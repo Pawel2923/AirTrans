@@ -11,7 +11,7 @@ ENV REACT_APP_API_URL=$REACT_APP_API_URL
 RUN npm run build
 
 FROM nginx:stable-alpine3.17
-COPY --from=0 /ui/build /usr/share/nginx/html
+COPY --from=0 /ui/dist /usr/share/nginx/html
 EXPOSE $REACT_DOCKER_PORT
 
 CMD ["nginx", "-g", "daemon off;"]

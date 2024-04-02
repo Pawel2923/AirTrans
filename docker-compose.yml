@@ -20,6 +20,8 @@ services:
     build: ./api
     restart: unless-stopped
     env_file: ./.env
+    volumes:
+      - ./api:/api
     ports:
       - $NODE_LOCAL_PORT:$NODE_DOCKER_PORT
     environment:
@@ -35,6 +37,10 @@ services:
   ui:
     depends_on:
       - api
+    volumes:
+      - ./ui/src:/ui/src
+      - ./ui/public:/ui/public
+      - ./ui/index.html:/ui/index.html
     build:
       context: ./ui
       args:
@@ -43,6 +49,7 @@ services:
       - $REACT_LOCAL_PORT:$REACT_DOCKER_PORT
     networks:
       - frontend
+    command: npm run dev
 
 volumes:
   db:

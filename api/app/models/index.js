@@ -4,6 +4,7 @@ const Sequelize = require("sequelize");
 const sequelize = new Sequelize(dbConfig.DB, dbConfig.USER, dbConfig.PASSWORD, {
   host: dbConfig.HOST,
   dialect: dbConfig.dialect,
+  port: dbConfig.port,
   operatorsAliases: false,
 
   pool: {
@@ -19,6 +20,6 @@ const db = {};
 db.Sequelize = Sequelize;
 db.sequelize = sequelize;
 
-db.tutorials = require("./tutorial.model.js")(sequelize, Sequelize);
+db.airplane = require("./airplane.model.js")(sequelize, Sequelize);
 
 module.exports = db;

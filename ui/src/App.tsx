@@ -1,20 +1,17 @@
-import { Routes, Route } from 'react-router-dom'
-import Nav from './components/Nav'
-import Airplane from './components/Airplane'
-import AddAirplane from './components/AddAirplane'
+import { Routes, Route, createBrowserRouter, RouterProvider } from "react-router-dom";
+import Home from "./pages/Home";
 
-function App() {
-  return (
-    <>
-      <Nav />
-      <div className="container mt-3">
-        <Routes>
-          <Route path="/airplane" element={<Airplane />} />
-          <Route path="/add" element={<AddAirplane />} />
-        </Routes>
-      </div>
-    </>
-  )
+const router = createBrowserRouter([{ path: "*", Component: Root }]);
+
+export default function App() {
+  return <RouterProvider router={router} />;
 }
 
-export default App
+function Root() {
+	return (
+    <Routes>
+      <Route path="/" element={<Home />} />
+      <Route path="*" element={<div>Not Found</div>} />
+    </Routes>
+	);
+}

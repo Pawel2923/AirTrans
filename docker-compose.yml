@@ -21,7 +21,7 @@ services:
     restart: unless-stopped
     env_file: ./.env
     volumes:
-      - ./api:/api
+      - ./api/app:/api/app
     ports:
       - $NODE_LOCAL_PORT:$NODE_DOCKER_PORT
     environment:

@@ -1,5 +1,8 @@
 import Nav from "../components/Nav";
+import Footer from "../components/footer";
+
 import Tabela from "../components/table";
+
 import './ogloszenia.css';
 
 
@@ -12,10 +15,10 @@ const Ogloszenia = () => {
                 <Tabela />
                 <Tabela />
                 <Tabela />
-                
-            </div>
-           
+                </div>
+            <Footer />
         </div>   
+        
     );
 };
 

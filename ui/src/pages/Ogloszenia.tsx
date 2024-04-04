@@ -1,19 +1,22 @@
 import Nav from "../components/Nav";
 import Tabela from "../components/table";
+import './ogloszenia.css';
+
 
 const Ogloszenia = () => {
-    const myStyle: React.CSSProperties = {
-        backgroundColor: "#f8f9fb",
-        textAlign: "center",
-        padding: "10px",
-    };
-   
     return (
-        <div>
+        <div className="container">
             <Nav />
-            <h1 style={myStyle}>Ogłosznia</h1>
-            <Tabela />
-        </div>
+            <h1>Ogłoszenia</h1>
+            <div className="tabela-container">
+                <Tabela />
+                <Tabela />
+                <Tabela />
+                
+            </div>
+           
+        </div>   
     );
 };
+
 export default Ogloszenia;

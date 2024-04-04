@@ -1,0 +1,15 @@
+.container {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 100vh; 
+}
+
+h1 {
+    text-align: center;
+}
+
+.tabela-container {
+    display: flex;
+    justify-content: space-around;
+}

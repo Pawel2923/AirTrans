@@ -3,6 +3,7 @@ import Home from "./pages/Home";
 import Ogloszenia from "./pages/Ogloszenia";
 import NotFound from "./pages/NotFound";
 
+
 const router = createBrowserRouter([{ path: "*", Component: Root }]);
 
 export default function App() {

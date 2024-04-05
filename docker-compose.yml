@@ -12,6 +12,7 @@ services:
       - $MYSQLDB_LOCAL_PORT:$MYSQLDB_DOCKER_PORT
     volumes:
       - db:/var/lib/mysql
+      - ./db-dump:/db-dump
     networks:
       - backend
   api:

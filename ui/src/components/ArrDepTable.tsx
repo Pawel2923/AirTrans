@@ -6,8 +6,8 @@ import tableStyles from "./ArrDepTable.module.css";
 
 interface Flight {
 	id: string;
-	arrival: string;
-	departure: string;
+	arrival: Date;
+	departure: Date;
 	destination: string;
 }
 
@@ -24,11 +24,11 @@ const ArrDepTable: React.FC<ArrDepTableProps> = ({
 	useEffect(() => {
 		if (!isArrivalTab) {
 			setFilteredData(
-				data.filter((flight: Flight) => flight.departure !== "")
+				data.filter((flight: Flight) => !flight.departure.toString().toLowerCase().includes("invalid"))
 			);
 		} else {
 			setFilteredData(
-				data.filter((flight: Flight) => flight.arrival !== "")
+				data.filter((flight: Flight) => !flight.arrival.toString().toLowerCase().includes("invalid date"))
 			);
 		}
 	}, [isArrivalTab, data]);
@@ -40,6 +40,7 @@ const ArrDepTable: React.FC<ArrDepTableProps> = ({
 					<th
 						onClick={() => setIsArrivalTab(false)}
 						className={!isArrivalTab ? tableStyles.active : ""}
+						colSpan={2}
 					>
 						<FontAwesomeIcon icon={faPlaneDeparture} />
 						<span> Odloty</span>
@@ -47,7 +48,6 @@ const ArrDepTable: React.FC<ArrDepTableProps> = ({
 					<th
 						onClick={() => setIsArrivalTab(true)}
 						className={isArrivalTab ? tableStyles.active : ""}
-						colSpan={2}
 					>
 						<FontAwesomeIcon icon={faPlaneArrival} />
 						<span> Przyloty</span>
@@ -59,13 +59,13 @@ const ArrDepTable: React.FC<ArrDepTableProps> = ({
 					filteredData.map((flight: Flight, index: number) =>
 						!isArrivalTab ? (
 							<tr key={index}>
-								<td>{flight.departure}</td>
+								<td>{flight.departure.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}</td>
 								<td>{flight.destination}</td>
 								<td>{flight.id}</td>
 							</tr>
 						) : (
 							<tr key={index}>
-								<td>{flight.arrival}</td>
+								<td>{flight.arrival.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}</td>
 								<td>{flight.destination}</td>
 								<td>{flight.id}</td>
 							</tr>

@@ -3,7 +3,7 @@ import Logo from "../assets/Logo.svg";
 
 const Nav = () => {
     return (
-        <nav className="navbar navbar-expand-lg" style={{backgroundColor: "#f8f9fb"}}>
+        <nav className="navbar navbar-expand-lg" style={{ backgroundColor: "var(--background-white)" }}>
             <div className="container-fluid px-4">
                 <Link to="/" className="d-flex align-items-center gap-3 navbar-brand fw-bold fs-3">
                     <img src={Logo} alt="AirTrans Logo" />

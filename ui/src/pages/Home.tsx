@@ -52,7 +52,7 @@ const Home = () => {
             <Nav />
 			<header className={homeStyles.header}>
                 <div className="container">
-                    <div className="row d-flex align-items-center py-5">
+                    <div className={`row d-flex align-items-center ${homeStyles["content-wrapper"]}`}>
                         <div className="col-6 text-center">
                             <h1 className="display-3 fw-bold">Witamy na stronie AirTrans</h1>
                             <p className="lead">Zaplanuj swoją podróż z nami</p>
@@ -63,6 +63,43 @@ const Home = () => {
                     </div>
                 </div>
             </header>
+            <main>
+                <div className={`d-flex justify-content-around ${homeStyles["content-wrapper"]}`} style={{ backgroundColor: "#B3D3E8" }}>
+                    <div>
+                        <h2 className="display-6 text-uppercase">
+                            Parking
+                        </h2>
+                        <p>
+                            Sprawdź dostępne miejsca parkingowe
+                        </p>
+                        <button type="button" className="btn btn-primary py-2 px-5">
+                            Sprawdź
+                        </button>
+                    </div>
+                    <div>
+                        <h2 className="display-6 text-uppercase">
+                            Wypożyczalnia
+                        </h2>
+                        <p>
+                            Wypożycz samochód z naszego katalogu
+                        </p>
+                        <button type="button" className="btn btn-primary py-2 px-5">
+                            Sprawdź
+                        </button>
+                    </div>
+                    <div>
+                        <h2 className="display-6 text-uppercase">
+                            Harmonogram
+                        </h2>
+                        <p>
+                            Sprawdź dostępne loty
+                        </p>
+                        <button type="button" className="btn btn-primary py-2 px-5">
+                            Sprawdź
+                        </button>
+                    </div>
+                </div>
+            </main>
 		</>
 	);
 };

@@ -3,13 +3,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlaneDeparture } from "@fortawesome/free-solid-svg-icons/faPlaneDeparture";
 import { faPlaneArrival } from "@fortawesome/free-solid-svg-icons/faPlaneArrival";
 import tableStyles from "./ArrDepTable.module.css";
-
-interface Flight {
-	id: string;
-	arrival: Date;
-	departure: Date;
-	destination: string;
-}
+import { Flight } from "../assets/Data";
 
 interface ArrDepTableProps {
 	data: Flight[];
@@ -83,6 +77,10 @@ const ArrDepTable: React.FC<ArrDepTableProps> = ({
 			</tbody>
 		</table>
 	);
+};
+
+ArrDepTable.defaultProps = {
+    data: [],
 };
 
 export default ArrDepTable;

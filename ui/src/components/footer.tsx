@@ -22,7 +22,7 @@ const Footer = () => {
                         </Link>
                     </li>
                 </div>
-                <p className="d-flex align-items-center gap-3 navbar-brand fw-bold fs-3">
+                <p className="d-flex align-items-center navbar-brand fw-small fs-5">
                     © 2024 AirTrans. Wszystkie prawa zastrzeżone.
                 </p>
             </div>

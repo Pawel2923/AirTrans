@@ -24,7 +24,7 @@ const ArrDepTable: React.FC<ArrDepTableProps> = ({
 	useEffect(() => {
 		if (!isArrivalTab) {
 			setFilteredData(
-				data.filter((flight: Flight) => !flight.departure.toString().toLowerCase().includes("invalid"))
+				data.filter((flight: Flight) => !flight.departure.toString().toLowerCase().includes("invalid date"))
 			);
 		} else {
 			setFilteredData(
@@ -38,19 +38,21 @@ const ArrDepTable: React.FC<ArrDepTableProps> = ({
 			<thead>
 				<tr>
 					<th
-						onClick={() => setIsArrivalTab(false)}
 						className={!isArrivalTab ? tableStyles.active : ""}
 						colSpan={2}
 					>
-						<FontAwesomeIcon icon={faPlaneDeparture} />
-						<span> Odloty</span>
+						<button className={tableStyles["thead-btn"]} onClick={() => setIsArrivalTab(false)}>
+                            <FontAwesomeIcon icon={faPlaneDeparture} />
+                            <span> Odloty</span>
+                        </button>
 					</th>
 					<th
-						onClick={() => setIsArrivalTab(true)}
 						className={isArrivalTab ? tableStyles.active : ""}
 					>
-						<FontAwesomeIcon icon={faPlaneArrival} />
-						<span> Przyloty</span>
+                        <button className={tableStyles["thead-btn"]} onClick={() => setIsArrivalTab(true)}>
+                            <FontAwesomeIcon icon={faPlaneArrival} />
+                            <span> Przyloty</span>
+                        </button>
 					</th>
 				</tr>
 			</thead>

@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 const NotFound = () => {
     return (
         <div className="container-fluid">
-            <div className="row">
+            <div className="row align-items-center"  style={{ minHeight: "100vh" }}>
                 <div className="col-12 text-center">
                     <h1 className="display-1">404</h1>
                     <h2>Strona nie istnieje</h2>

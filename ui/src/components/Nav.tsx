@@ -10,7 +10,7 @@ const Nav = () => {
                     AirTrans
                 </Link>
                 <div className="collapse navbar-collapse" id="navbarSupportedContent">
-                    <div className="d-flex navbar-nav text-uppercase fw-medium ms-auto">
+                    <ul className="d-flex navbar-nav text-uppercase fw-medium ms-auto">
                         <li className="nav-item">
                             <NavLink to="/" className="nav-link">
                                 HOME
@@ -31,8 +31,7 @@ const Nav = () => {
                                 KONTAKT
                             </NavLink>
                         </li>
-                        
-                    </div>
+                    </ul>
                 </div>
                 <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Przełącz nawigację">
                     <span className="navbar-toggler-icon"></span>

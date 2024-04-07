@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import ArrDepTable from "../components/ArrDepTable";
 import Nav from "../components/Nav";
+import Footer from "../components/footer";
 import homeStyles from "./Home.module.css";
 import { Announcements, Offer, flightsData, announcementsData, offersData } from "../assets/Data";
 
@@ -155,6 +156,7 @@ const Home = () => {
                     </div>
                 </div>
             </main>
+            <Footer />
 		</>
 	);
 };

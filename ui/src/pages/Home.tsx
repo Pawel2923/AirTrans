@@ -23,7 +23,7 @@ const Home = () => {
             </header>
             <main>
                 <div className={`container-fluid ${homeStyles["content-wrapper"]}`} style={{ backgroundColor: "#B3D3E8" }}>
-                    <div className="container-fluid row text-center text-lg-start justify-content-between gap-5 ms-auto mx-lg-auto">
+                    <div className="container-fluid row text-center text-lg-start justify-content-between gap-5 ms-0">
                         <div className="col-lg-3">
                             <h2 className="display-6 text-uppercase">
                                 Parking
@@ -65,8 +65,8 @@ const Home = () => {
                             Ogłoszenia
                         </h2>
                     </div>
-                    <div className={`container-fluid row justify-content-between gap-5 ms-auto mx-lg-auto ${homeStyles["announcements-wrapper"]}`}>
-                        {announcementsData.map((announcement: Announcements, index: number) => (
+                    <div className={`container-fluid row justify-content-between gap-5 ms-0 ${homeStyles["announcements-wrapper"]}`}>
+                        {announcementsData.slice(0, 3).map((announcement: Announcements, index: number) => (
                             <div key={index} className="col-md-3">
                                 <h3>
                                     {announcement.title}
@@ -84,9 +84,9 @@ const Home = () => {
                             Oferta
                         </h2>
                     </div>
-                    <div className={`row gap-5 ms-auto mx-lg-auto`}>
-                        {offersData.map((offer: Offer) => (
-                            <div key={offer.id} className={`col-lg col-md-4 mx-0 mx-md-auto card ${homeStyles["offer-card"]}`}>
+                    <div className={`row gap-5`}>
+                        {offersData.slice(0, 4).map((offer: Offer) => (
+                            <div key={offer.id} className={`col-lg col-md-4 ms-0 card ${homeStyles["offer-card"]}`}>
                                 <img src={`/src/assets/${offer.imgPath}`} alt={offer.title} className="card-img-top" />
                                 <div className="card-body d-grid">
                                     <h5 className="card-title text-center">
@@ -119,9 +119,9 @@ const Home = () => {
                         <p>NIP</p>
                         <p>KRS</p>
                     </div>
-                    <div className={`row container ${homeStyles["contact-info"]}`}>
+                    <div className={`${homeStyles["contact-info"]}`}>
                         <div className="row py-4">
-                            <div className="col-sm-4 text-uppercase px-0">
+                            <div className="col-sm-4 text-uppercase">
                                 Informacja lotniskowa: 
                             </div>
                             <div className="col-sm-8">
@@ -129,7 +129,7 @@ const Home = () => {
                             </div>
                         </div>
                         <div className="row py-4">
-                            <div className="col-sm-4 text-uppercase px-0">
+                            <div className="col-sm-4 text-uppercase">
                                 Centrala portu lotniczego: 
                             </div>
                             <div className="col-sm-8">
@@ -137,7 +137,7 @@ const Home = () => {
                             </div>
                         </div>
                         <div className="row py-4">
-                            <div className="col-sm-4 text-uppercase px-0">
+                            <div className="col-sm-4 text-uppercase">
                                 Biuro PR: 
                             </div>
                             <div className="col-sm-8">
@@ -145,7 +145,7 @@ const Home = () => {
                             </div>
                         </div>
                         <div className="row py-4">
-                            <div className="col-sm-4 text-uppercase px-0">
+                            <div className="col-sm-4 text-uppercase">
                                 BIURO SPRZEDAŻY, MARKETINGU I KOMUNIKACJI: 
                             </div>
                             <div className="col-sm-8">

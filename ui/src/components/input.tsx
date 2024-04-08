@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect, useRef, forwardRef, useLayoutEffect } from "react";
 import PropTypes from "prop-types";
 import classes from "./input.module.css";
@@ -16,7 +17,7 @@ interface InputProps {
     onBlur?: (ev: React.FocusEvent<HTMLInputElement>) => void;
     onChange?: (ev: React.ChangeEvent<HTMLInputElement>) => void;
     validateInput?: (value: string) => boolean;
-    setIsFormInvalid?: (isInvalid: boolean) => void; // Added this line
+    setIsFormInvalid?:(value: boolean) => void;
 }
 
 const Input = forwardRef((
@@ -38,23 +39,23 @@ const Input = forwardRef((
     }: InputProps, 
 ) => {
     const [isInvalid, setIsInvalid] = useState(false);
-    const inputRef = useRef<HTMLInputElement>(null); // Updated this line
+    const inputRef = useRef<HTMLInputElement>(null); 
 
     useLayoutEffect(() => {
         if (!isInvalid) {
-            inputRef.current?.classList.remove(classes.invalid); // Updated this line
+            inputRef.current?.classList.remove(classes.invalid); 
             return;
         }
 
-        inputRef.current?.classList.add(classes.invalid); // Updated this line
+        inputRef.current?.classList.add(classes.invalid); 
     }, [isInvalid]);
 
     useEffect(() => {
         if (isInvalid) {
-            inputRef.current?.setCustomValidity("Poprawnie wypełnij to pole"); // Updated this line
+            inputRef.current?.setCustomValidity("Poprawnie wypełnij to pole"); 
             return;
         }
-        inputRef.current?.setCustomValidity(""); // Updated this line
+        inputRef.current?.setCustomValidity(""); 
         if (setIsFormInvalid) {
             setIsFormInvalid(false);
         }

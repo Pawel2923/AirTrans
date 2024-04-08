@@ -2,6 +2,7 @@ import { Routes, Route, createBrowserRouter, RouterProvider } from "react-router
 import Home from "./pages/Home";
 import Ogloszenia from "./pages/Ogloszenia";
 import NotFound from "./pages/NotFound";
+import Logowanie from "./pages/Logowanie";
 
 
 const router = createBrowserRouter([{ path: "*", Component: Root }]);
@@ -15,7 +16,9 @@ function Root() {
     <Routes>
       <Route path="/" element={<Home />} />
       <Route path="/home/ogloszenia" element={<Ogloszenia />} />
+      <Route path="/logowanie" element={<Logowanie />} />
       <Route path="*" element={<NotFound />} />
+      
     </Routes>
 	);
 }

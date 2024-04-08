@@ -1,0 +1,26 @@
+.Input {
+	border: 2px solid gray;
+	outline: none;
+	border-radius: 25px;
+	padding: 0.5rem;
+	width: 100%;
+}
+
+.Invalid {
+	border-color: #de5452;
+}
+
+.Input:focus {
+	border-color: #3b9add;
+}
+
+.Input:focus-within {
+	border-color: #3b9add;
+}
+
+.Input[type="search"]::-webkit-search-decoration,
+.Input[type="search"]::-webkit-search-cancel-button,
+.Input[type="search"]::-webkit-search-results-button,
+.Input[type="search"]::-webkit-search-results-decoration {
+	-webkit-appearance: none;
+}

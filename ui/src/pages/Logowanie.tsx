@@ -1,86 +1,95 @@
+import { useState } from "react";
 import { Link } from "react-router-dom";
-import { useState } from "react"; 
-import homeStyles from "./Home.module.css";
-import Input from "../components/input"; 
+import Input from "../components/Input"
 
-const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-z]{2,}$/;
+const emailRegex = /^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$/i;
+const isEmpty = (value: string) => value.trim() !== "" && value.trim().length >= 3;
+const isEmail = (value: string) =>
+	emailRegex.test(value.toLowerCase()) &&
+	value.toLowerCase().trim().length >= 3;
 
+const Login = () => {
+	const [email, setEmail] = useState("");
+	const [password, setPassword] = useState("");
+	const [isFormInvalid, setIsFormInvalid] = useState(true);
 
+	const emailInputHandler = (ev: React.ChangeEvent<HTMLInputElement>) => {
+		setEmail(ev.target.value);
+	};
 
-const Logowanie = () => {
-    const [email, setEmail] = useState("");
-    const [password, setPassword] = useState("");
-    const [isFormInvalid, setIsFormInvalid] = useState(true);
-    const submitHandler = (ev: { preventDefault: () => void; }) => {
-        ev.preventDefault();
-        validateForm();
-        if (isFormInvalid) {
-            return;
-        }
-    };
+	const passwordInputHandler = (ev: React.ChangeEvent<HTMLInputElement>) => {
+		setPassword(ev.target.value);
+	};
 
-    const emailInputHandler = (ev: React.ChangeEvent<HTMLInputElement>) => {
-        setEmail(ev.target.value);
-    };
+	const resetForm = () => {
+		setEmail("");
+		setPassword("");
+		setIsFormInvalid(false);
+	};
 
-    const passwordInputHandler = (ev: React.ChangeEvent<HTMLInputElement>) => {
-        setPassword(ev.target.value);
-    };
+	const submitHandler = (ev: React.FormEvent<HTMLFormElement>) => {
+		ev.preventDefault();
 
-    const validateForm = () => {
-        const emailIsValid = email.trim() !== "" && emailRegex.test(email.toLowerCase());
-        const passwordIsValid = password.trim() !== "" && password.length >= 3;
-        setIsFormInvalid(!emailIsValid || !passwordIsValid);
-    };
+		if (isFormInvalid) {
+			console.error("Niepoprawnie wypełniony formularz");
+			alert("Niepoprawnie wypełniony formularz");
+			return;
+		}
+		resetForm();
+		console.log("Zalogowano przy użyciu e-maila i hasła: ", email, password);
+	};
 
-    
+	const loginForm = (
+		<form onSubmit={submitHandler}>
+			<label>
+				<p>
+					E-mail*
+				</p>
+				<Input
+					type="email"
+					id="email"
+					value={email}
+					minLength={3}
+					onInput={emailInputHandler}
+					validateInput={isEmail}
+					setIsFormInvalid={setIsFormInvalid}
+					required
+				/>
+			</label>
+			<label>
+				<p>
+					Hasło*
+				</p>
+				<Input
+					type="password"
+					id="password"
+					value={password}
+					minLength={3}
+					onInput={passwordInputHandler}
+					validateInput={isEmpty}
+					setIsFormInvalid={setIsFormInvalid}
+					required
+				/>
+			</label>
+			<button type="submit">Zaloguj się</button>
+			<p>
+				Nie masz jeszcze konta?{" "}
+				<Link to="/rejestracja">Zapisz się</Link>
+			</p>
+		</form>
+	);
 
-    return (
-        <div className={`container-fluid ${homeStyles["content-wrapper"]}`} style={{ backgroundColor: "#B3D3E8", margin: "auto", borderRadius: "10px", display: 'flex', justifyContent: 'center', alignItems: 'center', height: '55vh', marginTop:'10%',width:'120vh'}}>
-            <div className="container-fluid row text-center text-lg-start justify-content-between gap-5 ms-0">
-                <div className="col-lg-6" style={{ width: "200%" }}>
-                    <div className="row">
-                        <div className="col-md-6">
-                            <h3>LOGOWANIE DO SYSTEMU</h3>
-                        </div>
-                        <div className="col-md-6">
-                            <form onSubmit={submitHandler}>
-                                <div className="form-group d-flex justify-content-start">
-                                    <p>Formularz logowania</p>
-                                </div>
-                                <div className="form-group d-flex justify-content-start">
-                                    <label htmlFor="email">Email</label>
-                                    <Input
-                                        type="email"
-                                        id="email"
-                                        value={email}
-                                        onInput={emailInputHandler}
-                                        setIsFormInvalid={setIsFormInvalid}
-                                        required
-                                    />
-                                </div>
-                                
-                                <div className="form-group d-flex justify-content-start">
-                                    <label htmlFor="password">Hasło</label>
-                                    <Input
-                                        type="password"
-                                        id="password"
-                                        value={password}
-                                        onInput={passwordInputHandler}
-                                        setIsFormInvalid={setIsFormInvalid}
-                                        required
-                                    />
-                                </div>
-                                <button type="submit" className="btn btn-primary text-center" disabled={isFormInvalid}>Zaloguj</button>
-                            </form>
-                        </div>
-                    </div>
-                    <p>Nie masz jeszcze konta?</p>
-                    <Link to="/rejestracja">Zarejestruj się</Link>
-                </div>
-            </div>
-        </div>
-     );
+	return (
+		<>
+			<main>
+				<section className="section">
+					<h1>Zaloguj się</h1>
+					<h2>Wypełnij formularz logowania</h2>
+					{loginForm}
+				</section>
+			</main>
+		</>
+	);
 };
 
-export default Logowanie;
+export default Login;

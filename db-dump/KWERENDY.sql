@@ -28,7 +28,8 @@ CREATE TABLE Flight (
      Status VARCHAR(25) NOT NULL,
      Airline_name VARCHAR(25) NOT NULL,
      Destination VARCHAR(45) NOT NULL,
-     Departure VARCHAR(45) NOT NULL
+     Arrival DATETIME NOT NULL,
+     Departure DATETIME NOT NULL
      );
 CREATE TABLE Radar (
      id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,

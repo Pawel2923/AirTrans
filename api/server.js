@@ -1,6 +1,7 @@
 require("dotenv").config();
 const express = require("express");
 const cors = require("cors");
+const flightsRouter = require("./routes/flights");
 
 const app = express();
 
@@ -26,6 +27,14 @@ app.get("/", (req, res) => {
   res.json({ message: "System lotniska." });
 });
 
+app.use("/api/flights", flightsRouter);
+
+app.use((err, req, res, next) => {
+  const statusCode = err.statusCode || 500;
+  console.error(err.message, err.stack);
+  res.status(statusCode).json({ message: err.message });
+  return;
+});
 
 // set port, listen for requests
 const PORT = process.env.NODE_DOCKER_PORT || 8080;

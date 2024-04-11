@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
-import Input from "../components/Input"
+import Input from "../components/input"
 
 const emailRegex = /^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$/i;
 const isEmpty = (value: string) => value.trim() !== "" && value.trim().length >= 3;

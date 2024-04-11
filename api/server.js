@@ -1,6 +1,7 @@
 require("dotenv").config();
 const express = require("express");
 const cors = require("cors");
+const mysql = require("mysql2");
 
 const app = express();
 
@@ -25,6 +26,27 @@ app.use(express.urlencoded({ extended: true }));
 app.get("/", (req, res) => {
   res.json({ message: "System lotniska." });
 });
+
+
+app.get("/fetch_client", (req, res) => {
+  const connection = mysql.createConnection({ 
+    host: process.env.DB_HOST,
+    user: process.env.DB_USER,
+    password: process.env.DB_PASSWORD,
+    database: process.env.DB_NAME
+});
+  connection.connect();
+
+  connection.query("SELECT Login,Password FROM Client",(err, rows, fields)=> {
+    if (err){
+      res.status(500).send({message: "Error "+err});
+      return;
+    };
+    res.json({status:200 , message: rows});
+});
+    connection.end();
+});
+
 
 
 // set port, listen for requests

@@ -1,11 +1,33 @@
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import ArrDepTable from "../components/ArrDepTable";
 import Nav from "../components/Nav";
 import Footer from "../components/footer";
 import homeStyles from "./Home.module.css";
-import { Announcements, Offer, flightsData, announcementsData, offersData } from "../assets/Data";
+import { Announcements, Offer, announcementsData, offersData } from "../assets/Data";
+import { Flight } from "../assets/Data";
+import flightService from "../services/flight.service";
 
-const Home = () => {    
+const Home = () => {
+    const [flightsData, setFlightsData] = useState<Flight[]>([]);
+    
+    useEffect(() => {
+        flightService.getAll().then((response) => {
+            if (response.status === 200) {
+                const flights: Flight[] = [];
+                response.data.data.map((flight: Flight) => {
+                    flights.push({
+                        id: flight.id,
+                        departure: new Date(flight.departure),
+                        arrival: new Date(flight.arrival),
+                        destination: flight.destination,
+                    })
+                });
+                setFlightsData(flights);
+            }
+        });
+    }, []);
+
     return (
         <>
             <Nav />

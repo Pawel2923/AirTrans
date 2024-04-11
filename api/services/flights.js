@@ -4,7 +4,7 @@ const config = require("../config");
 
 async function getAll(page = 1) {
     const offset = helper.getOffset(page, config.listPerPage);
-    const rows = await db.query(`SELECT Arrival, Departure, Destination, id FROM Flight LIMIT ${offset},${config.listPerPage}`);
+    const rows = await db.query(`SELECT arrival, departure, CONVERT(CAST(CONVERT(Destination USING LATIN1) AS BINARY) USING UTF8) destination, id FROM Flight LIMIT ${offset},${config.listPerPage}`);
 
     const data = helper.emptyOrRows(rows);
     const meta = { page };

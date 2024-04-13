@@ -21,6 +21,7 @@ const Home = () => {
                         departure: new Date(flight.departure),
                         arrival: new Date(flight.arrival),
                         destination: flight.destination,
+                        is_departure: flight.is_departure,
                     })
                 });
                 setFlightsData(flights);

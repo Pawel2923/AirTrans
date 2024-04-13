@@ -3,6 +3,7 @@ interface Flight {
 	arrival: Date;
 	departure: Date;
 	destination: string;
+	is_departure: boolean;
 }
 
 interface Announcements {

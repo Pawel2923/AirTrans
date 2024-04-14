@@ -1,8 +1,12 @@
 import http from "../http-common";
 
 class FlightService {
-    getAll = () => {
-        return http.get("/flights");
+    getAll = (page: number = 1) => {
+        return http.get(`/flights?page=${page}`);
+    }
+
+    getArrDep = () => {
+        return http.get("/flights/arrdep");
     }
 }
 

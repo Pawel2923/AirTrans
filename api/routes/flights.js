@@ -10,6 +10,13 @@ router.get("/", async function (req, res, next) {
   }
 });
 
+router.get("/arrdep", async function (req, res, next) {
+  try {
+    res.json(await flights.getArrDep());
+  } catch (err) {
+    next(err);
+  }
+});
 
 router.get("/:id", async function (req, res, next) {
   try {

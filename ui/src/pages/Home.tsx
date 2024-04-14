@@ -4,27 +4,52 @@ import ArrDepTable from "../components/ArrDepTable";
 import Nav from "../components/Nav";
 import Footer from "../components/footer";
 import homeStyles from "./Home.module.css";
-import { Announcements, Offer, announcementsData, offersData } from "../assets/Data";
-import { Flight } from "../assets/Data";
+import { Flight, Announcements, ContactInfo, Offer, announcementsData, offersData } from "../assets/Data";
 import flightService from "../services/flight.service";
+import contactInfoService from "../services/contactInfo.service";
+
+const flightsDataParser = (flightsData: Flight[]) => {
+    const flights: Flight[] = [];
+    flightsData.map((flight: Flight) => {
+        flights.push({
+            id: flight.id,
+            departure: new Date(flight.departure),
+            arrival: new Date(flight.arrival),
+            destination: flight.destination,
+            is_departure: flight.is_departure,
+        });
+    });
+    return flights;
+};
+
+const defaultContactInfo: ContactInfo = {
+    name: "",
+    addr_street: "",
+    addr_number: 0,
+    zip_code: "",
+    city: "",
+    nip: 0,
+    krs: 0,
+    phone_inf: "",
+    phone_central: "",
+    email_pr: "",
+    email_marketing: "",
+};
 
 const Home = () => {
     const [flightsData, setFlightsData] = useState<Flight[]>([]);
+    const [contactInfo, setContactInfo] = useState<ContactInfo>(defaultContactInfo);
     
     useEffect(() => {
-        flightService.getAll().then((response) => {
+        flightService.getArrDep().then((response) => {
             if (response.status === 200) {
-                const flights: Flight[] = [];
-                response.data.data.map((flight: Flight) => {
-                    flights.push({
-                        id: flight.id,
-                        departure: new Date(flight.departure),
-                        arrival: new Date(flight.arrival),
-                        destination: flight.destination,
-                        is_departure: flight.is_departure,
-                    })
-                });
-                setFlightsData(flights);
+                setFlightsData(flightsDataParser(response.data.data));
+            }
+        });
+
+        contactInfoService.getContactInfo().then((response) => {
+            if (response.status === 200) {
+                setContactInfo(response.data.data[0]);
             }
         });
     }, []);
@@ -137,11 +162,11 @@ const Home = () => {
                     </div>
                     <div className="row mb-3">
                         <p>Adres do korespondecji</p>
-                        <p>Port lotniczy</p>
-                        <p>ul. Królowej Jadwigi 5</p>
-                        <p>33-300 Nowy Sącz</p>
-                        <p>NIP</p>
-                        <p>KRS</p>
+                        <p>{contactInfo.name}</p>
+                        <p>{contactInfo.addr_street} {contactInfo.addr_number}</p>
+                        <p>{contactInfo.zip_code} {contactInfo.city}</p>
+                        <p>NIP: {contactInfo.nip}</p>
+                        <p>KRS: {contactInfo.krs}</p>
                     </div>
                     <div className={`${homeStyles["contact-info"]}`}>
                         <div className="row py-4">
@@ -149,7 +174,7 @@ const Home = () => {
                                 Informacja lotniskowa: 
                             </div>
                             <div className="col-sm-8">
-                                <a href="tel:+48123456789">+48 123 456 789</a>
+                                <a href={`tel:${contactInfo.phone_inf}`}>{contactInfo.phone_inf}</a>
                             </div>
                         </div>
                         <div className="row py-4">
@@ -157,7 +182,7 @@ const Home = () => {
                                 Centrala portu lotniczego: 
                             </div>
                             <div className="col-sm-8">
-                                <a href="tel:+48123456789">+48 123 456 789</a>
+                                <a href={`tel:${contactInfo.phone_central}`}>{contactInfo.phone_central}</a>
                             </div>
                         </div>
                         <div className="row py-4">
@@ -165,7 +190,7 @@ const Home = () => {
                                 Biuro PR: 
                             </div>
                             <div className="col-sm-8">
-                                <a href="mailto:biuro.lotniska@op.pl" target="_blank">biuro.lotniska@op.pl</a>
+                                <a href={`mailto:${contactInfo.email_pr}`} target="_blank">{contactInfo.email_pr}</a>
                             </div>
                         </div>
                         <div className="row py-4">
@@ -173,7 +198,7 @@ const Home = () => {
                                 BIURO SPRZEDAŻY, MARKETINGU I KOMUNIKACJI: 
                             </div>
                             <div className="col-sm-8">
-                                <a href="mailto:marketing.lotniska@op.pl" target="_blank">marketing.lotniska@op.pl</a>
+                                <a href={`mailto:${contactInfo.email_marketing}`} target="_blank">{contactInfo.email_marketing}</a>
                             </div>
                         </div>
                     </div>

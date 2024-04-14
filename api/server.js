@@ -2,6 +2,7 @@ require("dotenv").config();
 const express = require("express");
 const cors = require("cors");
 const flightsRouter = require("./routes/flights");
+const contactInfoRouter = require("./routes/contact-info");
 
 const app = express();
 
@@ -28,6 +29,8 @@ app.get("/", (req, res) => {
 });
 
 app.use("/api/flights", flightsRouter);
+
+app.use("/api/contact-info", contactInfoRouter);
 
 app.use((err, req, res, next) => {
   const statusCode = err.statusCode || 500;

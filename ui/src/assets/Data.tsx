@@ -22,6 +22,20 @@ interface Offer {
 	btnText: string;
 }
 
+interface ContactInfo {
+	name: string;
+	addr_street: string;
+	addr_number: number;
+	zip_code: string;
+	city: string;
+	nip: number;
+	krs: number;
+	phone_inf: string;
+	phone_central: string;
+	email_pr: string;
+	email_marketing: string;
+}
+
 // const flightsData: Flight[] = [
 // 	{
 // 		id: "EJU 4668",
@@ -131,4 +145,4 @@ const offersData: Offer[] = [
 
 // eslint-disable-next-line react-refresh/only-export-components
 export { /*flightsData, */announcementsData, offersData };
-export type { Flight, Announcements, Offer };
+export type { Flight, Announcements, Offer, ContactInfo };

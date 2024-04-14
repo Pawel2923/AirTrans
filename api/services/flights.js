@@ -6,10 +6,12 @@ const flightProperties = ["id", "status", "airlineName", "destination", "arrival
 
 async function getAll(page = 1) {
     const offset = helper.getOffset(page, config.listPerPage);
-    const rows = await db.query(`SELECT * FROM ArrDepTable ORDER BY departure LIMIT ${offset},${config.listPerPage}`);
-
+    const rows = await db.query(`SELECT * FROM ArrDepTable ORDER BY departure, arrival LIMIT ${offset},${config.listPerPage}`);
     const data = helper.emptyOrRows(rows);
-    const meta = { page };
+
+    const allFlights = await db.query("SELECT COUNT(*) flightCount FROM ArrDepTable");
+
+    const meta = { page, pages: Math.round(allFlights[0].flightCount / config.listPerPage) };
 
     return {
         data,

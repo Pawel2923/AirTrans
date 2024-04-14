@@ -18,15 +18,15 @@ const ArrDepTable: React.FC<ArrDepTableProps> = ({
 	useEffect(() => {
 		if (!isArrivalTab) {
 			setFilteredData(
-				data.slice(0, 5).filter((flight: Flight) => (
+				data.filter((flight: Flight) => (
 					!flight.departure.toString().toLowerCase().includes("invalid date") && flight.is_departure
-				))
+				)).slice(0, 5)
 			);
 		} else {
 			setFilteredData(
-				data.slice(0, 5).filter((flight: Flight) => (
+				data.filter((flight: Flight) => (
 					!flight.arrival.toString().toLowerCase().includes("invalid date") && !flight.is_departure
-				))
+				)).slice(0, 5)
 			);
 		}
 	}, [isArrivalTab, data]);

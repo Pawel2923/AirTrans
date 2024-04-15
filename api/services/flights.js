@@ -25,7 +25,7 @@ async function getAll(page = 1) {
 
 	const meta = {
 		page,
-		pages: Math.round(allFlights[0].flightCount / config.listPerPage),
+		pages: Math.ceil(allFlights[0].flightCount / config.listPerPage),
 	};
 
 	return {

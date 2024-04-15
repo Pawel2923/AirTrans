@@ -4,9 +4,10 @@ import ArrDepTable from "../components/ArrDepTable";
 import Nav from "../components/Nav";
 import Footer from "../components/footer";
 import homeStyles from "./Home.module.css";
-import { Flight, Announcements, ContactInfo, Offer, announcementsData, offersData } from "../assets/Data";
+import { Flight, Announcements, ContactInfo, Offer, offersData } from "../assets/Data";
 import flightService from "../services/flight.service";
 import contactInfoService from "../services/contactInfo.service";
+import announcementService from "../services/announcement.service";
 
 const flightsDataParser = (flightsData: Flight[]) => {
     const flights: Flight[] = [];
@@ -39,6 +40,7 @@ const defaultContactInfo: ContactInfo = {
 const Home = () => {
     const [flightsData, setFlightsData] = useState<Flight[]>([]);
     const [contactInfo, setContactInfo] = useState<ContactInfo>(defaultContactInfo);
+    const [announcementsData, setAnnouncementsData] = useState<Announcements[]>([]);
     
     useEffect(() => {
         flightService.getArrDep().then((response) => {
@@ -50,6 +52,12 @@ const Home = () => {
         contactInfoService.getContactInfo().then((response) => {
             if (response.status === 200) {
                 setContactInfo(response.data.data[0]);
+            }
+        });
+
+        announcementService.getAll().then((response) => {
+            if (response.status === 200) {
+                setAnnouncementsData(response.data.data);
             }
         });
     }, []);
@@ -133,9 +141,9 @@ const Home = () => {
                             Oferta
                         </h2>
                     </div>
-                    <div className={`row gap-5`}>
+                    <div className="d-flex justify-content-center row gap-5">
                         {offersData.slice(0, 4).map((offer: Offer) => (
-                            <div key={offer.id} className={`col-lg col-md-4 ms-0 card ${homeStyles["offer-card"]}`}>
+                            <div key={offer.id} className={`col-lg col-md-4 card ${homeStyles["offer-card"]}`}>
                                 <img src={`/src/assets/${offer.imgPath}`} alt={offer.title} className="card-img-top" />
                                 <div className="card-body d-grid">
                                     <h5 className="card-title text-center">

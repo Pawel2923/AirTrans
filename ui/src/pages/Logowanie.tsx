@@ -3,13 +3,14 @@ import loginService from "../services/login.service";
 import { Link } from "react-router-dom";
 import Input from "../components/input";
 
-
-
+import bcrypt from 'bcryptjs';
 const emailRegex = /^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$/i;
 const isEmpty = (value: string) => value.trim() !== "" && value.trim().length >= 3;
 const isEmail = (value: string) =>
   emailRegex.test(value.toLowerCase()) &&
   value.toLowerCase().trim().length >= 3;
+
+
 
 const Login = () => {
   const [email, setEmail] = useState("");
@@ -44,7 +45,7 @@ const Login = () => {
         const { auth, accessToken } = response.data;
         if (auth) {
           resetForm();
-          console.log("Zalogowano",accessToken);
+          console.log("Zalogowano", accessToken);
           alert("Zalogowano");
         } else {
           console.error("Błędne dane logowania");
@@ -59,7 +60,6 @@ const Login = () => {
       alert("Błąd logowania - sprawdź konsolę");
     }
   };
-
   console.log("password", password)
   const loginForm = (
     <form onSubmit={submitHandler}>

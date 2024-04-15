@@ -3,8 +3,7 @@ const express = require("express");
 const cors = require("cors");
 const mysql = require("mysql2");
 const jwt = require("jsonwebtoken");
-
-
+const bcrypt = require("bcryptjs");
 
 const app = express();
 
@@ -34,7 +33,7 @@ app.get("/", (req, res) => {
 
 
 app.post("/api/fetch_client", (req, res) => {
-  const { email, password } = req.body;
+  const { email, password: userInputPassword } = req.body;
 
   const connection = mysql.createConnection({
     host: process.env.DB_HOST,
@@ -45,8 +44,8 @@ app.post("/api/fetch_client", (req, res) => {
 
   connection.connect();
 
-  const query = "SELECT Email, Password FROM Client WHERE Email = ? AND Password = ?";
-  connection.query(query, [email, password], async (err, rows, fields) => {
+  const query = "SELECT Email, Password FROM Client WHERE Email = ?";
+  connection.query(query, [email], async (err, rows, fields) => {
     if (err) {
       res.status(500).send({ message: "Error " + err });
       return;
@@ -55,25 +54,30 @@ app.post("/api/fetch_client", (req, res) => {
       res.status(404).send({ message: "Not found" });
       return;
     } else {
-      const id = rows[0].Email;
-      const token = jwt.sign({ id }, process.env.SECRET_TOKEN, {
-        expiresIn: 86400
-      });
-      console.log("The token is: " + token);
-      return res.status(200).json({ auth: true, accessToken: token });
-    
-      const cookieOptions = {
-      expires: new Date(
-        Date.now() + process.env.JWT_COOKIE_EXPIRES * 24 * 60 * 60 * 1000
-      ),
-      httpOnly: true
-    };
+      const storedHashedPassword = rows[0].Password;
+      bcrypt.compare(userInputPassword, storedHashedPassword, (err, result) => {
+        if (err) {
+          console.error('Error comparing passwords:', err);
+          return;
+        }
 
-    res.cookie('jwt', token, cookieOptions);
-    res.status(200).json({ auth: true, accessToken: token });
-  }
-});
-connection.end();
+        if (result) {
+          const id = rows[0].Email;
+          const token = jwt.sign({ id }, process.env.SECRET_TOKEN, {
+            expiresIn: 86400
+          });
+          console.log("The token is: " + token);
+          res.status(200).json({ auth: true, accessToken: token });
+          return res.status(200).json({ auth: true, accessToken: token });
+        } else {
+          console.log('Passwords do not match! Authentication failed.');
+          res.status(401).send({ message: "Authentication failed" });
+          return;
+        }
+      });
+    }
+  });
+  connection.end();
 });
 
 app.post("/api/register", (req, res) => {

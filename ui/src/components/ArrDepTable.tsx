@@ -18,11 +18,15 @@ const ArrDepTable: React.FC<ArrDepTableProps> = ({
 	useEffect(() => {
 		if (!isArrivalTab) {
 			setFilteredData(
-				data.slice(0, 6).filter((flight: Flight) => !flight.departure.toString().toLowerCase().includes("invalid date"))
+				data.filter((flight: Flight) => (
+					!flight.departure.toString().toLowerCase().includes("invalid date") && flight.is_departure
+				)).slice(0, 5)
 			);
 		} else {
 			setFilteredData(
-				data.slice(0, 6).filter((flight: Flight) => !flight.arrival.toString().toLowerCase().includes("invalid date"))
+				data.filter((flight: Flight) => (
+					!flight.arrival.toString().toLowerCase().includes("invalid date") && !flight.is_departure
+				)).slice(0, 5)
 			);
 		}
 	}, [isArrivalTab, data]);
@@ -56,13 +60,13 @@ const ArrDepTable: React.FC<ArrDepTableProps> = ({
 						!isArrivalTab ? (
 							<tr key={index}>
 								<td>{flight.departure.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}</td>
-								<td>{flight.destination}</td>
+								<td>{flight.destination.toUpperCase()}</td>
 								<td>{flight.id}</td>
 							</tr>
 						) : (
 							<tr key={index}>
 								<td>{flight.arrival.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}</td>
-								<td>{flight.destination}</td>
+								<td>{flight.destination.toUpperCase()}</td>
 								<td>{flight.id}</td>
 							</tr>
 						)

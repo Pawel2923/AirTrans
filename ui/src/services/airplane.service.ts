@@ -1,7 +1,13 @@
 import http from "../http-common";
 
+interface Airplane {
+    code: string;
+    model: string;
+    passengerCapacity: number;
+}
+
 class AirplaneService {
-    create = (data) => {
+    create = (data: Airplane) => {
         return http.post("/airplanes", data);
     };
 
@@ -9,15 +15,15 @@ class AirplaneService {
         return http.get("/airplanes");
     };
 
-    findOne = (id) => {
+    findOne = (id: string) => {
         return http.get(`/airplanes/${id}`);
     };
 
-    update = (id, data) => {
+    update = (id: string, data: Airplane) => {
         return http.put(`/airplanes/${id}`, data);
     };
 
-    delete = (id) => {
+    delete = (id: string) => {
         return http.delete(`/airplanes/${id}`);
     };
 }

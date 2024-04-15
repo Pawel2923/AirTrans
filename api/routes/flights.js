@@ -4,7 +4,8 @@ const flights = require("../services/flights");
 
 router.get("/", async function (req, res, next) {
   try {
-    res.json(await flights.getAll(req.query.page));
+    const { data, meta, response } = await flights.getAll(req.query.page);
+    res.status(response.statusCode).json({ data, meta, message: response.message });
   } catch (err) {
     next(err);
   }
@@ -12,7 +13,8 @@ router.get("/", async function (req, res, next) {
 
 router.get("/arrdep", async function (req, res, next) {
   try {
-    res.json(await flights.getArrDep());
+    const { data, response } = await flights.getArrDep();
+    res.status(response.statusCode).json({ data, message: response.message });
   } catch (err) {
     next(err);
   }
@@ -20,7 +22,8 @@ router.get("/arrdep", async function (req, res, next) {
 
 router.get("/:id", async function (req, res, next) {
   try {
-    res.json(await flights.getById(req.params.id));
+    const { data, response } = await flights.getById(req.params.id);
+    res.status(response.statusCode).json({ data, message: response.message });
   } catch (err) {
     next(err);
   }
@@ -28,7 +31,8 @@ router.get("/:id", async function (req, res, next) {
 
 router.post("/post", async function (req, res, next) {
   try {
-    res.json(await flights.create(req.body))
+    const response = await flights.create(req.body);
+    res.status(response.statusCode).json({ message: response.message });
   } catch (err) {
     next(err);
   }

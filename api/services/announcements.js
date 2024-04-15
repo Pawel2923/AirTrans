@@ -13,12 +13,18 @@ async function getAll(page = 1) {
 		"SELECT COUNT(*) announcementCount FROM Announcements"
 	);
 
-	const meta = { 
-        page, 
-        pages: Math.ceil(allAnnouncements[0].announcementCount / config.listPerPage)
-    };
+	const meta = {
+		page,
+		pages: Math.ceil(
+			allAnnouncements[0].announcementCount / config.listPerPage
+		),
+	};
 
-	return { data, meta };
+	return {
+		data,
+		meta,
+		response: { message: `Successfully fetched data`, statusCode: 200 },
+	};
 }
 
 module.exports = { getAll };

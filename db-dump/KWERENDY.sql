@@ -86,15 +86,15 @@ CREATE TABLE Equipment (
      Id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
      First_name VARCHAR(45) NOT NULL,
      Last_name VARCHAR(45) NOT NULL,
-     Date_of_birth DATE NOT NULL,
-     Gender ENUM('M','F') NOT NULL,
-     Phone_no INT NOT NULL,
-     Address VARCHAR(45) NOT NULL,
-     Zip_code VARCHAR(12) NOT NULL,
+     Date_of_birth DATE NULL,
+     Gender ENUM('M','F')  NULL,
+     Phone_no INT NULL,
+     Address VARCHAR(45) NULL,
+     Zip_code VARCHAR(12) NULL,
      Login VARCHAR(50) NOT NULL,
      Password LONGTEXT NOT NULL,
      Email VARCHAR(45) NOT NULL,
-     Path_to_avatar VARCHAR(45) NOT NULL
+     Path_to_avatar VARCHAR(45) NULL
      );
 CREATE TABLE Rentals (
      Id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,

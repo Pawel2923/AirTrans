@@ -3,6 +3,8 @@ import loginService from "../services/login.service";
 import { Link } from "react-router-dom";
 import Input from "../components/input";
 
+
+
 const emailRegex = /^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$/i;
 const isEmpty = (value: string) => value.trim() !== "" && value.trim().length >= 3;
 const isEmail = (value: string) =>
@@ -37,37 +39,27 @@ const Login = () => {
         return;
       }
   
-      const response = await loginService.findByLogin(email);
+      const response = await loginService.create({ email, password });
       if (response.status === 200) {
-        const userDataArray = response.data.message; 
-        console.log("userDataArray", userDataArray);
-
-        let found = false;
-        for (let i = 0; i < userDataArray.length; i++) {
-          const userData = userDataArray[i];
-          if ( userData.Password === password) {
-            found = true;
-            break; 
-          }
-        }
-  
-        if (found) {
+        const { auth, accessToken } = response.data;
+        if (auth) {
           resetForm();
-          console.log("Zalogowano");
+          console.log("Zalogowano",accessToken);
           alert("Zalogowano");
         } else {
-          console.error("Błędne hasło");
-          alert("Błędne hasło");
+          console.error("Błędne dane logowania");
+          alert("Błędne dane logowania");
         }
       } else {
-        console.error("Błędny e-mail");
-        alert("Błędny e-mail");
+        console.error("Błąd logowania");
+        alert("Błąd logowania");
       }
     } catch (error) {
       console.error("Błąd logowania", error);
       alert("Błąd logowania - sprawdź konsolę");
     }
   };
+
   console.log("password", password)
   const loginForm = (
     <form onSubmit={submitHandler}>
@@ -114,7 +106,10 @@ const Login = () => {
         </section>
       </main>
     </>
-  );
-};
+    );
+  };
 
-export default Login;
+
+
+
+  export default Login;

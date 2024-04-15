@@ -2,8 +2,13 @@ require("dotenv").config();
 const express = require("express");
 const cors = require("cors");
 const mysql = require("mysql2");
+const jwt = require("jsonwebtoken");
+
+
 
 const app = express();
+
+
 
 var corsOptions = {
   origin: process.env.CLIENT_ORIGIN || "http://localhost:8081"
@@ -28,35 +33,88 @@ app.get("/", (req, res) => {
 });
 
 
-app.get("/api/fetch_client", (req, res) => {
-  // Pobierz adres e-mail z parametru zapytania
-  const email = req.query.email;
+app.post("/api/fetch_client", (req, res) => {
+  const { email, password } = req.body;
 
-  // Nawiąż połączenie z bazą danych
-  const connection = mysql.createConnection({ 
-      host: process.env.DB_HOST,
-      user: process.env.DB_USER,
-      password: process.env.DB_PASSWORD,
-      database: process.env.DB_NAME
+  const connection = mysql.createConnection({
+    host: process.env.DB_HOST,
+    user: process.env.DB_USER,
+    password: process.env.DB_PASSWORD,
+    database: process.env.DB_NAME
   });
 
   connection.connect();
 
-  const query = "SELECT Email,Password FROM Client WHERE Email = ?";
-  connection.query(query, [email], (err, rows, fields) => {
-      if (err) {
-          // Jeśli wystąpił błąd, zwróć odpowiedź 500 z komunikatem o błędzie
-          res.status(500).send({ message: "Error " + err });
-          return;
-      };
-      if (rows.length === 0) {
-          // Jeśli nie znaleziono adresu e-mail, zwróć odpowiedź 404
-          res.status(404).send({ message: "Not found" });
-          return;
-      };
+  const query = "SELECT Email, Password FROM Client WHERE Email = ? AND Password = ?";
+  connection.query(query, [email, password], async (err, rows, fields) => {
+    if (err) {
+      res.status(500).send({ message: "Error " + err });
+      return;
+    };
+    if (rows.length === 0) {
+      res.status(404).send({ message: "Not found" });
+      return;
+    } else {
+      const id = rows[0].Email;
+      const token = jwt.sign({ id }, process.env.SECRET_TOKEN, {
+        expiresIn: 86400
+      });
+      console.log("The token is: " + token);
+      return res.status(200).json({ auth: true, accessToken: token });
     
-      // Jeśli nie ma błędu, zwróć wynik zapytania jako JSON
-      res.json({ status: 200, message: rows });
+      const cookieOptions = {
+      expires: new Date(
+        Date.now() + process.env.JWT_COOKIE_EXPIRES * 24 * 60 * 60 * 1000
+      ),
+      httpOnly: true
+    };
+
+    res.cookie('jwt', token, cookieOptions);
+    res.status(200).json({ auth: true, accessToken: token });
+  }
+});
+
+  connection.end();
+});
+
+app.post("/api/register", (req, res) => {
+  // Pobierz dane z ciała żądania
+  const { First_Name,Last_Name,Phone_no,Address,Zip_code,Login, Password,Email } = req.body;
+
+  // Nawiąż połączenie z bazą danych
+  const connection = mysql.createConnection({ 
+    host: process.env.DB_HOST,
+    user: process.env.DB_USER,
+    password: process.env.DB_PASSWORD,
+    database: process.env.DB_NAME
+});
+
+  connection.connect();
+
+
+  const checkQuery = "SELECT COUNT(*) as count FROM Client WHERE Email = ?";
+  connection.query(checkQuery, [Email], (checkErr, checkRows) => {
+    if (checkErr) {
+      res.status(500).send({ message: "Error " + checkErr });
+      return;
+    }
+    if (checkRows[0].count > 0) {
+      // Jeśli użytkownik już istnieje, zwróć odpowiedź 409 (konflikt)
+      res.status(409).send({ message: "User with this email already exists" });
+      return;
+    }
+
+    // Wykonaj zapytanie INSERT, aby dodać nowego użytkownika do bazy danych
+    const insertQuery = "INSERT INTO Client (First_Name,Last_Name,Phone_no,Address,Zip_code,Login, Password,Email) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+    connection.query(insertQuery, [First_Name,Last_Name,Phone_no,Address,Zip_code,Login, Password,Email], (insertErr, insertResult) => {
+      if (insertErr) {
+        res.status(500).send({ message: "Error " + insertErr });
+        return;
+      }
+
+      // Zwróć odpowiedź 201 (created), że użytkownik został pomyślnie zarejestrowany
+      res.status(201).send({ message: "User registered successfully" });
+    });
   });
 
   // Zakończ połączenie z bazą danych po zakończeniu zapytania

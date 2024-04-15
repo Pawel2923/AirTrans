@@ -36,10 +36,9 @@ async function getAll(page = 1) {
 
 async function getArrDep() {
 	const rows = await db.query(`
-        (SELECT * FROM ArrDepTable WHERE is_departure=1 LIMIT 5)
+        (SELECT * FROM ArrDepTable WHERE is_departure=1 ORDER BY departure LIMIT 5)
         UNION
-        (SELECT * FROM ArrDepTable WHERE is_departure=0 LIMIT 5)
-        ORDER BY departure, arrival;
+        (SELECT * FROM ArrDepTable WHERE is_departure=0 ORDER BY arrival LIMIT 5)
     `);
 	const data = helper.emptyOrRows(rows);
 

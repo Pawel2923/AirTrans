@@ -4,6 +4,7 @@ const cors = require("cors");
 const flightsRouter = require("./routes/flights");
 const contactInfoRouter = require("./routes/contact-info");
 const announcementsRouter = require("./routes/announcements");
+const offerRouter = require("./routes/offer");
 
 const app = express();
 
@@ -30,10 +31,9 @@ app.get("/", (req, res) => {
 });
 
 app.use("/api/flights", flightsRouter);
-
 app.use("/api/contact-info", contactInfoRouter);
-
 app.use("/api/announcements", announcementsRouter)
+app.use("/api/offer", offerRouter);
 
 app.use((err, req, res, next) => {
   const statusCode = err.statusCode || 500;

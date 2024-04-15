@@ -15,6 +15,7 @@ services:
       - ./db-dump:/db-dump
     networks:
       - backend
+    hostname: mysqldb
   api:
     depends_on:
       - mysqldb

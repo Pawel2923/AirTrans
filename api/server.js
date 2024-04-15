@@ -73,56 +73,53 @@ app.post("/api/fetch_client", (req, res) => {
     res.status(200).json({ auth: true, accessToken: token });
   }
 });
-
-  connection.end();
+connection.end();
 });
 
 app.post("/api/register", (req, res) => {
   // Pobierz dane z ciała żądania
-  const { First_Name,Last_Name,Phone_no,Address,Zip_code,Login, Password,Email } = req.body;
+  const { First_name, Last_name, Login, Password, Email } = req.body;
 
-  // Nawiąż połączenie z bazą danych
   const connection = mysql.createConnection({ 
     host: process.env.DB_HOST,
     user: process.env.DB_USER,
     password: process.env.DB_PASSWORD,
     database: process.env.DB_NAME
-});
+  });
 
   connection.connect();
-
 
   const checkQuery = "SELECT COUNT(*) as count FROM Client WHERE Email = ?";
   connection.query(checkQuery, [Email], (checkErr, checkRows) => {
     if (checkErr) {
       res.status(500).send({ message: "Error " + checkErr });
+      connection.end(); 
       return;
     }
     if (checkRows[0].count > 0) {
-      // Jeśli użytkownik już istnieje, zwróć odpowiedź 409 (konflikt)
       res.status(409).send({ message: "User with this email already exists" });
+      connection.end();
       return;
     }
 
-    // Wykonaj zapytanie INSERT, aby dodać nowego użytkownika do bazy danych
-    const insertQuery = "INSERT INTO Client (First_Name,Last_Name,Phone_no,Address,Zip_code,Login, Password,Email) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
-    connection.query(insertQuery, [First_Name,Last_Name,Phone_no,Address,Zip_code,Login, Password,Email], (insertErr, insertResult) => {
+    
+    const insertQuery = "INSERT INTO Client (First_name, Last_name, Login, Password, Email) VALUES (?, ?, ?, ?, ?)";
+    connection.query(insertQuery, [First_name, Last_name, Login, Password, Email], (insertErr, insertResult) => {
       if (insertErr) {
         res.status(500).send({ message: "Error " + insertErr });
+        connection.end(); // Zamknij połączenie w przypadku błędu
         return;
       }
 
-      // Zwróć odpowiedź 201 (created), że użytkownik został pomyślnie zarejestrowany
-      res.status(201).send({ message: "User registered successfully" });
+      res.status(201).send({ insertResult, message: "User registered successfully" });
+      connection.end(); // Zamknij połączenie po zakończeniu zapytania
     });
   });
-
-  // Zakończ połączenie z bazą danych po zakończeniu zapytania
-  connection.end();
 });
 
 // set port, listen for requests
 const PORT = process.env.NODE_DOCKER_PORT || 8080;
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}.`);
+
 });

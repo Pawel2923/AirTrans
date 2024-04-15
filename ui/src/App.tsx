@@ -2,6 +2,8 @@ import { Routes, Route, createBrowserRouter, RouterProvider } from "react-router
 import Home from "./pages/Home";
 import Ogloszenia from "./pages/Ogloszenia";
 import NotFound from "./pages/NotFound";
+import Logowanie from "./pages/Logowanie";
+import Rejestracja from "./pages/Rejestracja";
 
 
 const router = createBrowserRouter([{ path: "*", Component: Root }]);
@@ -15,7 +17,10 @@ function Root() {
     <Routes>
       <Route path="/" element={<Home />} />
       <Route path="/home/ogloszenia" element={<Ogloszenia />} />
+      <Route path="/logowanie" element={<Logowanie />} />
+      <Route path="/rejestracja" element={<Rejestracja />} />
       <Route path="*" element={<NotFound />} />
+      
     </Routes>
 	);
 }

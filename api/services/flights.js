@@ -51,10 +51,10 @@ async function getArrDep() {
 
 async function getById(id) {
 	if (typeof id === "string" && id.length === 0) {
-		throw new Error({ message: "Id is empty", statusCode: 400 });
+		throw new Error("Id is empty");
 	}
 	if (id === null) {
-		throw new TypeError({ message: "Id is null", statusCode: 400 });
+		throw new TypeError("Id is null");
 	}
 
 	const rows = await db.query("SELECT * FROM ArrDepTable WHERE id=?", [id]);
@@ -69,16 +69,13 @@ async function getById(id) {
 async function create(flight) {
 	flightProperties.forEach((property) => {
 		if (property in flight === false) {
-			throw new Error({
-				message: `${property} property is missing`,
-				statusCode: 400,
-			});
+			throw new Error(`${property} property is missing`);
 		}
 	});
 
 	for (const [key, value] of Object.entries(flight)) {
 		if (value === null || value === "") {
-			throw new Error({ message: `${key} is empty`, statusCode: 400 });
+			throw new Error(`${key} is empty`);
 		}
 	}
 
@@ -86,17 +83,11 @@ async function create(flight) {
 		/^(((\d{4})-([01]\d)-(0[1-9]|[12]\d|3[01])) (([01]\d|2[0-3]):([0-5]\d):([0-5]\d)))$/m;
 
 	if (!datetimeRegex.test(flight.arrival)) {
-		throw new Error({
-			message: "Arrival property invalid format",
-			statusCode: 400,
-		});
+		throw new Error("Arrival property invalid format");
 	}
 
 	if (!datetimeRegex.test(flight.departure)) {
-		throw new Error({
-			message: "Departure property invalid format",
-			statusCode: 400,
-		});
+		throw new Error("Departure property invalid format");
 	}
 
 	const rows = await db.query("SELECT Serial_no FROM Airplane");
@@ -107,10 +98,10 @@ async function create(flight) {
 	});
 
 	if (!airplaneSerialNumbers.includes(flight.airplaneSerialNo)) {
-		throw new Error({
+		return {
 			message: "Provided airplane serial number does not exist",
 			statusCode: 404,
-		});
+		};
 	}
 
 	const result = await db.query(`INSERT INTO Flight VALUES (

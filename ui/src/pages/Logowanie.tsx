@@ -3,7 +3,7 @@ import loginService from "../services/login.service";
 import { Link } from "react-router-dom";
 import Input from "../components/input";
 
-import bcrypt from 'bcryptjs';
+
 const emailRegex = /^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$/i;
 const isEmpty = (value: string) => value.trim() !== "" && value.trim().length >= 3;
 const isEmail = (value: string) =>

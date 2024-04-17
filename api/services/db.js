@@ -7,7 +7,7 @@ async function query(sql, params) {
 
 	const [results] = await connection.execute(sql, params, (err, results) => {
         if (err) {
-            throw new Error({ message: err.message, statusCode: 500 });
+            throw new Error(err.message);
         }
         return results;
     });

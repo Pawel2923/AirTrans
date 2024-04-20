@@ -5,8 +5,8 @@ class FlightService {
         return http.get(`/flights?page=${page}`);
     }
 
-    getArrDep = () => {
-        return http.get("/flights/arrdep");
+    getByArrivalOrDeparture = () => {
+        return http.get("/flights?isarrdep=true");
     }
 }
 

@@ -7,7 +7,7 @@ router.get("/", async function (req, res, next) {
         const { data, response } = await offer.getData();
         res.status(response.statusCode).json({ data, message: response.message });
     } catch (err) {
-        next(err);
+        next(JSON.parse(err.message));
     }
 });
 

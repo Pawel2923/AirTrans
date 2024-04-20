@@ -16,11 +16,6 @@ var corsOptions = {
 
 app.use(cors(corsOptions));
 
-const db = require("./app/models");
-db.sequelize.sync({ force: true }).then(() => {
-    console.log("Drop and re-sync db.");
-  });
-
 // parse requests of content-type - application/json
 app.use(express.json());
 
@@ -40,8 +35,8 @@ app.use("/api/fetch_client", loginRouter);
 app.use("/api/register", registerRouter);
 
 app.use((err, req, res, next) => {
-  console.error(err.message, err.stack);
-  res.status(500).json({ message: err.message });
+  console.error(err.statusMessage);
+  res.status(err.statusCode).json({ message: err.statusMessage });
   return;
 });
 

@@ -1,7 +1,7 @@
 const db = require("./db");
 const helper = require("../helper");
 
-async function getContactInfo() {
+async function getAll() {
 	const rows = await db.query("SELECT * FROM Contact_info");
 	const data = helper.emptyOrRows(rows);
 
@@ -10,4 +10,4 @@ async function getContactInfo() {
 		response: { message: `Successfully fetched data`, statusCode: 200 },
 	};
 }
-module.exports = { getContactInfo };
+module.exports = { getAll };

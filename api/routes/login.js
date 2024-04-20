@@ -36,7 +36,7 @@ router.post("/", async function (req, res, next) {
             }
         });
     } catch (err) {
-        next(err);
+        next(JSON.parse(err.message));
     }
 });
 

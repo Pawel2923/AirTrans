@@ -9,7 +9,7 @@ router.post("/", async function (req, res, next) {
         const response = await registerService.registerClient(First_name, Last_name, Login, Password, Email);
         res.status(response.statusCode).json(response.message);
     } catch (err) {
-        next(err);
+        next(JSON.parse(err.message));
     }
 });
 

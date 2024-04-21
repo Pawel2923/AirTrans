@@ -211,6 +211,17 @@ async function update(flightId, flight) {
 }
 
 async function remove(flightId) {
+	const flightExists = await db.query("SELECT * FROM Flight WHERE id=?", [flightId]);
+
+	if (flightExists.length === 0) {
+		throw new Error(
+			JSON.stringify({
+				statusMessage: "Flight with this id does not exist",
+				statusCode: 404,
+			})
+		);
+	}
+
 	const result = await db.query("DELETE FROM Flight WHERE id=?", [flightId]);
 
 	if (result.affectedRows) {

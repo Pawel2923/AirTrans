@@ -47,6 +47,23 @@ router.get("/", async function (req, res, next) {
 	}
 });
 
+/**
+ * @openapi
+ * /api/flights/{id}:
+ *  get:
+ *   description: Get flight by id
+ *   parameters:
+ *    - name: id
+ *      in: path
+ *      required: true
+ *      description: Flight id
+ *      type: string
+ *   responses:
+ *    200:
+ *     description: Returns a flight
+ *    500:
+ *     description: Internal server error
+ */
 router.get("/:id", async function (req, res, next) {
 	try {
 		const { data, response } = await flight.getById(req.params.id);
@@ -59,6 +76,29 @@ router.get("/:id", async function (req, res, next) {
 	}
 });
 
+/**
+ * @openapi
+ * /api/flights:
+ *  post:
+ *   description: Create a new flight
+ *   requestBody:
+ *    required: true
+ *    content:
+ *     application/json:
+ *      schema:
+ *       $ref: '#/components/schemas/flight'
+ *   responses:
+ *    201:
+ *     description: Successfully created flight
+ *    400:
+ *     description: Invalid input
+ *    404:
+ *     description: Airplane serial number not found
+ *    409:
+ *     description: Flight with this id already exists
+ *    500:
+ *     description: Flight could not be created
+ */
 router.post("/", async function (req, res, next) {
 	try {
 		const response = await flight.create(req.body);
@@ -68,6 +108,31 @@ router.post("/", async function (req, res, next) {
 	}
 });
 
+/**
+ * @openapi
+ * /api/flights/{id}:
+ *  put:
+ *   description: Update a flight
+ *   parameters:
+ *    - name: id
+ *      in: path
+ *      required: true
+ *   requestBody:
+ *    required: true
+ *    content:
+ *     application/json:
+ *      schema:
+ *       $ref: '#/components/schemas/flight'
+ *   responses:
+ *    200:
+ *     description: Flight updated successfully
+ *    400:
+ *     description: Invalid input
+ *    404:
+ *     description: Flight with this id does not exist
+ *    500:
+ *     description: Flight could not be updated
+ */
 router.put("/:id", async function (req, res, next) {
 	try {
 		const response = await flight.update(req.params.id, req.body);
@@ -77,6 +142,23 @@ router.put("/:id", async function (req, res, next) {
 	}
 });
 
+/**
+ * @openapi
+ * /api/flights/{id}:
+ *  delete:
+ *   description: Delete a flight
+ *   parameters:
+ *    - name: id
+ *      in: path
+ *      required: true
+ *   responses:
+ *    200:
+ *     description: Flight deleted successfully
+ *    404:
+ *     description: Flight with this id does not exist
+ *    500:
+ *     description: Flight could not be deleted
+ */
 router.delete("/:id", async function (req, res, next) {
 	try {
 		const response = await flight.remove(req.params.id);
@@ -87,3 +169,41 @@ router.delete("/:id", async function (req, res, next) {
 });
 
 module.exports = router;
+
+/**
+ * @openapi
+ * components:
+ *  schemas:
+ *   errorResponse:
+ *    type: object
+ *    properties:
+ *     statusMessage:
+ *      type: string
+ *     statusCode:
+ *      type: integer
+ *   flight:
+ *    type: object
+ *    properties:
+ *     id:
+ *      type: string
+ *     status:
+ *      type: string
+ *     airlineName:
+ *      type: string
+ *     destination:
+ *      type: string
+ *     arrival:
+ *      type: string
+ *     departure:
+ *      type: string
+ *     airplaneSerialNo:
+ *      type: string
+ *    example:
+ *     id: "LH 2334"
+ *     status: "SCHEDULED"
+ *     airlineName: "Lufthansa"
+ *     destination: "Frankfurt"
+ *     arrival: "2024-07-01 12:00:00"
+ *     departure: "2024-07-01 10:00:00"
+ *     airplaneSerialNo: "D-AIMD"
+ */

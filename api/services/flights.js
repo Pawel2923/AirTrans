@@ -110,7 +110,7 @@ async function getById(id, tableName = "Flight") {
 	if (data.length === 0) {
 		throw new Error(
 			JSON.stringify({
-				statusMessage: `Flight with id ${id} not found`,
+				statusMessage: "Flight not found",
 				statusCode: 404,
 			})
 		);
@@ -126,11 +126,11 @@ async function create(flight) {
 	await validateFlight(flight);
 
 	const flightExists = await db.query(
-		"SELECT IF(COUNT(*)=0,0,1) flight_exists FROM Flight WHERE id=?",
+		"SELECT IF(COUNT(*)=0,0,1) result FROM Flight WHERE id=?",
 		[flight.id]
 	);
 
-	if (flightExists[0].flight_exists) {
+	if (flightExists[0].result) {
 		throw new Error(
 			JSON.stringify({
 				statusMessage: "Flight with this id already exists",
@@ -174,9 +174,12 @@ async function update(flightId, flight) {
 	flight.id = flightId;
 	await validateFlight(flight);
 
-	const flightExists = await db.query("SELECT * FROM Flight WHERE id=?", [flightId]);
-	
-	if (flightExists.length === 0) {
+	const flightExists = await db.query(
+		"SELECT IF(COUNT(*)=0,0,1) result FROM Flight WHERE id=?",
+		[flight.id]
+	);
+
+	if (!flightExists[0].result) {
 		throw new Error(
 			JSON.stringify({
 				statusMessage: "Flight with this id does not exist",
@@ -210,10 +213,13 @@ async function update(flightId, flight) {
 	}
 }
 
-async function remove(flightId) {
-	const flightExists = await db.query("SELECT * FROM Flight WHERE id=?", [flightId]);
+async function remove(id) {
+	const flightExists = await db.query(
+		"SELECT IF(COUNT(*)=0,0,1) result FROM Flight WHERE id=?",
+		[id]
+	);
 
-	if (flightExists.length === 0) {
+	if (!flightExists[0].result) {
 		throw new Error(
 			JSON.stringify({
 				statusMessage: "Flight with this id does not exist",
@@ -222,7 +228,7 @@ async function remove(flightId) {
 		);
 	}
 
-	const result = await db.query("DELETE FROM Flight WHERE id=?", [flightId]);
+	const result = await db.query("DELETE FROM Flight WHERE id=?", [id]);
 
 	if (result.affectedRows) {
 		return {

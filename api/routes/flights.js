@@ -4,7 +4,7 @@ const flight = require("../services/flights");
 
 /**
  * @openapi
- * /api/flights:
+ * /flights:
  *  get:
  *   description: Get all flights
  *   parameters:
@@ -49,7 +49,7 @@ router.get("/", async function (req, res, next) {
 
 /**
  * @openapi
- * /api/flights/{id}:
+ * /flights/{id}:
  *  get:
  *   description: Get flight by id
  *   parameters:
@@ -61,6 +61,8 @@ router.get("/", async function (req, res, next) {
  *   responses:
  *    200:
  *     description: Returns a flight
+ *    404:
+ *     description: Flight not found
  *    500:
  *     description: Internal server error
  */
@@ -78,7 +80,7 @@ router.get("/:id", async function (req, res, next) {
 
 /**
  * @openapi
- * /api/flights:
+ * /flights:
  *  post:
  *   description: Create a new flight
  *   requestBody:
@@ -110,7 +112,7 @@ router.post("/", async function (req, res, next) {
 
 /**
  * @openapi
- * /api/flights/{id}:
+ * /flights/{id}:
  *  put:
  *   description: Update a flight
  *   parameters:
@@ -144,7 +146,7 @@ router.put("/:id", async function (req, res, next) {
 
 /**
  * @openapi
- * /api/flights/{id}:
+ * /flights/{id}:
  *  delete:
  *   description: Delete a flight
  *   parameters:
@@ -194,8 +196,10 @@ module.exports = router;
  *      type: string
  *     arrival:
  *      type: string
+ *      format: date-time
  *     departure:
  *      type: string
+ *      format: date-time
  *     airplaneSerialNo:
  *      type: string
  *    example:

@@ -33,12 +33,12 @@ app.get("/", (req, res) => {
   res.json({ message: "System lotniska." });
 });
 
-app.use("/api/flights", flightsRouter);
-app.use("/api/contact-info", contactInfoRouter);
-app.use("/api/announcements", announcementsRouter)
-app.use("/api/offer", offerRouter);
-app.use("/api/fetch_client", loginRouter);
-app.use("/api/register", registerRouter);
+app.use("/flights", flightsRouter);
+app.use("/contact-info", contactInfoRouter);
+app.use("/announcements", announcementsRouter)
+app.use("/offer", offerRouter);
+app.use("/fetch_client", loginRouter);
+app.use("/register", registerRouter);
 
 app.use((err, req, res, next) => {
   console.error(err.statusMessage);

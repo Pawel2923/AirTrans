@@ -75,6 +75,7 @@ const Login = () => {
           setIsFormInvalid={setIsFormInvalid}
           required
         />
+        
       </label>
       <label>
         <p>Hasło*</p>
@@ -88,12 +89,14 @@ const Login = () => {
           setIsFormInvalid={setIsFormInvalid}
           required
         />
+
       </label>
       <button type="submit">Zaloguj się</button>
       <p>
         Nie masz jeszcze konta? <Link to="/rejestracja">Zapisz się</Link>
       </p>
     </form>
+
   );
 
   return (

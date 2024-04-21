@@ -3,15 +3,14 @@ import { Link } from "react-router-dom";
 import Input from "../components/input";
 import rejestracjaService from "../services/rejestracja.service";
 
-import bcrypt from 'bcryptjs';
+
 
 const emailRegex = /^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$/i;
 const isEmpty = (value:string) => value.trim() !== "" && value.trim().length >= 3;
 const isEmail = (value:string) =>
   emailRegex.test(value.toLowerCase()) &&
   value.toLowerCase().trim().length >= 3;
-  const saltRounds = 10;
-
+  
 const Rejestracja = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -78,13 +77,12 @@ const Rejestracja = () => {
       }
       
      
-      const salt = await bcrypt.genSalt(saltRounds);
-      const hashedPassword = await bcrypt.hash(password, salt);
-      setPassword(hashedPassword);
+      
+      
   
       const response = await rejestracjaService.create({
         Email: email,
-        Password: hashedPassword, 
+        Password: password, 
         First_name: firstName,
         Last_name: lastName,
         Login: login,

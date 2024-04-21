@@ -176,13 +176,6 @@ module.exports = router;
  * @openapi
  * components:
  *  schemas:
- *   errorResponse:
- *    type: object
- *    properties:
- *     statusMessage:
- *      type: string
- *     statusCode:
- *      type: integer
  *   flight:
  *    type: object
  *    properties:

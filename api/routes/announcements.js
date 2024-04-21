@@ -20,7 +20,25 @@ const announcements = require("../services/announcements");
  *      type: integer
  *   responses:
  *    200:
- *     description: Returns a list of announcements
+ *     description: Successfully fetched data
+ *     content:
+ *      application/json:
+ *       schema:
+ *        type: object
+ *        properties:
+ *         data:
+ *          type: array
+ *          items:
+ *           $ref: '#/components/schemas/announcement'
+ *         meta:
+ *          type: object
+ *          properties:
+ *           page:
+ *            type: integer
+ *           pages:
+ *            type: integer
+ *         message:
+ *          type: string
  *    500:
  *     description: Internal server error
  */

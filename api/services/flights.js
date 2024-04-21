@@ -12,6 +12,66 @@ const flightProperties = [
 	"airplaneSerialNo",
 ];
 
+async function validateFlight(flight) {
+	flightProperties.forEach((property) => {
+		if (property in flight === false) {
+			throw new Error(
+				JSON.stringify({
+					statusMessage: `${property} property is missing`,
+					statusCode: 400,
+				})
+			);
+		}
+	});
+
+	for (const [key, value] of Object.entries(flight)) {
+		if (value === null || value === "") {
+			throw new Error(
+				JSON.stringify({
+					message: `${key} is empty`,
+					statusCode: 400,
+				})
+			);
+		}
+	}
+
+	const datetimeRegex =
+		/^(((\d{4})-([01]\d)-(0[1-9]|[12]\d|3[01])) (([01]\d|2[0-3]):([0-5]\d):([0-5]\d)))$/m;
+
+	if (!datetimeRegex.test(flight.arrival)) {
+		throw new Error(
+			JSON.stringify({
+				statusMessage: "Arrival property invalid format",
+				statusCode: 400,
+			})
+		);
+	}
+
+	if (!datetimeRegex.test(flight.departure)) {
+		throw new Error(
+			JSON.stringify({
+				statusMessage: "Departure property invalid format",
+				statusCode: 400,
+			})
+		);
+	}
+
+	const airplaneSerialNoExists = await db.query(
+		"SELECT IF(COUNT(*)=0,0,1) serial_no_exists FROM Airplane WHERE Serial_no=?",
+		[flight.airplaneSerialNo]
+	);
+
+	if (!airplaneSerialNoExists[0].serial_no_exists) {
+		throw new Error(
+			JSON.stringify({
+				statusMessage:
+					"Airplane with this serial number does not exist",
+				statusCode: 404,
+			})
+		);
+	}
+}
+
 async function getAll(
 	page = 1,
 	limit = config.listPerPage,
@@ -83,27 +143,7 @@ async function getById(id, tableName = "Flight") {
 }
 
 async function create(flight) {
-	flightProperties.forEach((property) => {
-		if (property in flight === false) {
-			throw new Error(
-				JSON.stringify({
-					statusMessage: `${property} property is missing`,
-					statusCode: 400,
-				})
-			);
-		}
-	});
-
-	for (const [key, value] of Object.entries(flight)) {
-		if (value === null || value === "") {
-			throw new Error(
-				JSON.stringify({
-					message: `${key} is empty`,
-					statusCode: 400,
-				})
-			);
-		}
-	}
+	await validateFlight(flight);
 
 	const flightExists = await db.query(
 		"SELECT IF(COUNT(*)=0,0,1) flight_exists FROM Flight WHERE id=?",
@@ -115,41 +155,6 @@ async function create(flight) {
 			JSON.stringify({
 				statusMessage: "Flight with this id already exists",
 				statusCode: 409,
-			})
-		);
-	}
-
-	const datetimeRegex =
-		/^(((\d{4})-([01]\d)-(0[1-9]|[12]\d|3[01])) (([01]\d|2[0-3]):([0-5]\d):([0-5]\d)))$/m;
-
-	if (!datetimeRegex.test(flight.arrival)) {
-		throw new Error(
-			JSON.stringify({
-				statusMessage: "Arrival property invalid format",
-				statusCode: 400,
-			})
-		);
-	}
-
-	if (!datetimeRegex.test(flight.departure)) {
-		throw new Error(
-			JSON.stringify({
-				statusMessage: "Departure property invalid format",
-				statusCode: 400,
-			})
-		);
-	}
-
-	const airplaneSerialNoExists = await db.query(
-		"SELECT IF(COUNT(*)=0,0,1) serial_no_exists FROM Airplane WHERE Serial_no=?",
-		[flight.airplaneSerialNo]
-	);
-	
-	if (!airplaneSerialNoExists[0].serial_no_exists) {
-		throw new Error(
-			JSON.stringify({
-				statusMessage: "Airplane with this serial number does not exist",
-				statusCode: 404,
 			})
 		);
 	}
@@ -185,9 +190,69 @@ async function create(flight) {
 	return { message, statusCode };
 }
 
+async function update(flightId, flight) {
+	flight.id = flightId;
+	await validateFlight(flight);
+
+	const flightExists = await db.query("SELECT * FROM Flight WHERE id=?", [flightId]);
+	
+	if (flightExists.length === 0) {
+		throw new Error(
+			JSON.stringify({
+				statusMessage: "Flight with this id does not exist",
+				statusCode: 404,
+			})
+		);
+	}
+
+	const result = await db.query("UPDATE Flight SET Status=?, Airline_name=?, Destination=?, Arrival=?, Departure=?, Airplane_serial_no=? WHERE id=?", [
+		flight.status,
+		flight.airlineName,
+		flight.destination,
+		flight.arrival,
+		flight.departure,
+		flight.airplaneSerialNo,
+		flight.id,
+	]);
+
+	if (result.affectedRows) {
+		return {
+			message: "Flight updated successfully",
+			statusCode: 200,
+		};
+	} else {
+		throw new Error(
+			JSON.stringify({
+				statusMessage: "Flight could not be updated",
+				statusCode: 500,
+			})
+		);
+	}
+}
+
+async function remove(flightId) {
+	const result = await db.query("DELETE FROM Flight WHERE id=?", [flightId]);
+
+	if (result.affectedRows) {
+		return {
+			message: "Flight deleted successfully",
+			statusCode: 200,
+		};
+	} else {
+		throw new Error(
+			JSON.stringify({
+				statusMessage: "Flight could not be deleted",
+				statusCode: 500,
+			})
+		);
+	}
+}
+
 module.exports = {
 	getAll,
 	getByDepartureOrArrival,
 	getById,
 	create,
+	update,
+	remove,
 };

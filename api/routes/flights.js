@@ -41,4 +41,22 @@ router.post("/", async function (req, res, next) {
 	}
 });
 
+router.put("/:id", async function (req, res, next) {
+	try {
+		const response = await flight.update(req.params.id, req.body);
+		res.status(response.statusCode).json({ message: response.message });
+	} catch (err) {
+		next(JSON.parse(err.message));
+	}
+});
+
+router.delete("/:id", async function (req, res, next) {
+	try {
+		const response = await flight.remove(req.params.id);
+		res.status(response.statusCode).json({ message: response.message });
+	} catch (err) {
+		next(JSON.parse(err.message));
+	}
+});
+
 module.exports = router;

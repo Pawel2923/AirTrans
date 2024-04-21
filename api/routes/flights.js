@@ -2,6 +2,33 @@ const express = require("express");
 const router = express.Router();
 const flight = require("../services/flights");
 
+/**
+ * @openapi
+ * /api/flights:
+ *  get:
+ *   description: Get all flights
+ *   parameters:
+ *    - name: page
+ *      in: query
+ *      required: false
+ *      description: Page number
+ *      type: integer
+ *    - name: isarrdep
+ *      in: query
+ *      required: false
+ *      description: Filter by arrival or departure
+ *      type: boolean
+ *    - name: limit
+ *      in: query
+ *      required: false
+ *      description: Limit number of flights
+ *      type: integer
+ *   responses:
+ *    200:
+ *     description: Returns a list of flights
+ *    500:
+ *     description: Internal server error
+ */
 router.get("/", async function (req, res, next) {
 	try {
 		const { page, isarrdep, limit } = req.query;

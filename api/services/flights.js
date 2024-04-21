@@ -13,27 +13,7 @@ const flightProperties = [
 ];
 
 async function validateFlight(flight) {
-	flightProperties.forEach((property) => {
-		if (property in flight === false) {
-			throw new Error(
-				JSON.stringify({
-					statusMessage: `${property} property is missing`,
-					statusCode: 400,
-				})
-			);
-		}
-	});
-
-	for (const [key, value] of Object.entries(flight)) {
-		if (value === null || value === "") {
-			throw new Error(
-				JSON.stringify({
-					message: `${key} is empty`,
-					statusCode: 400,
-				})
-			);
-		}
-	}
+	helper.checkObject(flight, flightProperties);
 
 	const datetimeRegex =
 		/^(((\d{4})-([01]\d)-(0[1-9]|[12]\d|3[01])) (([01]\d|2[0-3]):([0-5]\d):([0-5]\d)))$/m;

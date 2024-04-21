@@ -20,8 +20,33 @@ async function getPages (tableName, limit) {
 	return Math.ceil(count / limit);
 }
 
+function checkObject (obj, objectProperties) {
+	objectProperties.forEach((property) => {
+		if (property in obj === false) {
+			throw new Error(
+				JSON.stringify({
+					statusMessage: `${property} property is missing`,
+					statusCode: 400,
+				})
+			);
+		}
+	});
+
+	for (const [key, value] of Object.entries(obj)) {
+		if (value === null || value === "") {
+			throw new Error(
+				JSON.stringify({
+					message: `${key} is empty`,
+					statusCode: 400,
+				})
+			);
+		}
+	}
+}
+
 module.exports = {
 	getOffset,
 	getPages,
 	emptyOrRows,
+	checkObject,
 };

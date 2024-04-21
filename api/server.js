@@ -1,6 +1,9 @@
 require("dotenv").config();
 const express = require("express");
 const cors = require("cors");
+const swaggerUI = require("swagger-ui-express");
+const swaggerSpec = require("./swagger");
+
 const flightsRouter = require("./routes/flights");
 const contactInfoRouter = require("./routes/contact-info");
 const announcementsRouter = require("./routes/announcements");
@@ -21,6 +24,9 @@ app.use(express.json());
 
 // parse requests of content-type - application/x-www-form-urlencoded
 app.use(express.urlencoded({ extended: true }));
+
+// Serve Swagger documentation
+app.use("/api-docs", swaggerUI.serve, swaggerUI.setup(swaggerSpec));
 
 // simple route
 app.get("/", (req, res) => {

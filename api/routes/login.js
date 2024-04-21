@@ -11,15 +11,15 @@ router.post("/", async function (req, res, next) {
         const { response, id, storedHashedPassword, userInputPassword } = await loginService.fetchClient(email, password);
         
         if (response.statusCode === 404) {
-            console.log("User not found");
+            console.log("Użytkownik nie znaleziony");
             res.status(response.statusCode).json({ message: response.message });
         }
 
         bcrypt.compare(userInputPassword, storedHashedPassword, (err, result) => {
             if (err) {
-                console.error("Error comparing passwords:", err);
+                console.error("Błąd porównywania haseł:", err);
                 throw new Error({
-                    message: "Error comparing passwords",
+                    message: "Błąd porównywania haseł",
                     statusCode: 500,
                 });
             }
@@ -28,11 +28,16 @@ router.post("/", async function (req, res, next) {
                 const token = jwt.sign({ id }, process.env.SECRET_TOKEN, {
                     expiresIn: 86400,
                 });
-                console.log("User authenticated");
-                res.status(200).json({ auth: true, accessToken: token });
+                const refreshToken = jwt.sign({ id }, process.env.REFRESH_SECRET_TOKEN, {
+                    expiresIn: 525600,
+                 });
+             
+                
+                res.setHeader("Authorization", `Bearer ${token}`,`refresh ${refreshToken}` );
+                res.status(200).json({ auth: true });
             } else {
-                console.log("Invalid password");
-                res.status(401).json({ auth: false, accessToken: null });
+                console.log("Nieprawidłowe hasło");
+                res.status(401).json({ auth: false });
             }
         });
     } catch (err) {

@@ -12,7 +12,7 @@ router.post("/", async function (req, res, next) {
         
         if (response.statusCode === 404) {
             console.log("Użytkownik nie znaleziony");
-            res.status(response.statusCode).json({ message: response.message });
+            return res.status(response.statusCode).json({ message: response.message });
         }
 
         bcrypt.compare(userInputPassword, storedHashedPassword, (err, result) => {
@@ -30,14 +30,13 @@ router.post("/", async function (req, res, next) {
                 });
                 const refreshToken = jwt.sign({ id }, process.env.REFRESH_SECRET_TOKEN, {
                     expiresIn: 525600,
-                 });
+                });
              
-                
                 res.setHeader("Authorization", `Bearer ${token}`,`refresh ${refreshToken}` );
-                res.status(200).json({ auth: true });
+                return res.status(200).json({ auth: true });
             } else {
                 console.log("Nieprawidłowe hasło");
-                res.status(401).json({ auth: false });
+                return res.status(401).json({ auth: false });
             }
         });
     } catch (err) {

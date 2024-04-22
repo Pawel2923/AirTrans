@@ -3,6 +3,7 @@ const router = express.Router();
 const loginService = require("../services/login");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
+const cookieParser = require('cookie-parser');
 
 router.post("/", async function (req, res, next) {
     const { email, password } = req.body;
@@ -22,10 +23,21 @@ router.post("/", async function (req, res, next) {
             expiresIn: 525600,
         });
      
+        // Ustawienie tokenów zarówno w nagłówkach Authorization, jak i jako ciasteczka
         res.set({
             "Authorization": `Bearer ${token}`,
             "Refresh-Token": `Bearer ${refreshToken}`
         });
+
+        const cookieOptions = {
+            expires: new Date(Date.now() + 86400 * 1000), // Token wygasa po 24 godzinach
+            httpOnly: true // Zapobieganie dostępu do ciasteczka przez JavaScript
+        };
+        // Ustawienie ciasteczka JWT
+        res.cookie('jwt', token, cookieOptions);
+        
+
+
         return res.status(200).json({ auth: true });
     } catch (err) {
         next(err);

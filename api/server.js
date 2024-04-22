@@ -10,6 +10,7 @@ const announcementsRouter = require("./routes/announcements");
 const offerRouter = require("./routes/offer");
 const loginRouter = require("./routes/login");
 const registerRouter = require("./routes/register");
+const airplaneRouter = require("./routes/airplane");
 
 const app = express();
 
@@ -39,10 +40,11 @@ app.use("/announcements", announcementsRouter)
 app.use("/offer", offerRouter);
 app.use("/fetch_client", loginRouter);
 app.use("/register", registerRouter);
+app.use("/airplane", airplaneRouter);
 
 app.use((err, req, res, next) => {
-  console.error(err.statusMessage);
-  res.status(err.statusCode).json({ message: err.statusMessage });
+  console.error(err.message);
+  res.status(err.statusCode).json({ message: err.message });
   return;
 });
 

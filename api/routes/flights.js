@@ -176,31 +176,31 @@ module.exports = router;
  * @openapi
  * components:
  *  schemas:
- *   flight:
+ *   Flight:
  *    type: object
  *    properties:
- *     id:
+ *     Id:
  *      type: string
- *     status:
+ *     Status:
  *      type: string
- *     airlineName:
+ *     Airline_name:
  *      type: string
- *     destination:
+ *     Destination:
  *      type: string
- *     arrival:
- *      type: string
- *      format: date-time
- *     departure:
+ *     Arrival:
  *      type: string
  *      format: date-time
- *     airplaneSerialNo:
+ *     Departure:
+ *      type: string
+ *      format: date-time
+ *     Airplane_serial_no:
  *      type: string
  *    example:
- *     id: "LH 2334"
- *     status: "SCHEDULED"
- *     airlineName: "Lufthansa"
- *     destination: "Frankfurt"
- *     arrival: "2024-07-01 12:00:00"
- *     departure: "2024-07-01 10:00:00"
- *     airplaneSerialNo: "D-AIMD"
+ *     Id: "LH 2334"
+ *     Status: "SCHEDULED"
+ *     Airline_name: "Lufthansa"
+ *     Destination: "Frankfurt"
+ *     Arrival: "2024-07-01 12:00:00"
+ *     Departure: "2024-07-01 10:00:00"
+ *     Airplane_serial_no: "D-AIMD"
  */

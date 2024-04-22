@@ -12,7 +12,7 @@ async function query(sql, params) {
 		return results;
 	} catch (error) {
 		throw new Error(JSON.stringify({
-            statusMessage: error.message,
+            message: error.message,
             statusCode: 500,
         }));
 	}

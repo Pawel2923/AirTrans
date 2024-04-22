@@ -20,7 +20,7 @@ async function update(name, info) {
 	if (!contactInfoExists[0].result) {
 		throw new Error(
 			JSON.stringify({
-				statusMessage: "Contact info not found",
+				message: "Contact info not found",
 				statusCode: 404,
 			})
 		);
@@ -42,7 +42,7 @@ async function update(name, info) {
 	} else {
 		throw new Error(
 			JSON.stringify({
-				statusMessage: "Could not update contact info",
+				message: "Could not update contact info",
 				statusCode: 500,
 			})
 		);

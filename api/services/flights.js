@@ -3,13 +3,13 @@ const helper = require("../helper");
 const config = require("../config");
 
 const flightProperties = [
-	"id",
-	"status",
-	"airlineName",
-	"destination",
-	"arrival",
-	"departure",
-	"airplaneSerialNo",
+	"Id",
+	"Status",
+	"Airline_name",
+	"Destination",
+	"Arrival",
+	"Departure",
+	"Airplane_serial_no",
 ];
 
 async function validateFlight(flight) {
@@ -21,7 +21,7 @@ async function validateFlight(flight) {
 	if (!datetimeRegex.test(flight.arrival)) {
 		throw new Error(
 			JSON.stringify({
-				statusMessage: "Arrival property invalid format",
+				message: "Arrival property invalid format",
 				statusCode: 400,
 			})
 		);
@@ -30,7 +30,7 @@ async function validateFlight(flight) {
 	if (!datetimeRegex.test(flight.departure)) {
 		throw new Error(
 			JSON.stringify({
-				statusMessage: "Departure property invalid format",
+				message: "Departure property invalid format",
 				statusCode: 400,
 			})
 		);
@@ -44,7 +44,7 @@ async function validateFlight(flight) {
 	if (!airplaneSerialNoExists[0].serial_no_exists) {
 		throw new Error(
 			JSON.stringify({
-				statusMessage:
+				message:
 					"Airplane with this serial number does not exist",
 				statusCode: 404,
 			})
@@ -82,6 +82,7 @@ async function getAll(
 
 async function getByDepartureOrArrival(limit = 5, page = 1) {
 	limit = parseInt(limit);
+	page = parseInt(page);
 	const offset = helper.getOffset(page, limit);
 	const rows = await db.query(
 		"(SELECT * FROM ArrDepTable WHERE is_departure=1 ORDER BY departure LIMIT ?,?) UNION (SELECT * FROM ArrDepTable WHERE is_departure=0 ORDER BY arrival LIMIT ?,?)",
@@ -110,7 +111,7 @@ async function getById(id, tableName = "Flight") {
 	if (data.length === 0) {
 		throw new Error(
 			JSON.stringify({
-				statusMessage: "Flight not found",
+				message: "Flight not found",
 				statusCode: 404,
 			})
 		);
@@ -133,7 +134,7 @@ async function create(flight) {
 	if (flightExists[0].result) {
 		throw new Error(
 			JSON.stringify({
-				statusMessage: "Flight with this id already exists",
+				message: "Flight with this id already exists",
 				statusCode: 409,
 			})
 		);
@@ -142,13 +143,13 @@ async function create(flight) {
 	const result = await db.query(
 		"INSERT INTO Flight VALUES (?, ?, ?, ?, ?, ?, ?)",
 		[
-			flight.id,
-			flight.status,
-			flight.airlineName,
-			flight.destination,
-			flight.arrival,
-			flight.departure,
-			flight.airplaneSerialNo,
+			flight.Id,
+			flight.Status,
+			flight.Airline_name,
+			flight.Destination,
+			flight.Arrival,
+			flight.Departure,
+			flight.Airplane_serial_no,
 		]
 	);
 
@@ -161,7 +162,7 @@ async function create(flight) {
 	} else {
 		throw new Error(
 			JSON.stringify({
-				statusMessage: "Flight could not be created",
+				message: "Flight could not be created",
 				statusCode: 500,
 			})
 		);
@@ -182,21 +183,24 @@ async function update(flightId, flight) {
 	if (!flightExists[0].result) {
 		throw new Error(
 			JSON.stringify({
-				statusMessage: "Flight with this id does not exist",
+				message: "Flight with this id does not exist",
 				statusCode: 404,
 			})
 		);
 	}
 
-	const result = await db.query("UPDATE Flight SET Status=?, Airline_name=?, Destination=?, Arrival=?, Departure=?, Airplane_serial_no=? WHERE id=?", [
-		flight.status,
-		flight.airlineName,
-		flight.destination,
-		flight.arrival,
-		flight.departure,
-		flight.airplaneSerialNo,
-		flight.id,
-	]);
+	const result = await db.query(
+		"UPDATE Flight SET Status=?, Airline_name=?, Destination=?, Arrival=?, Departure=?, Airplane_serial_no=? WHERE id=?",
+		[
+			flight.Status,
+			flight.Airline_name,
+			flight.Destination,
+			flight.Arrival,
+			flight.Departure,
+			flight.Airplane_serial_no,
+			flight.Id,
+		]
+	);
 
 	if (result.affectedRows) {
 		return {
@@ -206,7 +210,7 @@ async function update(flightId, flight) {
 	} else {
 		throw new Error(
 			JSON.stringify({
-				statusMessage: "Flight could not be updated",
+				message: "Flight could not be updated",
 				statusCode: 500,
 			})
 		);
@@ -222,7 +226,7 @@ async function remove(id) {
 	if (!flightExists[0].result) {
 		throw new Error(
 			JSON.stringify({
-				statusMessage: "Flight with this id does not exist",
+				message: "Flight with this id does not exist",
 				statusCode: 404,
 			})
 		);
@@ -238,7 +242,7 @@ async function remove(id) {
 	} else {
 		throw new Error(
 			JSON.stringify({
-				statusMessage: "Flight could not be deleted",
+				message: "Flight could not be deleted",
 				statusCode: 500,
 			})
 		);

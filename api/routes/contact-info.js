@@ -73,29 +73,29 @@ module.exports = router;
  * @openapi
  * components:
  *  schemas:
- *   contact-info:
+ *   Contact-info:
  *    type: object
  *    properties:
- *     name:
+ *     Name:
  *      type: string
- *     addr_street:
+ *     Addr_street:
  *      type: string
- *     addr_number:
+ *     Addr_number:
  *      type: integer
- *     zip_code:
+ *     Zip_code:
  *      type: string
- *     city:
+ *     City:
  *      type: string
- *     nip:
+ *     Nip:
  *      type: integer
- *     krs:
+ *     Krs:
  *      type: integer
- *     phone_inf:
+ *     Phone_inf:
  *      type: string
- *     phone_central:
+ *     Phone_central:
  *      type: string
- *     email_pr:
+ *     Email_pr:
  *      type: string
- *     email_marketing:
+ *     Email_marketing:
  *      type: string
  */

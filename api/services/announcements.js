@@ -20,7 +20,7 @@ function validateAnnouncement(announcement) {
 	if (!datetimeRegex.test(announcement.validUntil)) {
 		throw new Error(
 			JSON.stringify({
-				statusMessage: "validUntil property invalid format",
+				message: "validUntil property invalid format",
 				statusCode: 400,
 			})
 		);
@@ -32,7 +32,7 @@ function validateAnnouncement(announcement) {
 	if (validUntilDate < currentDate) {
 		throw new Error(
 			JSON.stringify({
-				statusMessage:
+				message:
 					"validUntil date should be greater than current date",
 				statusCode: 400,
 			})
@@ -40,15 +40,17 @@ function validateAnnouncement(announcement) {
 	}
 }
 
-async function getAll(page = 1) {
-	const offset = helper.getOffset(page, config.listPerPage);
+async function getAll(page = 1, limit = config.listPerPage) {
+	limit = parseInt(limit);
+	page = parseInt(page);
+	const offset = helper.getOffset(page, limit);
 	const rows = await db.query("SELECT * FROM Announcements LIMIT ?,?", [
 		offset,
-		config.listPerPage,
+		limit,
 	]);
 	const data = helper.emptyOrRows(rows);
 
-	const pages = await helper.getPages("Announcements", config.listPerPage);
+	const pages = await helper.getPages("Announcements", limit);
 
 	const meta = {
 		page,
@@ -69,7 +71,7 @@ async function getById(id) {
 	if (data.length === 0) {
 		throw new Error(
 			JSON.stringify({
-				statusMessage: "Announcement not found",
+				message: "Announcement not found",
 				statusCode: 404,
 			})
 		);
@@ -92,7 +94,7 @@ async function create(announcement) {
 	if (announcementExists[0].result) {
 		throw new Error(
 			JSON.stringify({
-				statusMessage: "Announcement with this id already exists",
+				message: "Announcement with this id already exists",
 				statusCode: 409,
 			})
 		);
@@ -134,7 +136,7 @@ async function update(id, announcement) {
 	if (!announcementExists[0].result) {
 		throw new Error(
 			JSON.stringify({
-				statusMessage: "Announcement with this id does not exist",
+				message: "Announcement with this id does not exist",
 				statusCode: 404,
 			})
 		);
@@ -175,7 +177,7 @@ async function remove(id) {
 	if (!announcementExists[0].result) {
 		throw new Error(
 			JSON.stringify({
-				statusMessage: "Announcement with this id does not exist",
+				message: "Announcement with this id does not exist",
 				statusCode: 404,
 			})
 		);

@@ -1,12 +1,16 @@
 require("dotenv").config();
 const express = require("express");
 const cors = require("cors");
+const swaggerUI = require("swagger-ui-express");
+const swaggerSpec = require("./swagger");
+
 const flightsRouter = require("./routes/flights");
 const contactInfoRouter = require("./routes/contact-info");
 const announcementsRouter = require("./routes/announcements");
 const offerRouter = require("./routes/offer");
 const loginRouter = require("./routes/login");
 const registerRouter = require("./routes/register");
+const carsRouter = require("./routes/cars");
 
 const app = express();
 
@@ -27,6 +31,8 @@ app.use(express.json());
 // parse requests of content-type - application/x-www-form-urlencoded
 app.use(express.urlencoded({ extended: true }));
 
+app.use("/api-docs", swaggerUI.serve, swaggerUI.setup(swaggerSpec));
+
 // simple route
 app.get("/", (req, res) => {
   res.json({ message: "System lotniska." });
@@ -38,6 +44,7 @@ app.use("/api/announcements", announcementsRouter)
 app.use("/api/offer", offerRouter);
 app.use("/api/fetch_client", loginRouter);
 app.use("/api/register", registerRouter);
+app.use("/api/cars", carsRouter);
 
 app.use((err, req, res, next) => {
   console.error(err.message, err.stack);

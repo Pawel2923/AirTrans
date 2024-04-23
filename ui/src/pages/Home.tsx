@@ -79,7 +79,7 @@ const Home = () => {
 	const [offerData, setOfferData] = useState<Offer[]>([]);
 
 	useEffect(() => {
-		flightService.getArrDep().then((response) => {
+		flightService.getByArrivalOrDeparture().then((response) => {
 			if (response.status === 200) {
 				setFlightsData(flightsDataParser(response.data.data));
 			}

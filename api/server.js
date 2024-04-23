@@ -1,12 +1,16 @@
 require("dotenv").config();
 const express = require("express");
 const cors = require("cors");
+const swaggerUI = require("swagger-ui-express");
+const swaggerSpec = require("./swagger");
+
 const flightsRouter = require("./routes/flights");
 const contactInfoRouter = require("./routes/contact-info");
 const announcementsRouter = require("./routes/announcements");
 const offerRouter = require("./routes/offer");
 const loginRouter = require("./routes/login");
 const registerRouter = require("./routes/register");
+const airplaneRouter = require("./routes/airplane");
 
 const app = express();
 
@@ -16,32 +20,31 @@ var corsOptions = {
 
 app.use(cors(corsOptions));
 
-const db = require("./app/models");
-db.sequelize.sync({ force: true }).then(() => {
-    console.log("Drop and re-sync db.");
-  });
-
 // parse requests of content-type - application/json
 app.use(express.json());
 
 // parse requests of content-type - application/x-www-form-urlencoded
 app.use(express.urlencoded({ extended: true }));
 
+// Serve Swagger documentation
+app.use("/api-docs", swaggerUI.serve, swaggerUI.setup(swaggerSpec));
+
 // simple route
 app.get("/", (req, res) => {
   res.json({ message: "System lotniska." });
 });
 
-app.use("/api/flights", flightsRouter);
-app.use("/api/contact-info", contactInfoRouter);
-app.use("/api/announcements", announcementsRouter)
-app.use("/api/offer", offerRouter);
-app.use("/api/fetch_client", loginRouter);
-app.use("/api/register", registerRouter);
+app.use("/flights", flightsRouter);
+app.use("/contact-info", contactInfoRouter);
+app.use("/announcements", announcementsRouter)
+app.use("/offer", offerRouter);
+app.use("/fetch_client", loginRouter);
+app.use("/register", registerRouter);
+app.use("/airplane", airplaneRouter);
 
 app.use((err, req, res, next) => {
-  console.error(err.message, err.stack);
-  res.status(500).json({ message: err.message });
+  console.error(err.message);
+  res.status(err.statusCode).json({ message: err.message });
   return;
 });
 

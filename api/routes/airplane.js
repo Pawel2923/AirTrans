@@ -1,12 +1,12 @@
 const express = require("express");
 const router = express.Router();
-const announcements = require("../services/announcements");
+const airplaneService = require("../services/airplane");
 
 /**
  * @openapi
- * /announcements:
+ * /airplane:
  *  get:
- *   description: Get all announcements
+ *   description: Get all airplanes
  *   parameters:
  *    - name: page
  *      in: query
@@ -16,7 +16,7 @@ const announcements = require("../services/announcements");
  *    - name: limit
  *      in: query
  *      required: false
- *      description: Limit number of announcements
+ *      description: Limit number of airplanes
  *      type: integer
  *   responses:
  *    200:
@@ -29,7 +29,7 @@ const announcements = require("../services/announcements");
  *         data:
  *          type: array
  *          items:
- *           $ref: '#/components/schemas/announcement'
+ *           $ref: '#/components/schemas/Airplane'
  *         meta:
  *          type: object
  *          properties:
@@ -45,7 +45,7 @@ const announcements = require("../services/announcements");
 router.get("/", async function (req, res, next) {
 	try {
 		const { page, limit } = req.query;
-		const { data, meta, response } = await announcements.getAll(
+		const { data, meta, response } = await airplaneService.getAll(
 			page,
 			limit
 		);
@@ -61,26 +61,40 @@ router.get("/", async function (req, res, next) {
 
 /**
  * @openapi
- * /announcements/{id}:
+ * /airplane/{serial_no}:
  *  get:
- *   description: Get announcement by id
+ *   description: Returns airplanes that match the serial number
  *   parameters:
- *    - name: id
+ *    - name: serial_no
  *      in: path
  *      required: true
- *      description: Announcement id
- *      type: string
+ *      description: Serial number of airplane
+ *      type: integer
  *   responses:
  *    200:
  *     description: Successfully fetched data
+ *     content:
+ *      application/json:
+ *       schema:
+ *        type: object
+ *        properties:
+ *         data:
+ *          type: array
+ *          items:
+ *           $ref: '#/components/schemas/Airplane'
+ *         message:
+ *          type: string
  *    404:
- *     description: Announcement not found
+ *     description: Airplane not found
  *    500:
  *     description: Internal server error
  */
-router.get("/:id", async function (req, res, next) {
+router.get("/:serial_no", async function (req, res, next) {
 	try {
-		const { data, response } = await announcements.getById(req.params.id);
+		const { serial_no } = req.params;
+		const { data, response } = await airplaneService.getBySerialNo(
+			serial_no
+		);
 		res.status(response.statusCode).json({
 			data,
 			message: response.message,
@@ -92,27 +106,32 @@ router.get("/:id", async function (req, res, next) {
 
 /**
  * @openapi
- * /announcements:
+ * /airplane:
  *  post:
- *   description: Create a new announcement
+ *   description: Create a new airplane
  *   requestBody:
  *    required: true
  *    content:
  *     application/json:
  *      schema:
- *       $ref: '#/components/schemas/announcement'
+ *       $ref: '#/components/schemas/Airplane'
  *   responses:
  *    201:
- *     description: Successfully created announcement
+ *     description: Successfully created airplane
  *    400:
  *     description: Invalid input
+ *    409:
+ *     description: Airplane already exists
  *    500:
  *     description: Internal server error
  */
 router.post("/", async function (req, res, next) {
 	try {
-		const response = await announcements.create(req.body);
-		res.status(response.statusCode).json({ message: response.message });
+		const { data, response } = await airplaneService.create(req.body);
+		res.status(response.statusCode).json({
+			data,
+			message: response.message,
+		});
 	} catch (err) {
 		next(JSON.parse(err.message));
 	}
@@ -120,38 +139,40 @@ router.post("/", async function (req, res, next) {
 
 /**
  * @openapi
- * /announcements/{id}:
+ * /airplane/{serial_no}:
  *  put:
- *   description: Update an announcement
+ *   description: Update an airplane
  *   parameters:
- *    - name: id
+ *    - name: serial_no
  *      in: path
  *      required: true
- *      description: Announcement id
+ *      description: Serial number of airplane
  *      type: string
  *   requestBody:
  *    required: true
  *    content:
  *     application/json:
  *      schema:
- *       $ref: '#/components/schemas/announcement'
+ *       $ref: '#/components/schemas/Airplane'
  *   responses:
  *    200:
- *     description: Successfully updated announcement
- *    400:
- *     description: Invalid input
+ *     description: Successfully updated airplane
  *    404:
- *     description: Announcement with this id does not exist
+ *     description: Airplane not found
  *    500:
  *     description: Internal server error
  */
-router.put("/:id", async function (req, res, next) {
+router.put("/:serial_no", async function (req, res, next) {
 	try {
-		const response = await announcements.update(
-			parseInt(req.params.id),
+		const { serial_no } = req.params;
+		const { data, response } = await airplaneService.update(
+			serial_no,
 			req.body
 		);
-		res.status(response.statusCode).json({ message: response.message });
+		res.status(response.statusCode).json({
+			data,
+			message: response.message,
+		});
 	} catch (err) {
 		next(JSON.parse(err.message));
 	}
@@ -159,24 +180,27 @@ router.put("/:id", async function (req, res, next) {
 
 /**
  * @openapi
- * /announcements/{id}:
+ * /airplane/{serial_no}:
  *  delete:
- *   description: Delete an announcement
+ *   description: Delete an airplane
  *   parameters:
- *    - name: id
+ *    - name: serial_no
  *      in: path
  *      required: true
+ *      description: Serial number of airplane
+ *      type: string
  *   responses:
  *    200:
- *     description: Announcement deleted successfully
+ *     description: Successfully deleted airplane
  *    404:
- *     description: Announcement with this id does not exist
+ *     description: Airplane not found
  *    500:
- *     description: Announcement could not be deleted
+ *     description: Internal server error
  */
-router.delete("/:id", async function (req, res, next) {
+router.delete("/:serial_no", async function (req, res, next) {
 	try {
-		const response = await announcements.remove(parseInt(req.params.id));
+		const { serial_no } = req.params;
+		const { response } = await airplaneService.remove(serial_no);
 		res.status(response.statusCode).json({ message: response.message });
 	} catch (err) {
 		next(JSON.parse(err.message));
@@ -189,20 +213,28 @@ module.exports = router;
  * @openapi
  * components:
  *  schemas:
- *   Announcement:
+ *   Airplane:
  *    type: object
  *    properties:
- *     Id:
+ *     Serial_no:
+ *      type: string
+ *     Model:
+ *      type: string
+ *     Type:
+ *      type: string
+ *     Production_year:
  *      type: integer
- *      required: false
- *      autoIncrement: true
- *     Title:
- *      type: string
- *     Content:
- *      type: string
- *     Valid_until:
- *      type: string
- *      format: date-time
- *     Personnel_id:
+ *     Num_of_seats:
  *      type: integer
+ *     Fuel_tank:
+ *      type: number
+ *      format: float
+ *     Fuel_quant:
+ *      type: number
+ *      format: float
+ *     Crew_size:
+ *      type: integer
+ *     Max_cargo:
+ *      type: number
+ *      format: float
  */

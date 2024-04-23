@@ -72,7 +72,7 @@ router.post("/", async function (req, res, next) {
 
         return res.status(200).json({ auth: true });
     } catch (err) {
-        next(err);
+        next(JSON.parse(err.message));
     }
 });
 

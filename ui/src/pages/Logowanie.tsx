@@ -3,7 +3,7 @@ import loginService from "../services/login.service";
 import { Link } from "react-router-dom";
 import Input from "../components/input";
 
-import bcrypt from 'bcryptjs';
+
 const emailRegex = /^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$/i;
 const isEmpty = (value: string) => value.trim() !== "" && value.trim().length >= 3;
 const isEmail = (value: string) =>
@@ -75,6 +75,7 @@ const Login = () => {
           setIsFormInvalid={setIsFormInvalid}
           required
         />
+        
       </label>
       <label>
         <p>Hasło*</p>
@@ -88,12 +89,14 @@ const Login = () => {
           setIsFormInvalid={setIsFormInvalid}
           required
         />
+
       </label>
       <button type="submit">Zaloguj się</button>
       <p>
         Nie masz jeszcze konta? <Link to="/rejestracja">Zapisz się</Link>
       </p>
     </form>
+
   );
 
   return (

@@ -36,4 +36,12 @@ interface ContactInfo {
 	email_marketing: string;
 }
 
-export type { Flight, Announcements, Offer, ContactInfo };
+interface Car {
+	id: number;
+	brand: string;
+	model: string;
+	price_per_day: number;
+	production_year: number;
+	license_plate: string;
+}
+export type { Flight, Announcements, Offer, ContactInfo, Car};

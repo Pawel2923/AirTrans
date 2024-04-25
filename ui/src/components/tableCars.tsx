@@ -1,5 +1,4 @@
 import React from "react";
-
 import { Car } from "../assets/Data"; 
 
 interface TableCarProps {
@@ -7,6 +6,11 @@ interface TableCarProps {
 }
 
 const TableCar: React.FC<TableCarProps> = ({ cars }: TableCarProps) => {
+  // Sprawdzenie, czy cars jest tablicą
+  if (!Array.isArray(cars)) {
+    return <div>No cars data</div>; // Jeśli nie jest tablicą, wyświetl komunikat
+  }
+
   return (
     <table>
       <thead>
@@ -36,4 +40,3 @@ const TableCar: React.FC<TableCarProps> = ({ cars }: TableCarProps) => {
 };
 
 export default TableCar;
-

@@ -1,13 +1,22 @@
 const express = require("express");
 const router = express.Router();
-car = require("../services/cars");
+const carService = require("../services/cars");
 
-async function getAllCars(tableName = "Cars") {
-    const rows = await db.query("SELECT ?? FROM ??", [carProperties, tableName]);
-    const data = helper.emptyOrRows(rows);
+router.get("/", async function (req, res, next) {
+    try {
+        const { page, limit } = req.query;
 
-    return {
-        data,
-        response: { message: `Successfully fetched data`, statusCode: 200 },
-    };
-}
+        const { data, meta, response } = await carService.getAllCars(page, limit);
+
+        res.status(response.statusCode).json({
+            data,
+            meta
+        });
+
+    } catch (error) {
+        console.error("Error while fetching cars", error);
+        res.status(500).json({ message: "Internal server error" });
+    }
+});
+
+module.exports = router;

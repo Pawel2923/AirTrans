@@ -1,18 +1,14 @@
 import React from "react";
-import { Car } from "../assets/Data"; 
+import { Car } from "../assets/Data";
+import styles from '../components/tableCars.module.css';
 
-interface TableCarProps {
+interface TableCarsProps {
   cars: Car[];
 }
 
-const TableCar: React.FC<TableCarProps> = ({ cars }: TableCarProps) => {
-  // Sprawdzenie, czy cars jest tablicą
-  if (!Array.isArray(cars)) {
-    return <div>No cars data</div>; // Jeśli nie jest tablicą, wyświetl komunikat
-  }
-
+const TableCars = ({ cars }: TableCarsProps) => {
   return (
-    <table>
+    <table className={styles.table}> {/* Dodaj klasę do tabeli */}
       <thead>
         <tr>
           <th>ID</th>
@@ -20,23 +16,25 @@ const TableCar: React.FC<TableCarProps> = ({ cars }: TableCarProps) => {
           <th>Model</th>
           <th>Cena za dzień</th>
           <th>Rok produkcji</th>
-          <th>Numer rejestracyjny</th>
+          <th>Nr rejestracji</th>
         </tr>
       </thead>
       <tbody>
-        {cars.map((car: Car) => (
-          <tr key={car.id}>
-            <td>{car.id}</td>
-            <td>{car.brand}</td>
-            <td>{car.model}</td>
-            <td>{car.price_per_day}</td>
-            <td>{car.production_year}</td>
-            <td>{car.license_plate}</td>
-          </tr>
-        ))}
+        {cars.map(car => {
+          return (
+            <tr key={car.Id}>
+              <td>{car.Id}</td>
+              <td>{car.Brand}</td>
+              <td>{car.Model}</td>
+              <td>{car.Price_per_day}</td>
+              <td>{car.Production_year}</td>
+              <td>{car.License_plate}</td>
+            </tr>
+          );
+        })}
       </tbody>
     </table>
   );
 };
 
-export default TableCar;
+export default TableCars;

@@ -37,11 +37,11 @@ interface ContactInfo {
 }
 
 interface Car {
-	id: number;
-	brand: string;
-	model: string;
-	price_per_day: number;
-	production_year: number;
-	license_plate: string;
+	Id: number;
+	Brand: string;
+	Model: string;
+	Price_per_day: number;
+	Production_year: number;
+	License_plate: string;
 }
 export type { Flight, Announcements, Offer, ContactInfo, Car};

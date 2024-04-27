@@ -38,25 +38,44 @@ function checkObject(obj, objectProperties) {
 	}
 }
 
-function buildQuery(tableName, filter, sort, offset, limit) {
-	let query = `SELECT * FROM ??`;
+function buildQuery(tableName, filter, sort, offset, limit, search = undefined) {
+	let query = "SELECT * FROM ??" + (search ? search.query : "");
 	const queryParams = [tableName];
+
+	if (search) {
+		search.queryParams.forEach((param) => {
+			queryParams.push(param);
+		});
+	}
 
 	if (filter) {
 		filter = JSON.parse(filter);
 
-		if (filter.by && filter.value) {
-			query += ` WHERE ?? ${db.getOperator(filter.operator)} ?`;
-			queryParams.push(filter.by, filter.value);
+		if (filter && filter.length > 0) {
+			if (!search) {
+				query += " WHERE";
+			} else {
+				query += " AND";
+			}
+			filter.forEach((condition) => {
+				if (condition.by && condition.value) {
+					query += ` ?? ${db.getOperator(condition.operator)} ? AND`;
+					queryParams.push(condition.by, condition.value);
+				}
+			});
+			query = query.slice(0, -4); // Remove the last "AND" from the query
 		}
 	}
 
 	if (sort) {
 		sort = JSON.parse(sort);
 
-		if (sort.by && sort.order) {
-			query += " ORDER BY ?? ??";
-			queryParams.push(sort.by, sort.order);
+		if (sort.by) {
+			query += " ORDER BY ??";
+			queryParams.push(sort.by);
+			if (sort.order) {
+				query += ` ${sort.order}`;
+			}
 		}
 	}
 

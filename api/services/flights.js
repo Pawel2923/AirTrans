@@ -247,6 +247,83 @@ async function remove(id) {
 	return "Flight deleted successfully";
 }
 
+// Search flight by term
+async function search(
+	term,
+	page = 1,
+	limit = config.listPerPage,
+	filter = undefined,
+	sort = undefined
+) {
+	// Parse page and limit to integer
+	page = parseInt(page);
+	limit = parseInt(limit);
+
+	// Check if search term is provided
+	if (!term) {
+		const error = new Error("Search term is required");
+		error.statusCode = 400;
+		throw error;
+	}
+
+	// Check if page and limit are valid
+	if (page < 1 || limit < 1) {
+		const error = new Error("Invalid page or limit number");
+		error.statusCode = 400;
+		throw error;
+	}
+
+	// Get offset for pagination
+	const offset = helper.getOffset(page, limit);
+
+	const search = { query: "", queryParams: [] };
+	// Search query
+	search.query =
+		" WHERE (id LIKE ? OR Status LIKE ? OR Airline_name LIKE ? OR Destination LIKE ? OR Arrival LIKE ? OR Departure LIKE ? OR Airplane_serial_no LIKE ?)";
+	// Add search term to the query parameters
+	search.queryParams = Array(7).fill(`%${term}%`);
+
+	// Build SQL query with filter, sort, offset and limit parameters
+	const { query: query, queryParams } = helper.buildQuery(
+		"Flight",
+		filter,
+		sort,
+		offset,
+		limit,
+		search
+	);
+
+	console.log(query, queryParams);
+
+	// Execute the search query
+	const result = await db.query(query, queryParams);
+	const data = helper.emptyOrRows(result);
+
+	// If no data found, throw an error
+	if (data.length === 0) {
+		const error = new Error("No flights found");
+		error.statusCode = 404;
+		throw error;
+	}
+
+	// Get pages count from the data length
+	const pages = Math.ceil(data.length / limit);
+
+	// Prepare meta data for response
+	const meta = {
+		page,
+		pages,
+		total: data.length,
+	};
+
+	// Return data and success message
+	return {
+		data,
+		meta,
+		message: "Successfully fetched data",
+	};
+}
+
 // Exporting functions for external use
 module.exports = {
 	get,
@@ -254,4 +331,5 @@ module.exports = {
 	create,
 	update,
 	remove,
+	search,
 };

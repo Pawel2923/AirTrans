@@ -71,6 +71,69 @@ router.get("/", async function (req, res, next) {
 
 /**
  * @openapi
+ * /flights/{term}:
+ *  get:
+ *   description: Get flights by search term
+ *   parameters:
+ *    - name: term
+ *      in: path
+ *      required: true
+ *      description: Search term
+ *      type: string
+ *    - name: page
+ *      in: query
+ *      required: false
+ *      description: Page number
+ *      type: integer
+ *    - name: limit
+ *      in: query
+ *      required: false
+ *      description: Limit number of flights
+ *      type: integer
+ *    - name: filter
+ *      in: query
+ *      required: false
+ *      description: Filter by property and value
+ *      type: object
+ *      properties:
+ *       by:
+ *        type: string
+ *       operator:
+ *        type: string
+ *       value:
+ *        type: string
+ *    - name: sort
+ *      in: query
+ *      required: false
+ *      description: Sort by property and order
+ *      type: object
+ *      properties:
+ *       by:
+ *        type: string
+ *       order:
+ *        type: string
+ *   responses:
+ *    200:
+ *     description: Returns a list of flights
+ *    404:
+ *     description: No flights found
+ *    500:
+ *     description: Internal server error
+ */
+router.get("/:term", async function (req, res, next) {
+	try {
+		const { page, limit, filter, sort } = req.query;
+		const { term } = req.params;
+
+		const { data, meta, message } = await flight.search(term, page, limit, filter, sort);
+		res.status(200).json({ data, meta, message });
+	} catch (err) {
+		next(err);
+	}
+});
+
+/**
+ * @openapi
  * /flights:
  *  post:
  *   description: Create a new flight

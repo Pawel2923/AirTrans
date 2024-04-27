@@ -16,7 +16,7 @@ async function get(offset = 0, limit = 3) {
 
 	// Get cars
 	const carsQuery =
-		"SELECT Brand, Model, Production_year, Transmission_type, Fuel_type, Price_per_day, Path_to_img FROM Cars LIMIT ?, ?";
+		"SELECT * FROM Cars LIMIT ?, ?";
 	const carsRows = await db.query(carsQuery, [offset, limit]);
 	const cars = helper.emptyOrRows(carsRows);
 
@@ -29,7 +29,7 @@ async function get(offset = 0, limit = 3) {
 
 	// Get parking info
 	const parkingInfoRows = await db.query(
-		"SELECT name, capacity, price_per_day, path_to_img FROM Parking_info"
+		"SELECT * FROM Parking_info"
 	);
 	const parkingInfo = helper.emptyOrRows(parkingInfoRows);
 

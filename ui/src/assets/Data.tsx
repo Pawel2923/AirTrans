@@ -6,20 +6,40 @@ interface Flight {
 	is_departure: boolean;
 }
 
-interface Announcements {
-	id: number;
-	title: string;
-	content: string;
-	validUntil: Date;
-	personnelId: number;
+interface Announcement {
+	Id: number;
+	Title: string;
+	Content: string;
+	Valid_until: Date;
+	Personnel_id: number;
+}
+
+interface Car {
+	Brand: string;
+	Model: string;
+	Production_year: number;
+	Transmission_type: string;
+	Price_per_day: number;
+	Path_to_img: string;
+}
+
+interface ParkingInfo {
+	Price_per_day: number;
+	Capacity: number;
+	Path_to_img: string;
 }
 
 interface Offer {
 	id: number;
-	imgPath: string;
+	path_to_img: string;
 	title: string;
-	offerParams: string[];
-	btnText: string;
+	offer_params: string[];
+	btn_text: string;
+}
+
+interface RawOffer {
+	cars: Car[];
+	parkingInfo: ParkingInfo[];
 }
 
 interface ContactInfo {
@@ -36,4 +56,12 @@ interface ContactInfo {
 	email_marketing: string;
 }
 
-export type { Flight, Announcements, Offer, ContactInfo };
+export type {
+	Flight,
+	Announcement,
+	Car,
+	ParkingInfo,
+	Offer,
+	RawOffer,
+	ContactInfo,
+};

@@ -1,21 +1,62 @@
 const db = require("./db");
 const helper = require("../helper");
 
-async function getData () {
-    let rows = await db.query("SELECT brand, model, production_year, transmission_type, fuel_type, price_per_day, path_to_img FROM Cars LIMIT 3");
-    const cars = helper.emptyOrRows(rows);
+// Get cars and parking info to display on the home page
+async function get(offset = 0, limit = 3) {
+	// Parse offset and limit to integer
+	offset = parseInt(offset);
+	limit = parseInt(limit);
 
-    rows = await db.query("SELECT name, capacity, price_per_day, path_to_img FROM Parking_info");
-    const parkingInfo = helper.emptyOrRows(rows);
+	// Check if offset and limit are valid
+	if (offset < 0 || limit < 1) {
+		const error = new Error("Invalid offset or limit number");
+		error.statusCode = 400;
+		throw error;
+	}
 
-    const data = { cars, parkingInfo };
+	// Get cars
+	const carsQuery =
+		"SELECT * FROM Cars LIMIT ?, ?";
+	const carsRows = await db.query(carsQuery, [offset, limit]);
+	const cars = helper.emptyOrRows(carsRows);
 
-    return {
-        data,
-        response: { message: `Successfully fetched data`, statusCode: 200 },
-    };
+	// Check if no cars found
+	if (cars.length === 0) {
+		const error = new Error("No cars found");
+		error.statusCode = 404;
+		throw error;
+	}
+
+	// Get parking info
+	const parkingInfoRows = await db.query(
+		"SELECT * FROM Parking_info"
+	);
+	const parkingInfo = helper.emptyOrRows(parkingInfoRows);
+
+	// Check if no parking info found
+	if (parkingInfo.length === 0) {
+		const error = new Error("No parking info found");
+		error.statusCode = 404;
+		throw error;
+	}
+
+	// Prepare meta data for response
+	const meta = {
+		offset,
+		limit,
+	};
+
+	// Prepare data for response
+	const data = { cars, parkingInfo };
+
+	// Return data, meta data and success message
+	return {
+		data,
+		meta,
+		message: "Successfully fetched data",
+	};
 }
 
 module.exports = {
-    getData,
+	get,
 };

@@ -2,7 +2,7 @@ const express = require("express");
 const router = express.Router();
 const offer = require("../services/offer");
 
-/** 
+/**
  * @openapi
  * /offer:
  *  get:
@@ -28,16 +28,20 @@ const offer = require("../services/offer");
  *             $ref: '#/components/schemas/parking-info'
  *         message:
  *          type: string
- *   500:
- *    description: Internal server error
-*/
+ *    404:
+ *     description: No offers found
+ *    500:
+ *     description: Internal server error
+ */
 router.get("/", async function (req, res, next) {
-    try {
-        const { data, response } = await offer.getData();
-        res.status(response.statusCode).json({ data, message: response.message });
-    } catch (err) {
-        next(JSON.parse(err.message));
-    }
+	try {
+		const { offset, limit } = req.query;
+
+		const { data, meta, message } = await offer.get(offset, limit);
+		res.status(200).json({ data, meta, message });
+	} catch (err) {
+		next(err);
+	}
 });
 
 module.exports = router;

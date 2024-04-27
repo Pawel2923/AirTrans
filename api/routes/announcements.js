@@ -18,6 +18,28 @@ const announcements = require("../services/announcements");
  *      required: false
  *      description: Limit number of announcements
  *      type: integer
+ *    - name: filter
+ *      in: query
+ *      required: false
+ *      description: Filter by property and value
+ *      type: object
+ *      properties:
+ *       by:
+ *        type: string
+ *       operator:
+ *        type: string
+ *       value:
+ *        type: string
+ *    - name: sort
+ *      in: query
+ *      required: false
+ *      description: Sort by property and order
+ *      type: object
+ *      properties:
+ *       by:
+ *        type: string
+ *       order:
+ *        type: string
  *   responses:
  *    200:
  *     description: Successfully fetched data
@@ -44,49 +66,20 @@ const announcements = require("../services/announcements");
  */
 router.get("/", async function (req, res, next) {
 	try {
-		const { page, limit } = req.query;
-		const { data, meta, response } = await announcements.getAll(
+		const { page, limit, filter, sort } = req.query;
+		const { data, meta, message } = await announcements.get(
 			page,
-			limit
+			limit,
+			filter,
+			sort
 		);
-		res.status(response.statusCode).json({
+		res.status(200).json({
 			data,
 			meta,
-			message: response.message,
+			message,
 		});
 	} catch (err) {
-		next(JSON.parse(err.message));
-	}
-});
-
-/**
- * @openapi
- * /announcements/{id}:
- *  get:
- *   description: Get announcement by id
- *   parameters:
- *    - name: id
- *      in: path
- *      required: true
- *      description: Announcement id
- *      type: string
- *   responses:
- *    200:
- *     description: Successfully fetched data
- *    404:
- *     description: Announcement not found
- *    500:
- *     description: Internal server error
- */
-router.get("/:id", async function (req, res, next) {
-	try {
-		const { data, response } = await announcements.getById(req.params.id);
-		res.status(response.statusCode).json({
-			data,
-			message: response.message,
-		});
-	} catch (err) {
-		next(JSON.parse(err.message));
+		next(err);
 	}
 });
 
@@ -107,14 +100,14 @@ router.get("/:id", async function (req, res, next) {
  *    400:
  *     description: Invalid input
  *    500:
- *     description: Internal server error
+ *     description: Failed to create announcement
  */
 router.post("/", async function (req, res, next) {
 	try {
-		const response = await announcements.create(req.body);
-		res.status(response.statusCode).json({ message: response.message });
+		const message = await announcements.create(req.body);
+		res.status(201).json({ message });
 	} catch (err) {
-		next(JSON.parse(err.message));
+		next(err);
 	}
 });
 
@@ -147,13 +140,15 @@ router.post("/", async function (req, res, next) {
  */
 router.put("/:id", async function (req, res, next) {
 	try {
-		const response = await announcements.update(
-			parseInt(req.params.id),
+		const { id } = req.params;
+
+		const message = await announcements.update(
+			id,
 			req.body
 		);
-		res.status(response.statusCode).json({ message: response.message });
+		res.status(200).json({ message });
 	} catch (err) {
-		next(JSON.parse(err.message));
+		next(err);
 	}
 });
 
@@ -167,7 +162,7 @@ router.put("/:id", async function (req, res, next) {
  *      in: path
  *      required: true
  *   responses:
- *    200:
+ *    204:
  *     description: Announcement deleted successfully
  *    404:
  *     description: Announcement with this id does not exist
@@ -176,10 +171,12 @@ router.put("/:id", async function (req, res, next) {
  */
 router.delete("/:id", async function (req, res, next) {
 	try {
-		const response = await announcements.remove(parseInt(req.params.id));
-		res.status(response.statusCode).json({ message: response.message });
+		const { id } = req.params;
+
+		const message = await announcements.remove(id);
+		res.status(204).json({ message });
 	} catch (err) {
-		next(JSON.parse(err.message));
+		next(err);
 	}
 });
 

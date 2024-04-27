@@ -1,11 +1,14 @@
-import React, { useState, useEffect } from "react";
+import React,{ useState, useEffect } from "react";
 import ButtonAdd from "../components/AddButton";
 import ButtonEdit from "../components/EditButton";
 import ButtonDelete from "../components/DeleteButton";
 import carService from "../services/car.service";
+import rentService from "../services/rental.service";
 import TableCars from "../components/tableCars";
 import { Car } from "../assets/Data";
 import tablestyle from "../components/tableCars.module.css"
+import CarRentaTable from "../components/CarRentaTable";
+import { CarRental } from "../assets/Data";
 
 const ZarzadzanieP = () => {
   const [cars, setCars] = useState<Car[]>([]);
@@ -33,16 +36,49 @@ const ZarzadzanieP = () => {
       .catch(error => console.error("Błąd podczas pobierania danych o pojazdach:", error));
   }, []); 
 
+  const [rentals, setRentals] = useState<CarRental[]>([]); 
+  const rentalData = (rentData: CarRental[]) => { 
+    const rentals: CarRental[] = [];
+    rentData.forEach(rental => { 
+      rentals.push({
+        Id: rental.Id,
+        Rental_date: rental.Rental_date,
+        Return_date: rental.Return_date,
+        Status: rental.Status,
+        Client_id: rental.Client_id,
+        Car_id: rental.Car_id
+      });
+    });
+    return rentals;
+  };
+  
+  useEffect(() => {
+    rentService.getAll()
+      .then((response: { data: CarRental[] }) => {
+        const convertedRentals = rentalData(response.data); 
+        setRentals(convertedRentals); 
+      })
+      .catch(error => console.error("Błąd podczas pobierania danych o wypożyczeniach:", error)); // Zmiana komunikatu błędu
+  }, []);
+  
   return (
     <div>
       <h1>Zarządzanie pojazdami</h1>
-      <h2>Lista pojazdów</h2>
+      <div className={tablestyle.tableContainer}>
+        <h2>Lista wypożyczeń</h2>
+        <CarRentaTable rent={rentals} />
+        </div>
       <ButtonAdd onClick={() => console.log("Dodaj")} />
       <ButtonEdit onClick={() => console.log("Edytuj")} />
       <ButtonDelete onClick={() => console.log("Usuń")} />
       <div className={tablestyle.tableContainer}>
-        <TableCars cars={cars} />
+       <h2>Lista pojazdów</h2> 
+       <TableCars cars={cars} />
+        <ButtonAdd onClick={() => console.log("Dodaj")} />
+      <ButtonEdit onClick={() => console.log("Edytuj")} />
+      <ButtonDelete onClick={() => console.log("Usuń")} />
       </div>
+
     </div>
   );
 };

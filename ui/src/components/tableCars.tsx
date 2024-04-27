@@ -1,4 +1,3 @@
-import React from "react";
 import { Car } from "../assets/Data";
 import styles from '../components/tableCars.module.css';
 
@@ -8,7 +7,7 @@ interface TableCarsProps {
 
 const TableCars = ({ cars }: TableCarsProps) => {
   return (
-    <table className={styles.table}> {/* Dodaj klasę do tabeli */}
+    <table className={styles.table}>
       <thead>
         <tr>
           <th>ID</th>

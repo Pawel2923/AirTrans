@@ -12,6 +12,7 @@ const loginRouter = require("./routes/login");
 const registerRouter = require("./routes/register");
 const airplaneRouter = require("./routes/airplane");
 const carsRouter = require("./routes/cars");
+const rentRouter = require("./routes/rent");
 
 const app = express();
 
@@ -42,6 +43,7 @@ app.use("/fetch_client", loginRouter);
 app.use("/register", registerRouter);
 app.use("/airplane", airplaneRouter);
 app.use("/cars", carsRouter);
+app.use("/rent", rentRouter);
 
 app.use((err, req, res, next) => {
   console.error(err.message);

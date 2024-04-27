@@ -44,4 +44,13 @@ interface Car {
 	Production_year: number;
 	License_plate: string;
 }
-export type { Flight, Announcements, Offer, ContactInfo, Car};
+interface CarRental {
+	Id: number;
+	Rental_date: Date;
+	Return_date: Date;
+	Status: string;
+	Client_id: number;
+	Car_id: number;
+}
+
+export type { Flight, Announcements, Offer, ContactInfo, Car, CarRental};

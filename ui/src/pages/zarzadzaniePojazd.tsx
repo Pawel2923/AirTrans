@@ -46,7 +46,7 @@ const ZarzadzanieP = () => {
         Return_date: rental.Return_date,
         Status: rental.Status,
         Client_id: rental.Client_id,
-        Car_id: rental.Car_id
+        Cars_id: rental.Cars_id
       });
     });
     return rentals;

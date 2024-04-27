@@ -50,7 +50,7 @@ interface CarRental {
 	Return_date: Date;
 	Status: string;
 	Client_id: number;
-	Car_id: number;
+	Cars_id: number;
 }
 
 export type { Flight, Announcements, Offer, ContactInfo, Car, CarRental};

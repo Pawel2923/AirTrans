@@ -18,16 +18,37 @@ function validateAirplane(airplane) {
 	helper.checkObject(airplane, airplaneProperties);
 }
 
-async function getAll(page = 1, limit = config.listPerPage) {
+async function get(
+	page = 1,
+	limit = config.listPerPage,
+	filter = undefined,
+	sort = undefined
+) {
 	limit = parseInt(limit);
 	page = parseInt(page);
+	if (page < 1 || limit < 1) {
+		const error = new Error("Invalid page or limit number");
+		error.statusCode = 400;
+		throw error;
+	}
 	const offset = helper.getOffset(page, limit);
 
-	const rows = await db.query("SELECT * FROM Airplane LIMIT ?, ?", [
+	const { query, queryParams } = helper.buildQuery(
+		"Airplane",
+		filter,
+		sort,
 		offset,
-		limit,
-	]);
+		limit
+	);
+
+	const rows = await db.query(query, queryParams);
 	const data = helper.emptyOrRows(rows);
+
+	if (data.length === 0) {
+		const error = new Error("No airplanes found");
+		error.statusCode = 404;
+		throw error;
+	}
 
 	const pages = await helper.getPages("Airplane", limit);
 
@@ -36,34 +57,7 @@ async function getAll(page = 1, limit = config.listPerPage) {
 	return {
 		data,
 		meta,
-		response: {
-			message: "Successfully fetched data",
-			statusCode: 200,
-		},
-	};
-}
-
-async function getBySerialNo(serial_no) {
-	const rows = await db.query("SELECT * FROM Airplane WHERE Serial_no = ?", [
-		serial_no,
-	]);
-	const data = helper.emptyOrRows(rows);
-
-	if (data.length === 0) {
-		throw new Error(
-			JSON.stringify({
-				message: "Airplane not found",
-				statusCode: 404,
-			})
-		);
-	}
-
-	return {
-		data,
-		response: {
-			message: "Successfully fetched data",
-			statusCode: 200,
-		},
+		message: "Successfully fetched data",
 	};
 }
 
@@ -71,20 +65,19 @@ async function create(airplane) {
 	validateAirplane(airplane);
 
 	const airplaneExists = await db.query(
-		"SELECT IF(COUNT(*)=0,0,1) result FROM Airplane WHERE Serial_no = ?",
+		"SELECT '' FROM Airplane WHERE Serial_no = ?",
 		[airplane.Serial_no]
 	);
 
-	if (airplaneExists[0].result) {
-		throw new Error(
-			JSON.stringify({
-				message: "Airplane with this serial number already exists",
-				statusCode: 409,
-			})
+	if (airplaneExists.length > 0) {
+		const error = new Error(
+			"Airplane with this serial number already exists"
 		);
+		error.statusCode = 409;
+		throw error;
 	}
 
-	const rows = await db.query(
+	const result = await db.query(
 		"INSERT INTO Airplane VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)",
 		[
 			airplane.Serial_no,
@@ -99,21 +92,13 @@ async function create(airplane) {
 		]
 	);
 
-	if (rows.affectedRows === 0) {
-		throw new Error(
-			JSON.stringify({
-				message: "Could not create airplane",
-				statusCode: 500,
-			})
-		);
+	if (result.affectedRows === 0) {
+		throw new Error("Could not create airplane");
 	}
 
 	return {
 		data: airplane,
-		response: {
-			message: "Successfully created airplane",
-			statusCode: 201,
-		},
+		message: "Successfully created airplane",
 	};
 }
 
@@ -121,20 +106,17 @@ async function update(serial_no, airplane) {
 	validateAirplane(airplane);
 
 	const airplaneExists = await db.query(
-		"SELECT IF(COUNT(*)=0,0,1) result FROM Airplane WHERE Serial_no = ?",
+		"SELECT '' FROM Airplane WHERE Serial_no = ?",
 		[serial_no]
 	);
 
-	if (!airplaneExists[0].result) {
-		throw new Error(
-			JSON.stringify({
-				message: "Airplane not found",
-				statusCode: 404,
-			})
-		);
+	if (airplaneExists.length === 0) {
+		const error = new Error("Airplane not found");
+		error.statusCode = 404;
+		throw error;
 	}
 
-	const rows = await db.query(
+	const result = await db.query(
 		"UPDATE Airplane SET Model = ?, Type = ?, Production_year = ?, Num_of_seats = ?, Fuel_tank = ?, Fuel_quant = ?, Crew_size = ?, Max_cargo = ? WHERE Serial_no = ?",
 		[
 			airplane.Model,
@@ -149,49 +131,41 @@ async function update(serial_no, airplane) {
 		]
 	);
 
-	if (rows.affectedRows === 0) {
-		throw new Error(
-			JSON.stringify({
-				message: "Could not update airplane",
-				statusCode: 500,
-			})
-		);
+	if (result.affectedRows === 0) {
+		throw new Error("Could not update airplane");
 	}
 
 	return {
 		data: airplane,
-		response: {
-			message: "Successfully updated airplane",
-			statusCode: 200,
-		},
+		message: "Successfully updated airplane",
 	};
 }
 
 async function remove(serial_no) {
+	const airplaneExists = await db.query(
+		"SELECT '' FROM Airplane WHERE Serial_no = ?",
+		[serial_no]
+	);
+
+	if (airplaneExists.length === 0) {
+		const error = new Error("Airplane not found");
+		error.statusCode = 404;
+		throw error;
+	}
+
 	const rows = await db.query("DELETE FROM Airplane WHERE Serial_no = ?", [
 		serial_no,
 	]);
 
 	if (rows.affectedRows === 0) {
-		throw new Error(
-			JSON.stringify({
-				message: "Airplane not found",
-				statusCode: 404,
-			})
-		);
+		throw new Error("Could not delete airplane");
 	}
 
-	return {
-		response: {
-			message: "Successfully deleted airplane",
-			statusCode: 200,
-		},
-	};
+	return "Successfully deleted airplane";
 }
 
 module.exports = {
-	getAll,
-	getBySerialNo,
+	get,
 	create,
 	update,
 	remove,

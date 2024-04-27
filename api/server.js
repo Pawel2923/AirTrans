@@ -15,7 +15,7 @@ const airplaneRouter = require("./routes/airplane");
 const app = express();
 
 var corsOptions = {
-  origin: process.env.CLIENT_ORIGIN || "http://localhost:8081"
+	origin: process.env.CLIENT_ORIGIN || "http://localhost:8081",
 };
 
 app.use(cors(corsOptions));
@@ -30,26 +30,26 @@ app.use("/api-docs", swaggerUI.serve, swaggerUI.setup(swaggerSpec));
 
 // simple route
 app.get("/", (req, res) => {
-  res.json({ message: "System lotniska." });
+	res.json({ message: "System lotniska." });
 });
 
 app.use("/flights", flightsRouter);
 app.use("/contact-info", contactInfoRouter);
-app.use("/announcements", announcementsRouter)
+app.use("/announcements", announcementsRouter);
 app.use("/offer", offerRouter);
 app.use("/fetch_client", loginRouter);
 app.use("/register", registerRouter);
 app.use("/airplane", airplaneRouter);
 
 app.use((err, req, res, next) => {
-  console.error(err.message);
-  res.status(err.statusCode).json({ message: err.message });
-  return;
+	const statusCode = err.statusCode || 500;
+	const message = err.message || "Internal Server Error";
+	res.status(statusCode).json({ message });
+	return;
 });
 
 // set port, listen for requests
 const PORT = process.env.NODE_DOCKER_PORT || 8080;
 app.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}.`);
-
+	console.log(`Server is running on port ${PORT}.`);
 });

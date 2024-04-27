@@ -1,29 +1,61 @@
 const db = require("./db");
+const config = require("../config");
 const helper = require("../helper");
 
-async function getAll() {
-	const rows = await db.query("SELECT * FROM Contact_info");
+async function get(
+	page = 1,
+	limit = config.listPerPage,
+	filter = undefined,
+	sort = undefined
+) {
+	limit = parseInt(limit);
+	page = parseInt(page);
+	if (page < 1 || limit < 1) {
+		const error = new Error("Invalid page or limit number");
+		error.statusCode = 400;
+		throw error;
+	}
+
+	const offset = helper.getOffset(page, limit);
+
+	const { query, queryParams } = helper.buildQuery(
+		"Contact_info",
+		filter,
+		sort,
+		offset,
+		limit
+	);
+
+	const rows = await db.query(query, queryParams);
 	const data = helper.emptyOrRows(rows);
+
+	if (data.length === 0) {
+		const error = new Error("No contact info found");
+		error.statusCode = 404;
+		throw error;
+	}
+
+	const pages = await helper.getPages("Airplane", limit);
+
+	const meta = { page, pages };
 
 	return {
 		data,
-		response: { message: `Successfully fetched data`, statusCode: 200 },
+		meta,
+		message: "Successfully fetched data",
 	};
 }
 
 async function update(name, info) {
 	const contactInfoExists = await db.query(
-		"SELECT IF(COUNT(*)=0,0,1) result FROM Contact_info WHERE name = ?",
+		"SELECT '' FROM Contact_info WHERE name = ?",
 		[name]
 	);
 
-	if (!contactInfoExists[0].result) {
-		throw new Error(
-			JSON.stringify({
-				message: "Contact info not found",
-				statusCode: 404,
-			})
-		);
+	if (contactInfoExists.length === 0) {
+		const error = new Error("Contact info not found");
+		error.statusCode = 404;
+		throw error;
 	}
 
 	const result = await db.query(
@@ -31,25 +63,17 @@ async function update(name, info) {
 		[info, name]
 	);
 
-	if (result.affectedRows) {
-		return {
-			data: { name, info },
-			response: {
-				message: `Successfully updated contact info`,
-				statusCode: 200,
-			},
-		};
-	} else {
-		throw new Error(
-			JSON.stringify({
-				message: "Could not update contact info",
-				statusCode: 500,
-			})
-		);
+	if (result.affectedRows === 0) {
+		throw new Error("Could not update contact info");
 	}
+
+	return {
+		data: { name, info },
+		message: "Successfully updated contact info",
+	};
 }
 
 module.exports = {
-	getAll,
+	get,
 	update,
 };

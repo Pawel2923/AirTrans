@@ -23,6 +23,28 @@ const flight = require("../services/flights");
  *      required: false
  *      description: Limit number of flights
  *      type: integer
+ *    - name: filter
+ *      in: query
+ *      required: false
+ *      description: Filter by property and value
+ *      type: object
+ *      properties:
+ *       by:
+ *        type: string
+ *       operator:
+ *        type: string
+ *       value:
+ *        type: string
+ *    - name: sort
+ *      in: query
+ *      required: false
+ *      description: Sort by property and order
+ *      type: object
+ *      properties:
+ *       by:
+ *        type: string
+ *       order:
+ *        type: string
  *   responses:
  *    200:
  *     description: Returns a list of flights
@@ -31,50 +53,19 @@ const flight = require("../services/flights");
  */
 router.get("/", async function (req, res, next) {
 	try {
-		const { page, isarrdep, limit } = req.query;
+		const { page, isarrdep, limit, filter, sort } = req.query;
 
-		const { data, meta, response } =
+		const { data, meta, message } =
 			isarrdep != undefined
-				? await flight.getByDepartureOrArrival(limit, page)
-				: await flight.getAll(page, limit);
-		res.status(response.statusCode).json({
+				? await flight.getByDepartureOrArrival(page, limit)
+				: await flight.get(page, limit, filter, sort);
+		res.status(200).json({
 			data,
 			meta,
-			message: response.message,
+			message,
 		});
 	} catch (err) {
-		next(JSON.parse(err.message));
-	}
-});
-
-/**
- * @openapi
- * /flights/{id}:
- *  get:
- *   description: Get flight by id
- *   parameters:
- *    - name: id
- *      in: path
- *      required: true
- *      description: Flight id
- *      type: string
- *   responses:
- *    200:
- *     description: Returns a flight
- *    404:
- *     description: Flight not found
- *    500:
- *     description: Internal server error
- */
-router.get("/:id", async function (req, res, next) {
-	try {
-		const { data, response } = await flight.getById(req.params.id);
-		res.status(response.statusCode).json({
-			data,
-			message: response.message,
-		});
-	} catch (err) {
-		next(JSON.parse(err.message));
+		next(err);
 	}
 });
 
@@ -88,7 +79,7 @@ router.get("/:id", async function (req, res, next) {
  *    content:
  *     application/json:
  *      schema:
- *       $ref: '#/components/schemas/flight'
+ *       $ref: '#/components/schemas/Flight'
  *   responses:
  *    201:
  *     description: Successfully created flight
@@ -103,10 +94,10 @@ router.get("/:id", async function (req, res, next) {
  */
 router.post("/", async function (req, res, next) {
 	try {
-		const response = await flight.create(req.body);
-		res.status(response.statusCode).json({ message: response.message });
+		const { data, message } = await flight.create(req.body);
+		res.status(201).json({ data, message });
 	} catch (err) {
-		next(JSON.parse(err.message));
+		next(err);
 	}
 });
 
@@ -124,7 +115,7 @@ router.post("/", async function (req, res, next) {
  *    content:
  *     application/json:
  *      schema:
- *       $ref: '#/components/schemas/flight'
+ *       $ref: '#/components/schemas/Flight'
  *   responses:
  *    200:
  *     description: Flight updated successfully
@@ -137,10 +128,10 @@ router.post("/", async function (req, res, next) {
  */
 router.put("/:id", async function (req, res, next) {
 	try {
-		const response = await flight.update(req.params.id, req.body);
-		res.status(response.statusCode).json({ message: response.message });
+		const { data, message } = await flight.update(req.params.id, req.body);
+		res.status(200).json({ data, message });
 	} catch (err) {
-		next(JSON.parse(err.message));
+		next(err);
 	}
 });
 
@@ -154,7 +145,7 @@ router.put("/:id", async function (req, res, next) {
  *      in: path
  *      required: true
  *   responses:
- *    200:
+ *    204:
  *     description: Flight deleted successfully
  *    404:
  *     description: Flight with this id does not exist
@@ -163,10 +154,10 @@ router.put("/:id", async function (req, res, next) {
  */
 router.delete("/:id", async function (req, res, next) {
 	try {
-		const response = await flight.remove(req.params.id);
-		res.status(response.statusCode).json({ message: response.message });
+		const message = await flight.remove(req.params.id);
+		res.status(204).json({ message });
 	} catch (err) {
-		next(JSON.parse(err.message));
+		next(err);
 	}
 });
 

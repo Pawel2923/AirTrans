@@ -1,12 +1,17 @@
 import React from "react";
 
 interface ButtonAddProps {
-    onClick: () => void;
+    onCreateCar: () => void; // Zmieniono nazwę propa na onCreateCar
 }
 
-const ButtonAdd = ({ onClick }: ButtonAddProps) => {
+const ButtonAdd = ({ onCreateCar }: ButtonAddProps) => {
+    const handleClick = () => {
+        console.log("Dodaj car  ")
+        onCreateCar();
+    };
+
     return (
-        <button onClick={onClick}>
+        <button onClick={handleClick}>
             Dodaj
         </button>
     );

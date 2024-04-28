@@ -68,13 +68,13 @@ const ZarzadzanieP = () => {
         <h2>Lista wypożyczeń</h2>
         <CarRentaTable rent={rentals} />
         </div>
-      <ButtonAdd onClick={() => console.log("Dodaj")} />
+      <ButtonAdd onCreateCar={() => console.log("Dodaj")} />
       <ButtonEdit onClick={() => console.log("Edytuj")} />
       <ButtonDelete onClick={() => console.log("Usuń")} />
       <div className={tablestyle.tableContainer}>
        <h2>Lista pojazdów</h2> 
        <TableCars cars={cars} />
-        <ButtonAdd onClick={() => console.log("Dodaj")} />
+        <ButtonAdd onCreateCar={() => console.log("Dodaj")} />
       <ButtonEdit onClick={() => console.log("Edytuj")} />
       <ButtonDelete onClick={() => console.log("Usuń")} />
       </div>

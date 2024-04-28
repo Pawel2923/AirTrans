@@ -21,25 +21,29 @@ const airplaneService = require("../services/airplane");
  *    - name: filter
  *      in: query
  *      required: false
- *      description: Filter by property and value
- *      type: object
- *      properties:
- *       by:
- *        type: string
- *       operator:
- *        type: string
- *       value:
- *        type: string
+ *      description: Filter by list of properties and values using operator
+ *      type: array
+ *      items:
+ *       type: object
+ *       properties:
+ *        by:
+ *         type: string
+ *        operator:
+ *         type: string
+ *        value:
+ *         type: string
  *    - name: sort
  *      in: query
  *      required: false
- *      description: Sort by property and order
+ *      description: Sort by properties and order
  *      type: object
  *      properties:
  *       by:
  *        type: string
  *       order:
- *        type: string
+ *        type: array
+ *        items:
+ *         type: string
  *   responses:
  *    200:
  *     description: Successfully fetched data

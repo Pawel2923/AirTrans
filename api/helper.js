@@ -70,7 +70,21 @@ function buildQuery(tableName, filter, sort, offset, limit, search = undefined) 
 	if (sort) {
 		sort = JSON.parse(sort);
 
-		if (sort.by) {
+		if (Array.isArray(sort.by)) {
+			sort.by.forEach((sortBy, index) => {
+				if (index === 0) {
+					query += " ORDER BY ??";
+				} else {
+					query += " ??";
+				}
+				queryParams.push(sortBy);
+				if (sort.order && index === sort.by.length - 1) {
+					query += ` ${sort.order}`;
+				}
+				query += ",";
+			});
+			query = query.slice(0, -1); // Remove the last comma from the query
+		} else if (sort.by) {
 			query += " ORDER BY ??";
 			queryParams.push(sort.by);
 			if (sort.order) {
@@ -81,6 +95,8 @@ function buildQuery(tableName, filter, sort, offset, limit, search = undefined) 
 
 	query += " LIMIT ?,?";
 	queryParams.push(offset, limit);
+
+	console.log(query, queryParams);
 
 	return { query, queryParams };
 }

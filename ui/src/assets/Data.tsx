@@ -43,6 +43,8 @@ interface Car {
 	Price_per_day: number;
 	Production_year: number;
 	License_plate: string;
+	Fuel_type: string;
+	Transmission_type: string;
 }
 interface CarRental {
 	Id: number;

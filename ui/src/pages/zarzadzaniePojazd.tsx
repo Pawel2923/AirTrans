@@ -1,4 +1,4 @@
-import React,{ useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import ButtonAdd from "../components/AddButton";
 import ButtonEdit from "../components/EditButton";
 import ButtonDelete from "../components/DeleteButton";
@@ -6,81 +6,154 @@ import carService from "../services/car.service";
 import rentService from "../services/rental.service";
 import TableCars from "../components/tableCars";
 import { Car } from "../assets/Data";
-import tablestyle from "../components/tableCars.module.css"
+import tablestyle from "../components/tableCars.module.css";
 import CarRentaTable from "../components/CarRentaTable";
 import { CarRental } from "../assets/Data";
 
-const ZarzadzanieP = () => {
+const ManageCars = () => {
   const [cars, setCars] = useState<Car[]>([]);
-  const carsData = (carData: Car[]) => {
-    const cars: Car[] = [];
-    carData.forEach(car => {
-      cars.push({
-        Id: car.Id,
-        Brand: car.Brand,
-        Model: car.Model,
-        Price_per_day: car.Price_per_day,
-        Production_year: car.Production_year,
-        License_plate: car.License_plate
+  const [rentals, setRentals] = useState<CarRental[]>([]);
+  const [newCarData, setNewCarData] = useState<Car>({
+    Id: 5,
+    Brand: "",
+    Model: "",
+    Price_per_day: 0,
+    Production_year: 0,
+    License_plate: "",
+    Fuel_type: "",
+    Transmission_type: ""
+  });
+
+  const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = event.target;
+    setNewCarData((prevData) => ({
+      ...prevData,
+      [name]: value
+    }));
+  };
+
+  const submitNewCar = async () => {
+    if (!newCarData.Brand || !newCarData.Model || !newCarData.License_plate) {
+      alert("Please fill in all required fields.");
+      return;
+    }
+
+    try {
+      const response = await carService.create(newCarData);
+      console.log("New Car Data:", response);
+      setCars([...cars, response]);
+      setNewCarData({
+        Id: 5,
+        Brand: "",
+        Model: "",
+        Price_per_day: 0,
+        Production_year: 0,
+        License_plate: "",
+        Fuel_type: "",
+        Transmission_type: ""
       });
-    });
-    return cars;
+      alert("Car added successfully!");
+    } catch (error) {
+      console.error("Error creating car:", error);
+      alert("Error creating car. Please try again.");
+    }
   };
 
   useEffect(() => {
-    carService.getAll()
-      .then((response: { data: Car[] }) => {
-        const convertedCars = carsData(response.data);
-        setCars(convertedCars);
-      })
-      .catch(error => console.error("Błąd podczas pobierania danych o pojazdach:", error));
-  }, []); 
+    async function fetchData() {
+      try {
+        const carsResponse = await carService.getAll();
+        setCars(carsResponse.data);
+      } catch (error) {
+        console.error("Error fetching car data:", error);
+      }
+    }
 
-  const [rentals, setRentals] = useState<CarRental[]>([]); 
-  const rentalData = (rentData: CarRental[]) => { 
-    const rentals: CarRental[] = [];
-    rentData.forEach(rental => { 
-      rentals.push({
-        Id: rental.Id,
-        Rental_date: rental.Rental_date,
-        Return_date: rental.Return_date,
-        Status: rental.Status,
-        Client_id: rental.Client_id,
-        Cars_id: rental.Cars_id
-      });
-    });
-    return rentals;
-  };
-  
-  useEffect(() => {
-    rentService.getAll()
-      .then((response: { data: CarRental[] }) => {
-        const convertedRentals = rentalData(response.data); 
-        setRentals(convertedRentals); 
-      })
-      .catch(error => console.error("Błąd podczas pobierania danych o wypożyczeniach:", error)); // Zmiana komunikatu błędu
+    fetchData();
   }, []);
-  
+
+  useEffect(() => {
+    async function fetchData() {
+      try {
+        const rentalsResponse = await rentService.getAll();
+        setRentals(rentalsResponse.data);
+      } catch (error) {
+        console.error("Error fetching rental data:", error);
+      }
+    }
+
+    fetchData();
+  }, []);
+
   return (
     <div>
-      <h1>Zarządzanie pojazdami</h1>
+      <h1>Manage Cars</h1>
       <div className={tablestyle.tableContainer}>
-        <h2>Lista wypożyczeń</h2>
+        <h2>Rental List</h2>
         <CarRentaTable rent={rentals} />
-        </div>
-      <ButtonAdd onCreateCar={() => console.log("Dodaj")} />
-      <ButtonEdit onClick={() => console.log("Edytuj")} />
-      <ButtonDelete onClick={() => console.log("Usuń")} />
-      <div className={tablestyle.tableContainer}>
-       <h2>Lista pojazdów</h2> 
-       <TableCars cars={cars} />
-        <ButtonAdd onCreateCar={() => console.log("Dodaj")} />
-      <ButtonEdit onClick={() => console.log("Edytuj")} />
-      <ButtonDelete onClick={() => console.log("Usuń")} />
       </div>
-
+      <div className={tablestyle.tableContainer}>
+        <h2>Car List</h2>
+        <TableCars cars={cars} />
+      </div>
+      <div className={tablestyle.tableContainer}>
+        <h2>Add New Car</h2>
+        <input
+          type="text"
+          name="Brand"
+          placeholder="Brand"
+          value={newCarData.Brand}
+          onChange={handleInputChange}
+        />
+        <input
+          type="text"
+          name="Model"
+          placeholder="Model"
+          value={newCarData.Model}
+          onChange={handleInputChange}
+        />
+        <input
+          type="number"
+          name="Price_per_day"
+          placeholder="Price per day"
+          value={newCarData.Price_per_day}
+          onChange={handleInputChange}
+        />
+        <input
+          type="number"
+          name="Production_year"
+          placeholder="Production year"
+          value={newCarData.Production_year}
+          onChange={handleInputChange}
+        />
+        <input
+          type="text"
+          name="License_plate"
+          placeholder="License plate"
+          value={newCarData.License_plate}
+          onChange={handleInputChange}
+        />
+        <input
+          type="text"
+          name="Fuel_type"
+          placeholder="Fuel type"
+          value={newCarData.Fuel_type}
+          onChange={handleInputChange}
+        />
+        <input
+          type="text"
+          name="Transmission_type"
+          placeholder="Transmission type"
+          value={newCarData.Transmission_type}
+          onChange={handleInputChange}
+        />
+        <button onClick={submitNewCar}>Add</button>
+      </div>
+      <ButtonAdd onClick={() => console.log("Add")} />
+      <ButtonEdit onClick={() => console.log("Edit")} />
+      <ButtonDelete onClick={() => console.log("Delete")} />
     </div>
   );
 };
 
-export default ZarzadzanieP;
+export default ManageCars;

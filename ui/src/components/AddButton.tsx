@@ -1,20 +1,17 @@
 import React from "react";
 
-interface ButtonAddProps {
-    onCreateCar: () => void; // Zmieniono nazwę propa na onCreateCar
+interface ButtonDeleteProps {
+    onClick: () => void;
 }
 
-const ButtonAdd = ({ onCreateCar }: ButtonAddProps) => {
-    const handleClick = () => {
-        console.log("Dodaj car  ")
-        onCreateCar();
-    };
-
+const ButtonAdd= ({ onClick }: ButtonDeleteProps) => {
     return (
-        <button onClick={handleClick}>
-            Dodaj
+        <button onClick={onClick}>
+            DODAJ
         </button>
     );
 };
+
+
 
 export default ButtonAdd;

@@ -19,4 +19,14 @@ router.get("/", async function (req, res, next) {
     }
 });
 
+
+router.post("/", async function (req, res, next) {
+    try {
+      const { data, message } = await carService.create(req.body);
+      res.status(201).json({ data, message });
+    } catch (err) {
+      next(err);
+    }
+  });
+
 module.exports = router;

@@ -4,7 +4,7 @@ class RentalService {
   getAll(page = 1, limit = 10) {
     return http.get(`/rent?page=${page}&limit=${limit}`) 
       .then(response => {
-        console.log(response.data); 
+        
         return response.data;
       });
   }

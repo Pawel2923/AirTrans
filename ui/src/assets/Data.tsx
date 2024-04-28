@@ -1,8 +1,21 @@
 interface Flight {
 	id: string;
+	status: string;
+	airline_name: string;
+	destination: string;
 	arrival: Date;
 	departure: Date;
+	airplane_serial_no: string;
+}
+
+interface ArrDepTableProps {
+	id: string;
+	status: string;
+	airline_name: string;
 	destination: string;
+	arrival: Date;
+	departure: Date;
+	airplane_serial_no: string;
 	is_departure: boolean;
 }
 
@@ -58,6 +71,7 @@ interface ContactInfo {
 
 export type {
 	Flight,
+	ArrDepTableProps,
 	Announcement,
 	Car,
 	ParkingInfo,

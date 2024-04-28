@@ -5,7 +5,7 @@ import Nav from "../components/Nav";
 import Footer from "../components/footer";
 import homeStyles from "./Home.module.css";
 import {
-	Flight,
+	ArrDepTableProps,
 	Announcement,
 	ContactInfo,
 	Car,
@@ -17,14 +17,17 @@ import contactInfoService from "../services/contactInfo.service";
 import announcementService from "../services/announcement.service";
 import offerService from "../services/offer.service";
 
-const flightsDataParser = (flightsData: Flight[]) => {
-	const flights: Flight[] = [];
-	flightsData.map((flight: Flight) => {
+const flightsDataParser = (flightsData: ArrDepTableProps[]) => {
+	const flights: ArrDepTableProps[] = [];
+	flightsData.map((flight: ArrDepTableProps) => {
 		flights.push({
 			id: flight.id,
+			status: flight.status,
+			airline_name: flight.airline_name,
 			departure: new Date(flight.departure),
 			arrival: new Date(flight.arrival),
 			destination: flight.destination,
+			airplane_serial_no: flight.airplane_serial_no,
 			is_departure: flight.is_departure,
 		});
 	});
@@ -93,7 +96,7 @@ const defaultContactInfo: ContactInfo = {
 };
 
 const Home = () => {
-	const [flightsData, setFlightsData] = useState<Flight[]>([]);
+	const [flightsData, setFlightsData] = useState<ArrDepTableProps[]>([]);
 	const [contactInfo, setContactInfo] =
 		useState<ContactInfo>(defaultContactInfo);
 	const [announcementsData, setAnnouncementsData] = useState<Announcement[]>(

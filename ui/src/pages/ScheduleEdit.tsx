@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import flightService from "../services/flight.service";
 import airplaneService from "../services/airplane.service";
 import { Flight, Airplane } from "../assets/Data";
@@ -15,6 +15,7 @@ const emptyFlight: Flight = {
 };
 
 const ScheduleEdit = () => {
+    const navigate = useNavigate();
 	const { id } = useParams<{ id: string }>();
 	const [airplaneData, setAirplaneData] = useState<Airplane[]>([]);
 	const [flightData, setFlightData] = useState<Flight>(emptyFlight);
@@ -53,8 +54,14 @@ const ScheduleEdit = () => {
 
         const submittedData = { ...flightData };
 
-        submittedData.arrival = submittedData.arrival.replace("T", " ");
-        submittedData.departure = submittedData.departure.replace("T", " ");
+        submittedData.arrival = new Date(submittedData.arrival)
+			.toISOString()
+			.slice(0, 19)
+			.replace("T", " ");
+		submittedData.departure = new Date(submittedData.departure)
+			.toISOString()
+			.slice(0, 19)
+			.replace("T", " ");
 
         // Regular expression to validate date and time format
         const datetimeRegex =
@@ -73,7 +80,8 @@ const ScheduleEdit = () => {
 
 		flightService.update(id, submittedData).then((response) => {
 			if (response.status === 200) {
-				console.log("Success");
+                alert("Zaktualizowano harmonogram")
+                navigate("/harmonogram");
 			}
 		});
 	};

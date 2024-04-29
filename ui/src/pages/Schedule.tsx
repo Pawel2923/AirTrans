@@ -63,19 +63,19 @@ const Schedule = () => {
 	const createInputChangeHandler = (
 		e: React.ChangeEvent<HTMLInputElement>
 	) => {
-		setCreateData({
-			...createData,
+		setCreateData((prevState) => ({
+			...prevState,
 			[e.target.name]: e.target.value,
-		});
+		}));
 	};
 
 	const createSelectChangeHandler = (
 		e: React.ChangeEvent<HTMLSelectElement>
 	) => {
-		setCreateData({
-			...createData,
+		setCreateData((prevState) => ({
+			...prevState,
 			[e.target.name]: e.target.value,
-		});
+		}));
 	};
 
 	const deleteInputChangeHandler = (

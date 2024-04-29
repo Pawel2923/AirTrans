@@ -87,17 +87,17 @@ const ScheduleEdit = () => {
 	};
 
 	const inputChangeHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
-		setFlightData({
-			...flightData,
+		setFlightData((prevState) => ({
+			...prevState,
 			[e.target.name]: e.target.value,
-		});
+		}));
 	};
 
 	const selectChangeHandler = (e: React.ChangeEvent<HTMLSelectElement>) => {
-		setFlightData({
-			...flightData,
+		setFlightData((prevState) => ({
+			...prevState,
 			[e.target.name]: e.target.value,
-		});
+		}));
 	};
 
     return (

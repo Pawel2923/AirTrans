@@ -35,10 +35,10 @@ const Airplanes = () => {
 	const createInputChangeHandler = (
 		e: React.ChangeEvent<HTMLInputElement>
 	) => {
-		setCreateData({
-			...createData,
+		setCreateData((prevState) => ({
+			...prevState,
 			[e.target.name]: e.target.value,
-		});
+		}));
 	};
 
 	const createFormSubmitHandler = (e: React.FormEvent<HTMLFormElement>) => {

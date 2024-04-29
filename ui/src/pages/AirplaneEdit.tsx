@@ -30,6 +30,13 @@ const AirplaneEdit = () => {
 		});
 	}, [id]);
 
+	const inputChangeHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
+		setAirplane((prevState) => ({
+			...prevState,
+			[e.target.name]: e.target.value,
+		}));
+	};
+
 	const formSubmitHandler = (e: React.FormEvent<HTMLFormElement>) => {
 		e.preventDefault();
 
@@ -37,6 +44,7 @@ const AirplaneEdit = () => {
 
 		airplaneService.update(id, airplane).then((response) => {
 			if (response.status === 200) {
+				setAirplane(emptyAirplane);
 				alert("Zaktualizowano samolot");
 				navigate("/samoloty");
 			}
@@ -52,123 +60,103 @@ const AirplaneEdit = () => {
 			<h1>Edit Airplane</h1>
 			<form onSubmit={formSubmitHandler}>
 				<div className="form-group">
-					<label>Serial No</label>
+					<label htmlFor="serial_no">Serial No</label>
 					<input
 						type="text"
 						className="form-control"
+						name="serial_no"
+						id="serial_no"
 						value={airplane.serial_no}
-						onChange={(e) =>
-							setAirplane({
-								...airplane,
-								serial_no: e.target.value,
-							})
-						}
+						readOnly={true}
+						aria-readonly={true}
 					/>
 				</div>
 				<div className="form-group">
-					<label>Model</label>
+					<label htmlFor="model">Model</label>
 					<input
 						type="text"
 						className="form-control"
+						name="model"
+						id="model"
 						value={airplane.model}
-						onChange={(e) =>
-							setAirplane({ ...airplane, model: e.target.value })
-						}
+						onChange={inputChangeHandler}
 					/>
 				</div>
 				<div className="form-group">
-					<label>Type</label>
+					<label htmlFor="type">Type</label>
 					<input
 						type="text"
 						className="form-control"
+						name="type"
+						id="type"
 						value={airplane.type}
-						onChange={(e) =>
-							setAirplane({ ...airplane, type: e.target.value })
-						}
+						onChange={inputChangeHandler}
 					/>
 				</div>
 				<div className="form-group">
-					<label>Production Year</label>
+					<label htmlFor="production_year">Production Year</label>
 					<input
 						type="number"
 						className="form-control"
+						name="production_year"
+						id="production_year"
 						value={airplane.production_year}
-						onChange={(e) =>
-							setAirplane({
-								...airplane,
-								production_year: Number(e.target.value),
-							})
-						}
+						onChange={inputChangeHandler}
 					/>
 				</div>
 				<div className="form-group">
-					<label>Number of Seats</label>
+					<label htmlFor="num_of_seats">Number of Seats</label>
 					<input
 						type="number"
 						className="form-control"
+						name="num_of_seats"
+						id="num_of_seats"
 						value={airplane.num_of_seats}
-						onChange={(e) =>
-							setAirplane({
-								...airplane,
-								num_of_seats: Number(e.target.value),
-							})
-						}
+						onChange={inputChangeHandler}
 					/>
 				</div>
 				<div className="form-group">
-					<label>Fuel Tank</label>
+					<label htmlFor="fuel_tank">Fuel Tank</label>
 					<input
 						type="number"
 						className="form-control"
+						name="fuel_tank"
+						id="fuel_tank"
 						value={airplane.fuel_tank}
-						onChange={(e) =>
-							setAirplane({
-								...airplane,
-								fuel_tank: Number(e.target.value),
-							})
-						}
+						onChange={inputChangeHandler}
 					/>
 				</div>
 				<div className="form-group">
-					<label>Fuel Quantity</label>
+					<label htmlFor="fuel_quant">Fuel Quantity</label>
 					<input
 						type="number"
 						className="form-control"
+						name="fuel_quant"
+						id="fuel_quant"
 						value={airplane.fuel_quant}
-						onChange={(e) =>
-							setAirplane({
-								...airplane,
-								fuel_quant: Number(e.target.value),
-							})
-						}
+						onChange={inputChangeHandler}
 					/>
 				</div>
 				<div className="form-group">
-					<label>Crew Size</label>
+					<label htmlFor="crew_size">Crew Size</label>
 					<input
 						type="number"
 						className="form-control"
+						name="crew_size"
+						id="crew_size"
 						value={airplane.crew_size}
-						onChange={(e) =>
-							setAirplane({
-								...airplane,
-								crew_size: Number(e.target.value),
-							})
-						}
+						onChange={inputChangeHandler}
 					/>
 				</div>
 				<div className="form-group">
-					<label>Max Cargo</label>
+					<label htmlFor="max_cargo">Max Cargo</label>
 					<input
 						type="number"
 						className="form-control"
+						name="max_cargo"
+						id="max_cargo"
 						value={airplane.max_cargo}
-						onChange={(e) =>
-							setAirplane({
-								...airplane,
-								max_cargo: Number(e.target.value),
-							})
-						}
+						onChange={inputChangeHandler}
 					/>
 				</div>
 				<button type="submit" className="btn btn-primary">

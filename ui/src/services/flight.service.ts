@@ -1,30 +1,35 @@
 import http from "../http-common";
-
-interface Filter {
-    by: string;
-    operator?: string;
-    value: string;
-}
-
-interface Sort {
-    by: string[];
-    order?: string;
-}
+import { Flight, Filter, Sort } from "../assets/Data";
 
 class FlightService {
-    getAll = (page: number = 1, limit: number = -1, filter: Filter[] = [], sort: Sort = { by: [""] }) => {
-        if (filter.length > 0) {
-            return http.get(`/flights?page=${page}&limit=${limit}&filter=${JSON.stringify(filter)}&sort=${JSON.stringify(sort)}`);
+    getAll = (page: number = 1, limit?: number, filter?: Filter[], sort?: Sort) => {
+        let url = `/flights?page=${page}`;
+
+        if (limit) {
+            url += `&limit=${limit}`;
         }
-        else if (sort.by.length > 0) {
-            return http.get(`/flights?page=${page}&limit=${limit}&sort=${JSON.stringify(sort)}`);
+
+        if (filter) {
+            // Check if filter is valid
+            filter.forEach((f) => {
+                if (!f.by || !f.value) {
+                    throw new Error("Invalid filter");
+                }
+            });
+
+            url += `&filter=${JSON.stringify(filter)}`;
         }
-        else if (limit > 0){
-            return http.get(`/flights?page=${page}&limit=${limit}`);
+
+        if (sort) {
+            // Check if sort is valid
+            if (!sort.by) {
+                throw new Error("Invalid sort");
+            }
+
+            url += `&sort=${JSON.stringify(sort)}`;
         }
-        else {
-            return http.get(`/flights?page=${page}`);
-        }
+
+        return http.get(url);
     }
 
     getByArrivalOrDeparture = (page: number = 1, limit: number = -1) => {
@@ -34,6 +39,22 @@ class FlightService {
         else {
             return http.get(`/flights/?isarrdep=true&page=${page}`);
         }
+    }
+
+    getById = (id: string) => {
+        return http.get(`/flights?filter=[{"by":"id","value":"${id}"}]`);
+    }
+
+    create = (data: Flight) => {
+        return http.post("/flights", data);
+    }
+
+    update = (id: string, data: Flight) => {
+        return http.put(`/flights/${id}`, data);
+    }
+
+    delete = (id: string) => {
+        return http.delete(`/flights/${id}`);
     }
 }
 

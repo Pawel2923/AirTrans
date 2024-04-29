@@ -20,16 +20,16 @@ import offerService from "../services/offer.service";
 const flightsDataParser = (flightsData: ArrDepTableProps[]) => {
 	const flights: ArrDepTableProps[] = [];
 	flightsData.map((flight: ArrDepTableProps) => {
-		flights.push({
-			id: flight.id,
-			status: flight.status,
-			airline_name: flight.airline_name,
-			departure: new Date(flight.departure),
-			arrival: new Date(flight.arrival),
-			destination: flight.destination,
-			airplane_serial_no: flight.airplane_serial_no,
-			is_departure: flight.is_departure,
-		});
+		flight.arrival = new Date(flight.arrival)
+			.toISOString()
+			.slice(0, 19)
+			.replace("T", " ");
+		flight.departure = new Date(flight.arrival)
+			.toISOString()
+			.slice(0, 19)
+			.replace("T", " ");
+
+		flights.push(flight);
 	});
 	return flights;
 };
@@ -38,13 +38,12 @@ const announcementsDataParser = (announcementsData: Announcement[]) => {
 	const announcements: Announcement[] = [];
 
 	announcementsData.map((announcement: Announcement) => {
-		announcements.push({
-			Id: announcement.Id,
-			Title: announcement.Title,
-			Content: announcement.Content,
-			Valid_until: new Date(announcement.Valid_until),
-			Personnel_id: announcement.Personnel_id,
-		});
+		announcement.valid_until = new Date(announcement.valid_until)
+			.toISOString()
+			.slice(0, 19)
+			.replace("T", " ");
+
+		announcements.push(announcement);
 	});
 
 	return announcements;
@@ -211,8 +210,8 @@ const Home = () => {
 							.map(
 								(announcement: Announcement, index: number) => (
 									<div key={index} className="col-md-3">
-										<h3>{announcement.Title}</h3>
-										<p>{announcement.Content}</p>
+										<h3>{announcement.title}</h3>
+										<p>{announcement.content}</p>
 									</div>
 								)
 							)}

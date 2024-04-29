@@ -5,6 +5,8 @@ import NotFound from "./pages/NotFound";
 import Logowanie from "./pages/Logowanie";
 import Rejestracja from "./pages/Rejestracja";
 import Schedule from "./pages/Schedule";
+import ScheduleDetails from "./pages/ScheduleDetails";
+import ScheduleEdit from "./pages/ScheduleEdit";
 
 const router = createBrowserRouter([{ path: "*", Component: Root }]);
 
@@ -15,13 +17,16 @@ export default function App() {
 function Root() {
 	return (
     <Routes>
-      <Route path="/" element={<Home />} />
-      <Route path="/home/ogloszenia" element={<Ogloszenia />} />
-      <Route path="/logowanie" element={<Logowanie />} />
-      <Route path="/rejestracja" element={<Rejestracja />} />
-      <Route path="/harmonogram" element={<Schedule />} />
+      <Route index element={<Home />} />
+      <Route path="home/ogloszenia" element={<Ogloszenia />} />
+      <Route path="logowanie" element={<Logowanie />} />
+      <Route path="rejestracja" element={<Rejestracja />} />
+      <Route path="harmonogram">
+        <Route index element={<Schedule />} />
+        <Route path=":id" element={<ScheduleDetails />} />
+        <Route path=":id/edytuj" element={<ScheduleEdit />} />
+      </Route>
       <Route path="*" element={<NotFound />} />
-      
     </Routes>
 	);
 }

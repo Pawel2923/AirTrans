@@ -3,8 +3,8 @@ interface Flight {
 	status: string;
 	airline_name: string;
 	destination: string;
-	arrival: Date;
-	departure: Date;
+	arrival: string;
+	departure: string;
 	airplane_serial_no: string;
 }
 
@@ -13,18 +13,30 @@ interface ArrDepTableProps {
 	status: string;
 	airline_name: string;
 	destination: string;
-	arrival: Date;
-	departure: Date;
+	arrival: string;
+	departure: string;
 	airplane_serial_no: string;
 	is_departure: boolean;
 }
 
+interface Airplane {
+	serial_no: string;
+	model: string;
+	type: string;
+	production_year: number;
+	num_of_seats: number;
+	fuel_tank: number;
+	fuel_quant: number;
+	crew_size: number;
+	max_cargo: number;
+}
+
 interface Announcement {
-	Id: number;
-	Title: string;
-	Content: string;
-	Valid_until: Date;
-	Personnel_id: number;
+	id: number;
+	title: string;
+	content: string;
+	valid_until: string;
+	personnel_id: number;
 }
 
 interface Car {
@@ -74,9 +86,21 @@ interface PageData {
 	pages: number;
 }
 
+interface Filter {
+    by: string;
+    operator?: string;
+    value: string;
+}
+
+interface Sort {
+    by: string[];
+    order?: string;
+}
+
 export type {
 	Flight,
 	ArrDepTableProps,
+	Airplane,
 	Announcement,
 	Car,
 	ParkingInfo,
@@ -84,4 +108,6 @@ export type {
 	RawOffer,
 	ContactInfo,
 	PageData,
+	Filter,
+	Sort,
 };

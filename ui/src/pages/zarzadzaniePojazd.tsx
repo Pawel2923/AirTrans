@@ -1,20 +1,20 @@
+
 import React, { useState, useEffect } from "react";
-import ButtonAdd from "../components/AddButton";
-import ButtonEdit from "../components/EditButton";
-import ButtonDelete from "../components/DeleteButton";
+import AddButton from "../components/AddButton";
+import EditButton from "../components/EditButton";
+import DeleteButton from "../components/DeleteButton";
 import carService from "../services/car.service";
 import rentService from "../services/rental.service";
-import TableCars from "../components/tableCars";
+import CarsTable from "../components/tableCars";
 import { Car } from "../assets/Data";
-import tablestyle from "../components/tableCars.module.css";
-import CarRentaTable from "../components/CarRentaTable";
+import tableStyle from "../components/tableCars.module.css";
+import CarRentalTable from "../components/CarRentaTable";
 import { CarRental } from "../assets/Data";
 
-const ManageCars = () => {
+const ZarzadzanieP = () => {
   const [cars, setCars] = useState<Car[]>([]);
   const [rentals, setRentals] = useState<CarRental[]>([]);
-  const [newCarData, setNewCarData] = useState<Car>({
-    Id: 5,
+  const [newCarData, setNewCarData] = useState<Omit<Car, 'Id'>>({
     Brand: "",
     Model: "",
     Price_per_day: 0,
@@ -33,17 +33,11 @@ const ManageCars = () => {
   };
 
   const submitNewCar = async () => {
-    if (!newCarData.Brand || !newCarData.Model || !newCarData.License_plate) {
-      alert("Please fill in all required fields.");
-      return;
-    }
-
     try {
-      const response = await carService.create(newCarData);
+      const response = await carService.create({ ...newCarData, Id: 0 });
       console.log("New Car Data:", response);
-      setCars([...cars, response]);
+      setCars([...cars, response.data]);
       setNewCarData({
-        Id: 5,
         Brand: "",
         Model: "",
         Price_per_day: 0,
@@ -54,8 +48,20 @@ const ManageCars = () => {
       });
       alert("Car added successfully!");
     } catch (error) {
-      console.error("Error creating car:", error);
-      alert("Error creating car. Please try again.");
+      console.error("Error while adding car:", error);
+      alert("An error occurred while adding the car. Please try again");
+    }
+  };
+
+  const deleteCar = async (id: number) => {
+    try {
+      const response = await carService.delete(id);
+      console.log("Car deleted:", response);
+      setCars(cars.filter((car) => car.Id !== id));
+      alert("Car deleted successfully!");
+    } catch (error) {
+      console.error("Error while deleting car:", error);
+      alert("An error occurred while deleting the car. Please try again");
     }
   };
 
@@ -65,7 +71,7 @@ const ManageCars = () => {
         const carsResponse = await carService.getAll();
         setCars(carsResponse.data);
       } catch (error) {
-        console.error("Error fetching car data:", error);
+        console.error("Error while fetching car data:", error);
       }
     }
 
@@ -78,7 +84,7 @@ const ManageCars = () => {
         const rentalsResponse = await rentService.getAll();
         setRentals(rentalsResponse.data);
       } catch (error) {
-        console.error("Error fetching rental data:", error);
+        console.error("Error while fetching rental data:", error);
       }
     }
 
@@ -86,74 +92,78 @@ const ManageCars = () => {
   }, []);
 
   return (
-    <div>
-      <h1>Manage Cars</h1>
-      <div className={tablestyle.tableContainer}>
-        <h2>Rental List</h2>
-        <CarRentaTable rent={rentals} />
+      <div>
+        <h1>Zarzadzanie Autami i Wypożyczeń</h1>
+        <div className={tableStyle.tableContainer}>
+          <h2>Lista Wypożyczeń</h2>
+          <CarRentalTable rent={rentals} />
+        </div>
+        <div className={tableStyle.tableContainer}>
+          <h2>Lista Aut</h2>
+          <CarsTable cars={cars} />
+        </div>
+        <div className={tableStyle.tableContainer}>
+          <h2>Dodaj nowe auto</h2>
+          <input
+            type="text"
+            name="Brand"
+            placeholder="Brand"
+            value={newCarData.Brand}
+            onChange={handleInputChange}
+          />
+          <input
+            type="text"
+            name="Model"
+            placeholder="Model"
+            value={newCarData.Model}
+            onChange={handleInputChange}
+          />
+          <input
+            type="number"
+            name="Price_per_day"
+            placeholder="Price per day"
+            value={newCarData.Price_per_day}
+            onChange={handleInputChange}
+          />
+          <input
+            type="number"
+            name="Production_year"
+            placeholder="Production year"
+            value={newCarData.Production_year}
+            onChange={handleInputChange}
+          />
+          <input
+            type="text"
+            name="License_plate"
+            placeholder="License plate"
+            value={newCarData.License_plate}
+            onChange={handleInputChange}
+          />
+          <input
+            type="text"
+            name="Fuel_type"
+            placeholder="Fuel type"
+            value={newCarData.Fuel_type}
+            onChange={handleInputChange}
+          />
+          <input
+            type="text"
+            name="Transmission_type"
+            placeholder="Transmission type"
+            value={newCarData.Transmission_type}
+            onChange={handleInputChange}
+          />
+          <button onClick={submitNewCar}>Dodaj</button>
+        </div>
+        <div>
+          <h2>Usuń auto</h2>
+          <input type="number" id="deleteCarId" placeholder="Car ID" />
+          <button onClick={() => deleteCar(Number((document.getElementById("deleteCarId") as HTMLInputElement).value))}>
+            Delete
+          </button>
+        </div>
       </div>
-      <div className={tablestyle.tableContainer}>
-        <h2>Car List</h2>
-        <TableCars cars={cars} />
-      </div>
-      <div className={tablestyle.tableContainer}>
-        <h2>Add New Car</h2>
-        <input
-          type="text"
-          name="Brand"
-          placeholder="Brand"
-          value={newCarData.Brand}
-          onChange={handleInputChange}
-        />
-        <input
-          type="text"
-          name="Model"
-          placeholder="Model"
-          value={newCarData.Model}
-          onChange={handleInputChange}
-        />
-        <input
-          type="number"
-          name="Price_per_day"
-          placeholder="Price per day"
-          value={newCarData.Price_per_day}
-          onChange={handleInputChange}
-        />
-        <input
-          type="number"
-          name="Production_year"
-          placeholder="Production year"
-          value={newCarData.Production_year}
-          onChange={handleInputChange}
-        />
-        <input
-          type="text"
-          name="License_plate"
-          placeholder="License plate"
-          value={newCarData.License_plate}
-          onChange={handleInputChange}
-        />
-        <input
-          type="text"
-          name="Fuel_type"
-          placeholder="Fuel type"
-          value={newCarData.Fuel_type}
-          onChange={handleInputChange}
-        />
-        <input
-          type="text"
-          name="Transmission_type"
-          placeholder="Transmission type"
-          value={newCarData.Transmission_type}
-          onChange={handleInputChange}
-        />
-        <button onClick={submitNewCar}>Add</button>
-      </div>
-      <ButtonAdd onClick={() => console.log("Add")} />
-      <ButtonEdit onClick={() => console.log("Edit")} />
-      <ButtonDelete onClick={() => console.log("Delete")} />
-    </div>
-  );
+    );
 };
 
-export default ManageCars;
+export default ZarzadzanieP;

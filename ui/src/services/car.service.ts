@@ -21,6 +21,33 @@ class CarService {
         console.error("Error creating car:", error);
         throw error;
       });
+
+  }
+
+  update(carData:Car) {
+    return http.put(`/cars/${carData.Id}`, carData)
+      .then(response => {
+        console.log("Car updated:", response.data);
+        return response.data;
+      })
+      .catch(error => {
+        console.error("Error updating car:", error);
+        throw error;
+      });
+
+  }
+
+  delete(id:number) {
+    return http.delete(`/cars/${id}`)
+      .then(response => {
+        console.log("Car deleted:", response.data);
+        return response.data;
+      })
+      .catch(error => {
+        console.error("Error deleting car:", error);
+        throw error;
+      });
+
   }
 }
 

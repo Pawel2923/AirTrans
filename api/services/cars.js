@@ -30,37 +30,37 @@ async function getAllCars(page = 1, limit = config.listPerPage, tableName = "Car
 }
 
 async function create(car) {
-    try {
-        await validateCar(car);
+    const { Id, ...carWithoutId } = car; 
 
-        
-        const carExists = await db.query("SELECT * FROM Cars WHERE Id=?", [car.Id]);
+    try {
+        await validateCar(carWithoutId);
+
+        const carExists = await db.query("SELECT * FROM Cars WHERE License_plate=?", [carWithoutId.License_plate]);
 
         if (carExists.length > 0) {
-            const error = new Error("Auto o podanym Id już istnieje");
+            const error = new Error("Auto o podanym numerze rejestracyjnym już istnieje!");
             error.statusCode = 409;
             throw error;
         }
 
-        // Wstaw nowy samochód do bazy danych
+        // Insert the new car into the database
         const result = await db.query(
-            "INSERT INTO Cars (Id, Brand, Model, Price_per_day, Production_year, License_plate, Fuel_type, Transmission_type) VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
+            "INSERT INTO Cars (Brand, Model, Price_per_day, Production_year, License_plate, Fuel_type, Transmission_type) VALUES (?, ?, ?, ?, ?, ?, ?)",
             [
-                car.Id,
-                car.Brand,
-                car.Model,
-                car.Price_per_day,
-                car.Production_year,
-                car.License_plate,
-                car.Fuel_type,
-                car.Transmission_type,
+                carWithoutId.Brand,
+                carWithoutId.Model,
+                carWithoutId.Price_per_day,
+                carWithoutId.Production_year,
+                carWithoutId.License_plate,
+                carWithoutId.Fuel_type,
+                carWithoutId.Transmission_type,
             ]
         );
 
-        
         if (result.affectedRows) {
             return {
-                data: car,
+                data: carWithoutId,
+                statusCode: 201,
                 message: "Auto zostało dodane!",
             };
         } else {
@@ -78,8 +78,79 @@ async function validateCar(car) {
         throw error;
     }
 }
+async function update(carId, car) {
+    try {
+      
+      car.Id = carId;
+  
+      await validateCar(car);
+  
+      
+      const carExists = await db.query("SELECT * FROM Cars WHERE Id=?", [car.Id]);
+  
+      if (carExists.length === 0) {
+        const error = new Error("Samochód o podanym Id nie istnieje");
+        error.statusCode = 404;
+        throw error;
+      }
+  
+      const result = await db.query(
+        "UPDATE Cars SET Brand=?, Model=?, Price_per_day=?, Production_year=?, License_plate=?, Fuel_type=?, Transmission_type=? WHERE Id=?",
+        [
+          car.Brand,
+          car.Model,
+          car.Price_per_day,
+          car.Production_year,
+          car.License_plate,
+          car.Fuel_type,
+          car.Transmission_type,
+          car.Id,
+        ]
+      );
+  
+     
+      if (result.affectedRows) {
+        return {
+          data: car,
+          statusCode: 200,
+          message: "Samochód zaktualizowany pomyślnie",
+        };
+      } else {
+        throw new Error("Samochód nie mógł zostać zaktualizowany");
+      }
+    } catch (error) {
+      throw error;
+    }
+  }
+  
+  async function remove(id) {
+    try {
+        const carExists = await db.query("SELECT * FROM Cars WHERE Id=?", [id]);
+
+        if (carExists.length === 0) {
+            const error = new Error("Samochód o podanym Id nie istnieje");
+            error.statusCode = 404;
+            throw error;
+        }
+
+        const result = await db.query("DELETE FROM Cars WHERE Id=?", [id]);
+
+        if (result.affectedRows === 0) {
+            throw new Error("Samochód nie został usunięty");
+        }
+
+        return {
+            message: "Samochód usunięty pomyślnie",
+            statusCode: 201
+        };
+    } catch (error) {
+        throw error;
+    }
+}
 
 module.exports = {
     getAllCars,
     create,
+    update,
+    remove,
 };

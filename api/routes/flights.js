@@ -26,28 +26,50 @@ const flight = require("../services/flights");
  *    - name: filter
  *      in: query
  *      required: false
- *      description: Filter by property and value
- *      type: object
- *      properties:
- *       by:
- *        type: string
- *       operator:
- *        type: string
- *       value:
- *        type: string
+ *      description: Filter by list of properties and values using operator
+ *      type: array
+ *      items:
+ *       type: object
+ *       properties:
+ *        by:
+ *         type: string
+ *        operator:
+ *         type: string
+ *        value:
+ *         type: string
  *    - name: sort
  *      in: query
  *      required: false
- *      description: Sort by property and order
+ *      description: Sort by properties and order
  *      type: object
  *      properties:
  *       by:
  *        type: string
  *       order:
- *        type: string
+ *        type: array
+ *        items:
+ *         type: string
  *   responses:
  *    200:
- *     description: Returns a list of flights
+ *     description: Successfully fetched data
+ *     content:
+ *      application/json:
+ *       schema:
+ *        type: object
+ *        properties:
+ *         data:
+ *          type: array
+ *          items:
+ *           $ref: '#/components/schemas/Flight'
+ *         meta:
+ *          type: object
+ *          properties:
+ *           page:
+ *            type: integer
+ *           pages:
+ *            type: integer
+ *         message:
+ *          type: string
  *    500:
  *     description: Internal server error
  */
@@ -64,6 +86,91 @@ router.get("/", async function (req, res, next) {
 			meta,
 			message,
 		});
+	} catch (err) {
+		next(err);
+	}
+});
+
+/**
+ * @openapi
+ * /flights/{term}:
+ *  get:
+ *   description: Get flights by search term
+ *   parameters:
+ *    - name: term
+ *      in: path
+ *      required: true
+ *      description: Search term
+ *      type: string
+ *    - name: page
+ *      in: query
+ *      required: false
+ *      description: Page number
+ *      type: integer
+ *    - name: limit
+ *      in: query
+ *      required: false
+ *      description: Limit number of flights
+ *      type: integer
+ *    - name: filter
+ *      in: query
+ *      required: false
+ *      description: Filter by list of properties and values using operator
+ *      type: array
+ *      items:
+ *       type: object
+ *       properties:
+ *        by:
+ *         type: string
+ *        operator:
+ *         type: string
+ *        value:
+ *         type: string
+ *    - name: sort
+ *      in: query
+ *      required: false
+ *      description: Sort by properties and order
+ *      type: object
+ *      properties:
+ *       by:
+ *        type: string
+ *       order:
+ *        type: array
+ *        items:
+ *         type: string
+ *   responses:
+ *    200:
+ *     description: Successfully fetched data
+ *     content:
+ *      application/json:
+ *       schema:
+ *        type: object
+ *        properties:
+ *         data:
+ *          type: array
+ *          items:
+ *           $ref: '#/components/schemas/Airplane'
+ *         meta:
+ *          type: object
+ *          properties:
+ *           page:
+ *            type: integer
+ *           pages:
+ *            type: integer
+ *         message:
+ *          type: string
+ *    404:
+ *     description: No flights found
+ *    500:
+ *     description: Internal server error
+ */
+router.get("/:term", async function (req, res, next) {
+	try {
+		const { page, limit, filter, sort } = req.query;
+		const { term } = req.params;
+
+		const { data, meta, message } = await flight.search(term, page, limit, filter, sort);
+		res.status(200).json({ data, meta, message });
 	} catch (err) {
 		next(err);
 	}
@@ -170,28 +277,28 @@ module.exports = router;
  *   Flight:
  *    type: object
  *    properties:
- *     Id:
+ *     id:
  *      type: string
- *     Status:
+ *     status:
  *      type: string
- *     Airline_name:
+ *     airline_name:
  *      type: string
- *     Destination:
+ *     destination:
  *      type: string
- *     Arrival:
- *      type: string
- *      format: date-time
- *     Departure:
+ *     arrival:
  *      type: string
  *      format: date-time
- *     Airplane_serial_no:
+ *     departure:
+ *      type: string
+ *      format: date-time
+ *     airplane_serial_no:
  *      type: string
  *    example:
- *     Id: "LH 2334"
- *     Status: "SCHEDULED"
- *     Airline_name: "Lufthansa"
- *     Destination: "Frankfurt"
- *     Arrival: "2024-07-01 12:00:00"
- *     Departure: "2024-07-01 10:00:00"
- *     Airplane_serial_no: "D-AIMD"
+ *     id: "LH 2334"
+ *     status: "SCHEDULED"
+ *     airline_name: "Lufthansa"
+ *     destination: "Frankfurt"
+ *     arrival: "2024-07-01 12:00:00"
+ *     departure: "2024-07-01 10:00:00"
+ *     airplane_serial_no: "D-AIMD"
  */

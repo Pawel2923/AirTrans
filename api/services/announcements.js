@@ -3,10 +3,10 @@ const helper = require("../helper");
 const config = require("../config");
 
 const announcementProperties = [
-	"Title",
-	"Content",
-	"Valid_until",
-	"Personnel_id",
+	"title",
+	"content",
+	"valid_until",
+	"personnel_id",
 ];
 
 function validateAnnouncement(announcement) {
@@ -121,6 +121,12 @@ async function update(id, announcement) {
 	if (announcementExists.length === 0) {
 		const error = new Error("Announcement with this id does not exist");
 		error.statusCode = 404;
+		throw error;
+	}
+
+	if (id !== announcement.Id) {
+		const error = new Error("Id in request body does not match id in URL");
+		error.statusCode = 400;
 		throw error;
 	}
 

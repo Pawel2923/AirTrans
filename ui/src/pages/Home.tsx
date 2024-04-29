@@ -5,7 +5,7 @@ import Nav from "../components/Nav";
 import Footer from "../components/footer";
 import homeStyles from "./Home.module.css";
 import {
-	Flight,
+	ArrDepTableProps,
 	Announcement,
 	ContactInfo,
 	Car,
@@ -17,16 +17,19 @@ import contactInfoService from "../services/contactInfo.service";
 import announcementService from "../services/announcement.service";
 import offerService from "../services/offer.service";
 
-const flightsDataParser = (flightsData: Flight[]) => {
-	const flights: Flight[] = [];
-	flightsData.map((flight: Flight) => {
-		flights.push({
-			id: flight.id,
-			departure: new Date(flight.departure),
-			arrival: new Date(flight.arrival),
-			destination: flight.destination,
-			is_departure: flight.is_departure,
-		});
+const flightsDataParser = (flightsData: ArrDepTableProps[]) => {
+	const flights: ArrDepTableProps[] = [];
+	flightsData.map((flight: ArrDepTableProps) => {
+		flight.arrival = new Date(flight.arrival)
+			.toISOString()
+			.slice(0, 19)
+			.replace("T", " ");
+		flight.departure = new Date(flight.arrival)
+			.toISOString()
+			.slice(0, 19)
+			.replace("T", " ");
+
+		flights.push(flight);
 	});
 	return flights;
 };
@@ -35,13 +38,12 @@ const announcementsDataParser = (announcementsData: Announcement[]) => {
 	const announcements: Announcement[] = [];
 
 	announcementsData.map((announcement: Announcement) => {
-		announcements.push({
-			Id: announcement.Id,
-			Title: announcement.Title,
-			Content: announcement.Content,
-			Valid_until: new Date(announcement.Valid_until),
-			Personnel_id: announcement.Personnel_id,
-		});
+		announcement.valid_until = new Date(announcement.valid_until)
+			.toISOString()
+			.slice(0, 19)
+			.replace("T", " ");
+
+		announcements.push(announcement);
 	});
 
 	return announcements;
@@ -93,7 +95,7 @@ const defaultContactInfo: ContactInfo = {
 };
 
 const Home = () => {
-	const [flightsData, setFlightsData] = useState<Flight[]>([]);
+	const [flightsData, setFlightsData] = useState<ArrDepTableProps[]>([]);
 	const [contactInfo, setContactInfo] =
 		useState<ContactInfo>(defaultContactInfo);
 	const [announcementsData, setAnnouncementsData] = useState<Announcement[]>(
@@ -208,8 +210,8 @@ const Home = () => {
 							.map(
 								(announcement: Announcement, index: number) => (
 									<div key={index} className="col-md-3">
-										<h3>{announcement.Title}</h3>
-										<p>{announcement.Content}</p>
+										<h3>{announcement.title}</h3>
+										<p>{announcement.content}</p>
 									</div>
 								)
 							)}

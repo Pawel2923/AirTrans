@@ -1,12 +1,8 @@
 import { useState, useEffect } from "react";
 import ArrDepTable from "../components/ArrDepTable";
 import flightService from "../services/flight.service";
-import { ArrDepTableProps } from "../assets/Data";
-
-interface Metadata {
-    page: number;
-    pages: number;
-}
+import { ArrDepTableProps, PageData } from "../assets/Data";
+import Pagination from "../components/Pagination";
 
 const flightsDataParser = (flightsData: ArrDepTableProps[]) => {
 	const flights: ArrDepTableProps[] = [];
@@ -27,10 +23,10 @@ const flightsDataParser = (flightsData: ArrDepTableProps[]) => {
 
 const Schedule = () => {
 	const [data, setData] = useState<ArrDepTableProps[]>([]);
-    const [pageData, setPageData] = useState<Metadata>({ page: 1, pages: 1 });
+    const [pageData, setPageData] = useState<PageData>({ page: 1, pages: 1 });
 
 	useEffect(() => {
-		flightService.getByArrivalOrDeparture(pageData.page, 10).then((response) => {
+		flightService.getByArrivalOrDeparture(pageData.page, 5).then((response) => {
 			if (response.status === 200) {
 				setData(flightsDataParser(response.data.data));
                 setPageData(response.data.meta);
@@ -44,10 +40,7 @@ const Schedule = () => {
 			<div>
 				<h2>Harmonogram lotów:</h2>
 				<ArrDepTable data={data} />
-                <div>
-                    <p>Strona: {pageData.page}</p>
-                    <p>Stron: {pageData.pages}</p>
-                </div>
+                <Pagination pageData={pageData} setPageData={setPageData} />
 			</div>
 		</>
 	);

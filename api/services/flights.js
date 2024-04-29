@@ -122,7 +122,7 @@ async function getByDepartureOrArrival(page = 1, limit = 5) {
 	const data = helper.emptyOrRows(rows);
 
 	// Get total number of pages
-	const pages = await helper.getPages("ArrDepTable", limit);
+	const pages = await helper.getPages("ArrDepTable", limit * 2);
 
 	// Prepare meta data for response
 	const meta = {

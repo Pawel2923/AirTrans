@@ -69,6 +69,11 @@ interface ContactInfo {
 	email_marketing: string;
 }
 
+interface PageData {
+	page: number;
+	pages: number;
+}
+
 export type {
 	Flight,
 	ArrDepTableProps,
@@ -78,4 +83,5 @@ export type {
 	Offer,
 	RawOffer,
 	ContactInfo,
+	PageData,
 };

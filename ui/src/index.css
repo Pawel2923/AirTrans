@@ -37,13 +37,19 @@ h1 {
 }
 
 .btn-primary {
-  --bs-btn-bg: #5da9db !important;
-  --bs-btn-border-color: #5da9db !important;
+  --bs-btn-bg: var(--primary-color) !important;
+  --bs-btn-border-color: var(--primary-color) !important;
   --bs-btn-hover-bg: #4c98ca !important;
   --bs-btn-hover-border-color: #4c98ca !important;
   --bs-btn-active-bg: #4c98ca !important;
   --bs-btn-active-border-color: #4c98ca !important;
-  --bs-btn-disabled-bg: #5da9db !important;
-  --bs-btn-disabled-border-color: #5da9db !important;
+  --bs-btn-disabled-bg: var(--primary-color) !important;
+  --bs-btn-disabled-border-color: var(--primary-color) !important;
   border-radius: 50px !important;
+}
+
+.pagination {
+  --bs-pagination-color: var(--primary-color) !important;
+  --bs-pagination-active-bg: var(--primary-color) !important;
+  --bs-pagination-active-border-color: var(--primary-color) !important;
 }

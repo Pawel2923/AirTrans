@@ -96,8 +96,6 @@ function buildQuery(tableName, filter, sort, offset, limit, search = undefined) 
 	query += " LIMIT ?,?";
 	queryParams.push(offset, limit);
 
-	console.log(query, queryParams);
-
 	return { query, queryParams };
 }
 

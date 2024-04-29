@@ -3,15 +3,15 @@ const helper = require("../helper");
 const config = require("../config");
 
 const airplaneProperties = [
-	"Serial_no",
-	"Model",
-	"Type",
-	"Production_year",
-	"Num_of_seats",
-	"Fuel_tank",
-	"Fuel_quant",
-	"Crew_size",
-	"Max_cargo",
+	"serial_no",
+	"model",
+	"type",
+	"production_year",
+	"num_of_seats",
+	"fuel_tank",
+	"fuel_quant",
+	"crew_size",
+	"max_cargo",
 ];
 
 function validateAirplane(airplane) {
@@ -65,8 +65,8 @@ async function create(airplane) {
 	validateAirplane(airplane);
 
 	const airplaneExists = await db.query(
-		"SELECT '' FROM Airplane WHERE Serial_no = ?",
-		[airplane.Serial_no]
+		"SELECT '' FROM Airplane WHERE serial_no = ?",
+		[airplane.serial_no]
 	);
 
 	if (airplaneExists.length > 0) {
@@ -77,20 +77,7 @@ async function create(airplane) {
 		throw error;
 	}
 
-	const result = await db.query(
-		"INSERT INTO Airplane VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)",
-		[
-			airplane.Serial_no,
-			airplane.Model,
-			airplane.Type,
-			airplane.Production_year,
-			airplane.Num_of_seats,
-			airplane.Fuel_tank,
-			airplane.Fuel_quant,
-			airplane.Crew_size,
-			airplane.Max_cargo,
-		]
-	);
+	const result = await db.query("INSERT INTO Airplane SET ?", airplane);
 
 	if (result.affectedRows === 0) {
 		throw new Error("Could not create airplane");
@@ -106,7 +93,7 @@ async function update(serial_no, airplane) {
 	validateAirplane(airplane);
 
 	const airplaneExists = await db.query(
-		"SELECT '' FROM Airplane WHERE Serial_no = ?",
+		"SELECT '' FROM Airplane WHERE serial_no = ?",
 		[serial_no]
 	);
 
@@ -116,20 +103,16 @@ async function update(serial_no, airplane) {
 		throw error;
 	}
 
-	const result = await db.query(
-		"UPDATE Airplane SET Model = ?, Type = ?, Production_year = ?, Num_of_seats = ?, Fuel_tank = ?, Fuel_quant = ?, Crew_size = ?, Max_cargo = ? WHERE Serial_no = ?",
-		[
-			airplane.Model,
-			airplane.Type,
-			airplane.Production_year,
-			airplane.Num_of_seats,
-			airplane.Fuel_tank,
-			airplane.Fuel_quant,
-			airplane.Crew_size,
-			airplane.Max_cargo,
-			serial_no,
-		]
-	);
+	if (serial_no !== airplane.serial_no) {
+		const error = new Error("Serial number cannot be changed");
+		error.statusCode = 400;
+		throw error;
+	}
+
+	const result = await db.query("UPDATE Airplane SET ? WHERE serial_no = ?", [
+		airplane,
+		serial_no,
+	]);
 
 	if (result.affectedRows === 0) {
 		throw new Error("Could not update airplane");

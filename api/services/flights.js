@@ -6,13 +6,13 @@ const config = require("../config");
 async function validateFlight(flight) {
 	// Check if all required properties are present in the flight object
 	helper.checkObject(flight, [
-		"Id",
-		"Status",
-		"Airline_name",
-		"Destination",
-		"Arrival",
-		"Departure",
-		"Airplane_serial_no",
+		"id",
+		"status",
+		"airline_name",
+		"destination",
+		"arrival",
+		"departure",
+		"airplane_serial_no",
 	]);
 
 	// Regular expression to validate date and time format
@@ -20,13 +20,13 @@ async function validateFlight(flight) {
 		/^(((\d{4})-([01]\d)-(0[1-9]|[12]\d|3[01])) (([01]\d|2[0-3]):([0-5]\d):([0-5]\d)))$/m;
 
 	// Validate Arrival and Departure date and time format
-	if (!datetimeRegex.test(flight.Arrival)) {
+	if (!datetimeRegex.test(flight.arrival)) {
 		const error = new Error("Arrival property invalid format");
 		error.statusCode = 400;
 		throw error;
 	}
 
-	if (!datetimeRegex.test(flight.Departure)) {
+	if (!datetimeRegex.test(flight.departure)) {
 		const error = new Error("Departure property invalid format");
 		error.statusCode = 400;
 		throw error;
@@ -34,8 +34,8 @@ async function validateFlight(flight) {
 
 	// Check if airplane with given serial number exists
 	const airplaneSerialNoExists = await db.query(
-		"SELECT '' FROM Airplane WHERE Serial_no=?",
-		[flight.Airplane_serial_no]
+		"SELECT '' FROM Airplane WHERE serial_no=?",
+		[flight.airplane_serial_no]
 	);
 
 	if (airplaneSerialNoExists.length === 0) {
@@ -155,18 +155,7 @@ async function create(flight) {
 	}
 
 	// Insert new flight into the database
-	const result = await db.query(
-		"INSERT INTO Flight VALUES (?, ?, ?, ?, ?, ?, ?)",
-		[
-			flight.Id,
-			flight.Status,
-			flight.Airline_name,
-			flight.Destination,
-			flight.Arrival,
-			flight.Departure,
-			flight.Airplane_serial_no,
-		]
-	);
+	const result = await db.query("INSERT INTO Flight SET ?", [flight]);
 
 	// If insertion is successful, return success message, else throw an error
 	if (result.affectedRows) {
@@ -181,15 +170,12 @@ async function create(flight) {
 
 // Function to update a flight
 async function update(flightId, flight) {
-	// Set flight id
-	flight.id = flightId;
-
 	// Validate flight details
 	await validateFlight(flight);
 
 	// Check if flight with given id exists
 	const flightExists = await db.query("SELECT '' FROM Flight WHERE id=?", [
-		flight.id,
+		flightId,
 	]);
 
 	if (flightExists.length === 0) {
@@ -198,29 +184,24 @@ async function update(flightId, flight) {
 		throw error;
 	}
 
-	// Update flight in the database
-	const result = await db.query(
-		"UPDATE Flight SET Status=?, Airline_name=?, Destination=?, Arrival=?, Departure=?, Airplane_serial_no=? WHERE id=?",
-		[
-			flight.Status,
-			flight.Airline_name,
-			flight.Destination,
-			flight.Arrival,
-			flight.Departure,
-			flight.Airplane_serial_no,
-			flight.Id,
-		]
-	);
+	// Check if flightId is equal to id in the flight object
+	if (flightId !== flight.id) {
+		const error = new Error("Flight id does not match");
+		error.statusCode = 400;
+		throw error;
+	}
 
-	// If update is successful, return success message, else throw an error
-	if (result.affectedRows) {
-		return {
-			data: flight,
-			message: "Flight updated successfully",
-		};
-	} else {
+	// Update flight in the database
+	const result = await db.query("UPDATE Flight SET ? WHERE id=?", [
+		flight,
+		flightId,
+	]);
+
+	if (result.affectedRows === 0) {
 		throw new Error("Flight could not be updated");
 	}
+
+	return "Flight updated successfully";
 }
 
 // Function to delete a flight
@@ -279,7 +260,7 @@ async function search(
 	const search = { query: "", queryParams: [] };
 	// Search query
 	search.query =
-		" WHERE (id LIKE ? OR Status LIKE ? OR Airline_name LIKE ? OR Destination LIKE ? OR Arrival LIKE ? OR Departure LIKE ? OR Airplane_serial_no LIKE ?)";
+		" WHERE (id LIKE ? OR status LIKE ? OR airline_name LIKE ? OR destination LIKE ? OR arrival LIKE ? OR departure LIKE ? OR airplane_serial_no LIKE ?)";
 	// Add search term to the query parameters
 	search.queryParams = Array(7).fill(`%${term}%`);
 
@@ -292,8 +273,6 @@ async function search(
 		limit,
 		search
 	);
-
-	console.log(query, queryParams);
 
 	// Execute the search query
 	const result = await db.query(query, queryParams);

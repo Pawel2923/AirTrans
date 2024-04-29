@@ -277,28 +277,28 @@ module.exports = router;
  *   Flight:
  *    type: object
  *    properties:
- *     Id:
+ *     id:
  *      type: string
- *     Status:
+ *     status:
  *      type: string
- *     Airline_name:
+ *     airline_name:
  *      type: string
- *     Destination:
+ *     destination:
  *      type: string
- *     Arrival:
- *      type: string
- *      format: date-time
- *     Departure:
+ *     arrival:
  *      type: string
  *      format: date-time
- *     Airplane_serial_no:
+ *     departure:
+ *      type: string
+ *      format: date-time
+ *     airplane_serial_no:
  *      type: string
  *    example:
- *     Id: "LH 2334"
- *     Status: "SCHEDULED"
- *     Airline_name: "Lufthansa"
- *     Destination: "Frankfurt"
- *     Arrival: "2024-07-01 12:00:00"
- *     Departure: "2024-07-01 10:00:00"
- *     Airplane_serial_no: "D-AIMD"
+ *     id: "LH 2334"
+ *     status: "SCHEDULED"
+ *     airline_name: "Lufthansa"
+ *     destination: "Frankfurt"
+ *     arrival: "2024-07-01 12:00:00"
+ *     departure: "2024-07-01 10:00:00"
+ *     airplane_serial_no: "D-AIMD"
  */

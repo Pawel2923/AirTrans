@@ -5,6 +5,7 @@ import NotFound from "./pages/NotFound";
 import Logowanie from "./pages/Logowanie";
 import Rejestracja from "./pages/Rejestracja";
 import ZarzadzanieP from "./pages/zarzadzaniePojazd";
+import EditCarPage from "./pages/editCarPage";
 
 
 const router = createBrowserRouter([{ path: "*", Component: Root }]);
@@ -22,6 +23,8 @@ function Root() {
       <Route path="/rejestracja" element={<Rejestracja />} />
       <Route path="/zarzadzaniePojazd" element={<ZarzadzanieP />} />
       <Route path="*" element={<NotFound />} />
+      <Route path="/edit-car/:id" element={<EditCarPage />} />
+
       
     </Routes>
 	);

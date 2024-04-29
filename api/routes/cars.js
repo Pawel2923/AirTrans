@@ -18,7 +18,48 @@ router.get("/", async function (req, res, next) {
         res.status(500).json({ message: "Internal server error" });
     }
 });
+router.get("/:id", async function (req, res, next) {
+  try {
+      const carId = req.params.id;
 
+      const { data, response } = await carService.getOneCar(carId);
+
+      if (!data) {
+          return res.status(response.statusCode).json({
+              message: response.message,
+          });
+      }
+
+      res.status(response.statusCode).json({
+          data,
+      });
+
+  } catch (error) {
+      console.error("Error while fetching car", error);
+      res.status(500).json({ message: "Internal server error" });
+  }
+});
+
+router.get("/:id", async function (req, res, next) {
+  try {
+    const carId = req.params.id;
+
+    const { data, response } = await carService.getById(carId);
+
+    if (!data) {
+      return res.status(response.statusCode).json({
+        message: response.message,
+      });
+    }
+
+    res.status(response.statusCode).json({
+      data,
+    });
+  } catch (error) {
+    console.error("Error while fetching car", error);
+    res.status(500).json({ message: "Internal server error" });
+  }
+});
 
 router.post("/", async function (req, res, next) {
     try {

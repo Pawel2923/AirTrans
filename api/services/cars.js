@@ -28,6 +28,46 @@ async function getAllCars(page = 1, limit = config.listPerPage, tableName = "Car
         response: { message: `Successfully fetched data`, statusCode: 200 },
     };
 }
+async function getOneCar(carId, tableName = "Cars") {
+    const row = await db.query("SELECT * FROM ?? WHERE Id = ?", [
+        tableName,
+        carId,
+    ]);
+
+    const data = helper.emptyOrRows(row);
+
+    if (!data) {
+        return {
+            data: null,
+            response: { message: `Car with ID ${carId} not found`, statusCode: 404 },
+        };
+    }
+
+    return {
+        data,
+        response: { message: `Successfully fetched car with ID ${carId}`, statusCode: 200 },
+    };
+}
+async function getById(carId, tableName = "Cars") {
+    const row = await db.query("SELECT * FROM ?? WHERE Id = ?", [
+        tableName,
+        carId,
+    ]);
+
+    const data = helper.emptyOrRows(row);
+
+    if (!data) {
+        return {
+            data: null,
+            response: { message: `Car with ID ${carId} not found`, statusCode: 404 },
+        };
+    }
+
+    return {
+        data: data[0], // Bez konwersji, zwracamy pierwszy rekord
+        response: { message: `Successfully fetched car with ID ${carId}`, statusCode: 200 },
+    };
+}
 
 async function create(car) {
     const { Id, ...carWithoutId } = car; 
@@ -150,7 +190,9 @@ async function update(carId, car) {
 
 module.exports = {
     getAllCars,
+    getOneCar,
     create,
     update,
     remove,
+    getById,
 };

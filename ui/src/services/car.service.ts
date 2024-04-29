@@ -10,6 +10,26 @@ class CarService {
       });
   }
 
+  getOne(id:number) {
+    return http.get(`/cars/${id}`)
+      .then(response => {
+        return response.data;
+      })
+      .catch(error => {
+        throw error;
+      });
+  }
+  
+  getById(id: number) {
+    return http.get(`/cars/${id}`)
+      .then(response => {
+        return response.data;
+      })
+      .catch(error => {
+        throw error;
+      });
+  }
+ 
  
   create(carData:Car) {
     return http.post("/cars", carData)
@@ -34,17 +54,16 @@ class CarService {
         console.error("Error updating car:", error);
         throw error;
       });
+      
 
   }
 
   delete(id:number) {
     return http.delete(`/cars/${id}`)
       .then(response => {
-        console.log("Car deleted:", response.data);
         return response.data;
       })
       .catch(error => {
-        console.error("Error deleting car:", error);
         throw error;
       });
 

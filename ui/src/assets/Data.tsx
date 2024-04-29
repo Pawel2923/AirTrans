@@ -45,6 +45,7 @@ interface Car {
 	License_plate: string;
 	Fuel_type: string;
 	Transmission_type: string;
+	
 }
 interface CarRental {
 	Id: number;

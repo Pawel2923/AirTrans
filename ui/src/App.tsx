@@ -7,6 +7,7 @@ import Rejestracja from "./pages/Rejestracja";
 import Schedule from "./pages/Schedule";
 import ScheduleDetails from "./pages/ScheduleDetails";
 import ScheduleEdit from "./pages/ScheduleEdit";
+import Airplanes from "./pages/Airplanes";
 
 const router = createBrowserRouter([{ path: "*", Component: Root }]);
 
@@ -25,6 +26,9 @@ function Root() {
         <Route index element={<Schedule />} />
         <Route path=":id" element={<ScheduleDetails />} />
         <Route path=":id/edytuj" element={<ScheduleEdit />} />
+      </Route>
+      <Route path="samoloty">
+        <Route index element={<Airplanes />} />
       </Route>
       <Route path="*" element={<NotFound />} />
     </Routes>

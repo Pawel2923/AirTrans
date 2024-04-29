@@ -7,11 +7,13 @@ import { faAngleRight } from "@fortawesome/free-solid-svg-icons/faAngleRight";
 interface PaginationProps {
 	pageData: PageData;
 	setPageData: (prevState: PageData) => void;
+	className?: string;
 }
 
 const Pagination: React.FC<PaginationProps> = ({
 	pageData,
 	setPageData,
+	className = "",
 }: PaginationProps) => {
 	const pagesArray = Array.from(
 		{ length: pageData.pages },
@@ -35,7 +37,7 @@ const Pagination: React.FC<PaginationProps> = ({
 	};
 
 	return (
-		<nav aria-label="Page navigation">
+		<nav aria-label="Page navigation" className={className}>
 			<ul className="pagination">
 				<li
 					className={`page-item ${

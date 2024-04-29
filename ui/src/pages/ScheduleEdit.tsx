@@ -100,71 +100,100 @@ const ScheduleEdit = () => {
 		});
 	};
 
-	return (
-		<div>
-			<h1>Edit Schedule</h1>
-			<form onSubmit={formSubmitHandler}>
-				<input
-					type="datetime-local"
-					name="arrival"
-					placeholder="Przylot"
-					onChange={inputChangeHandler}
-					value={flightData.arrival}
-				/>
-				<input
-					type="datetime-local"
-					name="departure"
-					placeholder="Odlot"
-					onChange={inputChangeHandler}
-					value={flightData.departure}
-				/>
-				<input
-					type="text"
-					name="destination"
-					placeholder="Kierunek"
-					onChange={inputChangeHandler}
-					value={flightData.destination}
-				/>
-				<input
-					type="Numer lotu"
-					name="id"
-					placeholder="Numer lotu"
-                    readOnly={true}
-                    aria-readonly={true}
-					value={flightData.id}
-				/>
-				<input
-					type="text"
-					name="status"
-					placeholder="Status"
-					onChange={inputChangeHandler}
-					value={flightData.status}
-				/>
-				<input
-					type="text"
-					name="airline_name"
-					placeholder="Linia lotnicza"
-					onChange={inputChangeHandler}
-					value={flightData.airline_name}
-				/>
-				<select
-					onChange={selectChangeHandler}
-					name="airplane_serial_no"
-					value={flightData.airplane_serial_no}
-				>
-					{airplaneData.map((airplane: Airplane) => (
-						<option
-							key={airplane.serial_no}
-							value={airplane.serial_no}
-						>
-							{airplane.serial_no}
-						</option>
-					))}
-				</select>
-				<button type="submit">Zapisz</button>
-			</form>
-		</div>
-	);
+    return (
+        <div>
+            <h1>Edit Schedule</h1>
+            <form onSubmit={formSubmitHandler}>
+                <div className="form-group">
+                    <label htmlFor="arrival">Przylot</label>
+                    <input
+                        type="datetime-local"
+                        className="form-control"
+                        id="arrival"
+                        name="arrival"
+                        onChange={inputChangeHandler}
+                        value={flightData.arrival}
+                    />
+                </div>
+                <div className="form-group">
+                    <label htmlFor="departure">Odlot</label>
+                    <input
+                        type="datetime-local"
+                        className="form-control"
+                        id="departure"
+                        name="departure"
+                        onChange={inputChangeHandler}
+                        value={flightData.departure}
+                    />
+                </div>
+                <div className="form-group">
+                    <label htmlFor="destination">Kierunek</label>
+                    <input
+                        type="text"
+                        className="form-control"
+                        id="destination"
+                        name="destination"
+                        onChange={inputChangeHandler}
+                        value={flightData.destination}
+                    />
+                </div>
+                <div className="form-group">
+                    <label htmlFor="id">Numer lotu</label>
+                    <input
+                        type="text"
+                        className="form-control"
+                        id="id"
+                        name="id"
+                        readOnly={true}
+                        aria-readonly={true}
+                        value={flightData.id}
+                    />
+                </div>
+                <div className="form-group">
+                    <label htmlFor="status">Status</label>
+                    <input
+                        type="text"
+                        className="form-control"
+                        id="status"
+                        name="status"
+                        onChange={inputChangeHandler}
+                        value={flightData.status}
+                    />
+                </div>
+                <div className="form-group">
+                    <label htmlFor="airline_name">Linia lotnicza</label>
+                    <input
+                        type="text"
+                        className="form-control"
+                        id="airline_name"
+                        name="airline_name"
+                        onChange={inputChangeHandler}
+                        value={flightData.airline_name}
+                    />
+                </div>
+                <div className="form-group">
+                    <label htmlFor="airplane_serial_no">Numer seryjny samolotu</label>
+                    <select
+                        className="form-control"
+                        id="airplane_serial_no"
+                        name="airplane_serial_no"
+                        onChange={selectChangeHandler}
+                        value={flightData.airplane_serial_no}
+                    >
+                        {airplaneData.map((airplane: Airplane) => (
+                            <option
+                                key={airplane.serial_no}
+                                value={airplane.serial_no}
+                            >
+                                {airplane.serial_no}
+                            </option>
+                        ))}
+                    </select>
+                </div>
+                <button type="submit" className="btn btn-primary">Zapisz</button>
+            </form>
+        </div>
+    );
 };
 
 export default ScheduleEdit;

@@ -2,7 +2,7 @@ import http from "../http-common";
 import { Airplane, Filter, Sort } from "../assets/Data";
 
 class AirplaneService {
-    getAll (page: number = 1, limit?: number, filter?: Filter[], sort?: Sort) {
+    getAll = (page: number = 1, limit?: number, filter?: Filter[], sort?: Sort) => {
         let url = `/airplane?page=${page}`;
 
         if (limit) {
@@ -30,22 +30,22 @@ class AirplaneService {
         }
 
         return http.get(url);
-    }
+    };
 
-    getById = (id: string) => {
-        return http.get(`/airplane?filter=[{"by":"id","value":"${id}"}]`);
+    getById = (serial_no: string) => {
+        return http.get(`/airplane?filter=[{"by":"serial_no","value":"${serial_no}"}]`);
     };
     
     create = (data: Airplane) => {
         return http.post("/airplane", data);
     };
 
-    update = (id: string, data: Airplane) => {
-        return http.put(`/airplane/${id}`, data);
+    update = (serial_no: string, data: Airplane) => {
+        return http.put(`/airplane/${serial_no}`, data);
     };
 
-    delete = (id: string) => {
-        return http.delete(`/airplane/${id}`);
+    delete = (serial_no: string) => {
+        return http.delete(`/airplane/${serial_no}`);
     };
 }
 

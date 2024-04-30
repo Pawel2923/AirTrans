@@ -4,6 +4,8 @@ import Ogloszenia from "./pages/Ogloszenia";
 import NotFound from "./pages/NotFound";
 import Logowanie from "./pages/Logowanie";
 import Rejestracja from "./pages/Rejestracja";
+import ZarzadzanieP from "./pages/zarzadzaniePojazd";
+import EditCarPage from "./pages/editCarPage";
 import Schedule from "./pages/Schedule";
 import ScheduleDetails from "./pages/ScheduleDetails";
 import ScheduleEdit from "./pages/ScheduleEdit";
@@ -32,6 +34,8 @@ function Root() {
         <Route index element={<Airplanes />} />
         <Route path=":id/edytuj" element={<AirplaneEdit />} />
       </Route>
+      <Route path="/zarzadzaniePojazd" element={<ZarzadzanieP />} />
+      <Route path="/edit-car/:id" element={<EditCarPage />} />
       <Route path="*" element={<NotFound />} />
     </Routes>
 	);

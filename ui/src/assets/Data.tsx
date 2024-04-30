@@ -39,15 +39,6 @@ interface Announcement {
 	personnel_id: number;
 }
 
-interface Car {
-	Brand: string;
-	Model: string;
-	Production_year: number;
-	Transmission_type: string;
-	Price_per_day: number;
-	Path_to_img: string;
-}
-
 interface ParkingInfo {
 	Price_per_day: number;
 	Capacity: number;
@@ -81,6 +72,26 @@ interface ContactInfo {
 	email_marketing: string;
 }
 
+interface Car {
+	Id: number;
+	Brand: string;
+	Model: string;
+	Price_per_day: number;
+	Production_year: number;
+	License_plate: string;
+	Fuel_type: string;
+	Transmission_type: string;
+	
+}
+interface CarRental {
+	Id: number;
+	Rental_date: Date;
+	Return_date: Date;
+	Status: string;
+	Client_id: number;
+	Cars_id: number;
+}
+
 interface PageData {
 	page: number;
 	pages: number;
@@ -103,6 +114,7 @@ export type {
 	Airplane,
 	Announcement,
 	Car,
+  CarRental,
 	ParkingInfo,
 	Offer,
 	RawOffer,

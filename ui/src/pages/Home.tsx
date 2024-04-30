@@ -4,55 +4,80 @@ import ArrDepTable from "../components/ArrDepTable";
 import Nav from "../components/Nav";
 import Footer from "../components/footer";
 import homeStyles from "./Home.module.css";
-import { Flight, Announcements, ContactInfo, Offer } from "../assets/Data";
+import {
+	ArrDepTableProps,
+	Announcement,
+	ContactInfo,
+	Car,
+	Offer,
+	RawOffer,
+} from "../assets/Data";
 import flightService from "../services/flight.service";
 import contactInfoService from "../services/contactInfo.service";
 import announcementService from "../services/announcement.service";
 import offerService from "../services/offer.service";
 
-const flightsDataParser = (flightsData: Flight[]) => {
-	const flights: Flight[] = [];
-	flightsData.map((flight: Flight) => {
-		flights.push({
-			id: flight.id,
-			departure: new Date(flight.departure),
-			arrival: new Date(flight.arrival),
-			destination: flight.destination,
-			is_departure: flight.is_departure,
-		});
+const flightsDataParser = (flightsData: ArrDepTableProps[]) => {
+	const flights: ArrDepTableProps[] = [];
+	flightsData.map((flight: ArrDepTableProps) => {
+		flight.arrival = new Date(flight.arrival)
+			.toISOString()
+			.slice(0, 19)
+			.replace("T", " ");
+		flight.departure = new Date(flight.arrival)
+			.toISOString()
+			.slice(0, 19)
+			.replace("T", " ");
+
+		flights.push(flight);
 	});
 	return flights;
 };
 
-const offerDataParser = (offerData: any) => {
+const announcementsDataParser = (announcementsData: Announcement[]) => {
+	const announcements: Announcement[] = [];
+
+	announcementsData.map((announcement: Announcement) => {
+		announcement.valid_until = new Date(announcement.valid_until)
+			.toISOString()
+			.slice(0, 19)
+			.replace("T", " ");
+
+		announcements.push(announcement);
+	});
+
+	return announcements;
+};
+
+const offerDataParser = (offerData: RawOffer) => {
 	const offers: Offer[] = [];
-	offerData.cars.map((car: any, index: number) => {
+	offerData.cars.map((car: Car, index: number) => {
 		offers.push({
 			id: index,
-			imgPath: car.path_to_img,
+			path_to_img: car.Path_to_img,
 			title: "Samochód",
-			offerParams: [
-				"Marka: " + car.brand,
-				"Model: " + car.model,
-				"Rok produkcji: " + car.production_year,
-				"Rodzaj skrzyni: " + car.transmission_type,
-				"Cena: " + car.price_per_day + " zł/doba",
+			offer_params: [
+				"Marka: " + car.Brand,
+				"Model: " + car.Model,
+				"Rok produkcji: " + car.Production_year,
+				"Rodzaj skrzyni: " + car.Transmission_type,
+				"Cena: " + car.Price_per_day + " zł/doba",
 			],
-			btnText: "Wypożycz",
+			btn_text: "Wypożycz",
 		});
 	});
-    offers.push({
-        id: 3,
-        imgPath: offerData.parkingInfo[0].path_to_img,
-        title: "Parking",
-        offerParams: [
-            "Cena: " + offerData.parkingInfo[0].price_per_day + " zł/doba",
-            "Miejsca: " + offerData.parkingInfo[0].capacity,
-        ],
-        btnText: "Zarezerwuj"
-    });
+	offers.push({
+		id: 3,
+		path_to_img: offerData.parkingInfo[0].Path_to_img,
+		title: "Parking",
+		offer_params: [
+			"Cena: " + offerData.parkingInfo[0].Price_per_day + " zł/doba",
+			"Miejsca: " + offerData.parkingInfo[0].Capacity,
+		],
+		btn_text: "Zarezerwuj",
+	});
 
-    return offers;
+	return offers;
 };
 
 const defaultContactInfo: ContactInfo = {
@@ -70,10 +95,10 @@ const defaultContactInfo: ContactInfo = {
 };
 
 const Home = () => {
-	const [flightsData, setFlightsData] = useState<Flight[]>([]);
+	const [flightsData, setFlightsData] = useState<ArrDepTableProps[]>([]);
 	const [contactInfo, setContactInfo] =
 		useState<ContactInfo>(defaultContactInfo);
-	const [announcementsData, setAnnouncementsData] = useState<Announcements[]>(
+	const [announcementsData, setAnnouncementsData] = useState<Announcement[]>(
 		[]
 	);
 	const [offerData, setOfferData] = useState<Offer[]>([]);
@@ -93,7 +118,9 @@ const Home = () => {
 
 		announcementService.getAll().then((response) => {
 			if (response.status === 200) {
-				setAnnouncementsData(response.data.data);
+				setAnnouncementsData(
+					announcementsDataParser(response.data.data)
+				);
 			}
 		});
 
@@ -181,10 +208,7 @@ const Home = () => {
 						{announcementsData
 							.slice(0, 3)
 							.map(
-								(
-									announcement: Announcements,
-									index: number
-								) => (
+								(announcement: Announcement, index: number) => (
 									<div key={index} className="col-md-3">
 										<h3>{announcement.title}</h3>
 										<p>{announcement.content}</p>
@@ -208,7 +232,7 @@ const Home = () => {
 								className={`col-lg col-md-4 card ${homeStyles["offer-card"]}`}
 							>
 								<img
-									src={`/src/assets/${offer.imgPath}`}
+									src={`/src/assets/${offer.path_to_img}`}
 									alt={offer.title}
 									className="card-img-top"
 								/>
@@ -216,7 +240,7 @@ const Home = () => {
 									<h5 className="card-title text-center">
 										{offer.title}
 									</h5>
-									{offer.offerParams.map(
+									{offer.offer_params.map(
 										(param: string, index: number) => (
 											<span
 												key={index}
@@ -230,7 +254,7 @@ const Home = () => {
 										to={"/"}
 										className="btn btn-primary align-self-end mt-4"
 									>
-										{offer.btnText}
+										{offer.btn_text}
 									</Link>
 								</div>
 							</div>

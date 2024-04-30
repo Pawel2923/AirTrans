@@ -23,58 +23,156 @@ const flight = require("../services/flights");
  *      required: false
  *      description: Limit number of flights
  *      type: integer
+ *    - name: filter
+ *      in: query
+ *      required: false
+ *      description: Filter by list of properties and values using operator
+ *      type: array
+ *      items:
+ *       type: object
+ *       properties:
+ *        by:
+ *         type: string
+ *        operator:
+ *         type: string
+ *        value:
+ *         type: string
+ *    - name: sort
+ *      in: query
+ *      required: false
+ *      description: Sort by properties and order
+ *      type: object
+ *      properties:
+ *       by:
+ *        type: string
+ *       order:
+ *        type: array
+ *        items:
+ *         type: string
  *   responses:
  *    200:
- *     description: Returns a list of flights
+ *     description: Successfully fetched data
+ *     content:
+ *      application/json:
+ *       schema:
+ *        type: object
+ *        properties:
+ *         data:
+ *          type: array
+ *          items:
+ *           $ref: '#/components/schemas/Flight'
+ *         meta:
+ *          type: object
+ *          properties:
+ *           page:
+ *            type: integer
+ *           pages:
+ *            type: integer
+ *         message:
+ *          type: string
  *    500:
  *     description: Internal server error
  */
 router.get("/", async function (req, res, next) {
 	try {
-		const { page, isarrdep, limit } = req.query;
+		const { page, isarrdep, limit, filter, sort } = req.query;
 
-		const { data, meta, response } =
+		const { data, meta, message } =
 			isarrdep != undefined
-				? await flight.getByDepartureOrArrival(limit, page)
-				: await flight.getAll(page, limit);
-		res.status(response.statusCode).json({
+				? await flight.getByDepartureOrArrival(page, limit)
+				: await flight.get(page, limit, filter, sort);
+		res.status(200).json({
 			data,
 			meta,
-			message: response.message,
+			message,
 		});
 	} catch (err) {
-		next(JSON.parse(err.message));
+		next(err);
 	}
 });
 
 /**
  * @openapi
- * /flights/{id}:
+ * /flights/{term}:
  *  get:
- *   description: Get flight by id
+ *   description: Get flights by search term
  *   parameters:
- *    - name: id
+ *    - name: term
  *      in: path
  *      required: true
- *      description: Flight id
+ *      description: Search term
  *      type: string
+ *    - name: page
+ *      in: query
+ *      required: false
+ *      description: Page number
+ *      type: integer
+ *    - name: limit
+ *      in: query
+ *      required: false
+ *      description: Limit number of flights
+ *      type: integer
+ *    - name: filter
+ *      in: query
+ *      required: false
+ *      description: Filter by list of properties and values using operator
+ *      type: array
+ *      items:
+ *       type: object
+ *       properties:
+ *        by:
+ *         type: string
+ *        operator:
+ *         type: string
+ *        value:
+ *         type: string
+ *    - name: sort
+ *      in: query
+ *      required: false
+ *      description: Sort by properties and order
+ *      type: object
+ *      properties:
+ *       by:
+ *        type: string
+ *       order:
+ *        type: array
+ *        items:
+ *         type: string
  *   responses:
  *    200:
- *     description: Returns a flight
+ *     description: Successfully fetched data
+ *     content:
+ *      application/json:
+ *       schema:
+ *        type: object
+ *        properties:
+ *         data:
+ *          type: array
+ *          items:
+ *           $ref: '#/components/schemas/Airplane'
+ *         meta:
+ *          type: object
+ *          properties:
+ *           page:
+ *            type: integer
+ *           pages:
+ *            type: integer
+ *         message:
+ *          type: string
  *    404:
- *     description: Flight not found
+ *     description: No flights found
  *    500:
  *     description: Internal server error
  */
-router.get("/:id", async function (req, res, next) {
+router.get("/:term", async function (req, res, next) {
 	try {
-		const { data, response } = await flight.getById(req.params.id);
-		res.status(response.statusCode).json({
-			data,
-			message: response.message,
-		});
+		const { page, limit, filter, sort } = req.query;
+		const { term } = req.params;
+
+		const { data, meta, message } = await flight.search(term, page, limit, filter, sort);
+		res.status(200).json({ data, meta, message });
 	} catch (err) {
-		next(JSON.parse(err.message));
+		next(err);
 	}
 });
 
@@ -88,7 +186,7 @@ router.get("/:id", async function (req, res, next) {
  *    content:
  *     application/json:
  *      schema:
- *       $ref: '#/components/schemas/flight'
+ *       $ref: '#/components/schemas/Flight'
  *   responses:
  *    201:
  *     description: Successfully created flight
@@ -103,10 +201,10 @@ router.get("/:id", async function (req, res, next) {
  */
 router.post("/", async function (req, res, next) {
 	try {
-		const response = await flight.create(req.body);
-		res.status(response.statusCode).json({ message: response.message });
+		const { data, message } = await flight.create(req.body);
+		res.status(201).json({ data, message });
 	} catch (err) {
-		next(JSON.parse(err.message));
+		next(err);
 	}
 });
 
@@ -124,7 +222,7 @@ router.post("/", async function (req, res, next) {
  *    content:
  *     application/json:
  *      schema:
- *       $ref: '#/components/schemas/flight'
+ *       $ref: '#/components/schemas/Flight'
  *   responses:
  *    200:
  *     description: Flight updated successfully
@@ -137,10 +235,10 @@ router.post("/", async function (req, res, next) {
  */
 router.put("/:id", async function (req, res, next) {
 	try {
-		const response = await flight.update(req.params.id, req.body);
-		res.status(response.statusCode).json({ message: response.message });
+		const { data, message } = await flight.update(req.params.id, req.body);
+		res.status(200).json({ data, message });
 	} catch (err) {
-		next(JSON.parse(err.message));
+		next(err);
 	}
 });
 
@@ -154,7 +252,7 @@ router.put("/:id", async function (req, res, next) {
  *      in: path
  *      required: true
  *   responses:
- *    200:
+ *    204:
  *     description: Flight deleted successfully
  *    404:
  *     description: Flight with this id does not exist
@@ -163,10 +261,10 @@ router.put("/:id", async function (req, res, next) {
  */
 router.delete("/:id", async function (req, res, next) {
 	try {
-		const response = await flight.remove(req.params.id);
-		res.status(response.statusCode).json({ message: response.message });
+		const message = await flight.remove(req.params.id);
+		res.status(204).json({ message });
 	} catch (err) {
-		next(JSON.parse(err.message));
+		next(err);
 	}
 });
 
@@ -179,28 +277,28 @@ module.exports = router;
  *   Flight:
  *    type: object
  *    properties:
- *     Id:
+ *     id:
  *      type: string
- *     Status:
+ *     status:
  *      type: string
- *     Airline_name:
+ *     airline_name:
  *      type: string
- *     Destination:
+ *     destination:
  *      type: string
- *     Arrival:
- *      type: string
- *      format: date-time
- *     Departure:
+ *     arrival:
  *      type: string
  *      format: date-time
- *     Airplane_serial_no:
+ *     departure:
+ *      type: string
+ *      format: date-time
+ *     airplane_serial_no:
  *      type: string
  *    example:
- *     Id: "LH 2334"
- *     Status: "SCHEDULED"
- *     Airline_name: "Lufthansa"
- *     Destination: "Frankfurt"
- *     Arrival: "2024-07-01 12:00:00"
- *     Departure: "2024-07-01 10:00:00"
- *     Airplane_serial_no: "D-AIMD"
+ *     id: "LH 2334"
+ *     status: "SCHEDULED"
+ *     airline_name: "Lufthansa"
+ *     destination: "Frankfurt"
+ *     arrival: "2024-07-01 12:00:00"
+ *     departure: "2024-07-01 10:00:00"
+ *     airplane_serial_no: "D-AIMD"
  */

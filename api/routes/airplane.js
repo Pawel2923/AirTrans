@@ -18,6 +18,32 @@ const airplaneService = require("../services/airplane");
  *      required: false
  *      description: Limit number of airplanes
  *      type: integer
+ *    - name: filter
+ *      in: query
+ *      required: false
+ *      description: Filter by list of properties and values using operator
+ *      type: array
+ *      items:
+ *       type: object
+ *       properties:
+ *        by:
+ *         type: string
+ *        operator:
+ *         type: string
+ *        value:
+ *         type: string
+ *    - name: sort
+ *      in: query
+ *      required: false
+ *      description: Sort by properties and order
+ *      type: object
+ *      properties:
+ *       by:
+ *        type: string
+ *       order:
+ *        type: array
+ *        items:
+ *         type: string
  *   responses:
  *    200:
  *     description: Successfully fetched data
@@ -39,68 +65,28 @@ const airplaneService = require("../services/airplane");
  *            type: integer
  *         message:
  *          type: string
- *    500:
- *     description: Internal server error
- */
-router.get("/", async function (req, res, next) {
-	try {
-		const { page, limit } = req.query;
-		const { data, meta, response } = await airplaneService.getAll(
-			page,
-			limit
-		);
-		res.status(response.statusCode).json({
-			data,
-			meta,
-			message: response.message,
-		});
-	} catch (err) {
-		next(JSON.parse(err.message));
-	}
-});
-
-/**
- * @openapi
- * /airplane/{serial_no}:
- *  get:
- *   description: Returns airplanes that match the serial number
- *   parameters:
- *    - name: serial_no
- *      in: path
- *      required: true
- *      description: Serial number of airplane
- *      type: integer
- *   responses:
- *    200:
- *     description: Successfully fetched data
- *     content:
- *      application/json:
- *       schema:
- *        type: object
- *        properties:
- *         data:
- *          type: array
- *          items:
- *           $ref: '#/components/schemas/Airplane'
- *         message:
- *          type: string
  *    404:
  *     description: Airplane not found
  *    500:
  *     description: Internal server error
  */
-router.get("/:serial_no", async function (req, res, next) {
+router.get("/", async function (req, res, next) {
 	try {
-		const { serial_no } = req.params;
-		const { data, response } = await airplaneService.getBySerialNo(
-			serial_no
+		const { page, limit, filter, sort } = req.query;
+
+		const { data, meta, message } = await airplaneService.get(
+			page,
+			limit,
+			filter,
+			sort
 		);
-		res.status(response.statusCode).json({
+		res.status(200).json({
 			data,
-			message: response.message,
+			meta,
+			message,
 		});
 	} catch (err) {
-		next(JSON.parse(err.message));
+		next(err);
 	}
 });
 
@@ -127,13 +113,13 @@ router.get("/:serial_no", async function (req, res, next) {
  */
 router.post("/", async function (req, res, next) {
 	try {
-		const { data, response } = await airplaneService.create(req.body);
-		res.status(response.statusCode).json({
+		const { data, message } = await airplaneService.create(req.body);
+		res.status(201).json({
 			data,
-			message: response.message,
+			message,
 		});
 	} catch (err) {
-		next(JSON.parse(err.message));
+		next(err);
 	}
 });
 
@@ -164,17 +150,16 @@ router.post("/", async function (req, res, next) {
  */
 router.put("/:serial_no", async function (req, res, next) {
 	try {
-		const { serial_no } = req.params;
-		const { data, response } = await airplaneService.update(
-			serial_no,
+		const { data, message } = await airplaneService.update(
+			req.params.serial_no,
 			req.body
 		);
-		res.status(response.statusCode).json({
+		res.status(200).json({
 			data,
-			message: response.message,
+			message,
 		});
 	} catch (err) {
-		next(JSON.parse(err.message));
+		next(err);
 	}
 });
 
@@ -190,20 +175,20 @@ router.put("/:serial_no", async function (req, res, next) {
  *      description: Serial number of airplane
  *      type: string
  *   responses:
- *    200:
+ *    204:
  *     description: Successfully deleted airplane
  *    404:
- *     description: Airplane not found
+ *     description: No airplanes found
  *    500:
  *     description: Internal server error
  */
 router.delete("/:serial_no", async function (req, res, next) {
 	try {
 		const { serial_no } = req.params;
-		const { response } = await airplaneService.remove(serial_no);
-		res.status(response.statusCode).json({ message: response.message });
+		const message = await airplaneService.remove(serial_no);
+		res.status(204).json({ message });
 	} catch (err) {
-		next(JSON.parse(err.message));
+		next(err);
 	}
 });
 

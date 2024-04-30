@@ -1,25 +1,61 @@
 interface Flight {
 	id: string;
-	arrival: Date;
-	departure: Date;
+	status: string;
+	airline_name: string;
 	destination: string;
+	arrival: string;
+	departure: string;
+	airplane_serial_no: string;
+}
+
+interface ArrDepTableProps {
+	id: string;
+	status: string;
+	airline_name: string;
+	destination: string;
+	arrival: string;
+	departure: string;
+	airplane_serial_no: string;
 	is_departure: boolean;
 }
 
-interface Announcements {
+interface Airplane {
+	serial_no: string;
+	model: string;
+	type: string;
+	production_year: number;
+	num_of_seats: number;
+	fuel_tank: number;
+	fuel_quant: number;
+	crew_size: number;
+	max_cargo: number;
+}
+
+interface Announcement {
 	id: number;
 	title: string;
 	content: string;
-	validUntil: Date;
-	personnelId: number;
+	valid_until: string;
+	personnel_id: number;
+}
+
+interface ParkingInfo {
+	Price_per_day: number;
+	Capacity: number;
+	Path_to_img: string;
 }
 
 interface Offer {
 	id: number;
-	imgPath: string;
+	path_to_img: string;
 	title: string;
-	offerParams: string[];
-	btnText: string;
+	offer_params: string[];
+	btn_text: string;
+}
+
+interface RawOffer {
+	cars: Car[];
+	parkingInfo: ParkingInfo[];
 }
 
 interface ContactInfo {
@@ -56,4 +92,34 @@ interface CarRental {
 	Cars_id: number;
 }
 
-export type { Flight, Announcements, Offer, ContactInfo, Car, CarRental};
+interface PageData {
+	page: number;
+	pages: number;
+}
+
+interface Filter {
+    by: string;
+    operator?: string;
+    value: string;
+}
+
+interface Sort {
+    by: string[];
+    order?: string;
+}
+
+export type {
+	Flight,
+	ArrDepTableProps,
+	Airplane,
+	Announcement,
+	Car,
+  CarRental,
+	ParkingInfo,
+	Offer,
+	RawOffer,
+	ContactInfo,
+	PageData,
+	Filter,
+	Sort,
+};

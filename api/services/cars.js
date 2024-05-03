@@ -62,11 +62,6 @@ async function getById(carId, tableName = "Cars") {
             response: { message: `Car with ID ${carId} not found`, statusCode: 404 },
         };
     }
-
-    return {
-        data: data[0], // Bez konwersji, zwracamy pierwszy rekord
-        response: { message: `Successfully fetched car with ID ${carId}`, statusCode: 200 },
-    };
 }
 
 async function create(car) {

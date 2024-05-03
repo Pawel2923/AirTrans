@@ -4,13 +4,13 @@ import styles from "./tableCars.module.css";
 
 type CarsTableProps = {
   cars: Car[];
-  onEdit: (car: Car) => void; // Funkcja do obsługi edycji samochodu
+  onEdit: (car: Car) => void; 
 };
 
 const CarsTable: React.FC<CarsTableProps> = ({ cars, onEdit }) => {
-  // Funkcja obsługująca naciśnięcie przycisku "Edit"
+ 
   const handleEditClick = (car: Car) => {
-    onEdit(car); // Wywołanie funkcji przekazanej z komponentu nadrzędnego
+    onEdit(car); 
   };
 
   return (
@@ -18,14 +18,14 @@ const CarsTable: React.FC<CarsTableProps> = ({ cars, onEdit }) => {
       <thead>
         <tr>
           <th>ID</th>
-          <th>Brand</th>
+          <th>Marka</th>
           <th>Model</th>
-          <th>Price_per_day</th>
-          <th>Production_year</th>
-          <th>License_plate</th>
-          <th>Fuel_type</th>
-          <th>Transmission_type</th>
-          <th>Actions</th> 
+          <th>Cena za dzień</th>
+          <th>Rok produkcji</th>
+          <th>Nr rejestacji</th>
+          <th>Paliwo</th>
+          <th>Skrzynia biegów</th>
+          <th></th> 
         </tr>
       </thead>
       <tbody>

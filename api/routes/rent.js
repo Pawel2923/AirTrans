@@ -18,5 +18,13 @@ router.get("/", async function (req, res, next) {
         res.status(500).json({ message: "Internal server error" });
     }
 });
-
+router.post("/", async function (req, res, next) {
+    try {
+      const { data, message } = await rentService.createRental(req.body);
+      res.status(201).json({ data, message });
+    } catch (err) {
+      next(err);
+    }
+  });
+  
 module.exports = router;

@@ -55,10 +55,7 @@ function formatDate(dateString) {
 async function createRental(rentalData) {
     try {
       
-      await validateRental(rentalData);
-  
-     
-      const carAvailability = await db.query("SELECT * FROM Rentals WHERE Cars_id = ? AND Return_date > NOW()", [rentalData.cars_id]);
+      const carAvailability = await db.query("SELECT * FROM Rentals WHERE Cars_id = ? AND Return_date > NOW()", [rentalData.Cars_id]);
       if (carAvailability.length > 0) {
         const error = new Error("Ten samochód jest już wypożyczony w podanym terminie.");
         error.statusCode = 409;
@@ -69,11 +66,11 @@ async function createRental(rentalData) {
       const result = await db.query(
         "INSERT INTO Rentals (Rental_date, Return_date, Status, Client_id, Cars_id) VALUES (?, ?, ?, ?, ?)",
         [
-            rentalData.rental_date, 
-            rentalData.return_date, 
-            rentalData.status, 
-            rentalData.client_id, 
-            rentalData.cars_id]
+            rentalData.Rental_date, 
+            rentalData.Return_date, 
+            rentalData.Status, 
+            rentalData.Client_id, 
+            rentalData.Cars_id]
       );
   
       
@@ -91,7 +88,34 @@ async function createRental(rentalData) {
     }
   }
   
+
+  async  function removeRent(Id){
+try {
+    const rentExists = await db.query("SELECT * FROM Rentals WHERE Id=?", [Id]);
+
+    if (rentExists.length === 0) {
+        const error = new Error("Wypożyczenie nie istnieje!");
+        error.statusCode = 404;
+        throw error;
+    }
+
+    const result = await db.query("DELETE FROM Rentals WHERE Id=?", [Id]);
+
+    if(result.affectedRows===0){
+        throw new Error("Wypożyczenie nie zostało usunięte!");
+
+    }
+    return {
+        message: "Wypożyczenie zostało usunięte!",
+        statusCode: 201
+    };
+  } catch (error) {
+    throw error;
+  }
+
+  }
 module.exports = {
     getAllRentals,
+    removeRent,
     createRental,
 };

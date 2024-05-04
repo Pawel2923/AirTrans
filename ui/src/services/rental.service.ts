@@ -1,3 +1,4 @@
+
 import {CarRental} from "../assets/Data";
 import http from "../http-common";
 
@@ -11,8 +12,13 @@ class RentalService {
       });
   }
   createRental(carRental: CarRental) {
-    return http.post("/rentals", carRental)
+    return http.post("/rent", carRental)
       
+
+  }
+
+  removeRent(id: number) {
+    return http.delete(`/rent/${id}`)
   }
   
 }

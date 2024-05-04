@@ -85,8 +85,8 @@ interface Car {
 }
 interface CarRental {
 	Id: number;
-	Rental_date: Date;
-	Return_date: Date;
+	Rental_date: string;
+	Return_date: string;
 	Status: string;
 	Client_id: number;
 	Cars_id: number;

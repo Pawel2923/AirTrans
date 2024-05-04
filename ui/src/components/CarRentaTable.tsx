@@ -25,8 +25,8 @@ const TableRent = ({ rent }:TableRentProps ) => {
               <td>{rents.Id}</td>
               <td>{rents.Client_id}</td>
               <td>{rents.Cars_id}</td>
-              <td>{rents.Rental_date.toString()}</td>
-              <td>{rents.Return_date.toString()}</td>
+              <td>{rents.Rental_date}</td>
+              <td>{rents.Return_date}</td>
               <td>{rents.Status}</td>
              
             </tr>

@@ -20,7 +20,14 @@ class RentalService {
   removeRent(id: number) {
     return http.delete(`/rent/${id}`)
   }
-  
+
+  getById(id: number) {
+    return http.get(`/rent/${id}`)
+    }
+ 
+  updateRent(carRental: CarRental) {
+    return http.put(`/rent/${carRental.Id}`, carRental)
+  }
 }
 
 

@@ -126,6 +126,10 @@ const ZarzadzanieP = () => {
     navigate(`/edit-car/${car.Id}`);
   };
 
+  const editRent = async (rent: CarRental) => {
+    navigate(`/edit-rent/${rent.Id}`);
+  };
+
   useEffect(() => {
     async function fetchData() {
       try {
@@ -151,7 +155,7 @@ const ZarzadzanieP = () => {
       <h1>Zarzadzanie Autami i Wypożyczeń</h1>
       <div className={tableStyle.tableContainer}>
         <h2>Lista Wypożyczeń</h2>
-        <TableRent rent={rentals} />
+        <TableRent rents={rentals} onEdit={editRent} />
       </div>
       <div className={tableStyle.tableContainer}>
         <h2>Lista Aut</h2>

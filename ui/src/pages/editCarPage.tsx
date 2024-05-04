@@ -108,7 +108,7 @@ const EditCarPage = () => {
           onChange={inputChangeHandler}
           value={carData.Transmission_type}
         />
-        <button type="submit">Save Changes</button>
+        <button type="submit">Zapisz zmiany</button>
       </form>
     </div>
   );

@@ -10,16 +10,9 @@ class RentalService {
         return response.data;
       });
   }
-  create(carRental: CarRental) {
+  createRental(carRental: CarRental) {
     return http.post("/rentals", carRental)
-      .then(response => {
-        console.log("Rental created:", response.data);
-        return response.data;
-      })
-      .catch(error => {
-        console.error("Error creating rental:", error);
-        throw error;
-      });
+      
   }
   
 }

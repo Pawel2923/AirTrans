@@ -11,6 +11,7 @@ import ScheduleDetails from "./pages/ScheduleDetails";
 import ScheduleEdit from "./pages/ScheduleEdit";
 import Airplanes from "./pages/Airplanes";
 import AirplaneEdit from "./pages/AirplaneEdit";
+import Manager from "./pages/Manager";
 
 const router = createBrowserRouter([{ path: "*", Component: Root }]);
 
@@ -36,6 +37,7 @@ function Root() {
       </Route>
       <Route path="/zarzadzaniePojazd" element={<ZarzadzanieP />} />
       <Route path="/edit-car/:id" element={<EditCarPage />} />
+      <Route path="/zarzadzanie" element={<Manager />} />
       <Route path="*" element={<NotFound />} />
     </Routes>
 	);

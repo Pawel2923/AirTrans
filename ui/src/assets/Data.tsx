@@ -92,16 +92,27 @@ interface CarRental {
 	Cars_id: number;
 }
 interface ParkingReservation {
+    Id: number;
+    Parking_level: string;
+    Space_id: number;
+    Since: string;
+    Until: string;
+    License_plate: string;
+    Price_per_day: number;
+    Client_id: number;
+}
+
+interface ParkingZ{
 	Id: number;
-	Parking_level:string;
+	Parking_level: string;
 	Space_id: number;
 	Since: string;
 	Until: string;
 	License_plate: string;
 	Price_per_day: number;
 	Client_id: number;
-}
 
+}
 interface PageData {
 	page: number;
 	pages: number;
@@ -133,4 +144,5 @@ export type {
 	Filter,
 	Sort,
 	ParkingReservation,
+	ParkingZ,
 };

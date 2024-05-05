@@ -13,6 +13,7 @@ const registerRouter = require("./routes/register");
 const airplaneRouter = require("./routes/airplane");
 const carsRouter = require("./routes/cars");
 const rentRouter = require("./routes/rent");
+const parkingRouter = require("./routes/parking");
 
 const app = express();
 
@@ -44,6 +45,8 @@ app.use("/register", registerRouter);
 app.use("/airplane", airplaneRouter);
 app.use("/cars", carsRouter);
 app.use("/rent", rentRouter);
+app.use("/parking", parkingRouter);
+
 
 app.use((err, req, res, next) => {
 	const statusCode = err.statusCode || 500;

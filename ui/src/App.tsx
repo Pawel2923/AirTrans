@@ -15,7 +15,6 @@ import EditRentPage from "./pages/editRentPage";
 import ParkingPage from "./pages/ParkingPage";
 
 
-
 const router = createBrowserRouter([{ path: "*", Component: Root }]);
 
 export default function App() {
@@ -43,8 +42,6 @@ function Root() {
       <Route path="/edit-rent/:id" element={<EditRentPage />} />
 
       <Route path="/parking" element={<ParkingPage />} />
-
-      
 
       <Route path="*" element={<NotFound />} />
     </Routes>

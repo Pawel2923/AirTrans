@@ -1,51 +1,57 @@
+import { ParkingZ } from "../assets/Data";
+import styles from '../components/tableCars.module.css';
 import React from "react";
-import { ParkingReservation } from "../assets/Data";
-import styles from "./tableCars.module.css";
 
-type ParkingTableProps = {
-    parking: ParkingReservation[];
-    onEdit: (parki: ParkingReservation) => void;
+type TableParkingProps={
+  parkings: ParkingZ[];
+  onEdit: (park: ParkingZ) => void;
+
 };
 
-const ParkingTable: React.FC<ParkingTableProps> = ({ parking, onEdit }) => {
-    const handleEditClick = (parki: ParkingReservation) => {
-        onEdit(parki);
-    };
+const TableParking:React.FC<TableParkingProps>= ({ parkings, onEdit }) => {
 
-    return (
-        <table className={styles.table}>
-            <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>Id_Klienta</th>
-                    <th>Poziom</th>
-                    <th>Miejsce</th>
-                    <th>Od</th>
-                    <th>Do</th>
-                    <th>Cana za dzień</th>
-                    <th>Nr rejestacji</th>
-                    <th></th>
-                </tr>
-            </thead>
-            <tbody>
-                {parking.map((parki) => (
-                    <tr key={parki.Id}>
-                        <td>{parki.Id}</td>
-                        <td>{parki.Client_id}</td>
-                        <td>{parki.Parking_level}</td>
-                        <td>{parki.Space_id}</td>
-                        <td>{parki.Since}</td>
-                        <td>{parki.Until}</td>
-                        <td>{parki.Price_per_day}</td>
-                        <td>{parki.License_plate}</td>
-                        <td>
-                            <button onClick={() => handleEditClick(parki)}>Edit</button>
-                        </td>
-                    </tr>
-                ))}
-            </tbody>
-        </table>
-    );
+  const handleEditParkClick = (park: ParkingZ) => {
+    onEdit(park);
+  };
+  return (
+    <table className={styles.table}>
+      <thead>
+        <tr>
+          <th>ID</th>
+            <th>ID_Clienta</th>
+            <th>Numer_rejestracyjny</th>
+            <th>Poziom_parkingu</th>
+            <th>Cena_dzienna</th>
+            <th>Od</th>
+            <th>Do</th>
+            <th>ID_Miejsca</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        {parkings.map((park) => (
+        
+            <tr key={park.Id}>
+              <td>{park.Id}</td>
+              <td>{park.Client_id}</td>
+              <td>{park.License_plate}</td>
+              <td>{park.Parking_level}</td>
+                <td>{park.Price_per_day}</td>
+                <td>{park.Since}</td>
+                <td>{park.Until}</td>
+                <td>{park.Space_id}</td>
+
+              <td>
+                <button onClick={()=> handleEditParkClick(park)}>Edit</button>
+              </td>
+             
+            </tr>
+          
+        ))}
+      </tbody>
+    </table>
+  );
 };
 
-export default ParkingTable;
+
+export default TableParking;

@@ -3,20 +3,28 @@ const router = express.Router();
 const parkingService = require("../services/parking");
 
 router.get("/", async function (req, res, next) {
-    try {
-        const { page, limit } = req.query;
+  try {
+    const { page, limit } = req.query;
 
-        const { data, meta, response } = await parkingService.getAllParkings(page, limit);
+    const { data, meta, response } = await parkingService.getAllParking(page, limit);
 
-        res.status(response.statusCode).json({
-            data,
-            meta
-        });
+    res.status(response.statusCode).json({
+      data,
+      meta
+    });
 
-    } catch (error) {
-        console.error("Error while fetching parkings", error);
-        res.status(500).json({ message: "Internal server error" });
-    }
+  } catch (error) {
+    console.error("Error while fetching parking", error);
+    res.status(500).json({ message: "Internal server error" });
+  }
 });
-
+router.post("/", async function (req, res, next) {
+    try {
+      const { data, message } = await parkingService.createParking(req.body);
+      res.status(201).json({ data, message });
+    } catch (err) {
+      next(err);
+    }
+  });
+  
 module.exports = router;

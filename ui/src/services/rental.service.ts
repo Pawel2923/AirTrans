@@ -13,8 +13,6 @@ class RentalService {
   }
   createRental(carRental: CarRental) {
     return http.post("/rent", carRental)
-      
-
   }
 
   removeRent(id: number) {
@@ -23,7 +21,7 @@ class RentalService {
 
   getById(id: number) {
     return http.get(`/rent/${id}`)
-    }
+  }
  
   updateRent(carRental: CarRental) {
     return http.put(`/rent/${carRental.Id}`, carRental);

@@ -91,6 +91,16 @@ interface CarRental {
 	Client_id: number;
 	Cars_id: number;
 }
+interface ParkingReservation {
+	Id: number;
+	Parking_level:string;
+	Space_id: number;
+	Since: string;
+	Until: string;
+	License_plate: string;
+	Price_per_day: number;
+	Client_id: number;
+}
 
 interface PageData {
 	page: number;
@@ -122,4 +132,5 @@ export type {
 	PageData,
 	Filter,
 	Sort,
+	ParkingReservation,
 };

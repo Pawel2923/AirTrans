@@ -21,8 +21,8 @@ const ZarzadzanieP = () => {
   });
   const [newRentalData, setNewRentalData] = useState<CarRental>({
     Id: 0,
-    Rental_date: "", // Zamiast new Date()
-    Return_date: "", // Zamiast new Date()
+    Rental_date: "", 
+    Return_date: "", 
     Status: "",
     Client_id: 0,
     Cars_id: 0,
@@ -43,11 +43,11 @@ const ZarzadzanieP = () => {
   ) => {
     const { name, value } = event.target;
 
-    // Jeśli nazwa pola to Rental_date lub Return_date, konwertujemy wartość na obiekt Date
+    
     if (name === "Rental_date" || name === "Return_date") {
       setNewRentalData((prevData) => ({
         ...prevData,
-        [name]: value, // Zmiana na wartość łańcuchową, ponieważ input typu datetime-local zwraca string
+        [name]: value, 
       }));
     } else {
       setNewRentalData((prevData) => ({

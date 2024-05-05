@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import classes from "./ManagerNav.module.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBars } from "@fortawesome/free-solid-svg-icons";
@@ -10,7 +10,7 @@ import { faTools } from "@fortawesome/free-solid-svg-icons";
 import { faDoorOpen } from "@fortawesome/free-solid-svg-icons";
 import { faBullhorn } from "@fortawesome/free-solid-svg-icons";
 import { faCircleUser } from "@fortawesome/free-solid-svg-icons";
-import { NavLink } from "react-router-dom";
+import { NavLink, useLocation } from "react-router-dom";
 
 const navItems = [
 	{
@@ -50,12 +50,12 @@ interface ManagerNavProps {
 }
 
 export const ManagerNav: React.FC<ManagerNavProps> = ({ setTitle }: ManagerNavProps) => {
+	const location = useLocation();
 	const [expanded, setExpanded] = useState<boolean>(true);
 
-	const linkClickHandler = (e: React.MouseEvent<HTMLAnchorElement>) => {
-		const target = e.currentTarget as HTMLAnchorElement;
-		setTitle(target.getAttribute("data-name") || "");
-	};
+	useEffect(() => {
+		setTitle(navItems.find(item => item.id === location.pathname.split("/")[2])?.name || "");
+	}, [location, setTitle]);
 
 	const expandHandler = () => {
 		setExpanded(!expanded);
@@ -75,8 +75,6 @@ export const ManagerNav: React.FC<ManagerNavProps> = ({ setTitle }: ManagerNavPr
 						<NavLink
 							to={`/zarzadzanie/${item.id}`}
 							id={item.id}
-							data-name={item.name}
-							onClick={linkClickHandler}
 						>
 							{item.name}
 						</NavLink>
@@ -87,8 +85,6 @@ export const ManagerNav: React.FC<ManagerNavProps> = ({ setTitle }: ManagerNavPr
 							<NavLink
 								to={`/zarzadzanie/${item.id}`}
 								id={item.id}
-								data-name={item.name}
-								onClick={linkClickHandler}
 							>
 								<FontAwesomeIcon icon={item.icon} />
 							</NavLink>

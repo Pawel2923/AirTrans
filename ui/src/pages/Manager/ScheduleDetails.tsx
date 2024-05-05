@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
-import flightService from "../services/flight.service";
-import { Flight } from "../assets/Data";
+import flightService from "../../services/flight.service";
+import { Flight } from "../../assets/Data";
 
 const ScheduleDetails = () => {
     const { id } = useParams<{ id: string }>();
@@ -19,7 +19,7 @@ const ScheduleDetails = () => {
 
 	return (
 		<>
-			<h1>Schedule Details</h1>
+			<h1>Szczegóły lotu</h1>
             <ul>
                 {flightData.map((flight: Flight) => (
                     Object.entries(flight).map(([key, value]) => (

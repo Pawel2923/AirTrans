@@ -1,8 +1,8 @@
 import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import flightService from "../services/flight.service";
-import airplaneService from "../services/airplane.service";
-import { Flight, Airplane } from "../assets/Data";
+import flightService from "../../services/flight.service";
+import airplaneService from "../../services/airplane.service";
+import { Flight, Airplane } from "../../assets/Data";
 
 const emptyFlight: Flight = {
 	id: "",
@@ -102,7 +102,7 @@ const ScheduleEdit = () => {
 
     return (
         <div>
-            <h1>Edit Schedule</h1>
+            <h1>Edytuj harmonogram</h1>
             <form onSubmit={formSubmitHandler}>
                 <div className="form-group">
                     <label htmlFor="arrival">Przylot</label>

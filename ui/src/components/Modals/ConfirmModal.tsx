@@ -1,5 +1,5 @@
 import React from "react";
-import classes from "./ConfirmModal.module.css";
+import classes from "./Modal.module.css";
 import Modal from "./Modal";
 
 interface ConfirmModalProps {
@@ -19,7 +19,7 @@ const ConfirmModal: React.FC<ConfirmModalProps> = ({
 }: ConfirmModalProps) => {
 	return (
 		<Modal open={open} onClose={onClose}>
-			<div className={classes["confirm-modal"]}>
+			<div>
 				<h2>{title}</h2>
 				<p>{message}</p>
 				<div className={classes["modal-buttons"]}>

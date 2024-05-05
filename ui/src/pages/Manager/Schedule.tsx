@@ -1,10 +1,10 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import ArrDepTable from "../components/ArrDepTable";
-import flightService from "../services/flight.service";
-import airplaneService from "../services/airplane.service";
-import { ArrDepTableProps, Flight, PageData, Airplane } from "../assets/Data";
-import Pagination from "../components/Pagination";
+import ArrDepTable from "../../components/ArrDepTable";
+import flightService from "../../services/flight.service";
+import airplaneService from "../../services/airplane.service";
+import { ArrDepTableProps, Flight, PageData, Airplane } from "../../assets/Data";
+import Pagination from "../../components/Pagination";
 
 const flightsDataParser = (flightsData: ArrDepTableProps[]) => {
 	const flights: ArrDepTableProps[] = [];

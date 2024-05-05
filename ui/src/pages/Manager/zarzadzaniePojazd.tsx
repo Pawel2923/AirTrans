@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from "react";
-import carService from "../services/car.service";
-import rentService from "../services/rental.service";
-import CarsTable from "../components/tableCars";
-import { Car } from "../assets/Data";
-import tableStyle from "../components/tableCars.module.css";
-import { CarRental } from "../assets/Data";
-import TableRent from "../components/CarRentaTable";
+import carService from "../../services/car.service";
+import rentService from "../../services/rental.service";
+import CarsTable from "../../components/tableCars";
+import { Car } from "../../assets/Data";
+import tableStyle from "../../components/tableCars.module.css";
+import { CarRental } from "../../assets/Data";
+import TableRent from "../../components/CarRentaTable";
 import { useNavigate } from "react-router-dom";
 
 const ZarzadzanieP = () => {

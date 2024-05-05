@@ -20,6 +20,12 @@
     border-radius: 25px;
 }
 
+.modal-buttons {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 1rem;
+}
+
 .close {
     color: #aaa;
     float: right;

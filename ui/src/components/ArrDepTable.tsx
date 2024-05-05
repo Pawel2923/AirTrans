@@ -9,7 +9,7 @@ import { faTrashCan } from "@fortawesome/free-solid-svg-icons/faTrashCan";
 import tableStyles from "./ArrDepTable.module.css";
 import { ArrDepTableProps } from "../assets/Data";
 import flightService from "../services/flight.service";
-import ConfirmModal from "./ConfirmModal";
+import ConfirmModal from "./Modals/ConfirmModal";
 
 interface TableProps {
 	data: ArrDepTableProps[];

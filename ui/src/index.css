@@ -60,6 +60,11 @@ h1 {
   --bs-btn-disabled-border-color: var(--alt-color) !important;
 }
 
+.btn-link {
+  box-shadow: none !important;
+  border-radius: unset !important;
+}
+
 .pagination {
   --bs-pagination-color: var(--primary-color) !important;
   --bs-pagination-active-bg: var(--primary-color) !important;

@@ -16,4 +16,5 @@
 .manager > main {
     grid-column: span 2;
     padding: 1rem;
+    background-color: #f5f5f5;
 }

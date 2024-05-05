@@ -3,10 +3,50 @@ import classes from "./ManagerNav.module.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBars } from "@fortawesome/free-solid-svg-icons";
 import { faRightFromBracket } from "@fortawesome/free-solid-svg-icons";
+import { faPlaneDeparture } from "@fortawesome/free-solid-svg-icons";
+import { faPlane } from "@fortawesome/free-solid-svg-icons";
+import { faMapMarkerAlt } from "@fortawesome/free-solid-svg-icons";
+import { faTools } from "@fortawesome/free-solid-svg-icons";
+import { faDoorOpen } from "@fortawesome/free-solid-svg-icons";
+import { faBullhorn } from "@fortawesome/free-solid-svg-icons";
+import { faCircleUser } from "@fortawesome/free-solid-svg-icons";
+
+const navItems = [
+	{
+		id: "flights",
+		name: "HARMONOGRAM LOTÓW",
+		icon: faPlaneDeparture
+	},
+	{
+		id: "airplanes",
+		name: "SAMOLOTY",
+		icon: faPlane
+	},
+	{
+		id: "airfield",
+		name: "LOTNISKO",
+		icon: faMapMarkerAlt
+	},
+	{
+		id: "equipment",
+		name: "SPRZĘT LOTNISKA",
+		icon: faTools
+	},
+	{
+		id: "gates",
+		name: "BRAMKI",
+		icon: faDoorOpen
+	},
+	{
+		id: "announcements",
+		name: "OGŁOSZENIA",
+		icon: faBullhorn
+	},
+];
 
 export const ManagerNav = () => {
 	const [active, setActive] = useState<string>("");
-	const [expanded, setExpanded] = useState<boolean>(false);
+	const [expanded, setExpanded] = useState<boolean>(true);
 
 	const activeHandler = (e: React.MouseEvent<HTMLAnchorElement>) => {
 		const target = e.target as HTMLAnchorElement;
@@ -17,9 +57,6 @@ export const ManagerNav = () => {
 		setExpanded(!expanded);
 	};
 
-	console.log(active);
-	console.log(expanded);
-
 	return (
 		<nav className={classes.nav}>
 			<button
@@ -29,68 +66,34 @@ export const ManagerNav = () => {
 				<FontAwesomeIcon className="navbar-toggler-icon" icon={faBars} />
 			</button>
 			<ul className={classes["nav-items"]}>
-				<li className={classes["nav-item"]}>
-					<a
-						href="#"
-						id="flights"
-						className={active === "flights" ? "active" : ""}
-						onClick={activeHandler}
-					>
-						HARMONOGRAM LOTÓW
-					</a>
-				</li>
-				<li className={classes["nav-item"]}>
-					<a
-						href="#"
-						id="airplanes"
-						className={active === "airplanes" ? "active" : ""}
-						onClick={activeHandler}
-					>
-						SAMOLOTY
-					</a>
-				</li>
-				<li className={classes["nav-item"]}>
-					<a
-						href="#"
-						id="airfield"
-						className={active === "airfield" ? "active" : ""}
-						onClick={activeHandler}
-					>
-						LOTNISKO
-					</a>
-				</li>
-				<li className={classes["nav-item"]}>
-					<a
-						href="#"
-						id="equipment"
-						className={active === "equipment" ? "active" : ""}
-						onClick={activeHandler}
-					>
-						SPRZĘT LOTNISKA
-					</a>
-				</li>
-				<li className={classes["nav-item"]}>
-					<a
-						href="#"
-						id="gates"
-						className={active === "gates" ? "active" : ""}
-						onClick={activeHandler}
-					>
-						BRAMKI
-					</a>
-				</li>
-				<li className={classes["nav-item"]}>
-					<a
-						href="#"
-						id="announcements"
-						className={active === "announcements" ? "active" : ""}
-						onClick={activeHandler}
-					>
-						OGŁOSZENIA
-					</a>
-				</li>
-				<li className={`${classes["nav-item"]} ${classes.logout}`}>
-					<a href="#">Wyloguj <FontAwesomeIcon icon={faRightFromBracket} /></a>
+				{expanded ? navItems.map(item => (
+					<li key={item.id} className={classes["nav-item"]}>
+						<a
+							href="#"
+							id={item.id}
+							className={active === item.id ? "active" : ""}
+							onClick={activeHandler}
+						>
+							{item.name}
+						</a>
+					</li>
+				)) : (
+					navItems.map(item => (
+						<li key={item.id} className={`${classes["nav-item"]} ${classes.shrank}`}>
+							<a
+								href="#"
+								id={item.id}
+								className={active === item.id ? "active" : ""}
+								onClick={activeHandler}
+							>
+								<FontAwesomeIcon icon={item.icon} />
+							</a>
+						</li>
+					
+					))
+				)}
+				<li className={`${classes["nav-item"]} ${classes.logout} ${!expanded ? classes.shrank : ""}`}>
+					<a href="#">{expanded && "Wyloguj "}<FontAwesomeIcon icon={faRightFromBracket} /></a>
 				</li>
 			</ul>
 		</nav>
@@ -105,7 +108,7 @@ export const ManagerTopNav = () => {
 				<h1>Title</h1>
 			</div>
 			<div className={classes["nav-right"]}>
-				<a href="#">User</a>
+				<a href="#"><FontAwesomeIcon icon={faCircleUser} /></a>
 			</div>
 		</nav>
 	);

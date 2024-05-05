@@ -49,6 +49,21 @@ h1 {
   --bs-btn-disabled-border-color: var(--primary-color) !important;
 }
 
+.btn-outline-primary {
+  --bs-btn-color: var(--primary-color) !important;
+  --bs-btn-bg: transparent !important;
+  --bs-btn-border-color: var(--primary-color) !important;
+  --bs-btn-hover-color: #fff !important;
+  --bs-btn-hover-bg: var(--primary-color) !important;
+  --bs-btn-hover-border-color: var(--primary-color) !important;
+  --bs-btn-active-color: #fff !important;
+  --bs-btn-active-bg: var(--primary-color) !important;
+  --bs-btn-active-border-color: var(--primary-color) !important;
+  --bs-btn-disabled-color: var(--primary-color) !important;
+  --bs-btn-disabled-bg: transparent !important;
+  --bs-btn-disabled-border-color: var(--primary-color) !important;
+}
+
 .btn-alt {
   --bs-btn-bg: var(--alt-color) !important;
   --bs-btn-border-color: var(--alt-color) !important;

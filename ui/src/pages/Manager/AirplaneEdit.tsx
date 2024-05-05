@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
-import airplaneService from "../services/airplane.service";
+import airplaneService from "../../services/airplane.service";
 import { useParams, useNavigate } from "react-router-dom";
-import { Airplane } from "../assets/Data";
+import { Airplane } from "../../assets/Data";
 
 const emptyAirplane: Airplane = {
 	serial_no: "",
@@ -51,13 +51,9 @@ const AirplaneEdit = () => {
 		});
 	};
 
-	if (!airplane) {
-		return <div>Loading...</div>;
-	}
-
 	return (
 		<div>
-			<h1>Edit Airplane</h1>
+			<h1>Edytuj dane samolotu</h1>
 			<form onSubmit={formSubmitHandler}>
 				<div className="form-group">
 					<label htmlFor="serial_no">Serial No</label>

@@ -35,6 +35,7 @@ h1 {
 
 .btn {
   box-shadow: var(--default-box-shadow);
+  border-radius: 50px !important;
 }
 
 .btn-primary {
@@ -46,7 +47,21 @@ h1 {
   --bs-btn-active-border-color: #4c98ca !important;
   --bs-btn-disabled-bg: var(--primary-color) !important;
   --bs-btn-disabled-border-color: var(--primary-color) !important;
-  border-radius: 50px !important;
+}
+
+.btn-outline-primary {
+  --bs-btn-color: var(--primary-color) !important;
+  --bs-btn-bg: transparent !important;
+  --bs-btn-border-color: var(--primary-color) !important;
+  --bs-btn-hover-color: #fff !important;
+  --bs-btn-hover-bg: var(--primary-color) !important;
+  --bs-btn-hover-border-color: var(--primary-color) !important;
+  --bs-btn-active-color: #fff !important;
+  --bs-btn-active-bg: var(--primary-color) !important;
+  --bs-btn-active-border-color: var(--primary-color) !important;
+  --bs-btn-disabled-color: var(--primary-color) !important;
+  --bs-btn-disabled-bg: transparent !important;
+  --bs-btn-disabled-border-color: var(--primary-color) !important;
 }
 
 .btn-alt {
@@ -58,11 +73,21 @@ h1 {
   --bs-btn-active-border-color: #d7e7f3 !important;
   --bs-btn-disabled-bg: var(--alt-color) !important;
   --bs-btn-disabled-border-color: var(--alt-color) !important;
-  border-radius: 50px !important;
+}
+
+.btn-link {
+  box-shadow: none !important;
+  border-radius: unset !important;
 }
 
 .pagination {
   --bs-pagination-color: var(--primary-color) !important;
   --bs-pagination-active-bg: var(--primary-color) !important;
   --bs-pagination-active-border-color: var(--primary-color) !important;
+}
+
+button.active,
+a.active {
+  background-color: #5DA9DB;
+  color: #fff !important;
 }

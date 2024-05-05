@@ -1,27 +1,19 @@
 import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
-import ArrDepTable from "../components/ArrDepTable";
-import flightService from "../services/flight.service";
-import airplaneService from "../services/airplane.service";
-import { ArrDepTableProps, Flight, PageData, Airplane } from "../assets/Data";
-import Pagination from "../components/Pagination";
-
-const flightsDataParser = (flightsData: ArrDepTableProps[]) => {
-	const flights: ArrDepTableProps[] = [];
-	flightsData.map((flight: ArrDepTableProps) => {
-		flights.push({
-			id: flight.id,
-			status: flight.status,
-			airline_name: flight.airline_name,
-			departure: flight.departure,
-			arrival: flight.arrival,
-			destination: flight.destination,
-			airplane_serial_no: flight.airplane_serial_no,
-			is_departure: flight.is_departure,
-		});
-	});
-	return flights;
-};
+import { useSearchParams } from "react-router-dom";
+import ArrDepTable from "../../components/ArrDepTable";
+import flightService from "../../services/flight.service";
+import airplaneService from "../../services/airplane.service";
+import {
+	ArrDepTableProps,
+	Flight,
+	PageData,
+	Airplane,
+} from "../../assets/Data";
+import { arrDepDataParser, flightsDataParser } from "../../utils/data-parser";
+import Pagination from "../../components/Pagination";
+import Toast from "../../components/Toast";
+import { faCircleExclamation } from "@fortawesome/free-solid-svg-icons";
+import { useCreateFlight } from "../../hooks/use-flight";
 
 const emptyFlight: Flight = {
 	id: "",
@@ -34,23 +26,29 @@ const emptyFlight: Flight = {
 };
 
 const Schedule = () => {
-	const navigate = useNavigate();
+	const [searchParams] = useSearchParams();
 	const [flights, setFlights] = useState<ArrDepTableProps[]>([]);
+	const [refreshData, setRefreshData] = useState<boolean>(false);
 	const [airplaneData, setAirplaneData] = useState<Airplane[]>([]);
-	const [pageData, setPageData] = useState<PageData>({ page: 1, pages: 1 });
+	const [pageData, setPageData] = useState<PageData>({
+		page: parseInt(searchParams.get("page") || "1"),
+		pages: 1,
+	});
 	const [createData, setCreateData] = useState<Flight>(emptyFlight);
-	const [deleteId, setDeleteId] = useState<string>("");
+	const [toast, setToast] = useState<typeof Toast | null>(null);
+	const { toast: createToast, createFlight } =
+		useCreateFlight(setRefreshData);
 
 	useEffect(() => {
 		flightService
-			.getByArrivalOrDeparture(pageData.page, 10)
+			.getByArrivalOrDeparture(pageData.page, 5)
 			.then((response) => {
 				if (response.status === 200) {
-					setFlights(flightsDataParser(response.data.data));
+					setFlights(arrDepDataParser(response.data.data));
 					setPageData(response.data.meta);
 				}
 			});
-	}, [pageData.page]);
+	}, [pageData.page, refreshData]);
 
 	useEffect(() => {
 		airplaneService.getAll().then((response) => {
@@ -78,25 +76,14 @@ const Schedule = () => {
 		}));
 	};
 
-	const deleteInputChangeHandler = (
-		e: React.ChangeEvent<HTMLInputElement>
-	) => {
-		setDeleteId(e.target.value);
-	};
-
 	const createFormSubmitHandler = (e: React.FormEvent<HTMLFormElement>) => {
 		e.preventDefault();
 
-		const submittedData = { ...createData };
+		let submittedData = { ...createData };
 
-		submittedData.arrival = new Date(submittedData.arrival)
-			.toISOString()
-			.slice(0, 19)
-			.replace("T", " ");
-		submittedData.departure = new Date(submittedData.departure)
-			.toISOString()
-			.slice(0, 19)
-			.replace("T", " ");
+		submittedData = flightsDataParser([submittedData])[0];
+		submittedData.arrival += ":00";
+		submittedData.departure += ":00";
 
 		// Regular expression to validate date and time format
 		const datetimeRegex =
@@ -104,43 +91,46 @@ const Schedule = () => {
 
 		// Validate Arrival and Departure date and time format
 		if (!datetimeRegex.test(submittedData.arrival)) {
-			console.log(submittedData.arrival);
+			setToast(() => (
+				<Toast
+					icon={faCircleExclamation}
+					message="Niepoprawna data i godzina przylotu"
+					onClose={() => setToast(null)}
+					type="danger"
+				/>
+			));
 			return;
 		}
 
 		if (!datetimeRegex.test(submittedData.departure)) {
-			console.log(submittedData.departure);
+			setToast(() => (
+				<Toast
+					icon={faCircleExclamation}
+					message="Niepoprawna data i godzina odlotu"
+					onClose={() => setToast(null)}
+					type="danger"
+				/>
+			));
 			return;
 		}
 
-		console.log(submittedData);
-
-		flightService.create(submittedData).then((response) => {
-			if (response.status === 201) {
-				alert("Dodano nowy lot");
-				navigate(0);
-			}
-		});
-	};
-
-	const deleteFormSubmitHandler = (e: React.FormEvent<HTMLFormElement>) => {
-		e.preventDefault();
-
-		flightService.delete(deleteId).then((response) => {
-			if (response.status === 204) {
-				alert("Usunięto lot");
-				navigate(0);
-			}
-		});
+		createFlight(submittedData);
 	};
 
 	return (
 		<>
-			<h1>Schedule</h1>
 			<div>
-				<h2>Harmonogram lotów:</h2>
-				<ArrDepTable data={flights} hasActionButtons={true} />
-				<Pagination pageData={pageData} setPageData={setPageData} />
+				<h2>Harmonogram odlotów i przylotów</h2>
+				<ArrDepTable
+					data={flights}
+					hasActionButtons={true}
+					setRefreshData={setRefreshData}
+				/>
+				<Pagination
+					className="mt-3"
+					pageData={pageData}
+					setPageData={setPageData}
+				/>
 			</div>
 			<form onSubmit={createFormSubmitHandler}>
 				<h3>Dodaj wpis do harmonogramu</h3>
@@ -232,24 +222,12 @@ const Schedule = () => {
 						))}
 					</select>
 				</div>
-				<button type="submit" className="btn btn-primary">Dodaj</button>
+				<button type="submit" className="btn btn-primary mt-3">
+					Dodaj
+				</button>
 			</form>
-			<form onSubmit={deleteFormSubmitHandler}>
-				<h3>Usuń wpis z harmonogramu</h3>
-				<div className="form-group">
-					<label htmlFor="delete_id">Numer lotu</label>
-					<input
-						type="text"
-						className="form-control"
-						id="delete_id"
-						name="delete_id"
-						value={deleteId}
-						onChange={deleteInputChangeHandler}
-						placeholder="Numer lotu"
-					/>
-				</div>
-				<button type="submit" className="btn btn-danger">Usuń</button>
-			</form>
+			{toast}
+			{createToast}
 		</>
 	);
 };

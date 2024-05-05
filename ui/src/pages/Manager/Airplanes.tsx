@@ -1,8 +1,11 @@
 import { useState, useEffect } from "react";
-import { useNavigate, Link } from "react-router-dom";
-import airplaneService from "../services/airplane.service";
-import { Airplane, PageData } from "../assets/Data";
-import Pagination from "../components/Pagination";
+import { useNavigate, Link, useSearchParams } from "react-router-dom";
+import airplaneService from "../../services/airplane.service";
+import { Airplane, PageData } from "../../assets/Data";
+import Pagination from "../../components/Pagination";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faPenToSquare, faTrashCan } from "@fortawesome/free-solid-svg-icons";
+import ConfirmModal from "../../components/Modals/ConfirmModal";
 
 const emptyAirplane: Airplane = {
 	serial_no: "",
@@ -17,14 +20,18 @@ const emptyAirplane: Airplane = {
 };
 
 const Airplanes = () => {
+	const [searchParams] = useSearchParams();
 	const navigate = useNavigate();
 	const [airplaneData, setAirplaneData] = useState<Airplane[]>([]);
-	const [pageData, setPageData] = useState<PageData>({ page: 1, pages: 1 });
+	const [pageData, setPageData] = useState<PageData>({
+		page: parseInt(searchParams.get("page") || "1"),
+		pages: 1,
+	});
 	const [createData, setCreateData] = useState<Airplane>(emptyAirplane);
 	const [deleteSerialNo, setDeleteSerialNo] = useState<string>("");
 
 	useEffect(() => {
-		airplaneService.getAll(pageData.page, 4).then((response) => {
+		airplaneService.getAll(pageData.page, 5).then((response) => {
 			if (response.status === 200) {
 				setAirplaneData(response.data.data);
 				setPageData(response.data.meta);
@@ -53,15 +60,11 @@ const Airplanes = () => {
 		});
 	};
 
-	const deleteInputChangeHandler = (
-		e: React.ChangeEvent<HTMLInputElement>
-	) => {
-		setDeleteSerialNo(e.target.value);
+	const deleteBtnHandler = (e: React.MouseEvent<HTMLButtonElement>) => {
+		setDeleteSerialNo(e.currentTarget.value);
 	};
 
-	const deleteFormSubmitHandler = (e: React.FormEvent<HTMLFormElement>) => {
-		e.preventDefault();
-
+	const deleteAirplane = () => {
 		airplaneService.delete(deleteSerialNo).then((response) => {
 			if (response.status === 200) {
 				setDeleteSerialNo("");
@@ -73,13 +76,12 @@ const Airplanes = () => {
 
 	return (
 		<>
-			<h1>Airplanes</h1>
 			<div className="container-fluid">
 				<div className="row gap-3 mx-auto">
 					{airplaneData.map((airplane: Airplane) => (
 						<div
 							key={airplane.serial_no}
-							className="card g-col-4 mx-auto"
+							className="card g-col-5"
 							style={{ width: "18rem" }}
 						>
 							<div className="card-body">
@@ -112,11 +114,20 @@ const Airplanes = () => {
 									</li>
 								</ul>
 								<Link
-									to={`/samoloty/${airplane.serial_no}/edytuj`}
-									className="card-link"
+									to={`${airplane.serial_no}/edytuj`}
+									className="btn btn-primary card-link"
 								>
-									Edytuj
+									<span>Edytuj </span>
+									<FontAwesomeIcon icon={faPenToSquare} />
 								</Link>
+								<button
+									value={airplane.serial_no}
+									onClick={deleteBtnHandler}
+									className="card-link btn btn-danger"
+								>
+									<span>Usuń </span>
+									<FontAwesomeIcon icon={faTrashCan} />
+								</button>
 							</div>
 						</div>
 					))}
@@ -134,7 +145,7 @@ const Airplanes = () => {
 			>
 				<div className="mb-3">
 					<label htmlFor="serial_no" className="form-label">
-						Serial number
+						Numer seryjny
 					</label>
 					<input
 						type="text"
@@ -162,7 +173,7 @@ const Airplanes = () => {
 				</div>
 				<div className="mb-3">
 					<label htmlFor="type" className="form-label">
-						Type
+						Typ
 					</label>
 					<input
 						type="text"
@@ -176,7 +187,7 @@ const Airplanes = () => {
 				</div>
 				<div className="mb-3">
 					<label htmlFor="production_year" className="form-label">
-						Production year
+						Rok produkcji
 					</label>
 					<input
 						type="number"
@@ -192,7 +203,7 @@ const Airplanes = () => {
 				</div>
 				<div className="mb-3">
 					<label htmlFor="num_of_seats" className="form-label">
-						Number of seats
+						Liczba miejsc
 					</label>
 					<input
 						type="number"
@@ -208,7 +219,7 @@ const Airplanes = () => {
 				</div>
 				<div className="mb-3">
 					<label htmlFor="fuel_tank" className="form-label">
-						Fuel tank
+						Pojemność zbiornika paliwa
 					</label>
 					<input
 						type="number"
@@ -224,7 +235,7 @@ const Airplanes = () => {
 				</div>
 				<div className="mb-3">
 					<label htmlFor="fuel_quant" className="form-label">
-						Fuel quantity
+						Ilość paliwa
 					</label>
 					<input
 						type="number"
@@ -251,7 +262,7 @@ const Airplanes = () => {
 				</div>
 				<div className="mb-3">
 					<label htmlFor="crew_size" className="form-label">
-						Crew size
+						Stanowiska załogi
 					</label>
 					<input
 						type="number"
@@ -267,7 +278,7 @@ const Airplanes = () => {
 				</div>
 				<div className="mb-3">
 					<label htmlFor="max_cargo" className="form-label">
-						Max cargo
+						Maksymalny ładunek
 					</label>
 					<input
 						type="number"
@@ -285,29 +296,13 @@ const Airplanes = () => {
 					Dodaj
 				</button>
 			</form>
-			<form
-				onSubmit={deleteFormSubmitHandler}
-				className="container ms-0"
-				style={{ width: "20rem" }}
-			>
-				<div className="mb-3">
-					<label htmlFor="serial_no" className="form-label">
-						Serial number
-					</label>
-					<input
-						type="text"
-						className="form-control"
-						id="serial_no"
-						name="serial_no"
-						value={deleteSerialNo}
-						onChange={deleteInputChangeHandler}
-						required
-					/>
-				</div>
-				<button type="submit" className="btn btn-danger">
-					Usuń
-				</button>
-			</form>
+			<ConfirmModal 
+				open={deleteSerialNo !== ""}
+				onConfirm={deleteAirplane}
+				onClose={() => setDeleteSerialNo("")}
+				title="Potwierdź usunięcie"
+				message="Czy na pewno chcesz usunąć ten samolot?"
+			/>
 		</>
 	);
 };

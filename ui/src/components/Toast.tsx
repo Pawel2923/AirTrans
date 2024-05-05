@@ -1,10 +1,11 @@
-import React, { useState, useEffect, CSSProperties } from "react";
+import React, { useState, useEffect, CSSProperties, useCallback } from "react";
 import classes from "./Toast.module.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { IconDefinition, faTimes } from "@fortawesome/free-solid-svg-icons";
 
 interface ToastProps {
 	message: string;
+	onClose: () => void;
 	type?: "primary" | "alt" | "warning" | "danger";
 	icon?: IconDefinition;
 	action?: {
@@ -20,6 +21,7 @@ const slideOutAnimation: CSSProperties = {
 
 const Toast: React.FC<ToastProps> = ({
 	message,
+	onClose,
 	type,
 	icon,
 	action,
@@ -27,6 +29,21 @@ const Toast: React.FC<ToastProps> = ({
 }: ToastProps) => {
 	const [open, setOpen] = useState<boolean>(true);
 	const [styles, setStyles] = useState<CSSProperties>({});
+
+	const closeHandler = useCallback(async () => {
+		await new Promise((resolve) => {
+			setStyles(slideOutAnimation);
+			setTimeout(() => {
+				setOpen(false);
+				resolve(true);
+			}, 500);
+		}).then(() => {
+			setStyles({});
+		})
+		.finally(() => {
+			onClose();
+		});
+	}, [onClose]);
 
 	useEffect(() => {
 		const timer = setTimeout(() => {
@@ -36,19 +53,7 @@ const Toast: React.FC<ToastProps> = ({
 		return () => {
 			clearTimeout(timer);
 		};
-	}, [timeout]);
-
-	const closeHandler = async () => {
-		await new Promise((resolve) => {
-			setStyles(slideOutAnimation);
-			setTimeout(() => {
-				setOpen(false);
-				resolve(true);
-			}, 500);
-		}).then(() => {
-			setStyles({});
-		});
-	};
+	}, [closeHandler, timeout]);
 
 	return (
 		open && (

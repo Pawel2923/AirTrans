@@ -10,7 +10,11 @@ import tableStyles from "./ArrDepTable.module.css";
 import { ArrDepTableProps } from "../assets/Data";
 import flightService from "../services/flight.service";
 import ConfirmModal from "./Modals/ConfirmModal";
-import AlertModal, { Alert } from "./Modals/AlertModal";
+import Toast from "./Toast";
+import {
+	faCircleCheck,
+	faCircleExclamation,
+} from "@fortawesome/free-solid-svg-icons";
 
 interface TableProps {
 	data: ArrDepTableProps[];
@@ -28,10 +32,7 @@ const ArrDepTable: React.FC<TableProps> = ({
 	const [isArrivalTab, setIsArrivalTab] = useState(false);
 	const [filteredData, setFilteredData] = useState<ArrDepTableProps[]>([]);
 	const [deleteId, setDeleteId] = useState<string>("");
-	const [alert, setAlert] = useState<Alert>({
-		message: "",
-		title: "",
-	});
+	const [toast, setToast] = useState<typeof Toast | null>(null);
 
 	useEffect(() => {
 		if (!isArrivalTab) {
@@ -60,7 +61,7 @@ const ArrDepTable: React.FC<TableProps> = ({
 	let headButtonsColSpan: number = isExtended ? 4 : 2;
 
 	if (hasActionButtons) {
-		headButtonsColSpan += 3;
+		headButtonsColSpan += 1;
 	}
 
 	const deleteBtnHandler = (e: React.MouseEvent<HTMLButtonElement>) => {
@@ -73,23 +74,36 @@ const ArrDepTable: React.FC<TableProps> = ({
 			.delete(deleteId)
 			.then((response) => {
 				if (response.status === 204) {
-					setAlert({
-						message: "Lot został usunięty",
-						title: "Sukces",
-					});
+					setToast(() => (
+						<Toast
+							icon={faCircleCheck}
+							message="Lot został usunięty"
+							onClose={() => setToast(null)}
+							type="primary"
+						/>
+					));
+					setRefreshData && setRefreshData((prev) => !prev);
 				}
 			})
 			.catch(({ response: errorResponse }) => {
 				if (errorResponse.status === 404) {
-					setAlert({
-						message: "Nie znaleziono lotu o podanym numerze",
-						title: "Błąd",
-					});
+					setToast(() => (
+						<Toast
+							icon={faCircleExclamation}
+							message="Lot nie istnieje"
+							onClose={() => setToast(null)}
+							type="danger"
+						/>
+					));
 				} else {
-					setAlert({
-						message: "Wystąpił błąd podczas usuwania lotu",
-						title: "Błąd",
-					});
+					setToast(() => (
+						<Toast
+							icon={faCircleExclamation}
+							message="Wystąpił błąd podczas usuwania lotu"
+							onClose={() => setToast(null)}
+							type="danger"
+						/>
+					));
 				}
 			});
 	};
@@ -130,11 +144,8 @@ const ArrDepTable: React.FC<TableProps> = ({
 							<td>Przylot</td>
 							<td>Miejsce docelowe</td>
 							<td>Nr. seryjny samolotu</td>
-							<td></td>
 							{hasActionButtons && (
 								<>
-									<td></td>
-									<td></td>
 									<td></td>
 								</>
 							)}
@@ -185,42 +196,42 @@ const ArrDepTable: React.FC<TableProps> = ({
 									{hasActionButtons && (
 										<>
 											<td>
-												<Link
-													to={`${flight.id}`}
-													className="btn btn-alt"
-												>
-													<span className="me-2">
-														WIĘCEJ
-													</span>
-													<FontAwesomeIcon
-														icon={faCircleInfo}
-													/>
-												</Link>
-											</td>
-											<td>
-												<Link
-													to={`${flight.id}/edytuj`}
-													className="btn btn-primary"
-												>
-													<span className="me-2">
-														EDYTUJ
-													</span>
-													<FontAwesomeIcon
-														icon={faPenToSquare}
-													/>
-												</Link>
-											</td>
-											<td>
-												<button
-													className="btn btn-danger"
-													value={flight.id}
-													onClick={deleteBtnHandler}
-												>
-													<span>USUŃ </span>
-													<FontAwesomeIcon
-														icon={faTrashCan}
-													/>
-												</button>
+												<div className="d-flex justify-content-end">
+													<Link
+														to={`${flight.id}`}
+														className="btn btn-alt me-3"
+													>
+														<span className="me-2">
+															WIĘCEJ
+														</span>
+														<FontAwesomeIcon
+															icon={faCircleInfo}
+														/>
+													</Link>
+													<Link
+														to={`${flight.id}/edytuj`}
+														className="btn btn-primary me-3"
+													>
+														<span className="me-2">
+															EDYTUJ
+														</span>
+														<FontAwesomeIcon
+															icon={faPenToSquare}
+														/>
+													</Link>
+													<button
+														className="btn btn-danger"
+														value={flight.id}
+														onClick={
+															deleteBtnHandler
+														}
+													>
+														<span>USUŃ </span>
+														<FontAwesomeIcon
+															icon={faTrashCan}
+														/>
+													</button>
+												</div>
 											</td>
 										</>
 									)}
@@ -246,15 +257,7 @@ const ArrDepTable: React.FC<TableProps> = ({
 				title="Potwierdź usunięcie"
 				message="Czy na pewno chcesz usunąć lot?"
 			/>
-			<AlertModal
-				open={alert.message !== "" && deleteId === ""}
-				onClose={() => {
-					setAlert({ message: "", title: "" });
-					setRefreshData && setRefreshData((prev) => !prev);
-				}}
-				message={alert.message}
-				title={alert.title}
-			/>
+			{toast}
 		</>
 	);
 };

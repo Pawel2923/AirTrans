@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import ArrDepTable from "../../components/ArrDepTable";
 import flightService from "../../services/flight.service";
 import airplaneService from "../../services/airplane.service";
@@ -9,7 +10,11 @@ import {
 	Airplane,
 } from "../../assets/Data";
 import Pagination from "../../components/Pagination";
-import AlertModal, { Alert } from "../../components/Modals/AlertModal";
+import Toast from "../../components/Toast";
+import {
+	faCircleCheck,
+	faCircleExclamation,
+} from "@fortawesome/free-solid-svg-icons";
 
 const flightsDataParser = (flightsData: ArrDepTableProps[]) => {
 	const flights: ArrDepTableProps[] = [];
@@ -39,15 +44,17 @@ const emptyFlight: Flight = {
 };
 
 const Schedule = () => {
+	const [searchParams] = useSearchParams();
+	const navigate = useNavigate();
 	const [flights, setFlights] = useState<ArrDepTableProps[]>([]);
 	const [refreshData, setRefreshData] = useState<boolean>(false);
 	const [airplaneData, setAirplaneData] = useState<Airplane[]>([]);
-	const [pageData, setPageData] = useState<PageData>({ page: 1, pages: 1 });
-	const [createData, setCreateData] = useState<Flight>(emptyFlight);
-	const [alert, setAlert] = useState<Alert>({
-		message: "",
-		title: "",
+	const [pageData, setPageData] = useState<PageData>({
+		page: parseInt(searchParams.get("page") || "1"),
+		pages: 1,
 	});
+	const [createData, setCreateData] = useState<Flight>(emptyFlight);
+	const [toast, setToast] = useState<typeof Toast | null>(null);
 
 	useEffect(() => {
 		flightService
@@ -91,7 +98,8 @@ const Schedule = () => {
 
 		const submittedData = { ...createData };
 
-		submittedData.arrival = new Date(submittedData.arrival)
+		try {
+			submittedData.arrival = new Date(submittedData.arrival)
 			.toISOString()
 			.slice(0, 19)
 			.replace("T", " ");
@@ -99,6 +107,17 @@ const Schedule = () => {
 			.toISOString()
 			.slice(0, 19)
 			.replace("T", " ");
+		} catch (error) {
+			setToast(() => (
+				<Toast
+					icon={faCircleExclamation}
+					message="Niepoprawna data i godzina lotu"
+					onClose={() => setToast(null)}
+					type="danger"
+				/>
+			));
+			return;
+		}
 
 		// Regular expression to validate date and time format
 		const datetimeRegex =
@@ -106,18 +125,26 @@ const Schedule = () => {
 
 		// Validate Arrival and Departure date and time format
 		if (!datetimeRegex.test(submittedData.arrival)) {
-			setAlert({
-				message: "Niepoprawna data i godzina przylotu",
-				title: "Błąd",
-			});
+			setToast(() => (
+				<Toast
+					icon={faCircleExclamation}
+					message="Niepoprawna data i godzina przylotu"
+					onClose={() => setToast(null)}
+					type="danger"
+				/>
+			));
 			return;
 		}
 
 		if (!datetimeRegex.test(submittedData.departure)) {
-			setAlert({
-				message: "Niepoprawna data i godzina odlotu",
-				title: "Błąd",
-			});
+			setToast(() => (
+				<Toast
+					icon={faCircleExclamation}
+					message="Niepoprawna data i godzina odlotu"
+					onClose={() => setToast(null)}
+					type="danger"
+				/>
+			));
 			return;
 		}
 
@@ -125,28 +152,54 @@ const Schedule = () => {
 			.create(submittedData)
 			.then((response) => {
 				if (response.status === 201) {
-					setAlert({
-						message: "Lot został dodany",
-						title: "Sukces",
-					});
+					const { id } = response.data.data;
+
+					setToast(() => (
+						<Toast
+							icon={faCircleCheck}
+							message="Lot został dodany"
+							onClose={() => setToast(null)}
+							action={{
+								label: "Zobacz",
+								onClick: () => {
+									setToast(null);
+									navigate(id);
+								},
+							}}
+							type="primary"
+						/>
+					));
+					setRefreshData((prev) => !prev);
 				}
 			})
 			.catch(({ response: errorResponse }) => {
 				if (errorResponse.status === 400) {
-					setAlert({
-						message: "Niepoprawne dane",
-						title: "Błąd",
-					});
+					setToast(() => (
+						<Toast
+							icon={faCircleExclamation}
+							message="Niepoprawne dane lotu"
+							onClose={() => setToast(null)}
+							type="danger"
+						/>
+					));
 				} else if (errorResponse.status === 409) {
-					setAlert({
-						message: "Lot o podanym numerze już istnieje",
-						title: "Błąd",
-					});
+					setToast(() => (
+						<Toast
+							icon={faCircleExclamation}
+							message="Lot o podanym numerze już istnieje"
+							onClose={() => setToast(null)}
+							type="danger"
+						/>
+					));
 				} else {
-					setAlert({
-						message: "Nie udało się dodać lotu",
-						title: "Błąd",
-					});
+					setToast(() => (
+						<Toast
+							icon={faCircleExclamation}
+							message="Wystąpił błąd podczas dodawania lotu"
+							onClose={() => setToast(null)}
+							type="danger"
+						/>
+					));
 				}
 			});
 	};
@@ -154,7 +207,7 @@ const Schedule = () => {
 	return (
 		<>
 			<div>
-				<h2>Harmonogram lotów:</h2>
+				<h2>Harmonogram odlotów i przylotów</h2>
 				<ArrDepTable
 					data={flights}
 					hasActionButtons={true}
@@ -260,15 +313,7 @@ const Schedule = () => {
 					Dodaj
 				</button>
 			</form>
-			<AlertModal
-				open={alert.message !== ""}
-				onClose={() => {
-					setAlert({ message: "", title: "" });
-					setRefreshData && setRefreshData((prev) => !prev);
-				}}
-				title={alert.title}
-				message={alert.message}
-			/>
+			{toast}
 		</>
 	);
 };

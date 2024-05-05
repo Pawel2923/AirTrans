@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useNavigate, Link } from "react-router-dom";
+import { useNavigate, Link, useSearchParams } from "react-router-dom";
 import airplaneService from "../../services/airplane.service";
 import { Airplane, PageData } from "../../assets/Data";
 import Pagination from "../../components/Pagination";
@@ -20,14 +20,18 @@ const emptyAirplane: Airplane = {
 };
 
 const Airplanes = () => {
+	const [searchParams] = useSearchParams();
 	const navigate = useNavigate();
 	const [airplaneData, setAirplaneData] = useState<Airplane[]>([]);
-	const [pageData, setPageData] = useState<PageData>({ page: 1, pages: 1 });
+	const [pageData, setPageData] = useState<PageData>({
+		page: parseInt(searchParams.get("page") || "1"),
+		pages: 1,
+	});
 	const [createData, setCreateData] = useState<Airplane>(emptyAirplane);
 	const [deleteSerialNo, setDeleteSerialNo] = useState<string>("");
 
 	useEffect(() => {
-		airplaneService.getAll(pageData.page, 4).then((response) => {
+		airplaneService.getAll(pageData.page, 5).then((response) => {
 			if (response.status === 200) {
 				setAirplaneData(response.data.data);
 				setPageData(response.data.meta);
@@ -77,7 +81,7 @@ const Airplanes = () => {
 					{airplaneData.map((airplane: Airplane) => (
 						<div
 							key={airplane.serial_no}
-							className="card g-col-4 mx-auto"
+							className="card g-col-5"
 							style={{ width: "18rem" }}
 						>
 							<div className="card-body">

@@ -19,7 +19,7 @@ const ScheduleDetails = () => {
 
 	return (
 		<>
-			<h1>Szczegóły lotu</h1>
+			<h2>Szczegóły lotu</h2>
             <ul>
                 {flightData.map((flight: Flight) => (
                     Object.entries(flight).map(([key, value]) => (

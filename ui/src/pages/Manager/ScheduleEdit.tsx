@@ -102,7 +102,7 @@ const ScheduleEdit = () => {
 
     return (
         <div>
-            <h1>Edytuj harmonogram</h1>
+            <h2>Edytuj harmonogram</h2>
             <form onSubmit={formSubmitHandler}>
                 <div className="form-group">
                     <label htmlFor="arrival">Przylot</label>

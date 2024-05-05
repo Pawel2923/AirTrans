@@ -39,11 +39,10 @@ const Schedule = () => {
 	const [airplaneData, setAirplaneData] = useState<Airplane[]>([]);
 	const [pageData, setPageData] = useState<PageData>({ page: 1, pages: 1 });
 	const [createData, setCreateData] = useState<Flight>(emptyFlight);
-	const [deleteId, setDeleteId] = useState<string>("");
 
 	useEffect(() => {
 		flightService
-			.getByArrivalOrDeparture(pageData.page, 10)
+			.getByArrivalOrDeparture(pageData.page, 5)
 			.then((response) => {
 				if (response.status === 200) {
 					setFlights(flightsDataParser(response.data.data));
@@ -76,12 +75,6 @@ const Schedule = () => {
 			...prevState,
 			[e.target.name]: e.target.value,
 		}));
-	};
-
-	const deleteInputChangeHandler = (
-		e: React.ChangeEvent<HTMLInputElement>
-	) => {
-		setDeleteId(e.target.value);
 	};
 
 	const createFormSubmitHandler = (e: React.FormEvent<HTMLFormElement>) => {
@@ -123,24 +116,12 @@ const Schedule = () => {
 		});
 	};
 
-	const deleteFormSubmitHandler = (e: React.FormEvent<HTMLFormElement>) => {
-		e.preventDefault();
-
-		flightService.delete(deleteId).then((response) => {
-			if (response.status === 204) {
-				alert("Usunięto lot");
-				navigate(0);
-			}
-		});
-	};
-
 	return (
 		<>
-			<h1>Schedule</h1>
 			<div>
 				<h2>Harmonogram lotów:</h2>
 				<ArrDepTable data={flights} hasActionButtons={true} />
-				<Pagination pageData={pageData} setPageData={setPageData} />
+				<Pagination className="mt-3" pageData={pageData} setPageData={setPageData} />
 			</div>
 			<form onSubmit={createFormSubmitHandler}>
 				<h3>Dodaj wpis do harmonogramu</h3>
@@ -233,22 +214,6 @@ const Schedule = () => {
 					</select>
 				</div>
 				<button type="submit" className="btn btn-primary">Dodaj</button>
-			</form>
-			<form onSubmit={deleteFormSubmitHandler}>
-				<h3>Usuń wpis z harmonogramu</h3>
-				<div className="form-group">
-					<label htmlFor="delete_id">Numer lotu</label>
-					<input
-						type="text"
-						className="form-control"
-						id="delete_id"
-						name="delete_id"
-						value={deleteId}
-						onChange={deleteInputChangeHandler}
-						placeholder="Numer lotu"
-					/>
-				</div>
-				<button type="submit" className="btn btn-danger">Usuń</button>
 			</form>
 		</>
 	);

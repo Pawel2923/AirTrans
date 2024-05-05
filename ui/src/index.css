@@ -35,6 +35,7 @@ h1 {
 
 .btn {
   box-shadow: var(--default-box-shadow);
+  border-radius: 50px !important;
 }
 
 .btn-primary {
@@ -46,7 +47,6 @@ h1 {
   --bs-btn-active-border-color: #4c98ca !important;
   --bs-btn-disabled-bg: var(--primary-color) !important;
   --bs-btn-disabled-border-color: var(--primary-color) !important;
-  border-radius: 50px !important;
 }
 
 .btn-alt {
@@ -58,11 +58,15 @@ h1 {
   --bs-btn-active-border-color: #d7e7f3 !important;
   --bs-btn-disabled-bg: var(--alt-color) !important;
   --bs-btn-disabled-border-color: var(--alt-color) !important;
-  border-radius: 50px !important;
 }
 
 .pagination {
   --bs-pagination-color: var(--primary-color) !important;
   --bs-pagination-active-bg: var(--primary-color) !important;
   --bs-pagination-active-border-color: var(--primary-color) !important;
+}
+
+.active {
+  background-color: #5DA9DB;
+  color: #fff !important;
 }

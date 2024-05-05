@@ -1,4 +1,4 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import classes from "./ManagerNav.module.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBars } from "@fortawesome/free-solid-svg-icons";
@@ -10,47 +10,51 @@ import { faTools } from "@fortawesome/free-solid-svg-icons";
 import { faDoorOpen } from "@fortawesome/free-solid-svg-icons";
 import { faBullhorn } from "@fortawesome/free-solid-svg-icons";
 import { faCircleUser } from "@fortawesome/free-solid-svg-icons";
+import { NavLink } from "react-router-dom";
 
 const navItems = [
 	{
-		id: "flights",
+		id: "harmonogram",
 		name: "HARMONOGRAM LOTÓW",
 		icon: faPlaneDeparture
 	},
 	{
-		id: "airplanes",
+		id: "samoloty",
 		name: "SAMOLOTY",
 		icon: faPlane
 	},
 	{
-		id: "airfield",
+		id: "lotnisko",
 		name: "LOTNISKO",
 		icon: faMapMarkerAlt
 	},
 	{
-		id: "equipment",
+		id: "sprzet",
 		name: "SPRZĘT LOTNISKA",
 		icon: faTools
 	},
 	{
-		id: "gates",
+		id: "bramki",
 		name: "BRAMKI",
 		icon: faDoorOpen
 	},
 	{
-		id: "announcements",
+		id: "ogloszenia",
 		name: "OGŁOSZENIA",
 		icon: faBullhorn
 	},
 ];
 
-export const ManagerNav = () => {
-	const [active, setActive] = useState<string>("");
+interface ManagerNavProps {
+	setTitle: React.Dispatch<React.SetStateAction<string>>;
+}
+
+export const ManagerNav: React.FC<ManagerNavProps> = ({ setTitle }: ManagerNavProps) => {
 	const [expanded, setExpanded] = useState<boolean>(true);
 
-	const activeHandler = (e: React.MouseEvent<HTMLAnchorElement>) => {
-		const target = e.target as HTMLAnchorElement;
-		setActive(target.id.toLowerCase());
+	const linkClickHandler = (e: React.MouseEvent<HTMLAnchorElement>) => {
+		const target = e.currentTarget as HTMLAnchorElement;
+		setTitle(target.getAttribute("data-name") || "");
 	};
 
 	const expandHandler = () => {
@@ -68,26 +72,26 @@ export const ManagerNav = () => {
 			<ul className={classes["nav-items"]}>
 				{expanded ? navItems.map(item => (
 					<li key={item.id} className={classes["nav-item"]}>
-						<a
-							href="#"
+						<NavLink
+							to={`/zarzadzanie/${item.id}`}
 							id={item.id}
-							className={active === item.id ? "active" : ""}
-							onClick={activeHandler}
+							data-name={item.name}
+							onClick={linkClickHandler}
 						>
 							{item.name}
-						</a>
+						</NavLink>
 					</li>
 				)) : (
 					navItems.map(item => (
 						<li key={item.id} className={`${classes["nav-item"]} ${classes.shrank}`}>
-							<a
-								href="#"
+							<NavLink
+								to={`/zarzadzanie/${item.id}`}
 								id={item.id}
-								className={active === item.id ? "active" : ""}
-								onClick={activeHandler}
+								data-name={item.name}
+								onClick={linkClickHandler}
 							>
 								<FontAwesomeIcon icon={item.icon} />
-							</a>
+							</NavLink>
 						</li>
 					
 					))
@@ -100,12 +104,15 @@ export const ManagerNav = () => {
 	);
 };
 
+interface ManagerTopNavProps {
+	title: string;
+}
 
-export const ManagerTopNav = () => {
+export const ManagerTopNav: React.FC<ManagerTopNavProps> = ({ title }: ManagerTopNavProps) => {
 	return (
 		<nav className={classes["top-nav"]}>
 			<div className={classes["nav-title"]}>
-				<h1>Title</h1>
+				<h1>{title}</h1>
 			</div>
 			<div className={classes["nav-right"]}>
 				<a href="#"><FontAwesomeIcon icon={faCircleUser} /></a>

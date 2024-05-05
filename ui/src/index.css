@@ -86,7 +86,8 @@ h1 {
   --bs-pagination-active-border-color: var(--primary-color) !important;
 }
 
-.active {
+button.active,
+a.active {
   background-color: #5DA9DB;
   color: #fff !important;
 }

@@ -1,20 +1,17 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faPlaneDeparture } from "@fortawesome/free-solid-svg-icons/faPlaneDeparture";
-import { faPlaneArrival } from "@fortawesome/free-solid-svg-icons/faPlaneArrival";
-import { faCircleInfo } from "@fortawesome/free-solid-svg-icons/faCircleInfo";
-import { faPenToSquare } from "@fortawesome/free-solid-svg-icons/faPenToSquare";
-import { faTrashCan } from "@fortawesome/free-solid-svg-icons/faTrashCan";
+import {
+	faPlaneDeparture,
+	faPlaneArrival,
+	faCircleInfo,
+	faPenToSquare,
+	faTrashCan,
+} from "@fortawesome/free-solid-svg-icons";
 import tableStyles from "./ArrDepTable.module.css";
 import { ArrDepTableProps } from "../assets/Data";
-import flightService from "../services/flight.service";
+import { useDeleteFlight } from "../hooks/use-flight";
 import ConfirmModal from "./Modals/ConfirmModal";
-import Toast from "./Toast";
-import {
-	faCircleCheck,
-	faCircleExclamation,
-} from "@fortawesome/free-solid-svg-icons";
 
 interface TableProps {
 	data: ArrDepTableProps[];
@@ -32,7 +29,7 @@ const ArrDepTable: React.FC<TableProps> = ({
 	const [isArrivalTab, setIsArrivalTab] = useState(false);
 	const [filteredData, setFilteredData] = useState<ArrDepTableProps[]>([]);
 	const [deleteId, setDeleteId] = useState<string>("");
-	const [toast, setToast] = useState<typeof Toast | null>(null);
+	const { toast, deleteFlight } = useDeleteFlight(setRefreshData);
 
 	useEffect(() => {
 		if (!isArrivalTab) {
@@ -58,7 +55,9 @@ const ArrDepTable: React.FC<TableProps> = ({
 		}
 	}, [isArrivalTab, data]);
 
-	let headButtonsColSpan: number = isExtended ? 4 : 2;
+	let headButtonsColSpan: number = isExtended ? 6 : 2;
+	let noDataColSpan: number = headButtonsColSpan;
+	noDataColSpan += 2;
 
 	if (hasActionButtons) {
 		headButtonsColSpan += 1;
@@ -67,45 +66,6 @@ const ArrDepTable: React.FC<TableProps> = ({
 	const deleteBtnHandler = (e: React.MouseEvent<HTMLButtonElement>) => {
 		const target = e.currentTarget as HTMLButtonElement;
 		setDeleteId(target.value);
-	};
-
-	const deleteFlight = () => {
-		flightService
-			.delete(deleteId)
-			.then((response) => {
-				if (response.status === 204) {
-					setToast(() => (
-						<Toast
-							icon={faCircleCheck}
-							message="Lot został usunięty"
-							onClose={() => setToast(null)}
-							type="primary"
-						/>
-					));
-					setRefreshData && setRefreshData((prev) => !prev);
-				}
-			})
-			.catch(({ response: errorResponse }) => {
-				if (errorResponse.status === 404) {
-					setToast(() => (
-						<Toast
-							icon={faCircleExclamation}
-							message="Lot nie istnieje"
-							onClose={() => setToast(null)}
-							type="danger"
-						/>
-					));
-				} else {
-					setToast(() => (
-						<Toast
-							icon={faCircleExclamation}
-							message="Wystąpił błąd podczas usuwania lotu"
-							onClose={() => setToast(null)}
-							type="danger"
-						/>
-					));
-				}
-			});
 	};
 
 	return (
@@ -144,11 +104,7 @@ const ArrDepTable: React.FC<TableProps> = ({
 							<td>Przylot</td>
 							<td>Miejsce docelowe</td>
 							<td>Nr. seryjny samolotu</td>
-							{hasActionButtons && (
-								<>
-									<td></td>
-								</>
-							)}
+							{hasActionButtons && <td></td>}
 						</tr>
 					)}
 				</thead>
@@ -240,7 +196,7 @@ const ArrDepTable: React.FC<TableProps> = ({
 						)
 					) : (
 						<tr>
-							<td colSpan={3} className="text-center">
+							<td colSpan={noDataColSpan} className="text-center">
 								Brak danych
 							</td>
 						</tr>
@@ -251,7 +207,7 @@ const ArrDepTable: React.FC<TableProps> = ({
 				open={deleteId !== ""}
 				onClose={() => setDeleteId("")}
 				onConfirm={() => {
-					deleteFlight();
+					deleteFlight(deleteId);
 					setDeleteId("");
 				}}
 				title="Potwierdź usunięcie"

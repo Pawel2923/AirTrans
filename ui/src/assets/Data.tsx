@@ -114,7 +114,7 @@ export type {
 	Airplane,
 	Announcement,
 	Car,
-  CarRental,
+	CarRental,
 	ParkingInfo,
 	Offer,
 	RawOffer,

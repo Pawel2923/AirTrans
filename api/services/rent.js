@@ -115,62 +115,74 @@ async function removeRent(Id) {
   }
 }
 
-async function getById(rentid, tableName = "Rentals") {
-  const rows = await db.query("SELECT * FROM ?? WHERE Id = ?", [
-    tableName,
-    rentid,
-  ]);
-  const data = helper.emptyOrRows(rows);
+async function getById(rentId, tableName = "Rentals") {
+  try {
+    const rows = await db.query("SELECT * FROM ?? WHERE Id = ?", [
+      tableName,
+      rentId,
+    ]);
+    const data = helper.emptyOrRows(rows);
 
-  if (!data) {
+    if (!data) {
+      return {
+        data: null,
+        response: {
+          message: `Wypożyczenie o ID ${rentId} nie istnieje`,
+          statusCode: 404,
+        },
+      };
+    }
+
     return {
-      data: null,
+      data,
       response: {
-        message: `Wypożyczenie o ID ${rentid} nie istnieje`,
-        statusCode: 404,
+        message: `Successfully fetched data for rental with ID ${rentId}`,
+        statusCode: 200,
       },
     };
+  } catch (error) {
+    throw error;
   }
 }
 
-  async function updateRent(rentId, rent) {
-    try {
-      const rentExists = await db.query("SELECT * FROM Rentals WHERE Id=?", [
-        rentId,
-      ]);
+async function updateRent(rentId, rent) {
+  try {
+      rent.Id = rentId;
 
+      
+      const rentExists = await db.query("SELECT * FROM Rentals WHERE Id=?", [rent.Id]);
       if (rentExists.length === 0) {
-        const error = new Error("Wypożyczenie nie istnieje!");
-        error.statusCode = 404;
-        throw error;
+          const error = new Error("Wypożyczenie nie istnieje!");
+          error.statusCode = 404;
+          throw error;
       }
 
+     
       const result = await db.query(
-        "UPDATE Rentals SET Rental_date=?, Return_date=?, Status=?, Client_id=?, Cars_id=? WHERE Id=?",
-        [
-          rent.Rental_date,
+          "UPDATE Rentals SET Rental_date=?, Return_date=?, Status=?, Client_id=?, Cars_id=? WHERE Id=?",
+          [rent.Rental_date,
           rent.Return_date,
-          rent.Status,
+          rent.Status, 
           rent.Client_id,
           rent.Cars_id,
-          rent.Id,
-        ]
+          rent.Id]
       );
 
+      
       if (result.affectedRows) {
-        return {
-          data: rentData,
-          statusCode: 200,
-          message: "Wypożyczenie zostało zaktualizowane!",
-        };
+          return {
+              data: rent,
+              statusCode: 200,
+              message: "Wypożyczenie zostało zaktualizowane!",
+          };
       } else {
-        throw new Error("Wypożyczenie nie zostało zaktualizowane!");
+          throw new Error("Wypożyczenie nie zostało zaktualizowane!");
       }
-    } catch (error) {
+  } catch (error) {
       throw error;
-    }
-
+  }
 }
+
 
 module.exports = {
   getAllRentals,

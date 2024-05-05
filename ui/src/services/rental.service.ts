@@ -26,7 +26,7 @@ class RentalService {
     }
  
   updateRent(carRental: CarRental) {
-    return http.put(`/rent/${carRental.Id}`, carRental)
+    return http.put(`/rent/${carRental.Id}`, carRental);
   }
 }
 

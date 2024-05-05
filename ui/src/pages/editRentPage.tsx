@@ -15,7 +15,7 @@ const emptyRental: CarRental = {
 const EditRentPage = () => {
     const navigate = useNavigate();
     const { id } = useParams<{ id: string }>();
-    const [rentData, setRentData] = useState<CarRental>(emptyRental);
+    const [carRental, setCarRent] = useState<CarRental>(emptyRental);
 
     useEffect(() => {
         if (id === undefined) return;
@@ -24,7 +24,7 @@ const EditRentPage = () => {
 
         rentalService.getById(rentId).then((response) => {
             if (response.status === 200) {
-                setRentData(response.data.data[0]);
+                setCarRent(response.data.data[0]);
             }
         });
     }, [id]);
@@ -33,22 +33,20 @@ const EditRentPage = () => {
         e.preventDefault();
 
         try {
-
-            const response = await rentalService.updateRent(rentData);
+            const response = await rentalService.updateRent(carRental);
             if (response.status === 200) {
-                alert("Edycja zakonczona sukcesem!");
-                navigate("/ui/src/pages/zarzadzaniePojazd");
+                alert("Edycja zakończona sukcesem!");
+                navigate("/zarzadzaniePojazd");
             }
         } catch (error) {
             console.error("Error while updating rent:", error);
-            alert("An error occurred while updating the rent. Please try again");
+            alert("Wystąpił błąd podczas aktualizacji wypożyczenia. Spróbuj ponownie");
         }
     };
 
     const inputChangeHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
-
-        setRentData({
-            ...rentData,
+        setCarRent({
+            ...carRental,
             [e.target.name]: e.target.value,
         });
     };
@@ -60,18 +58,20 @@ const EditRentPage = () => {
                 <label>
                     Rental Date:
                     <input
-                        type="text"
+                        type="datetime-local"
                         name="Rental_date"
-                        value={rentData.Rental_date}
+                        placeholder="Rental Date"
+                        value={carRental.Rental_date.toString()}
                         onChange={inputChangeHandler}
                     />
                 </label>
                 <label>
                     Return Date:
                     <input
-                        type="text"
+                        type="datetime-local"
                         name="Return_date"
-                        value={rentData.Return_date}
+                        placeholder="Return Date"
+                        value={carRental.Return_date.toString()}
                         onChange={inputChangeHandler}
                     />
                 </label>
@@ -80,7 +80,8 @@ const EditRentPage = () => {
                     <input
                         type="text"
                         name="Status"
-                        value={rentData.Status}
+                        placeholder="Status"
+                        value={carRental.Status}
                         onChange={inputChangeHandler}
                     />
                 </label>
@@ -89,7 +90,8 @@ const EditRentPage = () => {
                     <input
                         type="number"
                         name="Client_id"
-                        value={rentData.Client_id}
+                        placeholder="Client ID"
+                        value={carRental.Client_id}
                         onChange={inputChangeHandler}
                     />
                 </label>
@@ -98,7 +100,8 @@ const EditRentPage = () => {
                     <input
                         type="number"
                         name="Cars_id"
-                        value={rentData.Cars_id}
+                        placeholder="Car ID"
+                        value={carRental.Cars_id}
                         onChange={inputChangeHandler}
                     />
                 </label>
@@ -107,4 +110,5 @@ const EditRentPage = () => {
         </div>
     );
 };
+
 export default EditRentPage;

@@ -158,6 +158,61 @@ const ZarzadzanieP = () => {
         <TableRent rents={rentals} onEdit={editRent} />
       </div>
       <div className={tableStyle.tableContainer}>
+        <h2>Dodaj nowe wypożyczenie</h2>
+        <input
+          type="datetime-local"
+          name="Rental_date"
+          placeholder="Rental date"
+          value={newRentalData.Rental_date.toString()}
+          onChange={handleRentalInputChange}
+        />
+        <input
+          type="datetime-local"
+          name="Return_date"
+          placeholder="Return date"
+          value={newRentalData.Return_date.toString()}
+          onChange={handleRentalInputChange}
+        />
+        <input
+          type="text"
+          name="Status"
+          placeholder="Status"
+          value={newRentalData.Status}
+          onChange={handleRentalInputChange}
+        />
+        <input
+          type="number"
+          name="Client_id"
+          placeholder="Client ID"
+          value={newRentalData.Client_id}
+          onChange={handleRentalInputChange}
+        />
+        <input
+          type="number"
+          name="Cars_id"
+          placeholder="Car ID"
+          value={newRentalData.Cars_id}
+          onChange={handleRentalInputChange}
+        />
+        <button onClick={submitNewRental}>Dodaj</button>
+      </div>
+      <div>
+        <h2>Usuń wypożyczenie</h2>
+        <input type="number" id="deleteRentalId" placeholder="Rental ID" />
+        <button
+          onClick={() =>
+            deleteRental(
+              Number(
+                (document.getElementById("deleteRentalId") as HTMLInputElement)
+                  .value
+              )
+            )
+          }
+        >
+          Delete
+        </button>
+      </div>
+      <div className={tableStyle.tableContainer}>
         <h2>Lista Aut</h2>
         <CarsTable cars={cars} onEdit={editCar} />
       </div>
@@ -230,61 +285,7 @@ const ZarzadzanieP = () => {
           Delete
         </button>
       </div>
-      <div className={tableStyle.tableContainer}>
-        <h2>Dodaj nowe wypożyczenie</h2>
-        <input
-          type="datetime-local"
-          name="Rental_date"
-          placeholder="Rental date"
-          value={newRentalData.Rental_date.toString()}
-          onChange={handleRentalInputChange}
-        />
-        <input
-          type="datetime-local"
-          name="Return_date"
-          placeholder="Return date"
-          value={newRentalData.Return_date.toString()}
-          onChange={handleRentalInputChange}
-        />
-        <input
-          type="text"
-          name="Status"
-          placeholder="Status"
-          value={newRentalData.Status}
-          onChange={handleRentalInputChange}
-        />
-        <input
-          type="number"
-          name="Client_id"
-          placeholder="Client ID"
-          value={newRentalData.Client_id}
-          onChange={handleRentalInputChange}
-        />
-        <input
-          type="number"
-          name="Cars_id"
-          placeholder="Car ID"
-          value={newRentalData.Cars_id}
-          onChange={handleRentalInputChange}
-        />
-        <button onClick={submitNewRental}>Dodaj</button>
-      </div>
-      <div>
-        <h2>Usuń wypożyczenie</h2>
-        <input type="number" id="deleteRentalId" placeholder="Rental ID" />
-        <button
-          onClick={() =>
-            deleteRental(
-              Number(
-                (document.getElementById("deleteRentalId") as HTMLInputElement)
-                  .value
-              )
-            )
-          }
-        >
-          Delete
-        </button>
-      </div>
+      
     </div>
   );
 };

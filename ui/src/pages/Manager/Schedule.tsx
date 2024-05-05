@@ -1,10 +1,15 @@
 import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
 import ArrDepTable from "../../components/ArrDepTable";
 import flightService from "../../services/flight.service";
 import airplaneService from "../../services/airplane.service";
-import { ArrDepTableProps, Flight, PageData, Airplane } from "../../assets/Data";
+import {
+	ArrDepTableProps,
+	Flight,
+	PageData,
+	Airplane,
+} from "../../assets/Data";
 import Pagination from "../../components/Pagination";
+import AlertModal, { Alert } from "../../components/Modals/AlertModal";
 
 const flightsDataParser = (flightsData: ArrDepTableProps[]) => {
 	const flights: ArrDepTableProps[] = [];
@@ -34,11 +39,15 @@ const emptyFlight: Flight = {
 };
 
 const Schedule = () => {
-	const navigate = useNavigate();
 	const [flights, setFlights] = useState<ArrDepTableProps[]>([]);
+	const [refreshData, setRefreshData] = useState<boolean>(false);
 	const [airplaneData, setAirplaneData] = useState<Airplane[]>([]);
 	const [pageData, setPageData] = useState<PageData>({ page: 1, pages: 1 });
 	const [createData, setCreateData] = useState<Flight>(emptyFlight);
+	const [alert, setAlert] = useState<Alert>({
+		message: "",
+		title: "",
+	});
 
 	useEffect(() => {
 		flightService
@@ -49,7 +58,7 @@ const Schedule = () => {
 					setPageData(response.data.meta);
 				}
 			});
-	}, [pageData.page]);
+	}, [pageData.page, refreshData]);
 
 	useEffect(() => {
 		airplaneService.getAll().then((response) => {
@@ -97,31 +106,65 @@ const Schedule = () => {
 
 		// Validate Arrival and Departure date and time format
 		if (!datetimeRegex.test(submittedData.arrival)) {
-			console.log(submittedData.arrival);
+			setAlert({
+				message: "Niepoprawna data i godzina przylotu",
+				title: "Błąd",
+			});
 			return;
 		}
 
 		if (!datetimeRegex.test(submittedData.departure)) {
-			console.log(submittedData.departure);
+			setAlert({
+				message: "Niepoprawna data i godzina odlotu",
+				title: "Błąd",
+			});
 			return;
 		}
 
-		console.log(submittedData);
-
-		flightService.create(submittedData).then((response) => {
-			if (response.status === 201) {
-				alert("Dodano nowy lot");
-				navigate(0);
-			}
-		});
+		flightService
+			.create(submittedData)
+			.then((response) => {
+				if (response.status === 201) {
+					setAlert({
+						message: "Lot został dodany",
+						title: "Sukces",
+					});
+				}
+			})
+			.catch(({ response: errorResponse }) => {
+				if (errorResponse.status === 400) {
+					setAlert({
+						message: "Niepoprawne dane",
+						title: "Błąd",
+					});
+				} else if (errorResponse.status === 409) {
+					setAlert({
+						message: "Lot o podanym numerze już istnieje",
+						title: "Błąd",
+					});
+				} else {
+					setAlert({
+						message: "Nie udało się dodać lotu",
+						title: "Błąd",
+					});
+				}
+			});
 	};
 
 	return (
 		<>
 			<div>
 				<h2>Harmonogram lotów:</h2>
-				<ArrDepTable data={flights} hasActionButtons={true} />
-				<Pagination className="mt-3" pageData={pageData} setPageData={setPageData} />
+				<ArrDepTable
+					data={flights}
+					hasActionButtons={true}
+					setRefreshData={setRefreshData}
+				/>
+				<Pagination
+					className="mt-3"
+					pageData={pageData}
+					setPageData={setPageData}
+				/>
 			</div>
 			<form onSubmit={createFormSubmitHandler}>
 				<h3>Dodaj wpis do harmonogramu</h3>
@@ -213,8 +256,19 @@ const Schedule = () => {
 						))}
 					</select>
 				</div>
-				<button type="submit" className="btn btn-primary">Dodaj</button>
+				<button type="submit" className="btn btn-primary">
+					Dodaj
+				</button>
 			</form>
+			<AlertModal
+				open={alert.message !== ""}
+				onClose={() => {
+					setAlert({ message: "", title: "" });
+					setRefreshData && setRefreshData((prev) => !prev);
+				}}
+				title={alert.title}
+				message={alert.message}
+			/>
 		</>
 	);
 };

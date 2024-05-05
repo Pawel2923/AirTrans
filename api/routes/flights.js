@@ -192,8 +192,6 @@ router.get("/:term", async function (req, res, next) {
  *     description: Successfully created flight
  *    400:
  *     description: Invalid input
- *    404:
- *     description: Airplane serial number not found
  *    409:
  *     description: Flight with this id already exists
  *    500:

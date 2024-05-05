@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlaneDeparture } from "@fortawesome/free-solid-svg-icons/faPlaneDeparture";
 import { faPlaneArrival } from "@fortawesome/free-solid-svg-icons/faPlaneArrival";
@@ -10,22 +10,28 @@ import tableStyles from "./ArrDepTable.module.css";
 import { ArrDepTableProps } from "../assets/Data";
 import flightService from "../services/flight.service";
 import ConfirmModal from "./Modals/ConfirmModal";
+import AlertModal, { Alert } from "./Modals/AlertModal";
 
 interface TableProps {
 	data: ArrDepTableProps[];
 	isExtended?: boolean;
 	hasActionButtons?: boolean;
+	setRefreshData?: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 const ArrDepTable: React.FC<TableProps> = ({
 	data,
 	isExtended = false,
 	hasActionButtons = false,
+	setRefreshData,
 }: TableProps) => {
-	const navigate = useNavigate();
 	const [isArrivalTab, setIsArrivalTab] = useState(false);
 	const [filteredData, setFilteredData] = useState<ArrDepTableProps[]>([]);
 	const [deleteId, setDeleteId] = useState<string>("");
+	const [alert, setAlert] = useState<Alert>({
+		message: "",
+		title: "",
+	});
 
 	useEffect(() => {
 		if (!isArrivalTab) {
@@ -63,15 +69,30 @@ const ArrDepTable: React.FC<TableProps> = ({
 	};
 
 	const deleteFlight = () => {
-		flightService.delete(deleteId).then((response) => {
-			if (response.status === 204) {
-				alert("Usunięto lot");
-				navigate(0);
-			}
-		}).finally(() => {
-			setDeleteId("");
-		});
-	}
+		flightService
+			.delete(deleteId)
+			.then((response) => {
+				if (response.status === 204) {
+					setAlert({
+						message: "Lot został usunięty",
+						title: "Sukces",
+					});
+				}
+			})
+			.catch(({ response: errorResponse }) => {
+				if (errorResponse.status === 404) {
+					setAlert({
+						message: "Nie znaleziono lotu o podanym numerze",
+						title: "Błąd",
+					});
+				} else {
+					setAlert({
+						message: "Wystąpił błąd podczas usuwania lotu",
+						title: "Błąd",
+					});
+				}
+			});
+	};
 
 	return (
 		<>
@@ -196,7 +217,9 @@ const ArrDepTable: React.FC<TableProps> = ({
 													onClick={deleteBtnHandler}
 												>
 													<span>USUŃ </span>
-													<FontAwesomeIcon icon={faTrashCan} />
+													<FontAwesomeIcon
+														icon={faTrashCan}
+													/>
 												</button>
 											</td>
 										</>
@@ -216,9 +239,21 @@ const ArrDepTable: React.FC<TableProps> = ({
 			<ConfirmModal
 				open={deleteId !== ""}
 				onClose={() => setDeleteId("")}
-				onConfirm={deleteFlight}
+				onConfirm={() => {
+					deleteFlight();
+					setDeleteId("");
+				}}
 				title="Potwierdź usunięcie"
 				message="Czy na pewno chcesz usunąć lot?"
+			/>
+			<AlertModal
+				open={alert.message !== "" && deleteId === ""}
+				onClose={() => {
+					setAlert({ message: "", title: "" });
+					setRefreshData && setRefreshData((prev) => !prev);
+				}}
+				message={alert.message}
+				title={alert.title}
 			/>
 		</>
 	);

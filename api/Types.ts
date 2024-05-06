@@ -1,18 +1,18 @@
-interface Err {
+interface ErrInterface {
 	message: string;
 	statusCode?: number;
 	stack?: string;
 }
 
-interface ErrConstructor {
-	new (message?: string): Err;
-	(message?: string): Err;
-	new (message?: string, statusCode?: number): Err;
-	(message?: string, statusCode?: number): Err;
-	readonly prototype: Err;
+class Err implements ErrInterface {
+	constructor(message: string, statusCode?: number) {
+		this.message = message;
+		this.statusCode = statusCode;
+	}
+	message: string;
+	statusCode?: number | undefined;
+	stack?: string | undefined;
 }
-
-declare const Err: ErrConstructor;
 
 interface Flight {
 	id: string;
@@ -100,7 +100,7 @@ export type {
 	Contact_info,
 	Flight,
 	ParkingInfo,
-	ArrDepTableProps
+	ArrDepTableProps,
 }
 
 export {

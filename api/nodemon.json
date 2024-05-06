@@ -1,7 +1,0 @@
-{
-    "watch": [
-        "./"
-    ],
-    "ext": "js,ts,json",
-    "exec": "ts-node --transpile-only ./server.ts"
-}

@@ -2,7 +2,16 @@ import { NextFunction, Request, Response } from "express";
 import { Err } from "../Types";
 import jwt from "jsonwebtoken";
 
-export function verifyUser(req: Request, res: Response, next: NextFunction) {
+// Extend Request interface to include user and auth property
+declare global {
+	namespace Express {
+		interface Request {
+			user?: string | object | undefined;
+		}
+	}
+}
+
+export function verifyUser(req: Request, _res: Response, next: NextFunction) {
 	const token = req.cookies.jwt;
 	const authHeader = req.headers.authorization;
 
@@ -21,8 +30,7 @@ export function verifyUser(req: Request, res: Response, next: NextFunction) {
 					return next(error);
 				}
 
-				console.log(user);
-
+				req.user = user;
 				return next();
 			}
 		);
@@ -37,9 +45,7 @@ export function verifyUser(req: Request, res: Response, next: NextFunction) {
 					return next(error);
 				}
 
-				console.log(user);
-
-				// req.user = user;
+				req.user = user;
 				return next();
 			}
 		);

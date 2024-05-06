@@ -150,33 +150,33 @@ async function getById(parkingId, tableName = "Parking_reservations") {
     }
 }
 
-async function updateParking(id, parkingId) {
+async function updateParking(parkingId,parking) {
   try{
-    parking.id = parkingId;
+    parking.Id = parkingId;
 
-    const parkingExist = await db.query("SELECT * FROM Parking_reservations WHERE id = ?", [id]);
+    const parkingExist = await db.query("SELECT * FROM Parking_reservations WHERE Id = ?", [parking.Id]);
     if(parkingExist.length===0){
       const error = new Error("Parking not found");
       error.statusCode = 404;
       throw error;
     }
 
-    const result = await db.query("UPDATE Parking_reservations SET Client_id=?, Since=?, Until=?, Parking_level=?, Space_id=?, License_plate=?, Price_per_day=? WHERE id=?",
+    const result = await db.query("UPDATE Parking_reservations SET Client_id=?, Since=?, Until=?, Parking_level=?, Space_id=?, License_plate=?, Price_per_day=? WHERE Id=?",
     [
-        parkingId.Client_id,
-        parkingId.Since,
-        parkingId.Until,
-        parkingId.Parking_level,
-        parkingId.Space_id,
-        parkingId.License_plate,
-        parkingId.Price_per_day,
-        parkingId.id
+        parking.Client_id,
+        parking.Since,
+        parking.Until,
+        parking.Parking_level,
+        parking.Space_id,
+        parking.License_plate,
+        parking.Price_per_day,
+        parking.Id
     ]
     );
 
     if(result.affectedRows){
       return{
-        data: parkingId,
+        data: parking,
         message: "Parking updated successfully",
         statusCode: 200
       };

@@ -19,8 +19,11 @@ const navigate = useNavigate();
 const { id } = useParams<{id:string}>();
 const [parking, setParking] = useState<ParkingZ>(emptyParking);
 useEffect(()=>{
+
     if(id === undefined) return;
+
     const parkingId = parseInt(id);
+
     parkingService.getById(parkingId).then((response)=>{
         if(response.status === 200){
             setParking(response.data.data[0]);
@@ -46,7 +49,7 @@ const inputChangeHandler = (e:React.ChangeEvent<HTMLInputElement>)=>{
         ...parking,
         [e.target.name]: e.target.value,
     });
-}
+};
 
 return(
     <div>
@@ -57,6 +60,7 @@ return(
                 <input
                 type="number"
                 name="Client_id"
+                placeholder="Client ID"
                 value={parking.Client_id}
                 onChange={inputChangeHandler}
                 />
@@ -66,6 +70,7 @@ return(
                 <input
                 type="datetime-local"
                 name="Since"
+                placeholder="Since"
                 value={parking.Since.toString()}
                 onChange={inputChangeHandler}
                 />
@@ -75,6 +80,7 @@ return(
                 <input
                 type="datetime-local"
                 name="Until"
+                placeholder="Until"
                 value={parking.Until.toString()}
                 onChange={inputChangeHandler}
                 />
@@ -84,6 +90,7 @@ return(
                 <input
                 type="text"
                 name="Parking_level"
+                placeholder="Parking level"
                 value={parking.Parking_level}
                 onChange={inputChangeHandler}
                 />
@@ -93,6 +100,7 @@ return(
                 <input
                 type="number"
                 name="Space_id"
+                placeholder="Space ID"
                 value={parking.Space_id}
                 onChange={inputChangeHandler}
                 />
@@ -102,6 +110,7 @@ return(
                 <input
                 type="text"
                 name="License_plate"
+                placeholder="License plate"
                 value={parking.License_plate}
                 onChange={inputChangeHandler}
                 />
@@ -111,19 +120,15 @@ return(
                 <input
                 type="number"
                 name="Price_per_day"
+                placeholder="Price per day"
                 value={parking.Price_per_day}
                 onChange={inputChangeHandler}
                 />
             </label>
-            <button type="submit">Zapisz Zmiany</button>
+            <button type="submit">Zapisz zmiany</button>
         </form>  
-
     </div>
 );
-
-
-
-
 };
 
 export default EditParkingPage;

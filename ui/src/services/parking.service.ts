@@ -18,8 +18,8 @@ class ParkingService {
     getById=(id:number)=>{
         return http.get(`/parking/${id}`);
     };
-    updateParking=(parkingData:ParkingZ)=>{
-        return http.put(`/parking/${parkingData.Id}`,parkingData);
+    updateParking=(parking:ParkingZ)=>{
+        return http.put(`/parking/${parking.Id}`,parking);
     };
 
 

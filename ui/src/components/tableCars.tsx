@@ -5,9 +5,10 @@ import styles from "./tableCars.module.css";
 type CarsTableProps = {
   cars: Car[];
   onEdit: (car: Car) => void; 
+  onDelete: (id: number) => void;
 };
 
-const CarsTable: React.FC<CarsTableProps> = ({ cars, onEdit }) => {
+const CarsTable: React.FC<CarsTableProps> = ({ cars, onEdit,onDelete }) => {
  
   const handleEditClick = (car: Car) => {
     onEdit(car); 
@@ -40,7 +41,12 @@ const CarsTable: React.FC<CarsTableProps> = ({ cars, onEdit }) => {
             <td>{car.Fuel_type}</td>
             <td>{car.Transmission_type}</td>
             <td>
-              <button onClick={() => handleEditClick(car)}>Edit</button> {/* Wywołanie funkcji obsługującej edycję */}
+              <button 
+              className="btn btn-primary me-3"
+              onClick={() => handleEditClick(car)}>EDYTUJ</button>
+              <button 
+              className="btn btn-danger"
+              onClick={() => onDelete(car.Id)}>Delete</button>
             </td>
           </tr>
         ))}

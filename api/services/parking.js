@@ -106,7 +106,7 @@ async function removeParking(id) {
         [id]
       );
       if (parkingExist.length === 0) {
-        const error = new Error("Parking not found");
+        const error = new Error("Parking nie istnieje");
         error.statusCode = 404;
         throw error;
       }
@@ -114,11 +114,11 @@ async function removeParking(id) {
         id,
       ]);
       if(rows.affectedRows===0){
-        throw new Error("Failed to delete parking");
+        throw new Error("Parking nie został usunięty");
       }
       return {
-        message: "Parking deleted successfully",
-        statusCode: 200,
+        message: "Parking usunięty pomyślnie",
+        statusCode: 201,
       };
   
 }

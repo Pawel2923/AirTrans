@@ -83,7 +83,8 @@ router.post("/", async function (req, res, next) {
 
   router.delete("/:id", async function (req, res, next) {
     try {
-      const message = await carService.remove(req.params.id);
+      const { id } = req.params;
+      const {message }= await carService.remove(id);
       res.status(204).json({ message });
     } catch (err) {
       next(err);

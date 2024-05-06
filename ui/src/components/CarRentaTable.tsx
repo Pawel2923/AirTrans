@@ -5,9 +5,10 @@ import React from "react";
 type TableRentProps={
   rents: CarRental[];
   onEdit: (rent: CarRental) => void;
+  onDelete: (id: number) => void;
 };
 
-const TableRent:React.FC<TableRentProps>= ({ rents, onEdit }) => {
+const TableRent:React.FC<TableRentProps>= ({ rents, onEdit,onDelete }) => {
 
   const handleEditRentClick = (rent: CarRental) => {
     onEdit(rent);
@@ -36,7 +37,12 @@ const TableRent:React.FC<TableRentProps>= ({ rents, onEdit }) => {
               <td>{rent.Return_date}</td>
               <td>{rent.Status}</td>
               <td>
-                <button onClick={()=> handleEditRentClick(rent)}>Edit</button>
+                <button 
+                className="btn btn-primary me-3"
+                onClick={()=> handleEditRentClick(rent)}>EDYTUJ</button>
+                <button 
+                className="btn btn-danger"
+                onClick={() => onDelete(rent.Id)}>Delete</button>
               </td>
              
             </tr>

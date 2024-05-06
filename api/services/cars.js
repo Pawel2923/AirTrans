@@ -160,8 +160,9 @@ async function update(carId, car) {
   }
   
   async function remove(id) {
-    try {
-        const carExists = await db.query("SELECT * FROM Cars WHERE Id=?", [id]);
+    
+        const carExists = await db.query("SELECT * FROM Cars WHERE Id=?",
+         [id]);
 
         if (carExists.length === 0) {
             const error = new Error("Samochód o podanym Id nie istnieje");
@@ -169,9 +170,9 @@ async function update(carId, car) {
             throw error;
         }
 
-        const result = await db.query("DELETE FROM Cars WHERE Id=?", [id]);
+        const rows = await db.query("DELETE FROM Cars WHERE Id=?", [id]);
 
-        if (result.affectedRows === 0) {
+        if (rows.affectedRows === 0) {
             throw new Error("Samochód nie został usunięty");
         }
 
@@ -179,9 +180,7 @@ async function update(carId, car) {
             message: "Samochód usunięty pomyślnie",
             statusCode: 201
         };
-    } catch (error) {
-        throw error;
-    }
+   
 }
 
 module.exports = {

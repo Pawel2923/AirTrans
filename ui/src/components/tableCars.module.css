@@ -7,7 +7,7 @@
     margin: 0 auto;
 }
 
-.table tr:first-child th {
+.table th {
     text-align: center;
     font-size: 0.9rem;
     font-weight: 400;

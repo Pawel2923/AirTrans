@@ -1,4 +1,6 @@
+
 import React from "react";
+import { useSearchParams } from "react-router-dom";
 import { PageData } from "../assets/Data";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faAngleLeft } from "@fortawesome/free-solid-svg-icons/faAngleLeft";
@@ -6,7 +8,7 @@ import { faAngleRight } from "@fortawesome/free-solid-svg-icons/faAngleRight";
 
 interface PaginationProps {
 	pageData: PageData;
-	setPageData: (prevState: PageData) => void;
+	setPageData: React.Dispatch<React.SetStateAction<PageData>>;
 	className?: string;
 }
 
@@ -15,24 +17,31 @@ const Pagination: React.FC<PaginationProps> = ({
 	setPageData,
 	className = "",
 }: PaginationProps) => {
+	const [searchParams, setSearchParams] = useSearchParams();
+
 	const pagesArray = Array.from(
 		{ length: pageData.pages },
 		(_, index) => index + 1
 	);
 
 	const pageChangeHandler = (page: number) => {
-		setPageData({ ...pageData, page: page });
+		setPageData((prev) => ({ ...prev, page }));
+		setSearchParams({ page: page.toString() });
 	};
 
 	const prevPageHandler = () => {
 		if (pageData.page > 1) {
-			setPageData({ ...pageData, page: pageData.page - 1 });
+			setPageData((prev) => ({ ...prev, page: prev.page - 1 }));
+			const currentPage = parseInt(searchParams.get("page") || "1");
+			setSearchParams({ page: (currentPage - 1).toString() });
 		}
 	};
 
 	const nextPageHandler = () => {
 		if (pageData.page < pageData.pages) {
-			setPageData({ ...pageData, page: pageData.page + 1 });
+			setPageData((prev) => ({ ...prev, page: prev.page + 1 }));
+			const currentPage = parseInt(searchParams.get("page") || "1");
+			setSearchParams({ page: (currentPage + 1).toString() });
 		}
 	};
 

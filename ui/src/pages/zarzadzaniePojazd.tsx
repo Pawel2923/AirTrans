@@ -102,10 +102,9 @@ const ZarzadzanieP = () => {
 
   const deleteCar = async (id: number) => {
     try {
-      const response = await carService.delete(id);
-      console.log("Car deleted:", response);
+      await carService.delete(id);
       setCars(cars.filter((car) => car.Id !== id));
-      alert("Car deleted successfully!");
+      alert("Auto usunięte!");
       navigate(0);
     } catch (error) {
       console.error(error);
@@ -114,10 +113,9 @@ const ZarzadzanieP = () => {
 
   const deleteRental = async (id: number) => {
     try {
-      const response = await rentService.removeRent(id);
-      console.log("Rental deleted:", response);
+      await rentService.removeRent(id);
       setRentals(rentals.filter((rental) => rental.Id !== id));
-      alert("Rental deleted successfully!");
+      alert("Wypożyczenie usunięte!");
       navigate(0);
     } catch (error) {
       console.error(error);
@@ -158,7 +156,7 @@ const ZarzadzanieP = () => {
       <h1>Zarzadzanie Autami i Wypożyczeń</h1>
       <div className={tableStyle.tableContainer}>
         <h2>Lista Wypożyczeń</h2>
-        <TableRent rents={rentals} onEdit={editRent} />
+        <TableRent rents={rentals} onEdit={editRent} onDelete={deleteRental}/>
       </div>
       <div className={tableStyle.tableContainer}>
         <h2>Dodaj nowe wypożyczenie</h2>
@@ -199,25 +197,10 @@ const ZarzadzanieP = () => {
         />
         <button onClick={submitNewRental}>Dodaj</button>
       </div>
-      <div>
-        <h2>Usuń wypożyczenie</h2>
-        <input type="number" id="deleteRentalId" placeholder="Rental ID" />
-        <button
-          onClick={() =>
-            deleteRental(
-              Number(
-                (document.getElementById("deleteRentalId") as HTMLInputElement)
-                  .value
-              )
-            )
-          }
-        >
-          Delete
-        </button>
-      </div>
+      <br></br>
       <div className={tableStyle.tableContainer}>
         <h2>Lista Aut</h2>
-        <CarsTable cars={cars} onEdit={editCar} />
+        <CarsTable cars={cars} onEdit={editCar} onDelete={deleteCar}/>
       </div>
       <div className={tableStyle.tableContainer}>
         <h2>Dodaj nowe auto</h2>
@@ -271,22 +254,6 @@ const ZarzadzanieP = () => {
           onChange={handleInputChange}
         />
         <button onClick={submitNewCar}>Dodaj</button>
-      </div>
-      <div>
-        <h2>Usuń auto</h2>
-        <input type="number" id="deleteCarId" placeholder="Car ID" />
-        <button
-          onClick={() =>
-            deleteCar(
-              Number(
-                (document.getElementById("deleteCarId") as HTMLInputElement)
-                  .value
-              )
-            )
-          }
-        >
-          Delete
-        </button>
       </div>
       
     </div>

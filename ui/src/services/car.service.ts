@@ -35,8 +35,8 @@ class CarService {
     return http.put(`/cars/${carData.Id}`, carData)
   }
 
-  delete(id:number) {
-    return http.delete(`/cars/${id}`)
+  delete = (id: number) => {
+    return http.delete(`/cars/${id}`);
   }
 }
 

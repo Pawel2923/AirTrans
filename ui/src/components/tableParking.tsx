@@ -1,14 +1,15 @@
 import { ParkingZ } from "../assets/Data";
-import styles from '../components/tableCars.module.css';
+import styles from "./tableCars.module.css";
 import React from "react";
 
 type TableParkingProps={
   parkings: ParkingZ[];
   onEdit: (park: ParkingZ) => void;
+  onDelete: (id: number) => void;
 
 };
 
-const TableParking:React.FC<TableParkingProps>= ({ parkings, onEdit }) => {
+const TableParking:React.FC<TableParkingProps>= ({ parkings, onEdit, onDelete}) => {
 
   const handleEditParkClick = (park: ParkingZ) => {
     onEdit(park);
@@ -16,7 +17,7 @@ const TableParking:React.FC<TableParkingProps>= ({ parkings, onEdit }) => {
   return (
     <table className={styles.table}>
       <thead>
-        <tr>
+        <tr className="fw-semibold">
           <th>ID</th>
             <th>ID_Clienta</th>
             <th>Numer_rejestracyjny</th>
@@ -28,7 +29,7 @@ const TableParking:React.FC<TableParkingProps>= ({ parkings, onEdit }) => {
           <th></th>
         </tr>
       </thead>
-      <tbody>
+      <tbody className="text-uppercase">
         {parkings.map((park) => (
         
             <tr key={park.Id}>
@@ -42,7 +43,12 @@ const TableParking:React.FC<TableParkingProps>= ({ parkings, onEdit }) => {
                 <td>{park.Space_id}</td>
 
               <td>
-                <button onClick={()=> handleEditParkClick(park)}>Edit</button>
+                <button 
+                className="btn btn-primary me-3"
+                onClick={()=> handleEditParkClick(park)}>EDYTUJ</button>
+                <button
+                className="btn btn-danger" 
+                onClick={() => onDelete(park.Id)}>USUŃ</button>
               </td>
              
             </tr>

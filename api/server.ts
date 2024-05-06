@@ -14,6 +14,7 @@ import registerRouter from "./routes/register";
 import airplaneRouter from "./routes/airplane";
 import carsRouter from "./routes/cars";
 import rentRouter from "./routes/rent";
+import airfieldRouter from "./routes/airfield";
 import authenticateRouter from "./routes/authenticate";
 import logoutRouter from "./routes/logout";
 import { Err } from "./Types";
@@ -51,6 +52,7 @@ app.use("/register", registerRouter);
 app.use("/airplane", airplaneRouter);
 app.use("/cars", carsRouter);
 app.use("/rent", rentRouter);
+app.use("/airfield", airfieldRouter);
 app.use("/authenticate", authenticateRouter);
 app.use("/logout", logoutRouter);
 

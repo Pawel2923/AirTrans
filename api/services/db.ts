@@ -1,8 +1,8 @@
-const mysql = require("mysql2/promise");
-const config = require("../config");
+import { createConnection } from "mysql2/promise";
+import config from "../config";
 
-async function query(sql, params) {
-	const connection = await mysql.createConnection(config.db);
+async function query(sql: string, params?: any[]) {
+	const connection = await createConnection(config.db);
 	connection.connect();
 
 	try {
@@ -15,7 +15,11 @@ async function query(sql, params) {
 	}
 }
 
-function getOperator(operator) {
+function getOperator(operator?: string) {
+	if (!operator) {
+		return "=";
+	}
+	
 	const validOperators = ["=", "<>", "<", ">", "<=", ">=", "LIKE"];
 	if (validOperators.includes(operator)) {
 		return operator;
@@ -24,4 +28,4 @@ function getOperator(operator) {
 	return "=";
 }
 
-module.exports = { query, getOperator };
+export default { query, getOperator };

@@ -89,5 +89,9 @@ h1 {
 button.active,
 a.active {
   background-color: #5DA9DB;
-  color: #fff !important;
+  color: #fff;
+}
+
+.navbar-nav .nav-link {
+  background-color: transparent;
 }

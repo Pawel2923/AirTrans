@@ -1,6 +1,6 @@
-const express = require("express");
+import express from "express";
 const router = express.Router();
-const airplaneService = require("../services/airplane");
+import airplaneService from "../services/airplane";
 
 /**
  * @openapi
@@ -72,11 +72,15 @@ const airplaneService = require("../services/airplane");
  */
 router.get("/", async function (req, res, next) {
 	try {
-		const { page, limit, filter, sort } = req.query;
+		let { page, limit, filter, sort } = req.query;
+		const parsedPage = page ? parseInt(page as string) : undefined;
+		const parsedLimit = limit ? parseInt(limit as string) : undefined;
+		filter = filter as string || undefined;
+		sort = sort as string || undefined;
 
 		const { data, meta, message } = await airplaneService.get(
-			page,
-			limit,
+			parsedPage,
+			parsedLimit,
 			filter,
 			sort
 		);
@@ -192,7 +196,7 @@ router.delete("/:serial_no", async function (req, res, next) {
 	}
 });
 
-module.exports = router;
+export default router;
 
 /**
  * @openapi

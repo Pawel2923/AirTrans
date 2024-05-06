@@ -1,6 +1,6 @@
-const express = require("express");
+import express from "express";
 const router = express.Router();
-const announcements = require("../services/announcements");
+import announcements from "../services/announcements";
 
 /**
  * @openapi
@@ -70,10 +70,15 @@ const announcements = require("../services/announcements");
  */
 router.get("/", async function (req, res, next) {
 	try {
-		const { page, limit, filter, sort } = req.query;
+		let { page, limit, filter, sort } = req.query;
+		const parsedPage = page ? parseInt(page as string) : undefined;
+		const parsedLimit = limit ? parseInt(limit as string) : undefined;
+		filter = filter as string || undefined;
+		sort = sort as string || undefined;
+
 		const { data, meta, message } = await announcements.get(
-			page,
-			limit,
+			parsedPage,
+			parsedLimit,
 			filter,
 			sort
 		);
@@ -144,10 +149,11 @@ router.post("/", async function (req, res, next) {
  */
 router.put("/:id", async function (req, res, next) {
 	try {
-		const { id } = req.params;
+		let { id } = req.params;
+		const parsedId = parseInt(id) || -1;
 
 		const message = await announcements.update(
-			id,
+			parsedId,
 			req.body
 		);
 		res.status(200).json({ message });
@@ -175,16 +181,17 @@ router.put("/:id", async function (req, res, next) {
  */
 router.delete("/:id", async function (req, res, next) {
 	try {
-		const { id } = req.params;
+		let { id } = req.params;
+		const parsedId = parseInt(id) || -1;
 
-		const message = await announcements.remove(id);
+		const message = await announcements.remove(parsedId);
 		res.status(204).json({ message });
 	} catch (err) {
 		next(err);
 	}
 });
 
-module.exports = router;
+export default router;
 
 /**
  * @openapi

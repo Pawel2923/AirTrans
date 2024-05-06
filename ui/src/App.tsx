@@ -23,10 +23,10 @@ function Root() {
 	return (
     <Routes>
       <Route index element={<Home />} />
-      <Route path="home/ogloszenia" element={<Ogloszenia />} />
+      <Route path="ogloszenia" element={<Ogloszenia />} />
       <Route path="logowanie" element={<Logowanie />} />
       <Route path="rejestracja" element={<Rejestracja />} />
-      <Route path="/zarzadzanie" element={<Manager />}>
+      <Route path="zarzadzanie" element={<Manager />}>
         <Route index element={<Navigate to="/zarzadzanie/harmonogram" />} />
         <Route path="harmonogram">
           <Route index element={<Schedule />} />

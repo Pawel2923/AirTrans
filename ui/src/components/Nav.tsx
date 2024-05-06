@@ -13,22 +13,22 @@ const Nav = () => {
                     <ul className="d-flex navbar-nav text-uppercase fw-medium ms-auto">
                         <li className="nav-item">
                             <NavLink to="/" className="nav-link">
-                                HOME
+                                GŁÓWNA
                             </NavLink>
                         </li>
                         <li className="nav-item">
-                            <NavLink to="/add" className="nav-link">
-                                OFERTA
-                            </NavLink>
-                        </li>
-                        <li className="nav-item">
-                            <NavLink to="/add" className="nav-link">
+                            <NavLink to="/harmonogram" className="nav-link">
                                 HARMONOGRAM
                             </NavLink>
                         </li>
                         <li className="nav-item">
-                            <NavLink to="/add" className="nav-link">
-                                KONTAKT
+                            <NavLink to="/ogloszenia" className="nav-link">
+                                OGŁOSZENIA
+                            </NavLink>
+                        </li>
+                        <li className="nav-item">
+                            <NavLink to="/logowanie" className="nav-link">
+                                ZALOGUJ SIĘ
                             </NavLink>
                         </li>
                     </ul>

@@ -1,6 +1,6 @@
 import React, { useState } from "react"; // Zmiana importu na pełną ścieżkę do pliku "react"
 import loginService from "../services/login.service";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import Input from "../components/input";
 
 
@@ -13,6 +13,7 @@ const isEmail = (value: string) =>
 
 
 const Login = () => {
+  const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isFormInvalid, setIsFormInvalid] = useState(true);
@@ -35,32 +36,27 @@ const Login = () => {
     ev.preventDefault();
     try {
       if (isFormInvalid) {
-        console.error("Formularz jest niepoprawny");
         alert("Formularz jest niepoprawny");
         return;
       }
   
       const response = await loginService.create({ email, password });
       if (response.status === 200) {
-        const { auth, accessToken } = response.data;
+        const { auth } = response.data;
         if (auth) {
           resetForm();
-          console.log("Zalogowano", accessToken);
           alert("Zalogowano");
+          navigate("/zarzadzanie");
         } else {
-          console.error("Błędne dane logowania");
           alert("Błędne dane logowania");
         }
       } else {
-        console.error("Błąd logowania");
         alert("Błąd logowania");
       }
     } catch (error) {
-      console.error("Błąd logowania", error);
       alert("Błąd logowania - sprawdź konsolę");
     }
   };
-  console.log("password", password)
   const loginForm = (
     <form onSubmit={submitHandler}>
       <label>

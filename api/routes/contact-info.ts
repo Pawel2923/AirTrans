@@ -1,6 +1,6 @@
-const express = require("express");
+import express from "express";
 const router = express.Router();
-const contactInfo = require("../services/contact-info");
+import contactInfo from "../services/contact-info";
 
 /**
  * @openapi
@@ -55,11 +55,15 @@ const contactInfo = require("../services/contact-info");
  */
 router.get("/", async function (req, res, next) {
 	try {
-		const { page, limit, filter, sort } = req.query;
+		let { page, limit, filter, sort } = req.query;
+		const parsedPage = page ? parseInt(page as string) : undefined;
+		const parsedLimit = limit ? parseInt(limit as string) : undefined;
+		filter = filter as string || undefined;
+		sort = sort as string || undefined;
 
 		const { data, meta, message } = await contactInfo.get(
-			page,
-			limit,
+			parsedPage,
+			parsedLimit,
 			filter,
 			sort
 		);
@@ -108,7 +112,7 @@ router.put("/:name", async function (req, res, next) {
 	}
 });
 
-module.exports = router;
+export default router;
 
 /**
  * @openapi

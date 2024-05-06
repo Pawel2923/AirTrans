@@ -16,30 +16,13 @@ import flightService from "../services/flight.service";
 import contactInfoService from "../services/contactInfo.service";
 import announcementService from "../services/announcement.service";
 import offerService from "../services/offer.service";
-
-const flightsDataParser = (flightsData: ArrDepTableProps[]) => {
-	const flights: ArrDepTableProps[] = [];
-	flightsData.map((flight: ArrDepTableProps) => {
-		flight.arrival = new Date(flight.arrival)
-			.toISOString()
-			.slice(0, 19)
-			.replace("T", " ");
-		flight.departure = new Date(flight.arrival)
-			.toISOString()
-			.slice(0, 19)
-			.replace("T", " ");
-
-		flights.push(flight);
-	});
-	return flights;
-};
+import { arrDepDataParser } from "../utils/data-parser";
 
 const announcementsDataParser = (announcementsData: Announcement[]) => {
 	const announcements: Announcement[] = [];
 
 	announcementsData.map((announcement: Announcement) => {
-		announcement.valid_until = new Date(announcement.valid_until)
-			.toISOString()
+		announcement.valid_until = announcement.valid_until
 			.slice(0, 19)
 			.replace("T", " ");
 
@@ -106,7 +89,7 @@ const Home = () => {
 	useEffect(() => {
 		flightService.getByArrivalOrDeparture().then((response) => {
 			if (response.status === 200) {
-				setFlightsData(flightsDataParser(response.data.data));
+				setFlightsData(arrDepDataParser(response.data.data));
 			}
 		});
 

@@ -1,22 +1,27 @@
 require("dotenv").config();
-const express = require("express");
-const cors = require("cors");
-const swaggerUI = require("swagger-ui-express");
-const swaggerSpec = require("./swagger");
+import express, { NextFunction, Request, Response } from "express";
+import cors from "cors";
+import cookieParser from "cookie-parser";
+import swaggerUI from "swagger-ui-express";
+import swaggerSpec from "./swagger";
 
-const flightsRouter = require("./routes/flights");
-const contactInfoRouter = require("./routes/contact-info");
-const announcementsRouter = require("./routes/announcements");
-const offerRouter = require("./routes/offer");
-const loginRouter = require("./routes/login");
-const registerRouter = require("./routes/register");
-const airplaneRouter = require("./routes/airplane");
-const carsRouter = require("./routes/cars");
-const rentRouter = require("./routes/rent");
+import flightsRouter from "./routes/flights";
+import contactInfoRouter from "./routes/contact-info";
+import announcementsRouter from "./routes/announcements";
+import offerRouter from "./routes/offer";
+import loginRouter from "./routes/login";
+import registerRouter from "./routes/register";
+import airplaneRouter from "./routes/airplane";
+import carsRouter from "./routes/cars";
+import rentRouter from "./routes/rent";
+import authenticateRouter from "./routes/authenticate";
+import logoutRouter from "./routes/logout";
+import { Err } from "./Types";
 
 const app = express();
 
 var corsOptions = {
+	credentials: true,
 	origin: process.env.CLIENT_ORIGIN || "http://localhost:8081",
 };
 
@@ -28,10 +33,12 @@ app.use(express.json());
 // parse requests of content-type - application/x-www-form-urlencoded
 app.use(express.urlencoded({ extended: true }));
 
+app.use(cookieParser());
+
 app.use("/api-docs", swaggerUI.serve, swaggerUI.setup(swaggerSpec));
 
 // simple route
-app.get("/", (req, res) => {
+app.get("/", (_req, res) => {
 	res.json({ message: "System lotniska." });
 });
 
@@ -44,8 +51,10 @@ app.use("/register", registerRouter);
 app.use("/airplane", airplaneRouter);
 app.use("/cars", carsRouter);
 app.use("/rent", rentRouter);
+app.use("/authenticate", authenticateRouter);
+app.use("/logout", logoutRouter);
 
-app.use((err, req, res, next) => {
+app.use((err: Err, _req: Request, res: Response, _next: NextFunction): any => {
 	const statusCode = err.statusCode || 500;
 	const message = err.message || "Internal Server Error";
 	res.status(statusCode).json({ message });

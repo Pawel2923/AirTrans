@@ -1,14 +1,12 @@
-const db = require("./db");
-const helper = require("../helper");
-const config = require("../config");
+import db from "./db";
+import helper from "../helper";
+import config from "../config";
 
 async function getAllRentals(
     page = 1,
     limit = config.listPerPage,
     tableName = "Rentals"
 ) {
-    limit = parseInt(limit);
-
     const offset = helper.getOffset(page, config.listPerPage);
 
     const rows = await db.query("SELECT * FROM ?? LIMIT ?, ?", [
@@ -33,6 +31,6 @@ async function getAllRentals(
     };
 }
 
-module.exports = {
+export default {
     getAllRentals,
 };

@@ -8,4 +8,4 @@ const config = {
 	},
 	listPerPage: 10,
 };
-module.exports = config;
+export default config;

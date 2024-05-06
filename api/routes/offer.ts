@@ -1,12 +1,22 @@
-const express = require("express");
+import express from "express";
 const router = express.Router();
-const offer = require("../services/offer");
+import offer from "../services/offer";
 
 /**
  * @openapi
  * /offer:
  *  get:
  *   description: Get all offers
+ *   parameters:
+ *    - name: page
+ *      in: query
+ *      required: false
+ *      description: Page number
+ *      type: integer
+ *    - name: limit
+ *      in: query
+ *      required: false
+ *      description: Limit number of offers
  *   responses:
  *    200:
  *     description: Successfully fetched data
@@ -35,16 +45,18 @@ const offer = require("../services/offer");
  */
 router.get("/", async function (req, res, next) {
 	try {
-		const { offset, limit } = req.query;
+		const { page, limit } = req.query;
+		const parsedPage = page ? parseInt(page as string) : undefined;
+		const parsedLimit = limit ? parseInt(limit as string) : undefined;
 
-		const { data, meta, message } = await offer.get(offset, limit);
+		const { data, meta, message } = await offer.get(parsedPage, parsedLimit);
 		res.status(200).json({ data, meta, message });
 	} catch (err) {
 		next(err);
 	}
 });
 
-module.exports = router;
+export default router;
 
 /**
  * @openapi

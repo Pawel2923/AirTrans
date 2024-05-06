@@ -1,17 +1,19 @@
-const db = require("./services/db");
+import { QueryResult } from "mysql2";
+import db from "./services/db";
+import { Err } from "./Types";
 
-function getOffset(currentPage = 1, listPerPage) {
-	return (currentPage - 1) * [listPerPage];
+function getOffset(currentPage = 1, listPerPage: number) {
+	return (currentPage - 1) * listPerPage;
 }
 
-function emptyOrRows(rows) {
+function emptyOrRows(rows?: QueryResult) {
 	if (!rows) {
 		return [];
 	}
-	return rows;
+	return rows as any[];
 }
 
-async function getPages(tableName, limit) {
+async function getPages(tableName: string, limit: number) {
 	const rows = await db.query("SELECT COUNT(*) count FROM ??", [tableName]);
 	const data = emptyOrRows(rows);
 
@@ -20,27 +22,23 @@ async function getPages(tableName, limit) {
 	return Math.ceil(count / limit);
 }
 
-function checkObject(obj, objectProperties) {
+function checkObject(obj: object, objectProperties: string[]) {
 	objectProperties.forEach((property) => {
 		if (property in obj === false) {
-			const error = new Error(`${property} property is missing`);
-			error.statusCode = 400;
-			throw error;
+			throw new Err(`${property} property is missing`, 400);
 		}
 	});
 
 	for (const [key, value] of Object.entries(obj)) {
 		if (value === null || value === "") {
-			const error = new Error(`${key} is empty`);
-			error.statusCode = 400;
-			throw error;
+			throw new Err(`${key} is empty`, 400);
 		}
 	}
 }
 
-function buildQuery(tableName, filter, sort, offset, limit, search = undefined) {
+function buildQuery(tableName: string, offset: number, limit: number, filter?: string, sort?: string, search?: { query: string; queryParams: any[] }) {
 	let query = "SELECT * FROM ??" + (search ? search.query : "");
-	const queryParams = [tableName];
+	const queryParams: any[] = [tableName];
 
 	if (search) {
 		search.queryParams.forEach((param) => {
@@ -49,15 +47,15 @@ function buildQuery(tableName, filter, sort, offset, limit, search = undefined) 
 	}
 
 	if (filter) {
-		filter = JSON.parse(filter);
+		const parsedFilter = JSON.parse(filter) as { by: string; value: string; operator?: string }[]
 
-		if (filter && filter.length > 0) {
+		if (parsedFilter && parsedFilter.length > 0) {
 			if (!search) {
 				query += " WHERE";
 			} else {
 				query += " AND";
 			}
-			filter.forEach((condition) => {
+			parsedFilter.forEach((condition) => {
 				if (condition.by && condition.value) {
 					query += ` ?? ${db.getOperator(condition.operator)} ? AND`;
 					queryParams.push(condition.by, condition.value);
@@ -68,27 +66,27 @@ function buildQuery(tableName, filter, sort, offset, limit, search = undefined) 
 	}
 
 	if (sort) {
-		sort = JSON.parse(sort);
+		const parsedSort = JSON.parse(sort) as { by: string | string[]; order?: string };
 
-		if (Array.isArray(sort.by)) {
-			sort.by.forEach((sortBy, index) => {
+		if (Array.isArray(parsedSort.by)) {
+			parsedSort.by.forEach((sortBy, index) => {
 				if (index === 0) {
 					query += " ORDER BY ??";
 				} else {
 					query += " ??";
 				}
 				queryParams.push(sortBy);
-				if (sort.order && index === sort.by.length - 1) {
-					query += ` ${sort.order}`;
+				if (parsedSort.order && index === parsedSort.by.length - 1) {
+					query += ` ${parsedSort.order}`;
 				}
 				query += ",";
 			});
 			query = query.slice(0, -1); // Remove the last comma from the query
-		} else if (sort.by) {
+		} else if (parsedSort.by) {
 			query += " ORDER BY ??";
-			queryParams.push(sort.by);
-			if (sort.order) {
-				query += ` ${sort.order}`;
+			queryParams.push(parsedSort.by);
+			if (parsedSort.order) {
+				query += ` ${parsedSort.order}`;
 			}
 		}
 	}
@@ -99,7 +97,7 @@ function buildQuery(tableName, filter, sort, offset, limit, search = undefined) 
 	return { query, queryParams };
 }
 
-module.exports = {
+export default {
 	getOffset,
 	getPages,
 	emptyOrRows,

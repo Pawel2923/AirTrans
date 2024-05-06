@@ -1,6 +1,6 @@
-const express = require("express");
+import express from "express";
 const router = express.Router();
-const registerService = require("../services/register");
+import registerService from "../services/register";
 /**
  * @openapi
  * /register:
@@ -39,14 +39,20 @@ const registerService = require("../services/register");
  *         description: Internal server error.
  */
 router.post("/", async function (req, res, next) {
-    const { First_name, Last_name, Login, Password, Email } = req.body;
+	const { First_name, Last_name, Login, Password, Email } = req.body;
 
-    try {
-        const response = await registerService.registerClient(First_name, Last_name, Login, Password, Email);
-        res.status(response.statusCode).json(response.message);
-    } catch (err) {
-        next(JSON.parse(err.message));
-    }
+	try {
+		const message = await registerService.registerClient(
+			First_name,
+			Last_name,
+			Login,
+			Password,
+			Email
+		);
+		res.status(201).json(message);
+	} catch (err) {
+		next(err);
+	}
 });
 
-module.exports = router;
+export default router;

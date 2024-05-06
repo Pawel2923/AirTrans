@@ -1,6 +1,7 @@
-const express = require("express");
+import express from "express";
 const router = express.Router();
-const flight = require("../services/flights");
+import { flight } from "../services/flights";
+import { verifyUser } from "../middlewares/verifyUser";
 
 /**
  * @openapi
@@ -75,12 +76,16 @@ const flight = require("../services/flights");
  */
 router.get("/", async function (req, res, next) {
 	try {
-		const { page, isarrdep, limit, filter, sort } = req.query;
+		let { page, isarrdep, limit, filter, sort } = req.query;
+		const parsedPage = page ? parseInt(page as string) : undefined;
+		const parsedLimit = limit ? parseInt(limit as string) : undefined;
+		filter = filter as string || undefined;
+		sort = sort as string || undefined;
 
 		const { data, meta, message } =
 			isarrdep != undefined
-				? await flight.getByDepartureOrArrival(page, limit)
-				: await flight.get(page, limit, filter, sort);
+				? await flight.getByDepartureOrArrival(parsedPage, parsedLimit)
+				: await flight.get(parsedPage, parsedLimit, filter, sort);
 		res.status(200).json({
 			data,
 			meta,
@@ -166,10 +171,15 @@ router.get("/", async function (req, res, next) {
  */
 router.get("/:term", async function (req, res, next) {
 	try {
-		const { page, limit, filter, sort } = req.query;
+		let { page, limit, filter, sort } = req.query;
+		const parsedPage = page ? parseInt(page as string) : undefined;
+		const parsedLimit = limit ? parseInt(limit as string) : undefined;
+		filter = filter as string || undefined;
+		sort = sort as string || undefined;
+
 		const { term } = req.params;
 
-		const { data, meta, message } = await flight.search(term, page, limit, filter, sort);
+		const { data, meta, message } = await flight.search(term, parsedPage, parsedLimit, filter, sort);
 		res.status(200).json({ data, meta, message });
 	} catch (err) {
 		next(err);
@@ -192,12 +202,14 @@ router.get("/:term", async function (req, res, next) {
  *     description: Successfully created flight
  *    400:
  *     description: Invalid input
+ *    401:
+ *     description: Unauthorized
  *    409:
  *     description: Flight with this id already exists
  *    500:
  *     description: Flight could not be created
  */
-router.post("/", async function (req, res, next) {
+router.post("/", verifyUser, async function (req, res, next) {
 	try {
 		const { data, message } = await flight.create(req.body);
 		res.status(201).json({ data, message });
@@ -226,12 +238,14 @@ router.post("/", async function (req, res, next) {
  *     description: Flight updated successfully
  *    400:
  *     description: Invalid input
+ *    401:
+ *     description: Unauthorized
  *    404:
  *     description: Flight with this id does not exist
  *    500:
  *     description: Flight could not be updated
  */
-router.put("/:id", async function (req, res, next) {
+router.put("/:id", verifyUser, async function (req, res, next) {
 	try {
 		const { data, message } = await flight.update(req.params.id, req.body);
 		res.status(200).json({ data, message });
@@ -252,12 +266,14 @@ router.put("/:id", async function (req, res, next) {
  *   responses:
  *    204:
  *     description: Flight deleted successfully
+ *    401:
+ *     description: Unauthorized
  *    404:
  *     description: Flight with this id does not exist
  *    500:
  *     description: Flight could not be deleted
  */
-router.delete("/:id", async function (req, res, next) {
+router.delete("/:id", verifyUser, async function (req, res, next) {
 	try {
 		const message = await flight.remove(req.params.id);
 		res.status(204).json({ message });
@@ -266,7 +282,7 @@ router.delete("/:id", async function (req, res, next) {
 	}
 });
 
-module.exports = router;
+export default router;
 
 /**
  * @openapi

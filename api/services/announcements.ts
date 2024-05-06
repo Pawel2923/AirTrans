@@ -1,6 +1,8 @@
-const db = require("./db");
-const helper = require("../helper");
-const config = require("../config");
+import db from "./db";
+import helper from "../helper";
+import config from "../config";
+import { ResultSetHeader } from "mysql2";
+import { Announcement, Err } from "../Types";
 
 const announcementProperties = [
 	"title",
@@ -9,7 +11,7 @@ const announcementProperties = [
 	"personnel_id",
 ];
 
-function validateAnnouncement(announcement) {
+function validateAnnouncement(announcement: Announcement) {
 	// check if all required properties are present
 	helper.checkObject(announcement, announcementProperties);
 
@@ -17,17 +19,17 @@ function validateAnnouncement(announcement) {
 		/^(((\d{4})-([01]\d)-(0[1-9]|[12]\d|3[01])) (([01]\d|2[0-3]):([0-5]\d):([0-5]\d)))$/m;
 
 	// check if Valid_until is in correct format
-	if (!datetimeRegex.test(announcement.Valid_until)) {
-		const error = new Error("Valid_until property invalid format");
+	if (!datetimeRegex.test(announcement.valid_until)) {
+		const error = new Err("Valid_until property invalid format");
 		error.statusCode = 400;
 		throw error;
 	}
 
 	// check if Valid_until is greater than current date
 	const currentDate = new Date();
-	const validUntilDate = new Date(announcement.Valid_until);
+	const validUntilDate = new Date(announcement.valid_until);
 	if (validUntilDate < currentDate) {
-		const error = new Error(
+		const error = new Err(
 			"Valid_until date should be greater than current date"
 		);
 		error.statusCode = 400;
@@ -38,31 +40,23 @@ function validateAnnouncement(announcement) {
 async function get(
 	page = 1,
 	limit = config.listPerPage,
-	filter = undefined,
-	sort = undefined
+	filter?: string,
+	sort?: string
 ) {
-	limit = parseInt(limit);
-	page = parseInt(page);
 	if (page < 1 || limit < 1) {
-		const error = new Error("Invalid page or limit number");
+		const error = new Err("Invalid page or limit number");
 		error.statusCode = 400;
 		throw error;
 	}
 	const offset = helper.getOffset(page, limit);
 
-	const { query, queryParams } = helper.buildQuery(
-		"Announcements",
-		filter,
-		sort,
-		offset,
-		limit
-	);
+	const { query, queryParams } = helper.buildQuery("Announcements", offset, limit, filter, sort);
 
 	const rows = await db.query(query, queryParams);
-	const data = helper.emptyOrRows(rows);
+	const data = helper.emptyOrRows(rows) as Announcement[];
 
 	if (data.length === 0) {
-		const error = new Error("No announcements found");
+		const error = new Err("No announcements found");
 		error.statusCode = 404;
 		throw error;
 	}
@@ -81,27 +75,29 @@ async function get(
 	};
 }
 
-async function create(announcement) {
+async function create(announcement: Announcement) {
 	validateAnnouncement(announcement);
 
-	const announcementExists = await db.query(
+	let announcementExists = await db.query(
 		"SELECT '' FROM Announcements WHERE id=?",
-		[id]
+		[announcement.id]
 	);
+	announcementExists = helper.emptyOrRows(announcementExists);
 
 	if (announcementExists.length > 0) {
-		const error = new Error("Announcement with this id already exists");
+		const error = new Err("Announcement with this id already exists");
 		error.statusCode = 409;
 		throw error;
 	}
 
-	const result = await db.query(
+	let result = await db.query(
 		"INSERT INTO Announcements SET ?",
-		announcement
+		[announcement]
 	);
+	result = result as ResultSetHeader;
 
 	if (result.affectedRows === 0) {
-		throw new Error("Failed to create announcement");
+		throw new Err("Failed to create announcement");
 	}
 
 	return {
@@ -110,36 +106,38 @@ async function create(announcement) {
 	};
 }
 
-async function update(id, announcement) {
+async function update(id: number, announcement: Announcement) {
 	validateAnnouncement(announcement);
 
-	const announcementExists = await db.query(
+	let announcementExists = await db.query(
 		"SELECT '' FROM Announcements WHERE id=?",
 		[id]
 	);
+	announcementExists = helper.emptyOrRows(announcementExists);
 
 	if (announcementExists.length === 0) {
-		const error = new Error("Announcement with this id does not exist");
+		const error = new Err("Announcement with this id does not exist");
 		error.statusCode = 404;
 		throw error;
 	}
 
-	if (id !== announcement.Id) {
-		const error = new Error("Id in request body does not match id in URL");
+	if (id !== announcement.id) {
+		const error = new Err("Id in request body does not match id in URL");
 		error.statusCode = 400;
 		throw error;
 	}
 
-	const result = await db.query("UPDATE Announcements SET ? WHERE Id=?", [
+	let result = await db.query("UPDATE Announcements SET ? WHERE id=?", [
 		{
 			...announcement,
-			Id: announcement.Id || id,
+			id: announcement.id || id,
 		},
 		id,
 	]);
+	result = result as ResultSetHeader;
 
 	if (result.affectedRows === 0) {
-		throw new Error("Failed to update announcement");
+		throw new Err("Failed to update announcement");
 	}
 
 	return {
@@ -148,28 +146,30 @@ async function update(id, announcement) {
 	};
 }
 
-async function remove(id) {
-	const announcementExists = await db.query(
+async function remove(id: number) {
+	let announcementExists = await db.query(
 		"SELECT '' FROM Announcements WHERE id=?",
 		[id]
 	);
+	announcementExists = helper.emptyOrRows(announcementExists);
 
 	if (announcementExists.length === 0) {
-		const error = new Error("Announcement with this id does not exist");
+		const error = new Err("Announcement with this id does not exist");
 		error.statusCode = 404;
 		throw error;
 	}
 
-	const result = await db.query("DELETE FROM Announcements WHERE Id=?", [id]);
+	let result = await db.query("DELETE FROM Announcements WHERE Id=?", [id]);
+	result = result as ResultSetHeader;
 
 	if (result.affectedRows === 0) {
-		throw new Error("Failed to delete announcement");
+		throw new Err("Failed to delete announcement");
 	}
 
 	return "Successfully deleted announcement";
 }
 
-module.exports = {
+export default {
 	get,
 	create,
 	update,

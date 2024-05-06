@@ -51,45 +51,54 @@ function formatDate(dateString) {
 
   async function createParking(parkingData) {
     try {
-      const parkingAvailability = await db.query(
-        "SELECT * FROM Parking_reservations WHERE Parking_id = ? AND Until > NOW()",
-        [parkingData.Parking_id]
-      );
-      if (parkingAvailability.length > 0) {
-        const error = new Error(
-          "Parking is already reserved for the given time period"
+        const parkingAvailability = await db.query(
+            "SELECT * FROM Parking_reservations WHERE Parking_level = ? AND Space_id = ? AND ((Since <= ? AND Until >= ?) OR (Since <= ? AND Until >= ?) OR (Since >= ? AND Until <= ?))",
+            [
+                parkingData.Parking_level,
+                parkingData.Space_id,
+                parkingData.Since,
+                parkingData.Since,
+                parkingData.Until,
+                parkingData.Until,
+                parkingData.Since,
+                parkingData.Until
+            ]
         );
-        error.statusCode = 409;
-        throw error;
-      }
-  
-      const result = await db.query(
-        "INSERT INTO Parking_reservations (Client_id, Since, Until,Parking_level,Space_id,License_plate,Price_per_day) VALUES (?, ?, ?, ?, ?, ?, ?)",
-        [
-        parkingData.Client_id, 
-        parkingData.Since, 
-        parkingData.Until,
-        parkingData.Parking_level,
-        parkingData.Space_id,
-        parkingData.License_plate,
-        parkingData.Price_per_day
-    ]
-      );
-  
-     if(result.affectedRows) {
-        return { 
-        data: parkingData, 
-        statusCode: 201,
-        message: "Parking reserved successfully" 
-    };
-      }else{
-        throw new Error("Failed to reserve parking");
-      }
-    }catch(error){
+        if (parkingAvailability.length > 0) {
+            const error = new Error(
+                "Parking is already reserved for the given time period"
+            );
+            error.statusCode = 409;
+            throw error;
+        }
+
+        const result = await db.query(
+            "INSERT INTO Parking_reservations (Client_id, Since, Until, Parking_level, Space_id, License_plate, Price_per_day) VALUES (?, ?, ?, ?, ?, ?, ?)",
+            [
+                parkingData.Client_id,
+                parkingData.Since,
+                parkingData.Until,
+                parkingData.Parking_level,
+                parkingData.Space_id,
+                parkingData.License_plate,
+                parkingData.Price_per_day
+            ]
+        );
+
+        if (result.affectedRows) {
+            return {
+                data: parkingData,
+                statusCode: 201,
+                message: "Parking reserved successfully"
+            };
+        } else {
+            throw new Error("Failed to reserve parking");
+        }
+    } catch (error) {
         throw error;
     }
-    }
-  
+}
+
 
 module.exports = {
     getAllParking,

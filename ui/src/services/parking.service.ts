@@ -9,7 +9,7 @@ class ParkingService {
         });
     }
     createParking(parkingData:ParkingZ) {
-        return http.post("/parking", parkingData)
+        return http.post("/parking",parkingData)
     }
 
 

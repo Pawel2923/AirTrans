@@ -34,14 +34,15 @@ const ZarzadzanieP = () => {
 useEffect(() => {
         retrieveParkings();
     }, []);
-    const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const handleInputChange = (
+        event: React.ChangeEvent<HTMLInputElement>
+    ) => {
         const { name, value } = event.target;
         
         if (name === "Since" || name === "Until") {
-            const dateValue = value ? new Date(value) : null;
             setNewParking((prevData) => ({
                 ...prevData,
-                [name]: dateValue ? dateValue.toISOString() : '',
+                [name]: value,
             }));
         } else {
             setNewParking((prevData) => ({
@@ -53,6 +54,7 @@ useEffect(() => {
     const submitNewParking = async () => {
         try {
             const response = await parkingService.createParking(newParking);
+            console.log(response)
             setParkings([...parkings, response.data]);
             setNewParking({
                 Id: 0,

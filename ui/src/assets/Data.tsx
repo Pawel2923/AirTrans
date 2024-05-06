@@ -47,7 +47,7 @@ interface ParkingInfo {
 
 interface Offer {
 	id: number;
-	path_to_img: string;
+	path_to_img?: string;
 	title: string;
 	offer_params: string[];
 	btn_text: string;
@@ -81,7 +81,7 @@ interface Car {
 	License_plate: string;
 	Fuel_type: string;
 	Transmission_type: string;
-	
+	Path_to_img?: string;
 }
 interface CarRental {
 	Id: number;

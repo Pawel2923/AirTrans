@@ -35,32 +35,26 @@ const Login = () => {
     ev.preventDefault();
     try {
       if (isFormInvalid) {
-        console.error("Formularz jest niepoprawny");
         alert("Formularz jest niepoprawny");
         return;
       }
   
       const response = await loginService.create({ email, password });
       if (response.status === 200) {
-        const { auth, accessToken } = response.data;
+        const { auth } = response.data;
         if (auth) {
           resetForm();
-          console.log("Zalogowano", accessToken);
           alert("Zalogowano");
         } else {
-          console.error("Błędne dane logowania");
           alert("Błędne dane logowania");
         }
       } else {
-        console.error("Błąd logowania");
         alert("Błąd logowania");
       }
     } catch (error) {
-      console.error("Błąd logowania", error);
       alert("Błąd logowania - sprawdź konsolę");
     }
   };
-  console.log("password", password)
   const loginForm = (
     <form onSubmit={submitHandler}>
       <label>

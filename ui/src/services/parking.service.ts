@@ -12,6 +12,10 @@ class ParkingService {
         return http.post("/parking",parkingData)
     }
 
+    delete=(id:number)=>{
+    return http.delete(`/parking/${id}`);
+    };
+
 
 }
     

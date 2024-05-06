@@ -98,10 +98,33 @@ function formatDate(dateString) {
         throw error;
     }
 }
-
+async function removeParking(id) {
+    
+      const parkingExist = await db.query(
+        "SELECT * FROM Parking_reservations WHERE id = ?",
+        [id]
+      );
+      if (parkingExist.length === 0) {
+        const error = new Error("Parking not found");
+        error.statusCode = 404;
+        throw error;
+      }
+      const rows = await db.query("DELETE FROM Parking_reservations WHERE id = ?", [
+        id,
+      ]);
+      if(rows.affectedRows===0){
+        throw new Error("Failed to delete parking");
+      }
+      return {
+        message: "Parking deleted successfully",
+        statusCode: 200,
+      };
+  
+}
 
 module.exports = {
     getAllParking,
     createParking,
+    removeParking
     };
 

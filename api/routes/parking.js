@@ -27,4 +27,14 @@ router.post("/", async function (req, res, next) {
     }
   });
   
+ 
+router.delete("/:id", async function (req, res, next) {
+    try {
+      const { id } = req.params;
+      const { message } = await parkingService.removeParking(id);
+      res.status(204).json({ message });
+    } catch (err) {
+      next(err);
+    }
+  });  
 module.exports = router;

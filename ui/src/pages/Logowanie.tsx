@@ -1,6 +1,6 @@
 import React, { useState } from "react"; // Zmiana importu na pełną ścieżkę do pliku "react"
 import loginService from "../services/login.service";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import Input from "../components/input";
 
 
@@ -13,6 +13,7 @@ const isEmail = (value: string) =>
 
 
 const Login = () => {
+  const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isFormInvalid, setIsFormInvalid] = useState(true);
@@ -45,6 +46,7 @@ const Login = () => {
         if (auth) {
           resetForm();
           alert("Zalogowano");
+          navigate("/zarzadzanie");
         } else {
           alert("Błędne dane logowania");
         }

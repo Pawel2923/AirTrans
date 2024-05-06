@@ -72,6 +72,7 @@ const ZarzadzanieP = () => {
         Transmission_type: "",
       });
       alert("Car added successfully!");
+      navigate(0);
     } catch (error) {
       console.error("Error while adding car:", error);
       alert("An error occurred while adding the car. Please try again");
@@ -92,6 +93,7 @@ const ZarzadzanieP = () => {
         Cars_id: 0,
       });
       alert("Rental added successfully!");
+      navigate(0);
     } catch (error) {
       console.error("Error while adding rental:", error);
       alert("An error occurred while adding the rental. Please try again");
@@ -104,9 +106,9 @@ const ZarzadzanieP = () => {
       console.log("Car deleted:", response);
       setCars(cars.filter((car) => car.Id !== id));
       alert("Car deleted successfully!");
+      navigate(0);
     } catch (error) {
-      console.error("Error while deleting car:", error);
-      alert("An error occurred while deleting the car. Please try again");
+      console.error(error);
     }
   };
 
@@ -116,9 +118,10 @@ const ZarzadzanieP = () => {
       console.log("Rental deleted:", response);
       setRentals(rentals.filter((rental) => rental.Id !== id));
       alert("Rental deleted successfully!");
+      navigate(0);
     } catch (error) {
-      console.error("Error while deleting rental:", error);
-      alert("An error occurred while deleting the rental. Please try again");
+      console.error(error);
+     
     }
   };
 

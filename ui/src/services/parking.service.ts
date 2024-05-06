@@ -15,6 +15,12 @@ class ParkingService {
     delete=(id:number)=>{
     return http.delete(`/parking/${id}`);
     };
+    getById=(id:number)=>{
+        return http.get(`/parking/${id}`);
+    };
+    updateParking=(parkingData:ParkingZ)=>{
+        return http.put(`/parking/${parkingData.Id}`,parkingData);
+    };
 
 
 }

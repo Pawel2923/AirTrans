@@ -13,6 +13,7 @@ import Airplanes from "./pages/Airplanes";
 import AirplaneEdit from "./pages/AirplaneEdit";
 import EditRentPage from "./pages/editRentPage";
 import ParkingPage from "./pages/ParkingPage";
+import EditParkingPage from "./pages/editParkingPage";
 
 
 const router = createBrowserRouter([{ path: "*", Component: Root }]);
@@ -42,6 +43,7 @@ function Root() {
       <Route path="/edit-rent/:id" element={<EditRentPage />} />
 
       <Route path="/parking" element={<ParkingPage />} />
+      <Route path="/edit-parking/:id" element={<EditParkingPage />} />
 
       <Route path="*" element={<NotFound />} />
     </Routes>

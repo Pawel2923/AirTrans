@@ -3,10 +3,12 @@ import parkingService from "../services/parking.service";
 import TableParking from "../components/tableParking";
 import styles from '../components/tableCars.module.css';
 import { ParkingZ } from "../assets/Data";
+import { useNavigate } from "react-router-dom";
 
 
-const ZarzadzanieP = () => {
+const Parking = () => {
     const [parkings, setParkings] = useState<ParkingZ[]>([]);
+    const navigate = useNavigate();
     const [newParking, setNewParking] = useState<ParkingZ>({
         Id: 0,
         Client_id: 0,
@@ -17,11 +19,6 @@ const ZarzadzanieP = () => {
         License_plate: "",
         Price_per_day: 0,
     });
-
-    
-
-    
-
     const retrieveParkings = () => {
         parkingService.getAllParking()
             .then(response => {
@@ -67,17 +64,30 @@ useEffect(() => {
                 Price_per_day: 0,
             });
             alert("Dodano nowy parking");
+            navigate(0)
+        } catch (error) {
+            console.error(error);
+        }
+    }
+     const deleteParking = async (id: number) => {
+        try {
+            await parkingService.delete(id);
+            setParkings(parkings.filter((park) => park.Id !== id));
+            alert("Usunięto parking");
+            navigate(0)
         } catch (error) {
             console.error(error);
         }
     };
-
+    const editParking = async (parking:ParkingZ) => {
+        navigate(`/edit-parking/${parking.Id}`);
+    }
     return (
         <div>
             <h1>Zarządzanie Parkingami</h1>
             <div className={styles.tableContainer}>
                 <h2>Lista Parkingów</h2>
-                <TableParking parkings={parkings} onEdit={console.log} />
+                <TableParking parkings={parkings} onEdit={editParking} />
             </div>
             <div className={styles.tableContainer}>
                 <h2>Dodaj nowy parking</h2>
@@ -132,8 +142,21 @@ useEffect(() => {
                 />
                 <button onClick={submitNewParking}>Dodaj</button>
             </div>
+            <div>
+                <h2>Usuń parking</h2>
+                <input type="number" id="deleteParkingID" placeholder="Parking ID" />
+                <button
+                    onClick={() =>
+                        deleteParking(Number((document.getElementById("deleteParkingID") as HTMLInputElement).value))
+                    }
+                >
+                    Usuń
+                </button>
+            </div>
         </div>
-    );
-};
 
-export default ZarzadzanieP;
+    );
+}
+
+
+export default Parking;

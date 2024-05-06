@@ -1,6 +1,7 @@
 const db = require("./db");
 const helper = require("../helper");
 const config = require("../config");
+const { response } = require("express");
 
 async function getAllParking(
   page = 1,
@@ -121,10 +122,78 @@ async function removeParking(id) {
       };
   
 }
+async function getById(parkingId, tableName = "Parking_reservations") {
+    try {
+        const rows = await db.query("SELECT * FROM ?? WHERE id = ?", [
+            tableName,
+            parkingId
+        ]);
+        const data=helper.emptyOrRows(rows);
+        if(!data){
+          return {
+            data:null,
+            response:{
+              message: `Parking with ID ${parkingId} not found`,
+              statusCode: 404
+            }
+          };
+       }
+        return {
+          data,
+          response:{
+            message: `Successfully fetched data for parking with ID ${parkingId}`,
+            statusCode: 200
+          }
+        };
+    } catch (error) {
+        throw error;
+    }
+}
 
+async function updateParking(id, parkingId) {
+  try{
+    parking.id = parkingId;
+
+    const parkingExist = await db.query("SELECT * FROM Parking_reservations WHERE id = ?", [id]);
+    if(parkingExist.length===0){
+      const error = new Error("Parking not found");
+      error.statusCode = 404;
+      throw error;
+    }
+
+    const result = await db.query("UPDATE Parking_reservations SET Client_id=?, Since=?, Until=?, Parking_level=?, Space_id=?, License_plate=?, Price_per_day=? WHERE id=?",
+    [
+        parkingId.Client_id,
+        parkingId.Since,
+        parkingId.Until,
+        parkingId.Parking_level,
+        parkingId.Space_id,
+        parkingId.License_plate,
+        parkingId.Price_per_day,
+        parkingId.id
+    ]
+    );
+
+    if(result.affectedRows){
+      return{
+        data: parkingId,
+        message: "Parking updated successfully",
+        statusCode: 200
+      };
+    }else{
+      throw new Error("Failed to update parking");
+    }
+  }
+  catch(error){
+    throw error;
+  
+  }
+}
 module.exports = {
     getAllParking,
     createParking,
-    removeParking
+    removeParking,
+    getById,
+    updateParking,
     };
 

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import rentalService from "../services/rental.service";
-import { CarRental } from "../assets/Data";
+import rentalService from "../../services/rental.service";
+import { CarRental } from "../../assets/Data";
 
 const emptyRental: CarRental = {
   Id: 0,
@@ -36,7 +36,7 @@ const EditRentPage = () => {
             const response = await rentalService.updateRent(carRental);
             if (response.status === 200) {
                 alert("Edycja zakończona sukcesem!");
-                navigate("/zarzadzaniePojazd");
+                navigate("/zarzadzanie/pojazd");
             }
         } catch (error) {
             console.error("Error while updating rent:", error);

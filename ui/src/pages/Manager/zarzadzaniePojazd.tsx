@@ -2,10 +2,9 @@ import React, { useState, useEffect } from "react";
 import carService from "../../services/car.service";
 import rentService from "../../services/rental.service";
 import CarsTable from "../../components/tableCars";
-import { Car } from "../../assets/Data";
-import tableStyle from "../../components/tableCars.module.css";
-import { CarRental } from "../../assets/Data";
 import TableRent from "../../components/CarRentaTable";
+import { Car, CarRental } from "../../assets/Data";
+import tableStyle from "../../components/tableCars.module.css";
 import { useNavigate } from "react-router-dom";
 
 const ZarzadzanieP = () => {
@@ -20,8 +19,16 @@ const ZarzadzanieP = () => {
     Fuel_type: "",
     Transmission_type: "",
   });
+  const [newRentalData, setNewRentalData] = useState<CarRental>({
+    Id: 0,
+    Rental_date: "", 
+    Return_date: "", 
+    Status: "",
+    Client_id: 0,
+    Cars_id: 0,
+  });
 
-  const navigate = useNavigate(); // Użyj useNavigate do nawigacji
+  const navigate = useNavigate();
 
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.target;
@@ -31,7 +38,25 @@ const ZarzadzanieP = () => {
     }));
   };
 
-  // Funkcja obsługująca zapis nowego samochodu
+  const handleRentalInputChange = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    const { name, value } = event.target;
+
+    
+    if (name === "Rental_date" || name === "Return_date") {
+      setNewRentalData((prevData) => ({
+        ...prevData,
+        [name]: value, 
+      }));
+    } else {
+      setNewRentalData((prevData) => ({
+        ...prevData,
+        [name]: value,
+      }));
+    }
+  };
+
   const submitNewCar = async () => {
     try {
       const response = await carService.create({ ...newCarData, Id: 0 });
@@ -47,32 +72,65 @@ const ZarzadzanieP = () => {
         Transmission_type: "",
       });
       alert("Car added successfully!");
+      navigate(0);
     } catch (error) {
       console.error("Error while adding car:", error);
       alert("An error occurred while adding the car. Please try again");
     }
   };
 
-  // Funkcja obsługująca usunięcie samochodu
-  const deleteCar = async (id: number) => {
+  const submitNewRental = async () => {
     try {
-      const response = await carService.delete(id);
-      console.log("Car deleted:", response);
-      setCars(cars.filter((car) => car.Id !== id));
-      alert("Car deleted successfully!");
+      const response = await rentService.createRental(newRentalData);
+      console.log("New Rental Data:", response);
+      setRentals([...rentals, response.data]);
+      setNewRentalData({
+        Id: 0,
+        Rental_date: "",
+        Return_date: "",
+        Status: "",
+        Client_id: 0,
+        Cars_id: 0,
+      });
+      alert("Rental added successfully!");
+      navigate(0);
     } catch (error) {
-      console.error("Error while deleting car:", error);
-      alert("An error occurred while deleting the car. Please try again");
+      console.error("Error while adding rental:", error);
+      alert("An error occurred while adding the rental. Please try again");
     }
   };
 
-  // Funkcja obsługująca edycję samochodu
-  const editCar = async (car: Car) => {
-    // Przekierowuje do strony edycji samochodu po kliknięciu przycisku "Edytuj"
-    navigate(`/edit-car/${car.Id}`);
+  const deleteCar = async (id: number) => {
+    try {
+      await carService.delete(id);
+      setCars(cars.filter((car) => car.Id !== id));
+      alert("Auto usunięte!");
+      navigate(0);
+    } catch (error) {
+      console.error(error);
+    }
   };
 
-  // Pobranie listy samochodów i wypożyczeń po załadowaniu komponentu
+  const deleteRental = async (id: number) => {
+    try {
+      await rentService.removeRent(id);
+      setRentals(rentals.filter((rental) => rental.Id !== id));
+      alert("Wypożyczenie usunięte!");
+      navigate(0);
+    } catch (error) {
+      console.error(error);
+     
+    }
+  };
+
+  const editCar = async (car: Car) => {
+    navigate(`edit-car/${car.Id}`);
+  };
+
+  const editRent = async (rent: CarRental) => {
+    navigate(`edit-rent/${rent.Id}`);
+  };
+
   useEffect(() => {
     async function fetchData() {
       try {
@@ -98,11 +156,51 @@ const ZarzadzanieP = () => {
       <h1>Zarzadzanie Autami i Wypożyczeń</h1>
       <div className={tableStyle.tableContainer}>
         <h2>Lista Wypożyczeń</h2>
-        <TableRent rent={rentals} />
+        <TableRent rents={rentals} onEdit={editRent} onDelete={deleteRental}/>
       </div>
       <div className={tableStyle.tableContainer}>
+        <h2>Dodaj nowe wypożyczenie</h2>
+        <input
+          type="datetime-local"
+          name="Rental_date"
+          placeholder="Rental date"
+          value={newRentalData.Rental_date.toString()}
+          onChange={handleRentalInputChange}
+        />
+        <input
+          type="datetime-local"
+          name="Return_date"
+          placeholder="Return date"
+          value={newRentalData.Return_date.toString()}
+          onChange={handleRentalInputChange}
+        />
+        <input
+          type="text"
+          name="Status"
+          placeholder="Status"
+          value={newRentalData.Status}
+          onChange={handleRentalInputChange}
+        />
+        <input
+          type="number"
+          name="Client_id"
+          placeholder="Client ID"
+          value={newRentalData.Client_id}
+          onChange={handleRentalInputChange}
+        />
+        <input
+          type="number"
+          name="Cars_id"
+          placeholder="Car ID"
+          value={newRentalData.Cars_id}
+          onChange={handleRentalInputChange}
+        />
+        <button onClick={submitNewRental}>Dodaj</button>
+      </div>
+      <br></br>
+      <div className={tableStyle.tableContainer}>
         <h2>Lista Aut</h2>
-        <CarsTable cars={cars} onEdit={editCar} />
+        <CarsTable cars={cars} onEdit={editCar} onDelete={deleteCar}/>
       </div>
       <div className={tableStyle.tableContainer}>
         <h2>Dodaj nowe auto</h2>
@@ -157,22 +255,7 @@ const ZarzadzanieP = () => {
         />
         <button onClick={submitNewCar}>Dodaj</button>
       </div>
-      <div>
-        <h2>Usuń auto</h2>
-        <input type="number" id="deleteCarId" placeholder="Car ID" />
-        <button
-          onClick={() =>
-            deleteCar(
-              Number(
-                (document.getElementById("deleteCarId") as HTMLInputElement)
-                  .value
-              )
-            )
-          }
-        >
-          Delete
-        </button>
-      </div>
+      
     </div>
   );
 };

@@ -10,6 +10,8 @@ import {
 	faTools,
 	faDoorOpen,
 	faBullhorn,
+	faCar,
+	faSquareParking
 } from "@fortawesome/free-solid-svg-icons";
 import {
 	NavLink,
@@ -47,6 +49,16 @@ const navItems = [
 		id: "ogloszenia",
 		name: "OGŁOSZENIA",
 		icon: faBullhorn,
+	},
+	{
+		id: "pojazd",
+		name: "POJAZDY",
+		icon: faCar,
+	},
+	{
+		id: "parking",
+		name: "PARKING",
+		icon: faSquareParking,
 	},
 ];
 

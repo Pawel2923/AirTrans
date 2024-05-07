@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from "react";
-import parkingService from "../services/parking.service";
-import TableParking from "../components/tableParking";
+import parkingService from "../../services/parking.service";
+import TableParking from "../../components/tableParking";
 
-import { PageData, ParkingZ } from "../assets/Data";
+import { PageData, ParkingZ } from "../../assets/Data";
 import { useNavigate, useSearchParams } from "react-router-dom";
-import Pagination from "../components/Pagination";
-import '../pages/parking.module.css';
+import Pagination from "../../components/Pagination";
+// import '../pages/parking.module.css';
 
 const Parking = () => {
     const [searchParams] = useSearchParams();
@@ -85,7 +85,7 @@ const Parking = () => {
     };
 
     const editParking = async (parking: ParkingZ) => {
-        navigate(`/edit-parking/${parking.Id}`);
+        navigate(`edit-parking/${parking.Id}`);
     };
 
     return (

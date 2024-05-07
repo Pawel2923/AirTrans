@@ -1,7 +1,7 @@
 import React,{useState,useEffect} from "react";
 import {useParams, useNavigate } from "react-router-dom";
-import parkingService from "../services/parking.service";
-import { ParkingZ } from "../assets/Data";
+import parkingService from "../../services/parking.service";
+import { ParkingZ } from "../../assets/Data";
 
 const emptyParking: ParkingZ = {
     Id: 0,
@@ -37,7 +37,7 @@ const formSubmitHandler = async (e:React.FormEvent<HTMLFormElement>)=>{
         const response = await parkingService.updateParking(parking);
         if(response.status === 200){
             alert("Edycja zakończona sukcesem!");
-            navigate("/parking");
+            navigate("/zarzadzanie/parking");
         }
     }catch(error){
         console.error("Error while updating parking:", error);

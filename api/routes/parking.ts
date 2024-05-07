@@ -1,12 +1,14 @@
-const express = require("express");
+import express from "express";
 const router = express.Router();
-const parkingService = require("../services/parking");
+import parkingService from "../services/parking";
 
 router.get("/", async function (req, res, next) {
   try {
     const { page, limit } = req.query;
+		const parsedPage = page ? parseInt(page as string) : undefined;
+		const parsedLimit = limit ? parseInt(limit as string) : undefined;
 
-    const { data, meta, response } = await parkingService.getAllParking(page, limit);
+    const { data, meta, response } = await parkingService.getAllParking(parsedPage, parsedLimit);
 
     res.status(response.statusCode).json({
       data,
@@ -31,7 +33,9 @@ router.post("/", async function (req, res, next) {
 router.delete("/:id", async function (req, res, next) {
     try {
       const { id } = req.params;
-      const { message } = await parkingService.removeParking(id);
+      const rentId = parseInt(id as string);  
+
+      const { message } = await parkingService.removeParking(rentId);
       res.status(204).json({ message });
     } catch (err) {
       next(err);
@@ -41,7 +45,8 @@ router.delete("/:id", async function (req, res, next) {
 
 router.get("/:id", async function (req, res, next) {
   try {
-    const parkingId = req.params.id;
+    const { id } = req.params;
+		const parkingId = parseInt(id as string);
 
     const { data, response } = await parkingService.getById(parkingId);
 
@@ -63,10 +68,14 @@ router.get("/:id", async function (req, res, next) {
 
 router.put("/:id", async function (req, res, next) {
   try {
-    const {data, message} = await parkingService.updateParking(req.params.id, req.body);
+    const { id } = req.params;
+		const parkingId = parseInt(id as string);
+
+    const {data, message} = await parkingService.updateParking(parkingId, req.body);
     res.status(200).json({data, message});
   } catch (error) {
     next(error);
   }
 });
-module.exports = router;
+
+export default router;

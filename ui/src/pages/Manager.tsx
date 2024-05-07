@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Outlet } from "react-router-dom";
-import { ManagerNav, ManagerTopNav } from "../components/ManagerNav";
+import ManagerNav from "../components/Manager/ManagerNav";
+import ManagerTopNav from "../components/Manager/ManagerTopNav";
 import classes from "./Manager.module.css";
 import AuthProvider from "../store/AuthProvider";
 

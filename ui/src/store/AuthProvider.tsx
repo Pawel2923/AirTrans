@@ -6,7 +6,7 @@ import { AxiosResponse } from "axios";
 
 interface AuthResponse {
 	auth: boolean;
-	user: string | User | null | undefined;
+	user: string | User | undefined;
 }
 
 interface AuthProviderProps {
@@ -18,9 +18,7 @@ const AuthProvider: React.ComponentType<AuthProviderProps> = ({
 }: AuthProviderProps) => {
 	const navigate = useNavigate();
 	const [auth, setAuth] = useState<boolean>(false);
-	const [user, setUser] = useState<string | User | null | undefined>(
-		undefined
-	);
+	const [user, setUser] = useState<string | User | undefined>(undefined);
 
 	useEffect(() => {
 		authenticationService
@@ -28,7 +26,7 @@ const AuthProvider: React.ComponentType<AuthProviderProps> = ({
 			.then((response: AxiosResponse<AuthResponse>) => {
 				if (response.status === 200) {
 					setAuth(response.data.auth);
-                    setUser(response.data.user);
+					setUser(response.data.user);
 				}
 			})
 			.catch((error) => {

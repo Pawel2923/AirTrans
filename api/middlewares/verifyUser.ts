@@ -2,7 +2,7 @@ import { NextFunction, Request, Response } from "express";
 import { Err } from "../Types";
 import jwt from "jsonwebtoken";
 
-// Extend Request interface to include user and auth property
+// Extend Request interface to include user property
 declare global {
 	namespace Express {
 		interface Request {

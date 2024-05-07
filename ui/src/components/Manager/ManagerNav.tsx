@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from "react";
+import React, { useState, useEffect } from "react";
 import classes from "./ManagerNav.module.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -10,16 +10,12 @@ import {
 	faTools,
 	faDoorOpen,
 	faBullhorn,
-	faCircleUser,
 } from "@fortawesome/free-solid-svg-icons";
 import {
 	NavLink,
-	NavigateFunction,
 	useLocation,
-	useNavigate,
 } from "react-router-dom";
-import AuthContext, { User } from "../store/auth-context";
-import authenticationService from "../services/authentication.service";
+import useAuth from "../../hooks/use-auth";
 
 const navItems = [
 	{
@@ -54,32 +50,15 @@ const navItems = [
 	},
 ];
 
-const logout = (navigate: NavigateFunction) => {
-	authenticationService
-		.logout()
-		.then((response) => {
-			if (response.status === 200) {
-				navigate("/");
-			}
-		})
-		.catch((error) => {
-			if (error.response.status === 401) {
-				console.error("Unauthorized");
-			} else if (error.response.status === 500) {
-				console.error("Server error");
-			}
-		});
-};
-
 interface ManagerNavProps {
 	setTitle: React.Dispatch<React.SetStateAction<string>>;
 }
 
-export const ManagerNav: React.FC<ManagerNavProps> = ({
+const ManagerNav: React.FC<ManagerNavProps> = ({
 	setTitle,
 }: ManagerNavProps) => {
-	const navigate = useNavigate();
 	const location = useLocation();
+	const { logout } = useAuth();
 	const [expanded, setExpanded] = useState<boolean>(true);
 
 	useEffect(() => {
@@ -134,7 +113,7 @@ export const ManagerNav: React.FC<ManagerNavProps> = ({
 						!expanded ? classes.shrank : ""
 					}`}
 				>
-					<a href="#" onClick={() => logout(navigate)}>
+					<a href="#" onClick={logout}>
 						{expanded && "Wyloguj "}
 						<FontAwesomeIcon icon={faRightFromBracket} />
 					</a>
@@ -144,54 +123,4 @@ export const ManagerNav: React.FC<ManagerNavProps> = ({
 	);
 };
 
-interface ManagerTopNavProps {
-	title: string;
-}
-
-export const ManagerTopNav: React.FC<ManagerTopNavProps> = ({
-	title,
-}: ManagerTopNavProps) => {
-	const navigate = useNavigate();
-	const authCtx = useContext(AuthContext);
-	const [profileMenu, setProfileMenu] = useState<boolean>(false);
-	const [user, setUser] = useState<User>();
-
-	useEffect(() => {
-		setUser(authCtx.user as User);
-	}, [authCtx.user]);
-
-	return (
-		<nav className={classes["top-nav"]}>
-			<div className={classes["nav-title"]}>
-				<h1>{title}</h1>
-			</div>
-			<div className={classes["nav-right"]}>
-				<button onClick={() => setProfileMenu((prev) => !prev)}>
-					<FontAwesomeIcon icon={faCircleUser} />
-				</button>
-				{profileMenu && (
-					<>
-						<div
-							className={classes["profile-backdrop"]}
-							onClick={() => setProfileMenu(false)}
-						></div>
-						<div className={classes.profile}>
-							<div>{user ? user.id : "e-mail"}</div>
-							<ul className={classes["profile-menu"]}>
-								<li>
-									<a href="#">Profil</a>
-								</li>
-								<li>
-									<a href="#">Ustawienia</a>
-								</li>
-								<li onClick={() => logout(navigate)}>
-									<a href="#">Wyloguj</a>
-								</li>
-							</ul>
-						</div>
-					</>
-				)}
-			</div>
-		</nav>
-	);
-};
+export default ManagerNav;

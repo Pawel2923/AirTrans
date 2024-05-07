@@ -1,8 +1,8 @@
 import db from "./db";
 import helper from "../helper";
 import config from "../config";
+import { Err, Car } from "../Types";
 import { ResultSetHeader } from "mysql2";
-import { Car, Err } from "../Types";
 
 async function getAllCars(
 	page = 1,
@@ -17,7 +17,7 @@ async function getAllCars(
 		limit,
 	]);
 
-	const data = helper.emptyOrRows(rows) as Car[];
+	const data = helper.emptyOrRows(rows);
 
 	const pages = await helper.getPages(tableName, limit);
 
@@ -38,7 +38,7 @@ async function getOneCar(carId: number, tableName = "Cars") {
 		carId,
 	]);
 
-	const data = helper.emptyOrRows(row) as Car[];
+	const data = helper.emptyOrRows(row);
 
 	if (!data) {
 		return {
@@ -64,7 +64,7 @@ async function getById(carId: number, tableName = "Cars") {
 		carId,
 	]);
 
-	const data = helper.emptyOrRows(row) as Car[];
+	const data = helper.emptyOrRows(row);
 
 	if (!data) {
 		return {
@@ -75,14 +75,6 @@ async function getById(carId: number, tableName = "Cars") {
 			},
 		};
 	}
-
-	return {
-		data: data[0], // Bez konwersji, zwracamy pierwszy rekord
-		response: {
-			message: `Successfully fetched car with ID ${carId}`,
-			statusCode: 200,
-		},
-	};
 }
 
 async function create(car: Car) {
@@ -91,13 +83,12 @@ async function create(car: Car) {
 	try {
 		await validateCar(carWithoutId);
 
-		let carExists = await db.query(
+		const carExists = await db.query(
 			"SELECT * FROM Cars WHERE License_plate=?",
 			[carWithoutId.License_plate]
 		);
-        carExists = helper.emptyOrRows(carExists);
 
-		if (carExists.length > 0) {
+		if (helper.emptyOrRows(carExists).length > 0) {
 			const error = new Err(
 				"Auto o podanym numerze rejestracyjnym już istnieje!"
 			);
@@ -118,7 +109,7 @@ async function create(car: Car) {
 				carWithoutId.Transmission_type,
 			]
 		);
-        result = result as ResultSetHeader;
+		result = result as ResultSetHeader;
 
 		if (result.affectedRows) {
 			return {
@@ -155,12 +146,11 @@ async function update(carId: number, car: Car) {
 
 		await validateCar(car);
 
-		let carExists = await db.query("SELECT '' FROM Cars WHERE Id=?", [
+		const carExists = await db.query("SELECT * FROM Cars WHERE Id=?", [
 			car.Id,
 		]);
-        carExists = helper.emptyOrRows(carExists);
 
-		if (carExists.length === 0) {
+		if (helper.emptyOrRows(carExists).length === 0) {
 			const error = new Err("Samochód o podanym Id nie istnieje");
 			error.statusCode = 404;
 			throw error;
@@ -179,7 +169,7 @@ async function update(carId: number, car: Car) {
 				car.Id,
 			]
 		);
-        result = result as ResultSetHeader;
+		result = result as ResultSetHeader;
 
 		if (result.affectedRows) {
 			return {
@@ -196,30 +186,25 @@ async function update(carId: number, car: Car) {
 }
 
 async function remove(id: number) {
-	try {
-		let carExists = await db.query("SELECT '' FROM Cars WHERE Id=?", [id]);
-        carExists = helper.emptyOrRows(carExists);
+	const carExists = await db.query("SELECT * FROM Cars WHERE Id=?", [id]);
 
-		if (carExists.length === 0) {
-			const error = new Err("Samochód o podanym Id nie istnieje");
-			error.statusCode = 404;
-			throw error;
-		}
-
-		let result = await db.query("DELETE FROM Cars WHERE Id=?", [id]);
-        result = result as ResultSetHeader;
-
-		if (result.affectedRows === 0) {
-			throw new Err("Samochód nie został usunięty");
-		}
-
-		return {
-			message: "Samochód usunięty pomyślnie",
-			statusCode: 201,
-		};
-	} catch (error) {
+	if (helper.emptyOrRows(carExists).length === 0) {
+		const error = new Err("Samochód o podanym Id nie istnieje");
+		error.statusCode = 404;
 		throw error;
 	}
+
+	let rows = await db.query("DELETE FROM Cars WHERE Id=?", [id]);
+	rows = rows as ResultSetHeader;
+
+	if (rows.affectedRows === 0) {
+		throw new Err("Samochód nie został usunięty");
+	}
+
+	return {
+		message: "Samochód usunięty pomyślnie",
+		statusCode: 201,
+	};
 }
 
 export default {

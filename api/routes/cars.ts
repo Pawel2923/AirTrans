@@ -19,33 +19,7 @@ router.get("/", async function (req, res, next) {
 			meta,
 		});
 	} catch (error) {
-		console.error("Error while fetching cars", error);
-		res.status(500).json({ message: "Internal server error" });
-	}
-});
-router.get("/:id", async function (req, res, next) {
-	try {
-		const carId = req.params.id;
-		const parsedCarId = carId ? parseInt(carId as string) : undefined;
-
-		if (!parsedCarId) {
-			throw new Err("Invalid car id", 400);
-		}
-
-		const { data, response } = await carService.getById(parsedCarId);
-
-		if (!data) {
-			return res.status(response.statusCode).json({
-				message: response.message,
-			});
-		}
-
-		res.status(response.statusCode).json({
-			data,
-		});
-	} catch (error) {
-		console.error("Error while fetching car", error);
-		res.status(500).json({ message: "Internal server error" });
+		next(error);
 	}
 });
 
@@ -58,7 +32,7 @@ router.get("/:id", async function (req, res, next) {
 			throw new Err("Invalid car id", 400);
 		}
 
-		const { data, response } = await carService.getById(parsedCarId);
+		const { data, response } = await carService.getOneCar(parsedCarId);
 
 		if (!data) {
 			return res.status(response.statusCode).json({
@@ -70,8 +44,7 @@ router.get("/:id", async function (req, res, next) {
 			data,
 		});
 	} catch (error) {
-		console.error("Error while fetching car", error);
-		res.status(500).json({ message: "Internal server error" });
+		next(error);
 	}
 });
 

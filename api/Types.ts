@@ -81,7 +81,7 @@ interface Car {
 	Fuel_type: string;
 }
 
-interface ParkingInfo {
+interface Parking_info {
 	Parking_id: number;
 	Name?: string;
 	Capacity: number;
@@ -93,14 +93,45 @@ interface ParkingInfo {
 	Path_to_img?: string;
 }
 
+interface Runway {
+	id: string;
+	length: number;
+	is_available: boolean;
+	flight_id: string | null;
+}
+
+interface Terminal {
+	id: number;
+	is_available: boolean;
+	capacity: number;
+	flight_id: string | null;
+}
+
+interface Taxiway {
+	id: string;
+	is_available: boolean;
+	flight_id: string | null;
+}
+
+interface Airfield_info {
+	name: string;
+	runways: Runway[];
+	terminals: Terminal[];
+	taxiways: Taxiway[];
+}
+
 export type {
 	Airplane,
 	Announcement,
 	Car,
 	Contact_info,
 	Flight,
-	ParkingInfo,
+	Parking_info,
 	ArrDepTableProps,
+	Runway,
+	Terminal,
+	Taxiway,
+	Airfield_info
 }
 
 export {

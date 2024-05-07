@@ -7,6 +7,11 @@ import airfieldService from "../services/airfield";
  * /airfield:
  *  get:
  *   description: Get all airfields
+ *   parameters:
+ *    - name: table_name
+ *      in: query
+ *      required: false
+ *      description: Get specific table data
  *   responses:
  *    200:
  *     description: Successfully fetched data
@@ -26,13 +31,58 @@ import airfieldService from "../services/airfield";
  *    500:
  *     description: Internal server error
  */
-router.get("/", async (_req, res, next) => {
+router.get("/", async (req, res, next) => {
 	try {
-		const { data, message } = await airfieldService.get();
+        const { table_name } = req.query;
+
+		const { data, message } = await airfieldService.get(table_name as string | undefined);
 		res.status(200).json({ data, message });
 	} catch (error) {
 		next(error);
 	}
+});
+
+/**
+ * @openapi
+ * /airfield/{id}:
+ *  put:
+ *   description: Update airfield info
+ *   parameters:
+ *    - name: id
+ *      in: path
+ *      required: true
+ *      description: Airfield ID
+ *      type: string
+ *    - name: table_name
+ *      in: body
+ *      required: true
+ *      description: Table name
+ *      type: string
+ *    - name: newData
+ *      in: body
+ *      required: true
+ *      description: New data
+ *      type: object
+ *   responses:
+ *    200:
+ *     description: Successfully updated data
+ *    400:
+ *     description: Invalid table name
+ *    404:
+ *     description: Data not found
+ *    500:
+ *     description: Internal server error
+ */
+router.put("/:id", async (req, res, next) => {
+    try {
+        const { id } = req.params;
+        const { table_name, newData } = req.body;
+
+        const { data, message } = await airfieldService.update(table_name, id, newData);
+        res.status(200).json({ data, message });
+    } catch (error) {
+        next(error);
+    }
 });
 
 export default router;

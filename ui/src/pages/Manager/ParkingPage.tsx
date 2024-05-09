@@ -2,28 +2,27 @@ import React, { useState, useEffect } from "react";
 import parkingService from "../../services/parking.service";
 import TableParking from "../../components/tableParking";
 
-import { PageData, ParkingZ } from "../../assets/Data";
+import { PageData, ParkingReservations } from "../../assets/Data";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import Pagination from "../../components/Pagination";
 // import '../pages/parking.module.css';
 
 const Parking = () => {
     const [searchParams] = useSearchParams();
-    const [parkings, setParkings] = useState<ParkingZ[]>([]);
+    const [parkings, setParkings] = useState<ParkingReservations[]>([]);
     const navigate = useNavigate();
     const [pageData, setPageData] = useState<PageData>({
         page: parseInt(searchParams.get("page") || "1"),
         pages: 1,
     });
-    const [newParking, setNewParking] = useState<ParkingZ>({
-        Id: 0,
-        Client_id: 0,
-        Since: "",
-        Until: "",
-        Parking_level: "",
-        Space_id: 0,
-        License_plate: "",
-        Price_per_day: 0,
+    const [newParking, setNewParking] = useState<ParkingReservations>({
+        id: 0,
+        Users_uid: 0,
+        since: "",
+        until: "",
+        parking_level: "",
+        space_id: "",
+        license_plate: "",
     });
 
     const retrieveParkings = () => {
@@ -57,14 +56,13 @@ const Parking = () => {
             const response = await parkingService.createParking(newParking);
             setParkings([...parkings, response.data]);
             setNewParking({
-                Id: 0,
-                Client_id: 0,
-                Since: "",
-                Until: "",
-                Parking_level: "",
-                Space_id: 0,
-                License_plate: "",
-                Price_per_day: 0,
+                id: 0,
+                Users_uid: 0,
+                since: "",
+                until: "",
+                parking_level: "",
+                space_id: "",
+                license_plate: "",
             });
             alert("Dodano nowy parking");
             navigate(0);
@@ -76,7 +74,7 @@ const Parking = () => {
     const deleteParking = async (id: number) => {
         try {
             await parkingService.delete(id);
-            setParkings(parkings.filter(park => park.Id !== id));
+            setParkings(parkings.filter(park => park.id !== id));
             alert("Usunięto parking");
             navigate(0);
         } catch (error) {
@@ -84,8 +82,8 @@ const Parking = () => {
         }
     };
 
-    const editParking = async (parking: ParkingZ) => {
-        navigate(`edit-parking/${parking.Id}`);
+    const editParking = async (parking: ParkingReservations) => {
+        navigate(`edit-parking/${parking.id}`);
     };
 
     return (
@@ -106,49 +104,42 @@ const Parking = () => {
                         type="number"
                         name="Client_id"
                         placeholder="Client ID"
-                        value={newParking.Client_id}
+                        value={newParking.Users_uid}
                         onChange={handleInputChange}
                     />
                     <input
                         type="datetime-local"
                         name="Since"
                         placeholder="Since"
-                        value={newParking.Since.toString()}
+                        value={newParking.since.toString()}
                         onChange={handleInputChange}
                     />
                     <input
                         type="datetime-local"
                         name="Until"
                         placeholder="Until"
-                        value={newParking.Until.toString()}
+                        value={newParking.until.toString()}
                         onChange={handleInputChange}
                     />
                     <input
                         type="text"
                         name="Parking_level"
                         placeholder="Parking level"
-                        value={newParking.Parking_level}
+                        value={newParking.parking_level}
                         onChange={handleInputChange}
                     />
                     <input
                         type="number"
                         name="Space_id"
                         placeholder="Space ID"
-                        value={newParking.Space_id}
+                        value={newParking.space_id}
                         onChange={handleInputChange}
                     />
                     <input
                         type="text"
                         name="License_plate"
                         placeholder="License plate"
-                        value={newParking.License_plate}
-                        onChange={handleInputChange}
-                    />
-                    <input
-                        type="number"
-                        name="Price_per_day"
-                        placeholder="Price per day"
-                        value={newParking.Price_per_day}
+                        value={newParking.license_plate}
                         onChange={handleInputChange}
                     />
                     <button onClick={submitNewParking}>Dodaj</button>

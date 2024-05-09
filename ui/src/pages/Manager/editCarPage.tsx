@@ -1,23 +1,23 @@
 import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import carService from "../../services/car.service";
-import { Car } from "../../assets/Data";
+import { Cars } from "../../assets/Data";
 
-const emptyCar: Car = {
-  Id: 0,
-  Brand: "",
-  Model: "",
-  Price_per_day: 0,
-  Production_year: 0,
-  License_plate: "",
-  Fuel_type: "",
-  Transmission_type: "",
+const emptyCar: Cars = {
+  id: 0,
+  brand: "",
+  model: "",
+  price_per_day: 0,
+  production_year: 0,
+  license_plate: "",
+  fuel_type: "",
+  transmission_type: "MANUAL",
 };
 
 const EditCarPage = () => {
   const navigate = useNavigate();
   const { id } = useParams<{ id: string }>();
-  const [carData, setCarData] = useState<Car>(emptyCar);
+  const [carData, setCarData] = useState<Cars>(emptyCar);
 
   useEffect(() => {
     if (id === undefined) return;
@@ -64,49 +64,49 @@ const EditCarPage = () => {
           name="Brand"
           placeholder="Brand"
           onChange={inputChangeHandler}
-          value={carData.Brand}
+          value={carData.brand}
         />
         <input
           type="text"
           name="Model"
           placeholder="Model"
           onChange={inputChangeHandler}
-          value={carData.Model}
+          value={carData.model}
         />
         <input
           type="number"
           name="Price_per_day"
           placeholder="Price per day"
           onChange={inputChangeHandler}
-          value={carData.Price_per_day}
+          value={carData.price_per_day}
         />
         <input
           type="number"
           name="Production_year"
           placeholder="Production year"
           onChange={inputChangeHandler}
-          value={carData.Production_year}
+          value={carData.production_year}
         />
         <input
           type="text"
           name="License_plate"
           placeholder="License plate"
           onChange={inputChangeHandler}
-          value={carData.License_plate}
+          value={carData.license_plate}
         />
         <input
           type="text"
           name="Fuel_type"
           placeholder="Fuel type"
           onChange={inputChangeHandler}
-          value={carData.Fuel_type}
+          value={carData.fuel_type}
         />
         <input
           type="text"
           name="Transmission_type"
           placeholder="Transmission type"
           onChange={inputChangeHandler}
-          value={carData.Transmission_type}
+          value={carData.transmission_type}
         />
         <button type="submit">Save Changes</button>
       </form>

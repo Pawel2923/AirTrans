@@ -2,29 +2,29 @@ import React, { useState, useEffect } from "react";
 import carService from "../../services/car.service";
 import rentService from "../../services/rental.service";
 import CarsTable from "../../components/tableCars";
-import TableRent from "../../components/CarRentaTable";
-import { Car, CarRental } from "../../assets/Data";
+import TableRent from "../../components/CarRentalTable";
+import { Cars, Rentals } from "../../assets/Data";
 import tableStyle from "../../components/tableCars.module.css";
 import { useNavigate } from "react-router-dom";
 
 const ZarzadzanieP = () => {
-  const [cars, setCars] = useState<Car[]>([]);
-  const [rentals, setRentals] = useState<CarRental[]>([]);
-  const [newCarData, setNewCarData] = useState<Omit<Car, "Id">>({
-    Brand: "",
-    Model: "",
-    Price_per_day: 0,
-    Production_year: 0,
-    License_plate: "",
-    Fuel_type: "",
-    Transmission_type: "",
+  const [cars, setCars] = useState<Cars[]>([]);
+  const [rentals, setRentals] = useState<Rentals[]>([]);
+  const [newCarData, setNewCarData] = useState<Cars>({
+    brand: "",
+    model: "",
+    price_per_day: 0,
+    production_year: 0,
+    license_plate: "",
+    fuel_type: "",
+    transmission_type: "MANUAL",
   });
-  const [newRentalData, setNewRentalData] = useState<CarRental>({
-    Id: 0,
-    Rental_date: "", 
-    Return_date: "", 
-    Status: "",
-    Client_id: 0,
+  const [newRentalData, setNewRentalData] = useState<Rentals>({
+    id: 0,
+    since: "", 
+    until: "", 
+    status: undefined,
+    Users_uid: 0,
     Cars_id: 0,
   });
 
@@ -63,13 +63,13 @@ const ZarzadzanieP = () => {
       console.log("New Car Data:", response);
       setCars([...cars, response.data]);
       setNewCarData({
-        Brand: "",
-        Model: "",
-        Price_per_day: 0,
-        Production_year: 0,
-        License_plate: "",
-        Fuel_type: "",
-        Transmission_type: "",
+        brand: "",
+        model: "",
+        price_per_day: 0,
+        production_year: 0,
+        license_plate: "",
+        fuel_type: "",
+        transmission_type: "MANUAL",
       });
       alert("Car added successfully!");
       navigate(0);
@@ -85,11 +85,11 @@ const ZarzadzanieP = () => {
       console.log("New Rental Data:", response);
       setRentals([...rentals, response.data]);
       setNewRentalData({
-        Id: 0,
-        Rental_date: "",
-        Return_date: "",
-        Status: "",
-        Client_id: 0,
+        id: 0,
+        since: "",
+        until: "",
+        status: undefined,
+        Users_uid: 0,
         Cars_id: 0,
       });
       alert("Rental added successfully!");
@@ -103,7 +103,7 @@ const ZarzadzanieP = () => {
   const deleteCar = async (id: number) => {
     try {
       await carService.delete(id);
-      setCars(cars.filter((car) => car.Id !== id));
+      setCars(cars.filter((car) => car.id !== id));
       alert("Auto usunięte!");
       navigate(0);
     } catch (error) {
@@ -114,7 +114,7 @@ const ZarzadzanieP = () => {
   const deleteRental = async (id: number) => {
     try {
       await rentService.removeRent(id);
-      setRentals(rentals.filter((rental) => rental.Id !== id));
+      setRentals(rentals.filter((rental) => rental.id !== id));
       alert("Wypożyczenie usunięte!");
       navigate(0);
     } catch (error) {
@@ -123,12 +123,12 @@ const ZarzadzanieP = () => {
     }
   };
 
-  const editCar = async (car: Car) => {
-    navigate(`edit-car/${car.Id}`);
+  const editCar = async (car: Cars) => {
+    navigate(`edit-car/${car.id}`);
   };
 
-  const editRent = async (rent: CarRental) => {
-    navigate(`edit-rent/${rent.Id}`);
+  const editRent = async (rent: Rentals) => {
+    navigate(`edit-rent/${rent.id}`);
   };
 
   useEffect(() => {
@@ -164,28 +164,28 @@ const ZarzadzanieP = () => {
           type="datetime-local"
           name="Rental_date"
           placeholder="Rental date"
-          value={newRentalData.Rental_date.toString()}
+          value={newRentalData.since.toString()}
           onChange={handleRentalInputChange}
         />
         <input
           type="datetime-local"
           name="Return_date"
           placeholder="Return date"
-          value={newRentalData.Return_date.toString()}
+          value={newRentalData.until.toString()}
           onChange={handleRentalInputChange}
         />
         <input
           type="text"
           name="Status"
           placeholder="Status"
-          value={newRentalData.Status}
+          value={newRentalData.status}
           onChange={handleRentalInputChange}
         />
         <input
           type="number"
           name="Client_id"
           placeholder="Client ID"
-          value={newRentalData.Client_id}
+          value={newRentalData.Users_uid}
           onChange={handleRentalInputChange}
         />
         <input
@@ -208,49 +208,49 @@ const ZarzadzanieP = () => {
           type="text"
           name="Brand"
           placeholder="Brand"
-          value={newCarData.Brand}
+          value={newCarData.brand}
           onChange={handleInputChange}
         />
         <input
           type="text"
           name="Model"
           placeholder="Model"
-          value={newCarData.Model}
+          value={newCarData.model}
           onChange={handleInputChange}
         />
         <input
           type="number"
           name="Price_per_day"
           placeholder="Price per day"
-          value={newCarData.Price_per_day}
+          value={newCarData.price_per_day}
           onChange={handleInputChange}
         />
         <input
           type="number"
           name="Production_year"
           placeholder="Production year"
-          value={newCarData.Production_year}
+          value={newCarData.production_year}
           onChange={handleInputChange}
         />
         <input
           type="text"
           name="License_plate"
           placeholder="License plate"
-          value={newCarData.License_plate}
+          value={newCarData.license_plate}
           onChange={handleInputChange}
         />
         <input
           type="text"
           name="Fuel_type"
           placeholder="Fuel type"
-          value={newCarData.Fuel_type}
+          value={newCarData.fuel_type}
           onChange={handleInputChange}
         />
         <input
           type="text"
           name="Transmission_type"
           placeholder="Transmission type"
-          value={newCarData.Transmission_type}
+          value={newCarData.transmission_type}
           onChange={handleInputChange}
         />
         <button onClick={submitNewCar}>Dodaj</button>

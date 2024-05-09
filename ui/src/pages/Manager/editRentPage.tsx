@@ -1,21 +1,20 @@
 import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import rentalService from "../../services/rental.service";
-import { CarRental } from "../../assets/Data";
+import { Rentals } from "../../assets/Data";
 
-const emptyRental: CarRental = {
-  Id: 0,
-  Rental_date: "",
-  Return_date: "",
-  Status: "",
-  Client_id: 0,
+const emptyRental: Rentals = {
+  id: 0,
+  since: "",
+  until: "",
+  Users_uid: 0,
   Cars_id: 0,
 };
 
 const EditRentPage = () => {
     const navigate = useNavigate();
     const { id } = useParams<{ id: string }>();
-    const [carRental, setCarRent] = useState<CarRental>(emptyRental);
+    const [carRental, setCarRent] = useState<Rentals>(emptyRental);
 
     useEffect(() => {
         if (id === undefined) return;
@@ -61,7 +60,7 @@ const EditRentPage = () => {
                         type="datetime-local"
                         name="Rental_date"
                         placeholder="Rental Date"
-                        value={carRental.Rental_date.toString()}
+                        value={carRental.since.toString()}
                         onChange={inputChangeHandler}
                     />
                 </label>
@@ -71,7 +70,7 @@ const EditRentPage = () => {
                         type="datetime-local"
                         name="Return_date"
                         placeholder="Return Date"
-                        value={carRental.Return_date.toString()}
+                        value={carRental.until.toString()}
                         onChange={inputChangeHandler}
                     />
                 </label>
@@ -81,7 +80,7 @@ const EditRentPage = () => {
                         type="text"
                         name="Status"
                         placeholder="Status"
-                        value={carRental.Status}
+                        value={carRental.status}
                         onChange={inputChangeHandler}
                     />
                 </label>
@@ -91,7 +90,7 @@ const EditRentPage = () => {
                         type="number"
                         name="Client_id"
                         placeholder="Client ID"
-                        value={carRental.Client_id}
+                        value={carRental.Users_uid}
                         onChange={inputChangeHandler}
                     />
                 </label>

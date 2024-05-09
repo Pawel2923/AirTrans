@@ -1,13 +1,13 @@
 import { useState, useEffect } from "react";
 import { useNavigate, Link, useSearchParams } from "react-router-dom";
 import airplaneService from "../../services/airplane.service";
-import { Airplane, PageData } from "../../assets/Data";
+import { Airplanes, PageData } from "../../assets/Data";
 import Pagination from "../../components/Pagination";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPenToSquare, faTrashCan } from "@fortawesome/free-solid-svg-icons";
 import ConfirmModal from "../../components/Modals/ConfirmModal";
 
-const emptyAirplane: Airplane = {
+const emptyAirplane: Airplanes = {
 	serial_no: "",
 	model: "",
 	type: "",
@@ -15,19 +15,19 @@ const emptyAirplane: Airplane = {
 	num_of_seats: 0,
 	fuel_tank: 0,
 	fuel_quant: 0,
-	crew_size: 0,
+	num_of_crew: 0,
 	max_cargo: 0,
 };
 
-const Airplanes = () => {
+const AirplanesPage = () => {
 	const [searchParams] = useSearchParams();
 	const navigate = useNavigate();
-	const [airplaneData, setAirplaneData] = useState<Airplane[]>([]);
+	const [airplaneData, setAirplaneData] = useState<Airplanes[]>([]);
 	const [pageData, setPageData] = useState<PageData>({
 		page: parseInt(searchParams.get("page") || "1"),
 		pages: 1,
 	});
-	const [createData, setCreateData] = useState<Airplane>(emptyAirplane);
+	const [createData, setCreateData] = useState<Airplanes>(emptyAirplane);
 	const [deleteSerialNo, setDeleteSerialNo] = useState<string>("");
 
 	useEffect(() => {
@@ -78,7 +78,7 @@ const Airplanes = () => {
 		<>
 			<div className="container-fluid">
 				<div className="row gap-3 mx-auto">
-					{airplaneData.map((airplane: Airplane) => (
+					{airplaneData.map((airplane: Airplanes) => (
 						<div
 							key={airplane.serial_no}
 							className="card g-col-5"
@@ -107,7 +107,7 @@ const Airplanes = () => {
 										Ilość paliwa: {airplane.fuel_quant}
 									</li>
 									<li className="list-group-item">
-										Stanowiska załogi: {airplane.crew_size}
+										Stanowiska załogi: {airplane.num_of_crew}
 									</li>
 									<li className="list-group-item">
 										Maksymalny ładunek: {airplane.max_cargo}
@@ -269,7 +269,7 @@ const Airplanes = () => {
 						className="form-control"
 						id="crew_size"
 						name="crew_size"
-						value={createData.crew_size}
+						value={createData.num_of_crew}
 						onChange={createInputChangeHandler}
 						min={1}
 						max={30}
@@ -307,4 +307,4 @@ const Airplanes = () => {
 	);
 };
 
-export default Airplanes;
+export default AirplanesPage;

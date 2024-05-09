@@ -2,10 +2,10 @@ import db from "./db";
 import helper from "../helper";
 import config from "../config";
 import { ResultSetHeader } from "mysql2";
-import { Flight, Err, ArrDepTableProps } from "../Types";
+import { Flights, Err, Departures } from "../Types";
 
 // Function to validate flight details
-async function validateFlight(flight: Flight) {
+async function validateFlight(flight: Flights) {
 	// Check if all required properties are present in the flight object
 	helper.checkObject(flight, [
 		"id",
@@ -32,14 +32,14 @@ async function validateFlight(flight: Flight) {
 
 	// Check if airplane with given serial number exists
 	let airplaneSerialNoExists = await db.query(
-		"SELECT '' FROM Airplane WHERE serial_no=?",
+		"SELECT '' FROM Airplanes WHERE serial_no=?",
 		[flight.airplane_serial_no]
 	);
 
 	airplaneSerialNoExists = helper.emptyOrRows(airplaneSerialNoExists);
 
 	if (airplaneSerialNoExists.length === 0) {
-		throw new Err("Airplane with this serial number does not exist", 404);
+		throw new Err("Airplanes with this serial number does not exist", 404);
 	}
 }
 
@@ -59,11 +59,11 @@ async function get(
 	const offset = helper.getOffset(page, config.listPerPage);
 
 	// Build SQL query with filter, sort, offset and limit parameters
-	const { query, queryParams } = helper.buildQuery("Flight", offset, limit, filter, sort);
+	const { query, queryParams } = helper.buildQuery("Flights", offset, limit, filter, sort);
 
 	// Execute the query
 	const rows = await db.query(query, queryParams);
-	const data = helper.emptyOrRows(rows) as Flight[];
+	const data = helper.emptyOrRows(rows) as Flights[];
 
 	// If no data found, throw an error
 	if (data.length === 0) {
@@ -71,7 +71,7 @@ async function get(
 	}
 
 	// Get total number of pages
-	const pages = await helper.getPages("Flight", limit);
+	const pages = await helper.getPages("Flights", limit);
 
 	// Prepare meta data for response
 	const meta = {
@@ -94,13 +94,13 @@ async function getByDepartureOrArrival(page = 1, limit = 5) {
 
 	// Execute the query to get flights by departure or arrival
 	const rows = await db.query(
-		"(SELECT * FROM ArrDepTable WHERE is_departure=1 ORDER BY departure LIMIT ?,?) UNION (SELECT * FROM ArrDepTable WHERE is_departure=0 ORDER BY arrival LIMIT ?,?)",
+		"(SELECT * FROM Departures WHERE is_departure=1 ORDER BY departure LIMIT ?,?) UNION (SELECT * FROM Departures WHERE is_departure=0 ORDER BY arrival LIMIT ?,?)",
 		[offset, limit, offset, limit]
 	);
-	const data = helper.emptyOrRows(rows) as ArrDepTableProps[];
+	const data = helper.emptyOrRows(rows) as Departures[];
 
 	// Get total number of pages
-	const pages = await helper.getPages("ArrDepTable", limit * 2);
+	const pages = await helper.getPages("Departures", limit * 2);
 
 	// Prepare meta data for response
 	const meta = {
@@ -117,101 +117,101 @@ async function getByDepartureOrArrival(page = 1, limit = 5) {
 }
 
 // Function to create a new flight
-async function create(flight: Flight) {
+async function create(flight: Flights) {
 	// Validate flight details
 	await validateFlight(flight);
 
 	// Check if flight with given id already exists
-	let flightExists = await db.query("SELECT '' FROM Flight WHERE id=?", [
+	let flightExists = await db.query("SELECT '' FROM Flights WHERE id=?", [
 		flight.id,
 	]);
 
 	flightExists = helper.emptyOrRows(flightExists);
 
 	if (flightExists.length > 0) {
-		throw new Err("Flight with this id already exists", 409)
+		throw new Err("Flights with this id already exists", 409)
 	}
 
 	// Insert new flight into the database
-	let result = await db.query("INSERT INTO Flight SET ?", [flight]);
+	let result = await db.query("INSERT INTO Flights SET ?", [flight]);
 	result = result as ResultSetHeader;
 
 	// If insertion isn't successful throw an error
 	if (result?.affectedRows === 0) {
-		throw new Err("Flight could not be created");
+		throw new Err("Flights could not be created");
 	}
 
 	return {
 		data: flight,
-		message: "Flight created successfully",
+		message: "Flights created successfully",
 	};
 }
 
 // Function to update a flight
-async function update(flightId: string, flight: Flight) {
+async function update(flightId: string, flight: Flights) {
 	// Validate flight details
 	await validateFlight(flight);
 
 	// Check if flight with given id exists
-	let flightExists = await db.query("SELECT '' FROM Flight WHERE id=?", [
+	let flightExists = await db.query("SELECT '' FROM Flights WHERE id=?", [
 		flightId,
 	]);
 	flightExists = helper.emptyOrRows(flightExists);
 
 	if (flightExists.length === 0) {
-		const error = new Err("Flight with this id does not exist");
+		const error = new Err("Flights with this id does not exist");
 		error.statusCode = 404;
 		throw error;
 	}
 
 	// Check if flightId is equal to id in the flight object
 	if (flightId !== flight.id) {
-		const error = new Err("Flight id does not match");
+		const error = new Err("Flights id does not match");
 		error.statusCode = 400;
 		throw error;
 	}
 
 	// Update flight in the database
-	let result = await db.query("UPDATE Flight SET ? WHERE id=?", [
+	let result = await db.query("UPDATE Flights SET ? WHERE id=?", [
 		flight,
 		flightId,
 	]);
 	result = result as ResultSetHeader;
 
 	if (result.affectedRows === 0) {
-		throw new Err("Flight could not be updated");
+		throw new Err("Flights could not be updated");
 	}
 
 	return {
 		data: flight,
-		message: "Flight updated successfully",
+		message: "Flights updated successfully",
 	};
 }
 
 // Function to delete a flight
 async function remove(id: string) {
 	// Check if flight with given id exists
-	let flightExists = await db.query("SELECT '' FROM Flight WHERE id=?", [
+	let flightExists = await db.query("SELECT '' FROM Flights WHERE id=?", [
 		id,
 	]);
 	flightExists = helper.emptyOrRows(flightExists);
 
 	if (flightExists.length === 0) {
-		const error = new Err("Flight with this id does not exist");
+		const error = new Err("Flights with this id does not exist");
 		error.statusCode = 404;
 		throw error;
 	}
 
 	// Delete flight from the database
-	let result = await db.query("DELETE FROM Flight WHERE id=?", [id]);
+	let result = await db.query("DELETE FROM Flights WHERE id=?", [id]);
 	result = result as ResultSetHeader;
 
 	// If deletion is successful, return success message, else throw an error
 	if (result.affectedRows === 0) {
-		throw new Err("Flight could not be deleted");
+		throw new Err("Flights could not be deleted");
 	}
 
-	return "Flight deleted successfully";
+	return "Flights deleted successfully";
 }
 
 // Search flight by term
@@ -247,7 +247,7 @@ async function search(
 	search.queryParams = Array(7).fill(`%${term}%`);
 
 	// Build SQL query with filter, sort, offset and limit parameters
-	const { query: query, queryParams } = helper.buildQuery("Flight", offset, limit, filter, sort, search);
+	const { query: query, queryParams } = helper.buildQuery("Flights", offset, limit, filter, sort, search);
 
 	// Execute the search query
 	const result = await db.query(query, queryParams);

@@ -1,6 +1,6 @@
 import db from "./db";
 import helper from "../helper";
-import { Car, Err, Parking_info } from "../Types";
+import { Cars, Err, Parking_info } from "../Types";
 
 // Get cars and parking info to display on the home page
 async function get(offset = 0, limit = 3) {
@@ -15,7 +15,7 @@ async function get(offset = 0, limit = 3) {
 	const carsQuery =
 		"SELECT * FROM Cars LIMIT ?, ?";
 	const carsRows = await db.query(carsQuery, [offset, limit]);
-	const cars = helper.emptyOrRows(carsRows) as Car[];
+	const cars = helper.emptyOrRows(carsRows) as Cars[];
 
 	// Check if no cars found
 	if (cars.length === 0) {

@@ -1,6 +1,6 @@
-interface Flight {
+interface Flights {
 	id: string;
-	status: string;
+	status: "SCHEDULED" | "WAITING" | "AIRBORNE" | "TAKE OFF" | "LANDING" | "FINISHED" | "CANCELLED" | "DELAYED";
 	airline_name: string;
 	destination: string;
 	arrival: string;
@@ -8,54 +8,15 @@ interface Flight {
 	airplane_serial_no: string;
 }
 
-interface ArrDepTableProps {
+interface Departures {
 	id: string;
-	status: string;
+	status?: "SCHEDULED" | "WAITING" | "AIRBORNE" | "TAKE OFF" | "LANDING" | "FINISHED" | "CANCELLED" | "DELAYED";
 	airline_name: string;
 	destination: string;
 	arrival: string;
 	departure: string;
 	airplane_serial_no: string;
 	is_departure: boolean;
-}
-
-interface Airplane {
-	serial_no: string;
-	model: string;
-	type: string;
-	production_year: number;
-	num_of_seats: number;
-	fuel_tank: number;
-	fuel_quant: number;
-	crew_size: number;
-	max_cargo: number;
-}
-
-interface Announcement {
-	id: number;
-	title: string;
-	content: string;
-	valid_until: string;
-	personnel_id: number;
-}
-
-interface ParkingInfo {
-	Price_per_day: number;
-	Capacity: number;
-	Path_to_img: string;
-}
-
-interface Offer {
-	id: number;
-	path_to_img?: string;
-	title: string;
-	offer_params: string[];
-	btn_text: string;
-}
-
-interface RawOffer {
-	cars: Car[];
-	parkingInfo: ParkingInfo[];
 }
 
 interface ContactInfo {
@@ -72,47 +33,187 @@ interface ContactInfo {
 	email_marketing: string;
 }
 
-interface Car {
-	Id: number;
-	Brand: string;
-	Model: string;
-	Price_per_day: number;
-	Production_year: number;
-	License_plate: string;
-	Fuel_type: string;
-	Transmission_type: string;
-	Path_to_img?: string;
+interface Airplanes {
+	serial_no: string;
+	model: string;
+	type: string;
+	production_year: number;
+	num_of_seats: number;
+	fuel_tank: number;
+	fuel_quant: number;
+	num_of_crew: number;
+	max_cargo: number;
+	img?: number;
 }
-interface CarRental {
-	Id: number;
-	Rental_date: string;
-	Return_date: string;
-	Status: string;
-	Client_id: number;
+
+interface FlightData {
+	id?: number;
+	altitude: number;
+	track: number;
+	ground_speed: number;
+	vertical_speed: number;
+	latitude: number;
+	longitude: number;
+	Flight_id: string;
+}
+
+interface Runways {
+	id: string;
+	length: number;
+	is_available: boolean;
+	status?: "CLOSED" | "READY" | "OCCUPIED";
+	Flight_id?: string;
+}
+
+interface Terminals {
+	id?: number;
+	is_available: boolean;
+	num_of_stations: number;
+	status?: "CLOSED" | "OPEN" | "EMPTY" | "FULL";
+	Flight_id?: string;
+}
+
+interface Taxiways {
+	id: string;
+	is_available: boolean;
+	status?: "CLOSED" | "OCCUPIED" | "READY";
+	Flight_id?: string;
+}
+
+interface AirfieldInfo {
+	name: string;
+	runways: Runways[];
+	terminals: Terminals[];
+	taxiways: Taxiways[];
+}
+
+interface Gates {
+	id?: number;
+	name: string;
+	status?: "CLOSED" | "BUSY" | "ON STAND" | "READY";
+}
+
+interface Users {
+	uid?: number;
+	email: string;
+	password: string;
+	create_time?: string;
+	first_name?: string;
+	last_name?: string;
+	phone_number?: string;
+	address?: string;
+	gender?: 'M' | 'F';
+	birth_date?: string;
+	user_img?: number;
+	salt?: string;
+}
+
+interface Employees {
+	id?: number;
+	role: string;
+	department: string;
+	Gates_id?: number;
+	Flight_id?: string;
+	Users_uid: number;
+}
+
+interface Announcements {
+	id?: number;
+	title: string;
+	content: string;
+	valid_until: string;
+	create_time?: string;
+	Employee_id: number;
+}
+
+interface Equipment {
+	serial_no: string;
+	type: string;
+	name: string;
+	location?: string;
+	Employee_id?: number;
+}
+
+interface Luggage {
+	id?: number;
+	type: string;
+	size: string;
+	weight: number;
+	Users_uid: number;
+}
+
+interface Tickets {
+	id?: number;
+	purchase_time?: string;
+	expiry_date: string;
+	seat_class: string;
+	seat_number: string;
+	price: number;
+	status?: "PURCHASED" | "EXPIRED" | "USED" | "REFUNDED";
+	Flight_id: string;
+	Users_uid: number;
+	Gates_id: number;
+}
+
+interface ParkingReservations {
+	pid?: number;
+	parking_level: string;
+	space_id: string;
+	since: string;
+	until: string;
+	license_plate: string;
+	reservation_time?: string;
+	status?: "PENDING" | "RESERVED" | "CANCELLED";
+	Users_uid: number;
+}
+
+interface ParkingInfo {
+	pid?: number;
+	name: string;
+	capacity: number;
+	price_per_day: number;
+	addr_street: string;
+	addr_number: number;
+	city: string;
+	zip_code: string;
+}
+
+interface Cars {
+	id?: number;
+	brand: string;
+	model: string;
+	production_year: number;
+	license_plate: string;
+	price_per_day: number;
+	fuel_type: string;
+	transmission_type: "MANUAL" | "AUTOMATIC";
+	img?: number;
+}
+
+interface Rentals {
+	id?: number;
+	since: string;
+	until: string;
+	reservation_time?: string;
+	return_time?: string;
+	status?: "PENDING" | "RENTED" | "CANCELLED" | "RETURNED";
 	Cars_id: number;
-}
-interface ParkingReservation {
-    Id: number;
-    Parking_level: string;
-    Space_id: number;
-    Since: string;
-    Until: string;
-    License_plate: string;
-    Price_per_day: number;
-    Client_id: number;
+	Users_uid: number;
 }
 
-interface ParkingZ{
-	Id: number;
-	Parking_level: string;
-	Space_id: number;
-	Since: string;
-	Until: string;
-	License_plate: string;
-	Price_per_day: number;
-	Client_id: number;
-
+interface Offer {
+	id: number;
+	path_to_img?: string;
+	title: string;
+	offer_params: string[];
+	btn_text: string;
 }
+
+interface RawOffer {
+	cars: Cars[];
+	parkingInfo: ParkingInfo[];
+}
+
 interface PageData {
 	page: number;
 	pages: number;
@@ -130,12 +231,12 @@ interface Sort {
 }
 
 export type {
-	Flight,
-	ArrDepTableProps,
-	Airplane,
-	Announcement,
-	Car,
-	CarRental,
+	Flights,
+	Departures,
+	Airplanes,
+	Announcements,
+	Cars,
+	Rentals,
 	ParkingInfo,
 	Offer,
 	RawOffer,
@@ -143,6 +244,16 @@ export type {
 	PageData,
 	Filter,
 	Sort,
-	ParkingReservation,
-	ParkingZ,
+	ParkingReservations,
+	Tickets,
+	Luggage,
+	Equipment,
+	Users,
+	Gates,
+	AirfieldInfo,
+	Taxiways,
+	Terminals,
+	Runways,
+	FlightData,
+	Employees
 };

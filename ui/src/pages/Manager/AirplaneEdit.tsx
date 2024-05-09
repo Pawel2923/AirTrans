@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
 import airplaneService from "../../services/airplane.service";
 import { useParams, useNavigate } from "react-router-dom";
-import { Airplane } from "../../assets/Data";
+import { Airplanes } from "../../assets/Data";
 
-const emptyAirplane: Airplane = {
+const emptyAirplane: Airplanes = {
 	serial_no: "",
 	model: "",
 	type: "",
@@ -11,14 +11,14 @@ const emptyAirplane: Airplane = {
 	num_of_seats: 0,
 	fuel_tank: 0,
 	fuel_quant: 0,
-	crew_size: 0,
+	num_of_crew: 0,
 	max_cargo: 0,
 };
 
 const AirplaneEdit = () => {
 	const navigate = useNavigate();
 	const { id } = useParams<{ id: string }>();
-	const [airplane, setAirplane] = useState<Airplane>(emptyAirplane);
+	const [airplane, setAirplane] = useState<Airplanes>(emptyAirplane);
 
 	useEffect(() => {
 		if (id === undefined) return;
@@ -140,7 +140,7 @@ const AirplaneEdit = () => {
 						className="form-control"
 						name="crew_size"
 						id="crew_size"
-						value={airplane.crew_size}
+						value={airplane.num_of_crew}
 						onChange={inputChangeHandler}
 					/>
 				</div>

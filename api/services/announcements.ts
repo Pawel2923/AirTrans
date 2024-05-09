@@ -2,7 +2,7 @@ import db from "./db";
 import helper from "../helper";
 import config from "../config";
 import { ResultSetHeader } from "mysql2";
-import { Announcement, Err } from "../Types";
+import { Announcements, Err } from "../Types";
 
 const announcementProperties = [
 	"title",
@@ -11,7 +11,7 @@ const announcementProperties = [
 	"personnel_id",
 ];
 
-function validateAnnouncement(announcement: Announcement) {
+function validateAnnouncement(announcement: Announcements) {
 	// check if all required properties are present
 	helper.checkObject(announcement, announcementProperties);
 
@@ -53,7 +53,7 @@ async function get(
 	const { query, queryParams } = helper.buildQuery("Announcements", offset, limit, filter, sort);
 
 	const rows = await db.query(query, queryParams);
-	const data = helper.emptyOrRows(rows) as Announcement[];
+	const data = helper.emptyOrRows(rows) as Announcements[];
 
 	if (data.length === 0) {
 		const error = new Err("No announcements found");
@@ -75,7 +75,7 @@ async function get(
 	};
 }
 
-async function create(announcement: Announcement) {
+async function create(announcement: Announcements) {
 	validateAnnouncement(announcement);
 
 	let announcementExists = await db.query(
@@ -85,7 +85,7 @@ async function create(announcement: Announcement) {
 	announcementExists = helper.emptyOrRows(announcementExists);
 
 	if (announcementExists.length > 0) {
-		const error = new Err("Announcement with this id already exists");
+		const error = new Err("Announcements with this id already exists");
 		error.statusCode = 409;
 		throw error;
 	}
@@ -106,7 +106,7 @@ async function create(announcement: Announcement) {
 	};
 }
 
-async function update(id: number, announcement: Announcement) {
+async function update(id: number, announcement: Announcements) {
 	validateAnnouncement(announcement);
 
 	let announcementExists = await db.query(
@@ -116,7 +116,7 @@ async function update(id: number, announcement: Announcement) {
 	announcementExists = helper.emptyOrRows(announcementExists);
 
 	if (announcementExists.length === 0) {
-		const error = new Err("Announcement with this id does not exist");
+		const error = new Err("Announcements with this id does not exist");
 		error.statusCode = 404;
 		throw error;
 	}
@@ -154,7 +154,7 @@ async function remove(id: number) {
 	announcementExists = helper.emptyOrRows(announcementExists);
 
 	if (announcementExists.length === 0) {
-		const error = new Err("Announcement with this id does not exist");
+		const error = new Err("Announcements with this id does not exist");
 		error.statusCode = 404;
 		throw error;
 	}

@@ -2,28 +2,28 @@ import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import flightService from "../../services/flight.service";
 import airplaneService from "../../services/airplane.service";
-import { Flight, Airplane } from "../../assets/Data";
+import { Flights, Airplanes } from "../../assets/Data";
 import { flightsDataParser } from "../../utils/data-parser";
 import Breadcrumb, { BreadcrumbItem } from "../../components/Breadcrumb";
 import { useUpdateFlight } from "../../hooks/use-flight";
 import Toast from "../../components/Toast";
 import { faCircleExclamation } from "@fortawesome/free-solid-svg-icons";
 
-const emptyFlight: Flight = {
+const emptyFlight: Flights = {
 	id: "",
 	arrival: "",
 	departure: "",
 	destination: "",
-	status: "",
+	status: "SCHEDULED",
 	airline_name: "",
 	airplane_serial_no: "",
 };
 
 const ScheduleEdit = () => {
 	const { id } = useParams<{ id: string }>();
-	const [airplaneData, setAirplaneData] = useState<Airplane[]>([]);
-	const [flightData, setFlightData] = useState<Flight>(emptyFlight);
-    const [newFlightData, setNewFlightData] = useState<Flight>(emptyFlight);
+	const [airplaneData, setAirplaneData] = useState<Airplanes[]>([]);
+	const [flightData, setFlightData] = useState<Flights>(emptyFlight);
+    const [newFlightData, setNewFlightData] = useState<Flights>(emptyFlight);
     const [refreshData, setRefreshData] = useState<boolean>(false);
     const [toast, setToast] = useState<typeof Toast | null>(null);
     const { toast: updateToast, updateFlight } = useUpdateFlight(setRefreshData);
@@ -218,7 +218,7 @@ const ScheduleEdit = () => {
 						onChange={selectChangeHandler}
 						value={newFlightData.airplane_serial_no}
 					>
-						{airplaneData.map((airplane: Airplane) => (
+						{airplaneData.map((airplane: Airplanes) => (
 							<option
 								key={airplane.serial_no}
 								value={airplane.serial_no}

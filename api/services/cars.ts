@@ -1,7 +1,7 @@
 import db from "./db";
 import helper from "../helper";
 import config from "../config";
-import { Err, Car } from "../Types";
+import { Err, Cars } from "../Types";
 import { ResultSetHeader } from "mysql2";
 
 async function getAllCars(
@@ -44,7 +44,7 @@ async function getOneCar(carId: number, tableName = "Cars") {
 		return {
 			data: null,
 			response: {
-				message: `Car with ID ${carId} not found`,
+				message: `Cars with ID ${carId} not found`,
 				statusCode: 404,
 			},
 		};
@@ -70,22 +70,20 @@ async function getById(carId: number, tableName = "Cars") {
 		return {
 			data: null,
 			response: {
-				message: `Car with ID ${carId} not found`,
+				message: `Cars with ID ${carId} not found`,
 				statusCode: 404,
 			},
 		};
 	}
 }
 
-async function create(car: Car) {
-	const { Id, ...carWithoutId } = car;
-
+async function create(car: Cars) {
 	try {
-		await validateCar(carWithoutId);
+		await validateCar(car);
 
 		const carExists = await db.query(
 			"SELECT * FROM Cars WHERE License_plate=?",
-			[carWithoutId.License_plate]
+			[car.license_plate]
 		);
 
 		if (helper.emptyOrRows(carExists).length > 0) {
@@ -100,20 +98,20 @@ async function create(car: Car) {
 		let result = await db.query(
 			"INSERT INTO Cars (Brand, Model, Price_per_day, Production_year, License_plate, Fuel_type, Transmission_type) VALUES (?, ?, ?, ?, ?, ?, ?)",
 			[
-				carWithoutId.Brand,
-				carWithoutId.Model,
-				carWithoutId.Price_per_day,
-				carWithoutId.Production_year,
-				carWithoutId.License_plate,
-				carWithoutId.Fuel_type,
-				carWithoutId.Transmission_type,
+				car.brand,
+				car.model,
+				car.price_per_day,
+				car.production_year,
+				car.license_plate,
+				car.fuel_type,
+				car.transmission_type,
 			]
 		);
 		result = result as ResultSetHeader;
 
 		if (result.affectedRows) {
 			return {
-				data: carWithoutId,
+				data: car,
 				statusCode: 201,
 				message: "Auto zostało dodane!",
 			};
@@ -125,29 +123,29 @@ async function create(car: Car) {
 	}
 }
 
-async function validateCar(car: Car) {
+async function validateCar(car: Cars) {
 	if (
-		!car.Brand ||
-		!car.Model ||
-		!car.Price_per_day ||
-		!car.Production_year ||
-		!car.License_plate ||
-		!car.Fuel_type ||
-		!car.Transmission_type
+		!car.brand ||
+		!car.model ||
+		!car.price_per_day ||
+		!car.production_year ||
+		!car.license_plate ||
+		!car.fuel_type ||
+		!car.transmission_type
 	) {
 		const error = new Err("Brak wymaganych pól!");
 		error.statusCode = 400;
 		throw error;
 	}
 }
-async function update(carId: number, car: Car) {
+async function update(carId: number, car: Cars) {
 	try {
-		car.Id = carId;
+		car.id = carId;
 
 		await validateCar(car);
 
 		const carExists = await db.query("SELECT * FROM Cars WHERE Id=?", [
-			car.Id,
+			car.id,
 		]);
 
 		if (helper.emptyOrRows(carExists).length === 0) {
@@ -159,14 +157,14 @@ async function update(carId: number, car: Car) {
 		let result = await db.query(
 			"UPDATE Cars SET Brand=?, Model=?, Price_per_day=?, Production_year=?, License_plate=?, Fuel_type=?, Transmission_type=? WHERE Id=?",
 			[
-				car.Brand,
-				car.Model,
-				car.Price_per_day,
-				car.Production_year,
-				car.License_plate,
-				car.Fuel_type,
-				car.Transmission_type,
-				car.Id,
+				car.brand,
+				car.model,
+				car.price_per_day,
+				car.production_year,
+				car.license_plate,
+				car.fuel_type,
+				car.transmission_type,
+				car.id,
 			]
 		);
 		result = result as ResultSetHeader;

@@ -1,16 +1,16 @@
-import { CarRental} from "../assets/Data";
+import { Rentals } from "../assets/Data";
 import styles from '../components/tableCars.module.css';
 import React from "react";
 
 type TableRentProps={
-  rents: CarRental[];
-  onEdit: (rent: CarRental) => void;
+  rents: Rentals[];
+  onEdit: (rent: Rentals) => void;
   onDelete: (id: number) => void;
 };
 
 const TableRent:React.FC<TableRentProps>= ({ rents, onEdit,onDelete }) => {
 
-  const handleEditRentClick = (rent: CarRental) => {
+  const handleEditRentClick = (rent: Rentals) => {
     onEdit(rent);
   };
   return (
@@ -29,20 +29,20 @@ const TableRent:React.FC<TableRentProps>= ({ rents, onEdit,onDelete }) => {
       <tbody>
         {rents.map((rent) => (
         
-            <tr key={rent.Id}>
-              <td>{rent.Id}</td>
-              <td>{rent.Client_id}</td>
+            <tr key={rent.id}>
+              <td>{rent.id}</td>
+              <td>{rent.Users_uid}</td>
               <td>{rent.Cars_id}</td>
-              <td>{rent.Rental_date}</td>
-              <td>{rent.Return_date}</td>
-              <td>{rent.Status}</td>
+              <td>{rent.since}</td>
+              <td>{rent.until}</td>
+              <td>{rent.status}</td>
               <td>
                 <button 
                 className="btn btn-primary me-3"
                 onClick={()=> handleEditRentClick(rent)}>EDYTUJ</button>
                 <button 
                 className="btn btn-danger"
-                onClick={() => onDelete(rent.Id)}>Delete</button>
+                onClick={() => onDelete(rent.id ?? 0)}>Delete</button>
               </td>
              
             </tr>

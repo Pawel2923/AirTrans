@@ -1,23 +1,22 @@
 import React,{useState,useEffect} from "react";
 import {useParams, useNavigate } from "react-router-dom";
 import parkingService from "../../services/parking.service";
-import { ParkingZ } from "../../assets/Data";
+import { ParkingReservations } from "../../assets/Data";
 
-const emptyParking: ParkingZ = {
-    Id: 0,
-    Client_id: 0,
-    Since: "",
-    Until: "",
-    Parking_level: "",
-    Space_id: 0,
-    License_plate: "",
-    Price_per_day: 0,
+const emptyParking: ParkingReservations = {
+    id: 0,
+    Users_uid: 0,
+    since: "",
+    until: "",
+    parking_level: "",
+    space_id: "",
+    license_plate: "",
 };
 
 const EditParkingPage =()=>{
 const navigate = useNavigate();
 const { id } = useParams<{id:string}>();
-const [parking, setParking] = useState<ParkingZ>(emptyParking);
+const [parking, setParking] = useState<ParkingReservations>(emptyParking);
 useEffect(()=>{
 
     if(id === undefined) return;
@@ -61,7 +60,7 @@ return(
                 type="number"
                 name="Client_id"
                 placeholder="Client ID"
-                value={parking.Client_id}
+                value={parking.Users_uid}
                 onChange={inputChangeHandler}
                 />
             </label>
@@ -71,7 +70,7 @@ return(
                 type="datetime-local"
                 name="Since"
                 placeholder="Since"
-                value={parking.Since.toString()}
+                value={parking.since.toString()}
                 onChange={inputChangeHandler}
                 />
             </label>
@@ -81,7 +80,7 @@ return(
                 type="datetime-local"
                 name="Until"
                 placeholder="Until"
-                value={parking.Until.toString()}
+                value={parking.until.toString()}
                 onChange={inputChangeHandler}
                 />
             </label>
@@ -91,7 +90,7 @@ return(
                 type="text"
                 name="Parking_level"
                 placeholder="Parking level"
-                value={parking.Parking_level}
+                value={parking.parking_level}
                 onChange={inputChangeHandler}
                 />
             </label>
@@ -101,7 +100,7 @@ return(
                 type="number"
                 name="Space_id"
                 placeholder="Space ID"
-                value={parking.Space_id}
+                value={parking.space_id}
                 onChange={inputChangeHandler}
                 />
             </label>
@@ -111,17 +110,7 @@ return(
                 type="text"
                 name="License_plate"
                 placeholder="License plate"
-                value={parking.License_plate}
-                onChange={inputChangeHandler}
-                />
-            </label>
-            <label>
-                Price per day:
-                <input
-                type="number"
-                name="Price_per_day"
-                placeholder="Price per day"
-                value={parking.Price_per_day}
+                value={parking.license_plate}
                 onChange={inputChangeHandler}
                 />
             </label>

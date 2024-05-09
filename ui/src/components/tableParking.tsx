@@ -1,17 +1,17 @@
-import { ParkingZ } from "../assets/Data";
+import { ParkingReservations } from "../assets/Data";
 import styles from "./tableCars.module.css";
 import React from "react";
 
 type TableParkingProps={
-  parkings: ParkingZ[];
-  onEdit: (park: ParkingZ) => void;
+  parkings: ParkingReservations[];
+  onEdit: (park: ParkingReservations) => void;
   onDelete: (id: number) => void;
 
 };
 
 const TableParking:React.FC<TableParkingProps>= ({ parkings, onEdit, onDelete}) => {
 
-  const handleEditParkClick = (park: ParkingZ) => {
+  const handleEditParkClick = (park: ParkingReservations) => {
     onEdit(park);
   };
   return (
@@ -32,15 +32,14 @@ const TableParking:React.FC<TableParkingProps>= ({ parkings, onEdit, onDelete}) 
       <tbody className="text-uppercase">
         {parkings.map((park) => (
         
-            <tr key={park.Id}>
-              <td>{park.Id}</td>
-              <td>{park.Client_id}</td>
-              <td>{park.License_plate}</td>
-              <td>{park.Parking_level}</td>
-                <td>{park.Price_per_day}</td>
-                <td>{park.Since}</td>
-                <td>{park.Until}</td>
-                <td>{park.Space_id}</td>
+            <tr key={park.pid}>
+              <td>{park.pid}</td>
+              <td>{park.Users_uid}</td>
+              <td>{park.license_plate}</td>
+              <td>{park.parking_level}</td>
+                <td>{park.since}</td>
+                <td>{park.until}</td>
+                <td>{park.space_id}</td>
 
               <td>
                 <button 
@@ -48,7 +47,7 @@ const TableParking:React.FC<TableParkingProps>= ({ parkings, onEdit, onDelete}) 
                 onClick={()=> handleEditParkClick(park)}>EDYTUJ</button>
                 <button
                 className="btn btn-danger" 
-                onClick={() => onDelete(park.Id)}>USUŃ</button>
+                onClick={() => onDelete(park.pid ?? 0)}>USUŃ</button>
               </td>
              
             </tr>

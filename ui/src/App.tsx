@@ -12,7 +12,7 @@ import EditCarPage from "./pages/Manager/editCarPage";
 import Schedule from "./pages/Manager/Schedule";
 import ScheduleDetails from "./pages/Manager/ScheduleDetails";
 import ScheduleEdit from "./pages/Manager/ScheduleEdit";
-import Airplanes from "./pages/Manager/Airplanes";
+import AirplanesPage from "./pages/Manager/AirplanesPage";
 import AirplaneEdit from "./pages/Manager/AirplaneEdit";
 import Manager from "./pages/Manager";
 
@@ -37,7 +37,7 @@ function Root() {
           <Route path=":id/edytuj" element={<ScheduleEdit />} />
         </Route>
         <Route path="samoloty">
-          <Route index element={<Airplanes />} />
+          <Route index element={<AirplanesPage />} />
           <Route path=":id/edytuj" element={<AirplaneEdit />} />
         </Route>
         <Route path="pojazd">

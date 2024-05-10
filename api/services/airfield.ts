@@ -1,11 +1,11 @@
 import db from "./db";
 import helper from "../helper";
-import { Err, Airfield_info, Runway, Terminal, Taxiway } from "../Types";
+import { Err, Airfield_info, Runways, Terminals, Taxiways } from "../Types";
 import { ResultSetHeader } from "mysql2";
 
 async function get(table_name?: string) {
     if (table_name) {
-        if (table_name !== "Runway" && table_name !== "Terminal" && table_name !== "Taxiway") {
+        if (table_name !== "Runways" && table_name !== "Terminals" && table_name !== "Taxiways") {
             const error = new Err("Invalid table name");
             error.statusCode = 400;
             throw error;
@@ -27,19 +27,19 @@ async function get(table_name?: string) {
     }
 
     const runwayRows = await db.query(
-        "SELECT * FROM Runway"
+        "SELECT * FROM Runways"
     );
-    const runwayData = helper.emptyOrRows(runwayRows) as Runway[];
+    const runwayData = helper.emptyOrRows(runwayRows) as Runways[];
 
     const terminalRows = await db.query(
-        "SELECT * FROM Terminal"
+        "SELECT * FROM Terminals"
     );
-    const terminalData = helper.emptyOrRows(terminalRows) as Terminal[];
+    const terminalData = helper.emptyOrRows(terminalRows) as Terminals[];
 
     const taxiwayRows = await db.query(
-        "SELECT * FROM Taxiway"
+        "SELECT * FROM Taxiways"
     );
-    const taxiwayData = helper.emptyOrRows(taxiwayRows) as Taxiway[];
+    const taxiwayData = helper.emptyOrRows(taxiwayRows) as Taxiways[];
 
     if (runwayData.length === 0 && terminalData.length === 0 && taxiwayData.length === 0) {
         const error = new Err("No airfield info found");
@@ -60,8 +60,8 @@ async function get(table_name?: string) {
     };
 };
 
-async function update(table_name: string, id: string, newData: Runway | Terminal | Taxiway) {
-    if (table_name !== "Runway" && table_name !== "Terminal" && table_name !== "Taxiway") {
+async function update(table_name: string, id: string, newData: Runways | Terminals | Taxiways) {
+    if (table_name !== "Runways" && table_name !== "Terminals" && table_name !== "Taxiways") {
         const error = new Err("Invalid table name");
         error.statusCode = 400;
         throw error;

@@ -19,8 +19,8 @@ async function getAllParking(
 
 	const data = helper.emptyOrRows(rows).map((row) => ({
 		...row,
-		Since: formatDate(row.Since),
-		Until: formatDate(row.Until),
+		since: formatDate(row.since),
+		until: formatDate(row.until),
 	}));
 
 	const pages = await helper.getPages(tableName, limit);
@@ -52,16 +52,16 @@ function formatDate(dateString: string) {
 async function createParking(parkingData: any) {
 	try {
 		const parkingAvailability = await db.query(
-			"SELECT * FROM Parking_reservations WHERE Parking_level = ? AND Space_id = ? AND ((Since <= ? AND Until >= ?) OR (Since <= ? AND Until >= ?) OR (Since >= ? AND Until <= ?))",
+			"SELECT * FROM Parking_reservations WHERE parking_level = ? AND space_id = ? AND ((since <= ? AND until >= ?) OR (since <= ? AND until >= ?) OR (since >= ? AND until <= ?))",
 			[
-				parkingData.Parking_level,
-				parkingData.Space_id,
-				parkingData.Since,
-				parkingData.Since,
-				parkingData.Until,
-				parkingData.Until,
-				parkingData.Since,
-				parkingData.Until,
+				parkingData.parking_level,
+				parkingData.space_id,
+				parkingData.since,
+				parkingData.since,
+				parkingData.until,
+				parkingData.until,
+				parkingData.since,
+				parkingData.until,
 			]
 		);
 		if (helper.emptyOrRows(parkingAvailability).length > 0) {
@@ -73,15 +73,14 @@ async function createParking(parkingData: any) {
 		}
 
 		let result = await db.query(
-			"INSERT INTO Parking_reservations (Client_id, Since, Until, Parking_level, Space_id, License_plate, Price_per_day) VALUES (?, ?, ?, ?, ?, ?, ?)",
+			"INSERT INTO Parking_reservations (Client_id, since, until, parking_level, space_id, license_plate) VALUES (?, ?, ?, ?, ?, ?)",
 			[
 				parkingData.Client_id,
-				parkingData.Since,
-				parkingData.Until,
-				parkingData.Parking_level,
-				parkingData.Space_id,
-				parkingData.License_plate,
-				parkingData.Price_per_day,
+				parkingData.since,
+				parkingData.until,
+				parkingData.parking_level,
+				parkingData.space_id,
+				parkingData.license_plate,
 			]
 		);
     result = result as ResultSetHeader;
@@ -167,15 +166,15 @@ async function updateParking(parkingId: number, parking: any) {
 		}
 
 		let result = await db.query(
-			"UPDATE Parking_reservations SET Client_id=?, Since=?, Until=?, Parking_level=?, Space_id=?, License_plate=?, Price_per_day=? WHERE Id=?",
+			"UPDATE Parking_reservations SET Client_id=?, since=?, until=?, parking_level=?, space_id=?, license_plate=?, price_per_day=? WHERE Id=?",
 			[
 				parking.Client_id,
-				parking.Since,
-				parking.Until,
-				parking.Parking_level,
-				parking.Space_id,
-				parking.License_plate,
-				parking.Price_per_day,
+				parking.since,
+				parking.until,
+				parking.parking_level,
+				parking.space_id,
+				parking.license_plate,
+				parking.price_per_day,
 				parking.Id,
 			]
 		);

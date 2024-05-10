@@ -1,13 +1,13 @@
 import { useState, useEffect } from "react";
 import { useSearchParams } from "react-router-dom";
-import ArrDepTable from "../../components/ArrDepTable";
+import DeparturesTable from "../../components/DeparturesTable";
 import flightService from "../../services/flight.service";
 import airplaneService from "../../services/airplane.service";
 import {
-	ArrDepTableProps,
-	Flight,
+	Departures,
+	Flights,
 	PageData,
-	Airplane,
+	Airplanes,
 } from "../../assets/Data";
 import { arrDepDataParser, flightsDataParser } from "../../utils/data-parser";
 import Pagination from "../../components/Pagination";
@@ -15,26 +15,26 @@ import Toast from "../../components/Toast";
 import { faCircleExclamation } from "@fortawesome/free-solid-svg-icons";
 import { useCreateFlight } from "../../hooks/use-flight";
 
-const emptyFlight: Flight = {
+const emptyFlight: Flights = {
 	id: "",
 	arrival: "",
 	departure: "",
 	destination: "",
-	status: "",
+	status: "SCHEDULED",
 	airline_name: "",
 	airplane_serial_no: "",
 };
 
 const Schedule = () => {
 	const [searchParams] = useSearchParams();
-	const [flights, setFlights] = useState<ArrDepTableProps[]>([]);
+	const [flights, setFlights] = useState<Departures[]>([]);
 	const [refreshData, setRefreshData] = useState<boolean>(false);
-	const [airplaneData, setAirplaneData] = useState<Airplane[]>([]);
+	const [airplaneData, setAirplaneData] = useState<Airplanes[]>([]);
 	const [pageData, setPageData] = useState<PageData>({
 		page: parseInt(searchParams.get("page") || "1"),
 		pages: 1,
 	});
-	const [createData, setCreateData] = useState<Flight>(emptyFlight);
+	const [createData, setCreateData] = useState<Flights>(emptyFlight);
 	const [toast, setToast] = useState<typeof Toast | null>(null);
 	const { toast: createToast, createFlight } =
 		useCreateFlight(setRefreshData);
@@ -121,7 +121,7 @@ const Schedule = () => {
 		<>
 			<div>
 				<h2>Harmonogram odlotów i przylotów</h2>
-				<ArrDepTable
+				<DeparturesTable
 					data={flights}
 					hasActionButtons={true}
 					setRefreshData={setRefreshData}
@@ -212,7 +212,7 @@ const Schedule = () => {
 						<option value="" hidden>
 							Wybierz samolot
 						</option>
-						{airplaneData.map((airplane: Airplane) => (
+						{airplaneData.map((airplane: Airplanes) => (
 							<option
 								key={airplane.serial_no}
 								value={airplane.serial_no}

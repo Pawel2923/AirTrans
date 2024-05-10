@@ -8,26 +8,26 @@ import {
 	faPenToSquare,
 	faTrashCan,
 } from "@fortawesome/free-solid-svg-icons";
-import tableStyles from "./ArrDepTable.module.css";
-import { ArrDepTableProps } from "../assets/Data";
+import tableStyles from "./DeparturesTable.module.css";
+import { Departures } from "../assets/Data";
 import { useDeleteFlight } from "../hooks/use-flight";
 import ConfirmModal from "./Modals/ConfirmModal";
 
 interface TableProps {
-	data: ArrDepTableProps[];
+	data: Departures[];
 	isExtended?: boolean;
 	hasActionButtons?: boolean;
 	setRefreshData?: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-const ArrDepTable: React.FC<TableProps> = ({
+const DeparturesTable: React.FC<TableProps> = ({
 	data,
 	isExtended = false,
 	hasActionButtons = false,
 	setRefreshData,
 }: TableProps) => {
 	const [isArrivalTab, setIsArrivalTab] = useState(false);
-	const [filteredData, setFilteredData] = useState<ArrDepTableProps[]>([]);
+	const [filteredData, setFilteredData] = useState<Departures[]>([]);
 	const [deleteId, setDeleteId] = useState<string>("");
 	const { toast, deleteFlight } = useDeleteFlight(setRefreshData);
 
@@ -35,7 +35,7 @@ const ArrDepTable: React.FC<TableProps> = ({
 		if (!isArrivalTab) {
 			setFilteredData(
 				data.filter(
-					(flight: ArrDepTableProps) =>
+					(flight: Departures) =>
 						!flight.departure
 							.toString()
 							.toLowerCase()
@@ -45,7 +45,7 @@ const ArrDepTable: React.FC<TableProps> = ({
 		} else {
 			setFilteredData(
 				data.filter(
-					(flight: ArrDepTableProps) =>
+					(flight: Departures) =>
 						!flight.arrival
 							.toString()
 							.toLowerCase()
@@ -111,7 +111,7 @@ const ArrDepTable: React.FC<TableProps> = ({
 				<tbody className="text-uppercase">
 					{filteredData.length > 0 ? (
 						filteredData.map(
-							(flight: ArrDepTableProps, index: number) => (
+							(flight: Departures, index: number) => (
 								<tr key={index}>
 									{isExtended ? (
 										Object.entries(flight).map(
@@ -218,8 +218,4 @@ const ArrDepTable: React.FC<TableProps> = ({
 	);
 };
 
-ArrDepTable.defaultProps = {
-	data: [],
-};
-
-export default ArrDepTable;
+export default DeparturesTable;

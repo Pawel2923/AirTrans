@@ -29,7 +29,7 @@ async function get(
 		throw error;
 	}
 
-	const pages = await helper.getPages("Airplane", limit);
+	const pages = await helper.getPages("Airplanes", limit);
 
 	const meta = { page, pages };
 

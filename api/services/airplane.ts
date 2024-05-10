@@ -2,7 +2,7 @@ import db from "./db";
 import helper from "../helper";
 import config from "../config";
 import { ResultSetHeader } from "mysql2";
-import { Airplane, Err } from "../Types";
+import { Airplanes, Err } from "../Types";
 
 const airplaneProperties = [
 	"serial_no",
@@ -16,7 +16,7 @@ const airplaneProperties = [
 	"max_cargo",
 ];
 
-function validateAirplane(airplane: Airplane) {
+function validateAirplane(airplane: Airplanes) {
 	helper.checkObject(airplane, airplaneProperties);
 }
 
@@ -33,10 +33,10 @@ async function get(
 	}
 	const offset = helper.getOffset(page, limit);
 
-	const { query, queryParams } = helper.buildQuery("Airplane", offset, limit, filter, sort);
+	const { query, queryParams } = helper.buildQuery("Airplanes", offset, limit, filter, sort);
 
 	const rows = await db.query(query, queryParams);
-	const data = helper.emptyOrRows(rows) as Airplane[];
+	const data = helper.emptyOrRows(rows) as Airplanes[];
 
 	if (data.length === 0) {
 		const error = new Err("No airplanes found");
@@ -44,7 +44,7 @@ async function get(
 		throw error;
 	}
 
-	const pages = await helper.getPages("Airplane", limit);
+	const pages = await helper.getPages("Airplanes", limit);
 
 	const meta = { page, pages };
 
@@ -55,24 +55,24 @@ async function get(
 	};
 }
 
-async function create(airplane: Airplane) {
+async function create(airplane: Airplanes) {
 	validateAirplane(airplane);
 
 	let airplaneExists = await db.query(
-		"SELECT '' FROM Airplane WHERE serial_no = ?",
+		"SELECT '' FROM Airplanes WHERE serial_no = ?",
 		[airplane.serial_no]
 	);
 	airplaneExists = helper.emptyOrRows(airplaneExists);
 
 	if (airplaneExists.length > 0) {
 		const error = new Err(
-			"Airplane with this serial number already exists"
+			"Airplanes with this serial number already exists"
 		);
 		error.statusCode = 409;
 		throw error;
 	}
 
-	let result = await db.query("INSERT INTO Airplane SET ?", [airplane]);
+	let result = await db.query("INSERT INTO Airplanes SET ?", [airplane]);
 	result = result as ResultSetHeader;
 
 	if (result.affectedRows === 0) {
@@ -85,17 +85,17 @@ async function create(airplane: Airplane) {
 	};
 }
 
-async function update(serial_no: string, airplane: Airplane) {
+async function update(serial_no: string, airplane: Airplanes) {
 	validateAirplane(airplane);
 
 	let airplaneExists = await db.query(
-		"SELECT '' FROM Airplane WHERE serial_no = ?",
+		"SELECT '' FROM Airplanes WHERE serial_no = ?",
 		[serial_no]
 	);
 	airplaneExists = helper.emptyOrRows(airplaneExists);
 
 	if (airplaneExists.length === 0) {
-		const error = new Err("Airplane not found");
+		const error = new Err("Airplanes not found");
 		error.statusCode = 404;
 		throw error;
 	}
@@ -106,7 +106,7 @@ async function update(serial_no: string, airplane: Airplane) {
 		throw error;
 	}
 
-	let result = await db.query("UPDATE Airplane SET ? WHERE serial_no = ?", [
+	let result = await db.query("UPDATE Airplanes SET ? WHERE serial_no = ?", [
 		airplane,
 		serial_no,
 	]);
@@ -124,18 +124,18 @@ async function update(serial_no: string, airplane: Airplane) {
 
 async function remove(serial_no: string) {
 	let airplaneExists = await db.query(
-		"SELECT '' FROM Airplane WHERE Serial_no = ?",
+		"SELECT '' FROM Airplanes WHERE Serial_no = ?",
 		[serial_no]
 	);
 	airplaneExists = helper.emptyOrRows(airplaneExists);
 
 	if (airplaneExists.length === 0) {
-		const error = new Err("Airplane not found");
+		const error = new Err("Airplanes not found");
 		error.statusCode = 404;
 		throw error;
 	}
 
-	let result = await db.query("DELETE FROM Airplane WHERE Serial_no = ?", [
+	let result = await db.query("DELETE FROM Airplanes WHERE Serial_no = ?", [
 		serial_no,
 	]);
 	result = result as ResultSetHeader;

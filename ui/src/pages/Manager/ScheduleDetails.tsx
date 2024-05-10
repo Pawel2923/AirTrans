@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { Link, useParams } from "react-router-dom";
 import flightService from "../../services/flight.service";
-import { Flight } from "../../assets/Data";
+import { Flights } from "../../assets/Data";
 import { flightsDataParser } from "../../utils/data-parser";
 import Breadcrumb, { BreadcrumbItem } from "../../components/Breadcrumb";
 import ConfirmModal from "../../components/Modals/ConfirmModal";
@@ -9,7 +9,7 @@ import { useDeleteFlight } from "../../hooks/use-flight";
 
 const ScheduleDetails = () => {
 	const { id } = useParams<{ id: string }>();
-	const [flightData, setFlightData] = useState<Flight[]>([]);
+	const [flightData, setFlightData] = useState<Flights[]>([]);
 	const [openConfirm, setOpenConfirm] = useState<boolean>(false);
 	const { deleteFlight, toast, alert } = useDeleteFlight(undefined, true);
 
@@ -39,7 +39,7 @@ const ScheduleDetails = () => {
 			<Breadcrumb items={breadcrumbItems} />
 			<h2>Szczegóły lotu</h2>
 			<ul>
-				{flightData.map((flight: Flight) =>
+				{flightData.map((flight: Flights) =>
 					Object.entries(flight).map(([key, value]) => (
 						<li key={key}>
 							<strong>{key}:</strong> {value}

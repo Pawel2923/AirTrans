@@ -1,14 +1,14 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import ArrDepTable from "../components/ArrDepTable";
+import DeparturesTable from "../components/DeparturesTable";
 import Nav from "../components/Nav";
 import Footer from "../components/footer";
 import homeStyles from "./Home.module.css";
 import {
-	ArrDepTableProps,
-	Announcement,
+	Departures,
+	Announcements,
 	ContactInfo,
-	Car,
+	Cars,
 	Offer,
 	RawOffer,
 } from "../assets/Data";
@@ -18,10 +18,10 @@ import announcementService from "../services/announcement.service";
 import offerService from "../services/offer.service";
 import { arrDepDataParser } from "../utils/data-parser";
 
-const announcementsDataParser = (announcementsData: Announcement[]) => {
-	const announcements: Announcement[] = [];
+const announcementsDataParser = (announcementsData: Announcements[]) => {
+	const announcements: Announcements[] = [];
 
-	announcementsData.map((announcement: Announcement) => {
+	announcementsData.map((announcement: Announcements) => {
 		announcement.valid_until = announcement.valid_until
 			.slice(0, 19)
 			.replace("T", " ");
@@ -34,28 +34,28 @@ const announcementsDataParser = (announcementsData: Announcement[]) => {
 
 const offerDataParser = (offerData: RawOffer) => {
 	const offers: Offer[] = [];
-	offerData.cars.map((car: Car, index: number) => {
+	offerData.cars.map((car: Cars, index: number) => {
 		offers.push({
 			id: index,
-			path_to_img: car.Path_to_img,
+			path_to_img: "offerImg.png",
 			title: "Samochód",
 			offer_params: [
-				"Marka: " + car.Brand,
-				"Model: " + car.Model,
-				"Rok produkcji: " + car.Production_year,
-				"Rodzaj skrzyni: " + car.Transmission_type,
-				"Cena: " + car.Price_per_day + " zł/doba",
+				"Marka: " + car.brand,
+				"Model: " + car.model,
+				"Rok produkcji: " + car.production_year,
+				"Rodzaj skrzyni: " + car.transmission_type,
+				"Cena: " + car.price_per_day + " zł/doba",
 			],
 			btn_text: "Wypożycz",
 		});
 	});
 	offers.push({
 		id: 3,
-		path_to_img: offerData.parkingInfo[0].Path_to_img,
+		path_to_img: "offerImg.png",
 		title: "Parking",
 		offer_params: [
-			"Cena: " + offerData.parkingInfo[0].Price_per_day + " zł/doba",
-			"Miejsca: " + offerData.parkingInfo[0].Capacity,
+			"Cena: " + offerData.parkingInfo[0].price_per_day + " zł/doba",
+			"Miejsca: " + offerData.parkingInfo[0].capacity,
 		],
 		btn_text: "Zarezerwuj",
 	});
@@ -78,10 +78,10 @@ const defaultContactInfo: ContactInfo = {
 };
 
 const Home = () => {
-	const [flightsData, setFlightsData] = useState<ArrDepTableProps[]>([]);
+	const [flightsData, setFlightsData] = useState<Departures[]>([]);
 	const [contactInfo, setContactInfo] =
 		useState<ContactInfo>(defaultContactInfo);
-	const [announcementsData, setAnnouncementsData] = useState<Announcement[]>(
+	const [announcementsData, setAnnouncementsData] = useState<Announcements[]>(
 		[]
 	);
 	const [offerData, setOfferData] = useState<Offer[]>([]);
@@ -129,7 +129,7 @@ const Home = () => {
 							<p className="lead">Zaplanuj swoją podróż z nami</p>
 						</div>
 						<div className="col-lg-6">
-							<ArrDepTable data={flightsData} />
+							<DeparturesTable data={flightsData} />
 						</div>
 					</div>
 				</div>
@@ -191,7 +191,7 @@ const Home = () => {
 						{announcementsData
 							.slice(0, 3)
 							.map(
-								(announcement: Announcement, index: number) => (
+								(announcement: Announcements, index: number) => (
 									<div key={index} className="col-md-3">
 										<h3>{announcement.title}</h3>
 										<p>{announcement.content}</p>

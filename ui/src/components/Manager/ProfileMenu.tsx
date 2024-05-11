@@ -1,6 +1,7 @@
 import React, { useContext } from "react";
 import AuthContext from "../../store/auth-context";
 import classes from "./ManagerTopNav.module.css";
+import { useNavigate } from "react-router-dom";
 
 interface ProfileMenuProps {
     setIsOpenProfile: React.Dispatch<React.SetStateAction<boolean>>;
@@ -9,6 +10,7 @@ interface ProfileMenuProps {
 const ProfileMenu: React.FC<ProfileMenuProps> = ({
     setIsOpenProfile,
 }: ProfileMenuProps) => {
+	const navigate = useNavigate();
     const { user, logout } = useContext(AuthContext);
 
 	return (
@@ -26,7 +28,10 @@ const ProfileMenu: React.FC<ProfileMenuProps> = ({
 					<li>
 						<a href="#">Ustawienia</a>
 					</li>
-					<li onClick={logout}>
+					<li onClick={() => {
+						logout();
+						navigate(0)
+					}}>
 						<a href="#">Wyloguj</a>
 					</li>
 				</ul>

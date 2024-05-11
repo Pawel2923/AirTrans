@@ -23,6 +23,7 @@ import AirplaneEdit from "./pages/Manager/AirplaneEdit";
 import Manager from "./pages/Manager";
 import Airfield from "./pages/Manager/Airfield";
 import AuthProvider from "./store/AuthProvider";
+import Forbidden from "./pages/Forbidden";
 
 const router = createBrowserRouter([{ path: "*", Component: Root }]);
 
@@ -75,6 +76,7 @@ function Root() {
 						element={<Navigate to="/zarzadzanie/harmonogram" />}
 					/>
 				</Route>
+        <Route path="zabronione" element={<Forbidden />} />
 				<Route path="*" element={<NotFound />} />
 			</Routes>
 		</AuthProvider>

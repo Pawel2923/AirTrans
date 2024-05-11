@@ -4,7 +4,7 @@ import authenticationService from "../services/authentication.service";
 import { AxiosResponse } from "axios";
 import { User } from "../assets/Data";
 
-interface AuthResponse {
+export interface AuthResponse {
 	auth: boolean;
 	user: User | undefined;
 }

@@ -1,7 +1,7 @@
 const Airfield = () => {
 	return (
 		<>
-			<h2>Airfield</h2>
+			<h2>Informacje lotniska</h2>
 		</>
 	);
 };

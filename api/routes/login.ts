@@ -39,13 +39,20 @@ router.post("/", async function (req, res, next) {
 	const { email, password } = req.body;
 
 	try {
-		await loginService.fetchClient(email, password);
+		const { email: id, userRole } = await loginService.fetchClient(
+			email,
+			password
+		);
 
-		const token = jwt.sign({ email }, process.env.SECRET_TOKEN as string, {
-			expiresIn: 86400,
-		});
+		const token = jwt.sign(
+			{ email: id, role: userRole },
+			process.env.SECRET_TOKEN as string,
+			{
+				expiresIn: 86400,
+			}
+		);
 		const refreshToken = jwt.sign(
-			{ email },
+			{ email: id, role: userRole },
 			process.env.REFRESH_SECRET_TOKEN as string,
 			{
 				expiresIn: 525600,

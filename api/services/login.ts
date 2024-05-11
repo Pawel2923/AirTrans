@@ -31,7 +31,7 @@ async function fetchClient(email: string, userInputPassword: string) {
 
 	//tu sprawdza czy pasuje
 	const queryCheckUser =
-		"SELECT '' FROM Users WHERE email = ? AND password = ?";
+		"SELECT uid FROM Users WHERE email = ? AND password = ?";
 	const userExistsRows = await db.query(queryCheckUser, [
 		email,
 		hashedPassword,
@@ -44,7 +44,18 @@ async function fetchClient(email: string, userInputPassword: string) {
 		throw error;
 	}
 
-	return { response: { statusCode: 200 } };
+	//pobranie roli uzytkownika przy uzyciu endpointa employees
+	const queryGetRole = "SELECT role FROM Employees WHERE Users_uid = ?";
+	let roleResult = await db.query(queryGetRole, [userExistsData[0].uid]);
+	let userRole = helper.emptyOrRows(roleResult);
+
+	if (userRole.length === 0) {
+		userRole = [{ role: "client" }];
+		console.log(userRole);
+	}
+	console.log(userRole[0].role);
+
+	return { response: { statusCode: 200 }, email, userRole: userRole[0].role };
 }
 
 export default {

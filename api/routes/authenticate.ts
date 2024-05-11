@@ -22,12 +22,12 @@ const router = express.Router();
  *          type: object
  *          description: User data
  *          properties:
- *           Id:
+ *           email:
  *            type: string
- *            description: User ID
- *           Login:
+ *            description: Logged in user email
+ *           role:
  *            type: string
- *            description: User login
+ *            description: Logged in user role
  *    401:
  *     description: Unauthorized
  *    500:

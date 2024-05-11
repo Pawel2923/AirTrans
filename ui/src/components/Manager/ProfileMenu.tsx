@@ -25,7 +25,7 @@ const ProfileMenu: React.FC<ProfileMenuProps> = ({
 				onClick={() => setIsOpenProfile(false)}
 			></div>
 			<div className={classes.profile}>
-				<div>{user ? user.id : "e-mail"}</div>
+				<div>{user ? user.email : "e-mail"}</div>
 				<ul className={classes["profile-menu"]}>
 					<li>
 						<a href="#">Profil</a>

@@ -15,6 +15,7 @@ import ScheduleEdit from "./pages/Manager/ScheduleEdit";
 import AirplanesPage from "./pages/Manager/AirplanesPage";
 import AirplaneEdit from "./pages/Manager/AirplaneEdit";
 import Manager from "./pages/Manager";
+import Airfield from "./pages/Manager/Airfield";
 
 const router = createBrowserRouter([{ path: "*", Component: Root }]);
 
@@ -48,6 +49,9 @@ function Root() {
         <Route path="parking">
           <Route index element={<ParkingPage />} />
           <Route path="edit-parking/:id" element={<EditParkingPage />} />
+        </Route>
+        <Route path="lotnisko">
+          <Route index element={<Airfield />} />
         </Route>
         <Route path="*" element={<Navigate to="/zarzadzanie/harmonogram" />} />
       </Route>

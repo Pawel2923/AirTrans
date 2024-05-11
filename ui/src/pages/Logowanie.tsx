@@ -5,6 +5,8 @@ import Input from "../components/input";
 import styles from "./Logowanie.module.css"; 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {faArrowLeftLong,
+  
+        
 } from "@fortawesome/free-solid-svg-icons";
 const emailRegex = /^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$/i;
 const isEmpty = (value: string) => value.trim() !== "" && value.trim().length >= 3;
@@ -66,7 +68,7 @@ const Login = () => {
             <div className={styles.left}>
               <h1 className="text-center mb-4">LOGOWANIE DO SYSTEMU</h1>
               <p className="text-center">
-                Nie masz jeszcze konta? <Link to="/rejestracja">Zapisz się</Link>
+                Nie masz jeszcze konta? <Link to="/rejestracja">Zarejestruj się</Link>
               </p>
               <p className="text-center">
                 Zresetuj hasło <Link to="/resetowanie">tutaj</Link>.
@@ -80,7 +82,7 @@ const Login = () => {
             <div className={styles.right}>
               <form onSubmit={submitHandler}>
                 <div className="mb-3">
-                  <label htmlFor="email" className="form-label">E-mail*</label>
+                  <label htmlFor="email" className="form-label"></label>
                   <Input
                     type="email"
                     id="email"
@@ -90,14 +92,16 @@ const Login = () => {
                     validateInput={isEmail}
                     setIsFormInvalid={setIsFormInvalid}
                     className="form-control"
+                    placeholder="E-mail"
                     required
                   />
                 </div>
-                <div className="mb-3">
-                  <label htmlFor="password" className="form-label">Hasło*</label>
+                <div className="mb-2">
+                  <label htmlFor="password" className="form-label"></label>
                   <Input
                     type="password"
                     id="password"
+                    placeholder="Hasło"
                     value={password}
                     minLength={3}
                     onInput={passwordInputHandler}

@@ -4,7 +4,7 @@ import parkingService from "../../services/parking.service";
 import { ParkingReservations } from "../../assets/Data";
 
 const emptyParking: ParkingReservations = {
-    id: 0,
+    
     Users_uid: 0,
     since: "",
     until: "",

@@ -18,6 +18,7 @@ import rentRouter from "./routes/rent";
 import airfieldRouter from "./routes/airfield";
 import authenticateRouter from "./routes/authenticate";
 import logoutRouter from "./routes/logout";
+import employeesRouter from "./routes/employees";
 import { Err } from "./Types";
 
 const app = express();
@@ -56,6 +57,7 @@ app.use("/parking", parkingRouter);
 app.use("/rent", rentRouter);
 app.use("/airfield", airfieldRouter);
 app.use("/authenticate", authenticateRouter);
+app.use("/employees", employeesRouter);
 app.use("/logout", logoutRouter);
 
 app.use((err: Err, _req: Request, res: Response, _next: NextFunction): any => {

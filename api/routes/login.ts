@@ -39,13 +39,13 @@ router.post("/", async function (req, res, next) {
 	const { email, password } = req.body;
 
 	try {
-		const { id } = await loginService.fetchClient(email, password);
+		await loginService.fetchClient(email, password);
 
-		const token = jwt.sign({ id }, process.env.SECRET_TOKEN as string, {
+		const token = jwt.sign({ email }, process.env.SECRET_TOKEN as string, {
 			expiresIn: 86400,
 		});
 		const refreshToken = jwt.sign(
-			{ id },
+			{ email },
 			process.env.REFRESH_SECRET_TOKEN as string,
 			{
 				expiresIn: 525600,

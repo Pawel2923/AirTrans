@@ -72,7 +72,9 @@ router.post("/", async function (req, res, next) {
 		// Ustawienie ciasteczka JWT
 		res.cookie("jwt", token, cookieOptions);
 
-		return res.status(200).json({ auth: true });
+		return res
+			.status(200)
+			.json({ auth: true, user: { email, role: userRole } });
 	} catch (err) {
 		next(err);
 	}

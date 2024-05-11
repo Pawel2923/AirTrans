@@ -1,12 +1,12 @@
-import React, { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
-import AuthContext, { User } from "./auth-context";
+import React, { useCallback, useState } from "react";
+import AuthContext from "./auth-context";
 import authenticationService from "../services/authentication.service";
 import { AxiosResponse } from "axios";
+import { User } from "../assets/Data";
 
 interface AuthResponse {
 	auth: boolean;
-	user: string | User | undefined;
+	user: User | undefined;
 }
 
 interface AuthProviderProps {
@@ -16,11 +16,10 @@ interface AuthProviderProps {
 const AuthProvider: React.ComponentType<AuthProviderProps> = ({
 	children,
 }: AuthProviderProps) => {
-	const navigate = useNavigate();
 	const [auth, setAuth] = useState<boolean>(false);
-	const [user, setUser] = useState<string | User | undefined>(undefined);
+	const [user, setUser] = useState<User | undefined>(undefined);
 
-	useEffect(() => {
+	const checkAuth = useCallback(() => {
 		authenticationService
 			.authenticate()
 			.then((response: AxiosResponse<AuthResponse>) => {
@@ -32,17 +31,37 @@ const AuthProvider: React.ComponentType<AuthProviderProps> = ({
 			.catch((error) => {
 				if (error.response) {
 					if (error.response.status === 401) {
-						navigate("/logowanie");
+						setAuth(false);
+						setUser(undefined);
 					} else if (error.response.status === 500) {
-						navigate("/");
 						console.error("Internal server error");
 					}
 				}
 			});
-	}, [navigate]);
+	}, []);
+
+	const logout = useCallback(() => {
+		authenticationService
+			.logout()
+			.then((response) => {
+				if (response.status === 200) {
+					setAuth(false);
+					setUser(undefined);
+				}
+			})
+			.catch((error) => {
+				if (error.response.status === 401) {
+					console.error("Unauthorized");
+				} else if (error.response.status === 500) {
+					console.error("Server error");
+				}
+			});
+	}, []);
 
 	return (
-		<AuthContext.Provider value={{ auth, user }}>
+		<AuthContext.Provider
+			value={{ auth, user, setAuth, setUser, checkAuth, logout }}
+		>
 			{children}
 		</AuthContext.Provider>
 	);

@@ -1,15 +1,13 @@
 import { createContext } from "react";
-
-export interface User {
-    exp: number;
-    iat: number;
-    email: string;
-    role: string;
-}
+import { User } from "../assets/Data";
 
 interface AuthContextProps {
     auth: boolean;
-    user: string | User | null | undefined;
+    user: User | undefined;
+    setAuth: React.Dispatch<React.SetStateAction<boolean>>;
+    setUser: React.Dispatch<React.SetStateAction<User | undefined>>;
+    checkAuth: () => void;
+    logout: () => void;
 }
 
 const AuthContext = createContext({} as AuthContextProps)

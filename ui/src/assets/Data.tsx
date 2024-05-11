@@ -108,6 +108,13 @@ interface Users {
 	salt?: string;
 }
 
+interface User {
+    exp: number;
+    iat: number;
+    email: string;
+    role: string;
+}
+
 interface Employees {
 	id?: number;
 	role: string;
@@ -249,6 +256,7 @@ export type {
 	Luggage,
 	Equipment,
 	Users,
+	User,
 	Gates,
 	AirfieldInfo,
 	Taxiways,

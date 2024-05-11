@@ -14,10 +14,10 @@ import {
 	faSquareParking
 } from "@fortawesome/free-solid-svg-icons";
 import {
+	Link,
 	NavLink,
 	useLocation,
 } from "react-router-dom";
-import useAuth from "../../hooks/use-auth";
 
 const navItems = [
 	{
@@ -70,7 +70,6 @@ const ManagerNav: React.FC<ManagerNavProps> = ({
 	setTitle,
 }: ManagerNavProps) => {
 	const location = useLocation();
-	const { logout } = useAuth();
 	const [expanded, setExpanded] = useState<boolean>(true);
 
 	useEffect(() => {
@@ -125,10 +124,10 @@ const ManagerNav: React.FC<ManagerNavProps> = ({
 						!expanded ? classes.shrank : ""
 					}`}
 				>
-					<a href="#" onClick={logout}>
-						{expanded && "Wyloguj "}
+					<Link to="/">
+						{expanded && "Wyjście "}
 						<FontAwesomeIcon icon={faRightFromBracket} />
-					</a>
+					</Link>
 				</li>
 			</ul>
 		</nav>

@@ -1,7 +1,6 @@
-import React, { useContext, useState, useEffect } from "react";
-import AuthContext, { User } from "../../store/auth-context";
+import React, { useContext } from "react";
+import AuthContext from "../../store/auth-context";
 import classes from "./ManagerTopNav.module.css";
-import useAuth from "../../hooks/use-auth";
 
 interface ProfileMenuProps {
     setIsOpenProfile: React.Dispatch<React.SetStateAction<boolean>>;
@@ -10,13 +9,7 @@ interface ProfileMenuProps {
 const ProfileMenu: React.FC<ProfileMenuProps> = ({
     setIsOpenProfile,
 }: ProfileMenuProps) => {
-    const { logout } = useAuth();
-    const authCtx = useContext(AuthContext);
-    const [user, setUser] = useState<User>();
-
-	useEffect(() => {
-		setUser(authCtx.user as User);
-	}, [authCtx.user]);
+    const { user, logout } = useContext(AuthContext);
 
 	return (
 		<>

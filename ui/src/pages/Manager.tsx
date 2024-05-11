@@ -1,23 +1,27 @@
-import { useState } from "react";
-import { Outlet } from "react-router-dom";
+import { useState, useEffect, useContext } from "react";
+import { Outlet, useNavigate } from "react-router-dom";
 import ManagerNav from "../components/Manager/ManagerNav";
 import ManagerTopNav from "../components/Manager/ManagerTopNav";
 import classes from "./Manager.module.css";
-import AuthProvider from "../store/AuthProvider";
+import AuthContext from "../store/auth-context";
 
 const Manager = () => {
+	const navigate = useNavigate();
+	const { user } = useContext(AuthContext);
 	const [title, setTitle] = useState<string>("HARMONOGRAM LOTÓW");
 
+	useEffect(() => {
+		if (!user || user?.role === "client") navigate("/");
+	}, [navigate, user]);
+
 	return (
-		<AuthProvider>
-			<div className={classes.manager}>
-				<ManagerNav setTitle={setTitle} />
-				<ManagerTopNav title={title} />
-				<main>
-					<Outlet />
-				</main>
-			</div>
-		</AuthProvider>
+		<div className={classes.manager}>
+			<ManagerNav setTitle={setTitle} />
+			<ManagerTopNav title={title} />
+			<main>
+				<Outlet />
+			</main>
+		</div>
 	);
 };
 

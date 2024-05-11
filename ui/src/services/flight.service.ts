@@ -1,5 +1,5 @@
 import http from "../http-common";
-import { Flight, Filter, Sort } from "../assets/Data";
+import { Flights, Filter, Sort } from "../assets/Data";
 
 class FlightService {
 	getAll = (
@@ -51,13 +51,13 @@ class FlightService {
 		return http.get(`/flights?filter=[{"by":"id","value":"${id}"}]`);
 	};
 
-	create = (data: Flight) => {
+	create = (data: Flights) => {
 		return http.post("/flights", data, {
 			withCredentials: true,
 		});
 	};
 
-	update = (id: string, data: Flight) => {
+	update = (id: string, data: Flights) => {
 		return http.put(`/flights/${id}`, data, {
 			withCredentials: true,
 		});

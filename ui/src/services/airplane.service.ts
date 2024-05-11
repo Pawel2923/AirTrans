@@ -1,5 +1,5 @@
 import http from "../http-common";
-import { Airplane, Filter, Sort } from "../assets/Data";
+import { Airplanes, Filter, Sort } from "../assets/Data";
 
 class AirplaneService {
     getAll = (page: number = 1, limit?: number, filter?: Filter[], sort?: Sort) => {
@@ -36,11 +36,11 @@ class AirplaneService {
         return http.get(`/airplane?filter=[{"by":"serial_no","value":"${serial_no}"}]`);
     };
     
-    create = (data: Airplane) => {
+    create = (data: Airplanes) => {
         return http.post("/airplane", data);
     };
 
-    update = (serial_no: string, data: Airplane) => {
+    update = (serial_no: string, data: Airplanes) => {
         return http.put(`/airplane/${serial_no}`, data);
     };
 

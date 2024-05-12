@@ -24,8 +24,10 @@ import Manager from "./pages/Manager";
 import Airfield from "./pages/Manager/Airfield";
 import AuthProvider from "./store/AuthProvider";
 import Forbidden from "./pages/Forbidden";
+import InternalServerError from "./pages/InternalServerError";
+import ErrorBoundary from "./pages/ErrorBoundary";
 
-const router = createBrowserRouter([{ path: "*", Component: Root }]);
+const router = createBrowserRouter([{ path: "*", Component: Root, errorElement: <ErrorBoundary /> }]);
 
 export default function App() {
 	return <RouterProvider router={router} />;
@@ -76,7 +78,8 @@ function Root() {
 						element={<Navigate to="/zarzadzanie/harmonogram" />}
 					/>
 				</Route>
-        <Route path="zabronione" element={<Forbidden />} />
+				<Route path="zabronione" element={<Forbidden />} />
+				<Route path="blad" element={<InternalServerError />} />
 				<Route path="*" element={<NotFound />} />
 			</Routes>
 		</AuthProvider>

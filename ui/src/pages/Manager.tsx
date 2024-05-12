@@ -19,7 +19,7 @@ const Manager = () => {
 			.then((response: AxiosResponse<AuthResponse>) => {
 				if (response.status === 200) {
 					if (response.data.user?.role === "client") {
-						navigate("/zabrione");
+						navigate("/zabronione");
 					}
 					setAuth(response.data.auth);
 					setUser(response.data.user);
@@ -31,8 +31,11 @@ const Manager = () => {
 						setAuth(false);
 						setUser(undefined);
 						navigate("/logowanie");
-					} else if (error.response.status === 500) {
-						console.error("Internal server error");
+					} else if (error.response.status === 403) {
+						navigate("/zabronione");
+					} else {
+						sessionStorage.setItem("errorMessage", error.response.data.message);
+						navigate("/blad");
 					}
 				}
 			});

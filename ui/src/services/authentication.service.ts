@@ -1,7 +1,11 @@
 import http from "../http-common";
 
 class AuthenticationService {
-	authenticate = () => {
+	authenticate = (requiredRole?: string) => {
+		if (requiredRole) {
+			return http.get(`/authenticate/?requiredRole=${requiredRole}`, { withCredentials: true });
+		}
+
 		return http.get("/authenticate", { withCredentials: true });
 	};
 

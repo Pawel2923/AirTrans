@@ -12,6 +12,17 @@ import airfieldService from "../services/airfield";
  *      in: query
  *      required: false
  *      description: Get specific table data
+ *      type: string
+ *    - name: page
+ *      in: query
+ *      required: false
+ *      description: Page number
+ *      type: integer
+ *    - name: limit
+ *      in: query
+ *      required: false
+ *      description: Limit number of airfields
+ *      type: integer
  *   responses:
  *    200:
  *     description: Successfully fetched data
@@ -33,9 +44,12 @@ import airfieldService from "../services/airfield";
  */
 router.get("/", async (req, res, next) => {
 	try {
-        const { table_name } = req.query;
+        let { table_name, page, limit } = req.query;
+		const parsedPage = page ? parseInt(page as string) : undefined;
+		const parsedLimit = limit ? parseInt(limit as string) : undefined;
+        table_name = table_name as string | undefined;
 
-		const { data, message } = await airfieldService.get(table_name as string | undefined);
+		const { data, message } = await airfieldService.get(table_name, parsedPage, parsedLimit);
 		res.status(200).json({ data, message });
 	} catch (error) {
 		next(error);

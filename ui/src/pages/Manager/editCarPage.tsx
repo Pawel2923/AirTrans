@@ -26,7 +26,7 @@ const EditCarPage = () => {
 
     carService.getById(carId).then((response) => {
         if (response.status === 200) {
-            setCarData(response.data);
+            setCarData(response.data.data[0]);
         }
     });
 }, [id]);
@@ -39,7 +39,7 @@ const EditCarPage = () => {
       const response = await carService.update(carData);
       if (response.status === 200) {
         alert("Car updated successfully!");
-        navigate("/car-list");
+        navigate("/zarzadzanie/pojazd");
       }
     } catch (error) {
       console.error("Error while updating car:", error);
@@ -61,49 +61,49 @@ const EditCarPage = () => {
       <form onSubmit={formSubmitHandler}>
         <input
           type="text"
-          name="Brand"
+          name="brand"
           placeholder="Brand"
           onChange={inputChangeHandler}
           value={carData.brand}
         />
         <input
           type="text"
-          name="Model"
+          name="model"
           placeholder="Model"
           onChange={inputChangeHandler}
           value={carData.model}
         />
         <input
           type="number"
-          name="Price_per_day"
+          name="price_per_day"
           placeholder="Price per day"
           onChange={inputChangeHandler}
           value={carData.price_per_day}
         />
         <input
           type="number"
-          name="Production_year"
+          name="production_year"
           placeholder="Production year"
           onChange={inputChangeHandler}
           value={carData.production_year}
         />
         <input
           type="text"
-          name="License_plate"
+          name="license_plate"
           placeholder="License plate"
           onChange={inputChangeHandler}
           value={carData.license_plate}
         />
         <input
           type="text"
-          name="Fuel_type"
+          name="fuel_type"
           placeholder="Fuel type"
           onChange={inputChangeHandler}
           value={carData.fuel_type}
         />
         <input
           type="text"
-          name="Transmission_type"
+          name="transmission_type"
           placeholder="Transmission type"
           onChange={inputChangeHandler}
           value={carData.transmission_type}

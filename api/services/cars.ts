@@ -96,7 +96,7 @@ async function create(car: Cars) {
 
 		// Insert the new car into the database
 		let result = await db.query(
-			"INSERT INTO Cars (Brand, Model, Price_per_day, Production_year, License_plate, Fuel_type, Transmission_type) VALUES (?, ?, ?, ?, ?, ?, ?)",
+			"INSERT INTO Cars (brand, model, price_per_day, production_year, license_plate, fuel_type, transmission_type) VALUES (?, ?, ?, ?, ?, ?, ?)",
 			[
 				car.brand,
 				car.model,
@@ -155,7 +155,7 @@ async function update(carId: number, car: Cars) {
 		}
 
 		let result = await db.query(
-			"UPDATE Cars SET Brand=?, Model=?, Price_per_day=?, Production_year=?, License_plate=?, Fuel_type=?, Transmission_type=? WHERE Id=?",
+			"UPDATE Cars SET brand=?, model=?, price_per_day=?, production_year=?, license_plate=?, fuel_type=?, transmission_type=? WHERE id=?",
 			[
 				car.brand,
 				car.model,

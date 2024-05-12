@@ -156,6 +156,7 @@ interface Tickets {
 }
 
 interface ParkingReservations {
+	id?: number;
 	pid?: number;
 	parking_level: string;
 	space_id: string;
@@ -192,8 +193,8 @@ interface Cars {
 
 interface Rentals {
 	id?: number;
-	since: string;
-	until: string;
+	since?: string;
+	until?: string;
 	reservation_time?: string;
 	return_time?: string;
 	status?: "PENDING" | "RENTED" | "CANCELLED" | "RETURNED";

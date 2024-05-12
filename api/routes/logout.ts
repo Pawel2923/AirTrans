@@ -5,6 +5,8 @@ const router = express.Router();
  * @openapi
  * /logout:
  *  get:
+ *   tags: 
+ *    - Authentication
  *   description: Logs out the user by clearing the JWT cookie
  *   responses:
  *    200:

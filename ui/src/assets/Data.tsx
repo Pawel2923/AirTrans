@@ -69,7 +69,7 @@ interface Terminals {
 	id?: number;
 	is_available: boolean;
 	num_of_stations: number;
-	status?: "CLOSED" | "OPEN" | "EMPTY" | "FULL";
+	status?: "CLOSED" | "OCCUPIED" | "EMPTY" | "FULL";
 	Flight_id?: string;
 }
 

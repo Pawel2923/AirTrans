@@ -6,6 +6,8 @@ import employees from "../services/employees";
  * @openapi
  * /employees:
  *  get:
+ *   tags: 
+ *    - Employees
  *   description: Get all employees or a specific employee by uid
  *   parameters:
  *    - name: uid

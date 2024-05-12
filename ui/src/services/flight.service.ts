@@ -51,6 +51,10 @@ class FlightService {
 		return http.get(`/flights?filter=[{"by":"id","value":"${id}"}]`);
 	};
 
+	getIds = () => {
+		return http.get("/flights/ids");
+	};
+
 	create = (data: Flights) => {
 		return http.post("/flights", data, {
 			withCredentials: true,

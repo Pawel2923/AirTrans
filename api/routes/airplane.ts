@@ -6,7 +6,9 @@ import airplaneService from "../services/airplane";
  * @openapi
  * /airplane:
  *  get:
- *   description: Get all airplanes
+ *   tags: 
+ *    - Airplane
+ *   description: Get all airplanes or a specific airplane by serial number
  *   parameters:
  *    - name: page
  *      in: query
@@ -96,8 +98,50 @@ router.get("/", async function (req, res, next) {
 
 /**
  * @openapi
+ * /airplane/serial_numbers:
+ *  get:
+ *   tags: 
+ *    - Airplane
+ *   description: Get all airplane serial numbers
+ *   responses:
+ *    200:
+ *     description: Successfully fetched airplane serial numbers
+ *     content:
+ *      application/json:
+ *       schema:
+ *        type: object
+ *        properties:
+ *         data:
+ *          type: array
+ *          items:
+ *           type: string
+ *         message:
+ *          type: string
+ *          description: Success message
+ *    404:
+ *     description: No airplane serial numbers found
+ *    500:
+ *     description: Internal server error
+ */
+router.get("/serial_numbers", async function (_req, res, next) {
+	try {
+		const { data, message } = await airplaneService.getSerialNumbers();
+		res.status(200).json({
+			data,
+			message,
+		});
+	
+	} catch (error) {
+		next(error);
+	}
+});
+
+/**
+ * @openapi
  * /airplane:
  *  post:
+ *   tags: 
+ *    - Airplane
  *   description: Create a new airplane
  *   requestBody:
  *    required: true
@@ -131,6 +175,8 @@ router.post("/", async function (req, res, next) {
  * @openapi
  * /airplane/{serial_no}:
  *  put:
+ *   tags: 
+ *    - Airplane
  *   description: Update an airplane
  *   parameters:
  *    - name: serial_no
@@ -171,6 +217,8 @@ router.put("/:serial_no", async function (req, res, next) {
  * @openapi
  * /airplane/{serial_no}:
  *  delete:
+ *   tags: 
+ *    - Airplane
  *   description: Delete an airplane
  *   parameters:
  *    - name: serial_no

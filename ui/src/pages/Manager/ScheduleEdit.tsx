@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import flightService from "../../services/flight.service";
 import airplaneService from "../../services/airplane.service";
-import { Flights, Airplanes } from "../../assets/Data";
+import { Flights } from "../../assets/Data";
 import { flightsDataParser } from "../../utils/data-parser";
 import Breadcrumb, { BreadcrumbItem } from "../../components/Breadcrumb";
 import { useUpdateFlight } from "../../hooks/use-flight";
@@ -21,29 +21,30 @@ const emptyFlight: Flights = {
 
 const ScheduleEdit = () => {
 	const { id } = useParams<{ id: string }>();
-	const [airplaneData, setAirplaneData] = useState<Airplanes[]>([]);
+	const [serialNumbers, setSerialNumbers] = useState<string[]>([]);
 	const [flightData, setFlightData] = useState<Flights>(emptyFlight);
-    const [newFlightData, setNewFlightData] = useState<Flights>(emptyFlight);
-    const [refreshData, setRefreshData] = useState<boolean>(false);
-    const [toast, setToast] = useState<typeof Toast | null>(null);
-    const { toast: updateToast, updateFlight } = useUpdateFlight(setRefreshData);
+	const [newFlightData, setNewFlightData] = useState<Flights>(emptyFlight);
+	const [refreshData, setRefreshData] = useState<boolean>(false);
+	const [toast, setToast] = useState<typeof Toast | null>(null);
+	const { toast: updateToast, updateFlight } =
+		useUpdateFlight(setRefreshData);
 
 	useEffect(() => {
 		if (id === undefined) return;
 
 		flightService.getById(id).then((response) => {
 			if (response.status === 200) {
-                const data = flightsDataParser((response.data.data));
+				const data = flightsDataParser(response.data.data);
 				setFlightData(data[0]);
-                setNewFlightData(data[0]);
+				setNewFlightData(data[0]);
 			}
 		});
 	}, [id, refreshData]);
 
 	useEffect(() => {
-		airplaneService.getAll().then((response) => {
+		airplaneService.getSerialNumbers().then((response) => {
 			if (response.status === 200) {
-				setAirplaneData(response.data.data);
+				setSerialNumbers(response.data.data);
 			}
 		});
 	}, []);
@@ -56,12 +57,12 @@ const ScheduleEdit = () => {
 		let submittedData = { ...newFlightData };
 
 		submittedData = flightsDataParser([submittedData])[0];
-        if (submittedData.arrival !== flightData.arrival) {
-            submittedData.arrival += ":00";
-        }
-        if (submittedData.departure !== flightData.departure) {
-            submittedData.departure += ":00";
-        }
+		if (submittedData.arrival !== flightData.arrival) {
+			submittedData.arrival += ":00";
+		}
+		if (submittedData.departure !== flightData.departure) {
+			submittedData.departure += ":00";
+		}
 
 		// Regular expression to validate date and time format
 		const datetimeRegex =
@@ -92,25 +93,25 @@ const ScheduleEdit = () => {
 			return;
 		}
 
-        // Check if new data is different from the old data
-        if (
-            submittedData.arrival === flightData.arrival &&
-            submittedData.departure === flightData.departure &&
-            submittedData.destination === flightData.destination &&
-            submittedData.status === flightData.status &&
-            submittedData.airline_name === flightData.airline_name &&
-            submittedData.airplane_serial_no === flightData.airplane_serial_no
-        ) {
-            setToast(() => (
-                <Toast
-                    icon={faCircleExclamation}
-                    message="Nie dokonano zmian"
-                    onClose={() => setToast(null)}
-                    type="warning"
-                />
-            ));
-            return;
-        }
+		// Check if new data is different from the old data
+		if (
+			submittedData.arrival === flightData.arrival &&
+			submittedData.departure === flightData.departure &&
+			submittedData.destination === flightData.destination &&
+			submittedData.status === flightData.status &&
+			submittedData.airline_name === flightData.airline_name &&
+			submittedData.airplane_serial_no === flightData.airplane_serial_no
+		) {
+			setToast(() => (
+				<Toast
+					icon={faCircleExclamation}
+					message="Nie dokonano zmian"
+					onClose={() => setToast(null)}
+					type="warning"
+				/>
+			));
+			return;
+		}
 
 		updateFlight(id, submittedData);
 	};
@@ -218,12 +219,9 @@ const ScheduleEdit = () => {
 						onChange={selectChangeHandler}
 						value={newFlightData.airplane_serial_no}
 					>
-						{airplaneData.map((airplane: Airplanes) => (
-							<option
-								key={airplane.serial_no}
-								value={airplane.serial_no}
-							>
-								{airplane.serial_no}
+						{serialNumbers.map((serial_no: string) => (
+							<option key={serial_no} value={serial_no}>
+								{serial_no}
 							</option>
 						))}
 					</select>
@@ -232,8 +230,8 @@ const ScheduleEdit = () => {
 					Zapisz
 				</button>
 			</form>
-            {toast}
-            {updateToast}
+			{toast}
+			{updateToast}
 		</>
 	);
 };

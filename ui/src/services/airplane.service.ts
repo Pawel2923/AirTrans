@@ -32,6 +32,10 @@ class AirplaneService {
         return http.get(url);
     };
 
+    getSerialNumbers = () => {
+        return http.get("/airplane/serial_numbers");
+    };
+
     getById = (serial_no: string) => {
         return http.get(`/airplane?filter=[{"by":"serial_no","value":"${serial_no}"}]`);
     };

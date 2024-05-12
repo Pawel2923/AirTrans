@@ -6,6 +6,8 @@ import offer from "../services/offer";
  * @openapi
  * /offer:
  *  get:
+ *   tags: 
+ *    - Offer
  *   description: Get all offers
  *   parameters:
  *    - name: page

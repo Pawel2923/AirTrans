@@ -59,7 +59,13 @@ async function get(
 	const offset = helper.getOffset(page, config.listPerPage);
 
 	// Build SQL query with filter, sort, offset and limit parameters
-	const { query, queryParams } = helper.buildQuery("Flights", offset, limit, filter, sort);
+	const { query, queryParams } = helper.buildQuery(
+		"Flights",
+		offset,
+		limit,
+		filter,
+		sort
+	);
 
 	// Execute the query
 	const rows = await db.query(query, queryParams);
@@ -116,6 +122,27 @@ async function getByDepartureOrArrival(page = 1, limit = 5) {
 	};
 }
 
+// Function to get flight ids
+async function getFlightIds() {
+	// Execute the query to get flight ids
+	const rows = await db.query("SELECT DISTINCT id FROM Flights");
+	let data = helper.emptyOrRows(rows);
+
+	// Map the data to array of flight ids
+	data = data.map((row: Flights) => row.id);
+
+	// If no data found, throw an error
+	if (data.length === 0) {
+		throw new Err("No flight id found", 404);
+	}
+
+	// Return data and success message
+	return {
+		data,
+		message: "Successfully fetched data",
+	};
+}
+
 // Function to create a new flight
 async function create(flight: Flights) {
 	// Validate flight details
@@ -129,7 +156,7 @@ async function create(flight: Flights) {
 	flightExists = helper.emptyOrRows(flightExists);
 
 	if (flightExists.length > 0) {
-		throw new Err("Flights with this id already exists", 409)
+		throw new Err("Flights with this id already exists", 409);
 	}
 
 	// Insert new flight into the database
@@ -247,7 +274,14 @@ async function search(
 	search.queryParams = Array(7).fill(`%${term}%`);
 
 	// Build SQL query with filter, sort, offset and limit parameters
-	const { query: query, queryParams } = helper.buildQuery("Flights", offset, limit, filter, sort, search);
+	const { query: query, queryParams } = helper.buildQuery(
+		"Flights",
+		offset,
+		limit,
+		filter,
+		sort,
+		search
+	);
 
 	// Execute the search query
 	const result = await db.query(query, queryParams);
@@ -282,6 +316,7 @@ async function search(
 export const flight = {
 	get,
 	getByDepartureOrArrival,
+	getFlightIds,
 	create,
 	update,
 	remove,

@@ -6,6 +6,8 @@ const router = express.Router();
  * @openapi
  * /authenticate:
  *  get:
+ *   tags: 
+ *    - Authentication
  *   description: Check if user is authenticated
  *   parameters:
  *    - name: requiredRole

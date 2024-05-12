@@ -63,7 +63,7 @@ const Airfield = () => {
 								<p>Lot: {terminal.Flight_id}</p>
 							)}
 						<Link
-							to={`aktualizuj/terminal/${terminal.id}`}
+							to={`terminal/${terminal.id}/edytuj`}
 							className="btn btn-primary"
 						>
 							AKTUALIZUJ <FontAwesomeIcon icon={faPenToSquare} />
@@ -84,7 +84,7 @@ const Airfield = () => {
 							<p>Lot: {taxiway.Flight_id}</p>
 						)}
 						<Link
-							to={`aktualizuj/droga-kolowania/${taxiway.id}`}
+							to={`droga-kolowania/${taxiway.id}/edytuj`}
 							className="btn btn-primary"
 						>
 							AKTUALIZUJ <FontAwesomeIcon icon={faPenToSquare} />
@@ -106,7 +106,7 @@ const Airfield = () => {
 							<p>Lot: {runway.Flight_id}</p>
 						)}
 						<Link
-							to={`aktualizuj/pas-startowy/${runway.id}`}
+							to={`pas-startowy/${runway.id}/edytuj`}
 							className="btn btn-primary"
 						>
 							AKTUALIZUJ <FontAwesomeIcon icon={faPenToSquare} />

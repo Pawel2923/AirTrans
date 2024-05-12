@@ -6,34 +6,36 @@ import jwt from "jsonwebtoken";
  * @openapi
  * /login:
  *   post:
- *     summary: User login
- *     description: Authenticate a user by email and password and generate access tokens.
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             type: object
- *             properties:
- *               email:
- *                 type: string
- *               password:
- *                 type: string
- *     responses:
- *       '200':
- *         description: Successfully authenticated. Returns authentication status.
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 auth:
- *                   type: boolean
- *                   description: Authentication status.
- *       '401':
- *         description: Unauthorized. Invalid credentials.
- *       '500':
- *         description: Internal server error.
+ *    tags:
+ *     - Authentication
+ *    summary: User login
+ *    description: Authenticate a user by email and password and generate access tokens.
+ *    requestBody:
+ *      required: true
+ *      content:
+ *        application/json:
+ *          schema:
+ *            type: object
+ *            properties:
+ *              email:
+ *                type: string
+ *              password:
+ *                type: string
+ *    responses:
+ *      '200':
+ *        description: Successfully authenticated. Returns authentication status.
+ *        content:
+ *          application/json:
+ *            schema:
+ *              type: object
+ *              properties:
+ *                auth:
+ *                  type: boolean
+ *                  description: Authentication status.
+ *      '401':
+ *        description: Unauthorized. Invalid credentials.
+ *      '500':
+ *        description: Internal server error.
  */
 router.post("/", async function (req, res, next) {
 	const { email, password } = req.body;

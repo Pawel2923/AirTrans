@@ -3,7 +3,7 @@ import {
     faCircleCheck,
     faCircleExclamation,
 } from "@fortawesome/free-solid-svg-icons";
-import { Flight } from "../assets/Data";
+import { Flights } from "../assets/Data";
 import Toast from "../components/Toast";
 import flightService from "../services/flight.service";
 import { useNavigate } from "react-router-dom";
@@ -16,7 +16,7 @@ export const useCreateFlight = (
     const navigate = useNavigate();
     const [toast, setToast] = useState<typeof Toast | null>(null);
 
-    const createFlight = (data: Flight) => {
+    const createFlight = (data: Flights) => {
         flightService
             .create(data)
             .then((response) => {
@@ -90,7 +90,7 @@ export const useUpdateFlight = (
     const navigate = useNavigate();
     const [toast, setToast] = useState<typeof Toast | null>(null);
 
-    const updateFlight = (id: string, data: Flight) => {
+    const updateFlight = (id: string, data: Flights) => {
         flightService
             .update(id, data)
             .then((response) => {

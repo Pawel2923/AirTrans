@@ -26,6 +26,7 @@ import AuthProvider from "./store/AuthProvider";
 import Forbidden from "./pages/Forbidden";
 import InternalServerError from "./pages/InternalServerError";
 import ErrorBoundary from "./pages/ErrorBoundary";
+import AirfieldEdit from "./pages/Manager/AirfieldEdit";
 
 const router = createBrowserRouter([{ path: "*", Component: Root, errorElement: <ErrorBoundary /> }]);
 
@@ -72,6 +73,7 @@ function Root() {
 					</Route>
 					<Route path="lotnisko">
 						<Route index element={<Airfield />} />
+						<Route path=":table/:id/edytuj" element={<AirfieldEdit />} />
 					</Route>
 					<Route
 						path="*"

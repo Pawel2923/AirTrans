@@ -73,6 +73,8 @@ import { verifyUser } from "../middlewares/verifyUser";
  *            type: integer
  *         message:
  *          type: string
+ *    404:
+ *     description: No flights found
  *    500:
  *     description: Internal server error
  */

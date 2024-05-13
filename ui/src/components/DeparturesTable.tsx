@@ -72,7 +72,7 @@ const DeparturesTable: React.FC<TableProps> = ({
 		<>
 			<table className={tableStyles.table}>
 				<thead>
-					<tr>
+					<tr className={tableStyles["thead-btn-wrapper"]}>
 						<th
 							className={!isArrivalTab ? tableStyles.active : ""}
 							colSpan={headButtonsColSpan}

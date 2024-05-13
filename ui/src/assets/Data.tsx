@@ -108,6 +108,20 @@ interface Users {
 	salt?: string;
 }
 
+interface UserInfo {
+	uid?: number;
+	email: string;
+	first_name?: string;
+	last_name?: string;
+	phone_number?: string;
+	address?: string;
+	gender?: 'M' | 'F';
+	birth_date?: string;
+	create_time?: string;
+	user_img?: number;
+	role?: string;
+}
+
 interface User {
     exp: number;
     iat: number;
@@ -265,6 +279,7 @@ export type {
 	Luggage,
 	Equipment,
 	Users,
+	UserInfo,
 	User,
 	Gates,
 	AirfieldInfo,

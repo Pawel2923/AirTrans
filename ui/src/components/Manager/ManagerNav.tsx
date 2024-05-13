@@ -11,7 +11,8 @@ import {
 	faDoorOpen,
 	faBullhorn,
 	faCar,
-	faSquareParking
+	faSquareParking,
+	faUser
 } from "@fortawesome/free-solid-svg-icons";
 import {
 	Link,
@@ -59,6 +60,11 @@ const navItems = [
 		id: "parking",
 		name: "PARKING",
 		icon: faSquareParking,
+	},
+	{
+		id: "uzytkownicy",
+		name: "UŻYTKOWNICY",
+		icon: faUser,
 	},
 ];
 

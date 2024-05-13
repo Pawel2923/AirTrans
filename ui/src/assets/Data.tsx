@@ -123,7 +123,7 @@ interface Announcements {
 	content: string;
 	valid_until: string;
 	create_time?: string;
-	Employee_id: number;
+	Employee_id?: number;
 }
 
 interface Equipment {

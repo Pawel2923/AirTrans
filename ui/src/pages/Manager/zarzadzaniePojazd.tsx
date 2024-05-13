@@ -158,6 +158,7 @@ const ZarzadzanieP = () => {
 			<div className={tableStyle.tableContainer}>
 				<h2>Lista Wypożyczeń</h2>
 				<TableRent
+					
 					rents={rentals}
 					onEdit={editRent}
 					onDelete={deleteRental}

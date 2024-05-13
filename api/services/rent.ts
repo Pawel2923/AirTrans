@@ -6,33 +6,35 @@ import { Err } from "../Types";
 import { ResultSetHeader } from "mysql2";
 
 async function getAllRentals(
-    page = 1,
-    limit = config.listPerPage,
-    tableName = "Rentals"
+  page = 1,
+  limit = config.listPerPage,
+  tableName = "Rentals"
 ) {
-    const offset = helper.getOffset(page, config.listPerPage);
+  const offset = helper.getOffset(page, config.listPerPage);
 
-    const rows = await db.query("SELECT * FROM ?? LIMIT ?, ?", [
-        tableName,
-        offset,
-        limit,
-    ]);
+  const rows = await db.query(
+      "SELECT Rentals.*, Users.first_name AS user_first_name FROM ?? AS Rentals LEFT JOIN Users ON Rentals.Users_uid = Users.uid LIMIT ?, ?",
+      [tableName, offset, limit]
+  );
 
-    const data = helper.emptyOrRows(rows);
+  const data = helper.emptyOrRows(rows);
 
-    const pages = await helper.getPages(tableName, limit);
+  const pages = await helper.getPages(tableName, limit);
 
-    const meta = {
-        page,
-        pages,
-    };
+  const meta = {
+      page,
+      pages,
+  };
 
-    return {
-        data,
-        meta,
-        response: { message: `Successfully fetched data`, statusCode: 200 },
-    };
+  return {
+      data,
+      meta,
+      response: { message: `Successfully fetched data`, statusCode: 200 },
+  };
 }
+
+
+
 
 function formatDate(dateString: string) {
     const date = new Date(dateString);
@@ -48,10 +50,7 @@ function formatDate(dateString: string) {
   
   async function createRental(rentalData: any) {
     try {
-      
-    
-
-      const carAvailability = await db.query(
+        const carAvailability = await db.query(
         "SELECT '' FROM Rentals WHERE Cars_id = ? AND until > NOW()",
         [rentalData.Cars_id,rentalData.until]
       );

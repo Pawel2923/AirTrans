@@ -13,6 +13,8 @@ services:
       - ./db-dump:/db-dump
     networks:
       - backend
+    command: 
+      --secure-file-priv="/db-dump/"
     hostname: mysqldb
   api:
     depends_on:

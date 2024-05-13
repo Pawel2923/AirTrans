@@ -50,6 +50,7 @@
 .toast-btn {
     color: inherit !important;
     box-shadow: none !important;
+    text-wrap: nowrap;
 }
 
 .close {

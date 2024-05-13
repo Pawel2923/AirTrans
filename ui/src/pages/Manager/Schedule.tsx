@@ -3,17 +3,12 @@ import { useSearchParams } from "react-router-dom";
 import DeparturesTable from "../../components/DeparturesTable";
 import flightService from "../../services/flight.service";
 import airplaneService from "../../services/airplane.service";
-import {
-	Departures,
-	Flights,
-	PageData,
-	Airplanes,
-} from "../../assets/Data";
+import { Departures, Flights, PageData } from "../../assets/Data";
 import { arrDepDataParser, flightsDataParser } from "../../utils/data-parser";
 import Pagination from "../../components/Pagination";
 import Toast from "../../components/Toast";
 import { faCircleExclamation } from "@fortawesome/free-solid-svg-icons";
-import { useCreateFlight } from "../../hooks/use-flight";
+import { useCreateFlight } from "../../hooks/flight/useCreateFlight";
 
 const emptyFlight: Flights = {
 	id: "",
@@ -29,7 +24,7 @@ const Schedule = () => {
 	const [searchParams] = useSearchParams();
 	const [flights, setFlights] = useState<Departures[]>([]);
 	const [refreshData, setRefreshData] = useState<boolean>(false);
-	const [airplaneData, setAirplaneData] = useState<Airplanes[]>([]);
+	const [serialNumbers, setSerialNumbers] = useState<string[]>([]);
 	const [pageData, setPageData] = useState<PageData>({
 		page: parseInt(searchParams.get("page") || "1"),
 		pages: 1,
@@ -51,9 +46,9 @@ const Schedule = () => {
 	}, [pageData.page, refreshData]);
 
 	useEffect(() => {
-		airplaneService.getAll().then((response) => {
+		airplaneService.getSerialNumbers().then((response) => {
 			if (response.status === 200) {
-				setAirplaneData(response.data.data);
+				setSerialNumbers(response.data.data);
 			}
 		});
 	}, []);
@@ -212,12 +207,9 @@ const Schedule = () => {
 						<option value="" hidden>
 							Wybierz samolot
 						</option>
-						{airplaneData.map((airplane: Airplanes) => (
-							<option
-								key={airplane.serial_no}
-								value={airplane.serial_no}
-							>
-								{airplane.serial_no}
+						{serialNumbers.map((serial_no: string) => (
+							<option key={serial_no} value={serial_no}>
+								{serial_no}
 							</option>
 						))}
 					</select>

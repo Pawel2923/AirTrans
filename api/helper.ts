@@ -36,7 +36,67 @@ function checkObject(obj: object, objectProperties: string[]) {
 	}
 }
 
-function buildQuery(tableName: string, offset: number, limit: number, filter?: string, sort?: string, search?: { query: string; queryParams: any[] }) {
+function buildFilterQuery(filter: string) {
+	let query = " WHERE";
+	const queryParams: any[] = [];
+
+	const parsedFilter = JSON.parse(filter) as {
+		by: string;
+		value: string;
+		operator?: string;
+	}[];
+
+	parsedFilter.forEach((condition) => {
+		if (condition.by && condition.value) {
+			query += ` ?? ${db.getOperator(condition.operator)} ? AND`;
+			queryParams.push(condition.by, condition.value);
+		}
+	});
+
+	query = query.slice(0, -4); // Remove the last "AND" from the query
+
+	return { query, queryParams };
+}
+
+function buildSortQuery(sort: string) {
+	const parsedSort = JSON.parse(sort) as { by: string; order?: string };
+
+	let query = " ORDER BY ??";
+	const queryParams: any[] = [parsedSort.by];
+
+	if (Array.isArray(parsedSort.by)) {
+		parsedSort.by.forEach((sortBy, index) => {
+			if (index === 0) {
+				query += " ORDER BY ??";
+			} else {
+				query += " ??";
+			}
+			queryParams.push(sortBy);
+			if (parsedSort.order && index === parsedSort.by.length - 1) {
+				query += ` ${parsedSort.order}`;
+			}
+			query += ",";
+		});
+		query = query.slice(0, -1); // Remove the last comma from the query
+	} else if (parsedSort.by) {
+		query += " ORDER BY ??";
+		queryParams.push(parsedSort.by);
+		if (parsedSort.order) {
+			query += ` ${parsedSort.order}`;
+		}
+	}
+
+	return { query, queryParams };
+}
+
+function buildQuery(
+	tableName: string,
+	offset: number,
+	limit: number,
+	filter?: string,
+	sort?: string,
+	search?: { query: string; queryParams: any[] }
+) {
 	let query = "SELECT * FROM ??" + (search ? search.query : "");
 	const queryParams: any[] = [tableName];
 
@@ -47,48 +107,19 @@ function buildQuery(tableName: string, offset: number, limit: number, filter?: s
 	}
 
 	if (filter) {
-		const parsedFilter = JSON.parse(filter) as { by: string; value: string; operator?: string }[]
-
-		if (parsedFilter && parsedFilter.length > 0) {
-			if (!search) {
-				query += " WHERE";
-			} else {
-				query += " AND";
-			}
-			parsedFilter.forEach((condition) => {
-				if (condition.by && condition.value) {
-					query += ` ?? ${db.getOperator(condition.operator)} ? AND`;
-					queryParams.push(condition.by, condition.value);
-				}
-			});
-			query = query.slice(0, -4); // Remove the last "AND" from the query
-		}
+		const filterQuery = buildFilterQuery(filter);
+		query += filterQuery.query;
+		filterQuery.queryParams.forEach((param) => {
+			queryParams.push(param);
+		});
 	}
 
 	if (sort) {
-		const parsedSort = JSON.parse(sort) as { by: string | string[]; order?: string };
-
-		if (Array.isArray(parsedSort.by)) {
-			parsedSort.by.forEach((sortBy, index) => {
-				if (index === 0) {
-					query += " ORDER BY ??";
-				} else {
-					query += " ??";
-				}
-				queryParams.push(sortBy);
-				if (parsedSort.order && index === parsedSort.by.length - 1) {
-					query += ` ${parsedSort.order}`;
-				}
-				query += ",";
-			});
-			query = query.slice(0, -1); // Remove the last comma from the query
-		} else if (parsedSort.by) {
-			query += " ORDER BY ??";
-			queryParams.push(parsedSort.by);
-			if (parsedSort.order) {
-				query += ` ${parsedSort.order}`;
-			}
-		}
+		const sortQuery = buildSortQuery(sort);
+		query += sortQuery.query;
+		sortQuery.queryParams.forEach((param) => {
+			queryParams.push(param);
+		});
 	}
 
 	query += " LIMIT ?,?";
@@ -102,5 +133,7 @@ export default {
 	getPages,
 	emptyOrRows,
 	checkObject,
+	buildFilterQuery,
+	buildSortQuery,
 	buildQuery,
 };

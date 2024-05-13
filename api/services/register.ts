@@ -2,17 +2,11 @@ import db from "./db";
 import bcrypt from "bcryptjs";
 import helper from "../helper";
 import { ResultSetHeader } from "mysql2";
-import { Err } from "../Types";
+import { Err, Users } from "../Types";
 
-async function registerClient(
-	firstName: string,
-	lastName: string,
-	login: string,
-	password: string,
-	email: string
-) {
-	const checkQuery = "SELECT '' FROM Client WHERE Email = ?";
-	let checkResult = await db.query(checkQuery, [email]);
+async function registerClient(user: Users) {
+	const checkQuery = "SELECT '' FROM Users WHERE email = ?";
+	let checkResult = await db.query(checkQuery, [user.email]);
 	checkResult = helper.emptyOrRows(checkResult);
 
 	if (checkResult.length > 0) {
@@ -21,16 +15,15 @@ async function registerClient(
 
 	const salt = await bcrypt.genSalt(10); //tu tworzy sol
 
-	const hashedPassword = await bcrypt.hash(password, salt); // tu hasuje
+	const hashedPassword = await bcrypt.hash(user.password, salt); // tu hasuje
 
 	const insertQuery =
-		"INSERT INTO Client (First_name, Last_name, Login, Password, Email, Salt) VALUES (?, ?, ?, ?, ?, ?)";
+		"INSERT INTO Users (first_name, last_name, password, email, salt) VALUES (?, ?, ?, ?, ?)";
 	let insertResult = await db.query(insertQuery, [
-		firstName,
-		lastName,
-		login,
+		user.first_name ? user.first_name : null,
+		user.last_name ? user.last_name : null,
 		hashedPassword,
-		email,
+		user.email,
 		salt, //zapis soli
 	]);
 	insertResult = insertResult as ResultSetHeader;

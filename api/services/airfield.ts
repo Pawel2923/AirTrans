@@ -1,94 +1,139 @@
 import db from "./db";
 import helper from "../helper";
+import config from "../config";
 import { Err, Airfield_info, Runways, Terminals, Taxiways } from "../Types";
 import { ResultSetHeader } from "mysql2";
 
-async function get(table_name?: string) {
-    if (table_name) {
-        if (table_name !== "Runways" && table_name !== "Terminals" && table_name !== "Taxiways") {
-            const error = new Err("Invalid table name");
-            error.statusCode = 400;
-            throw error;
-        }
+const tableNames = ["Runways", "Terminals", "Taxiways"];
 
-        const rows = await db.query("SELECT * FROM ??", [table_name]);
-        const data = helper.emptyOrRows(rows);
+const runwaysProperties = ["id", "length", "is_available"];
+const terminalsProperties = ["id", "is_available", "num_of_stations"];
+const taxiwaysProperties = ["id", "is_available"];
 
-        if (data.length === 0) {
-            const error = new Err("No data found");
-            error.statusCode = 404;
-            throw error;
-        }
+async function get(
+	table_name?: string,
+	page = 1,
+	limit = config.listPerPage,
+	filter?: string,
+	sort?: string
+) {
+	// Check if page and limit are valid
+	if (page < 1 || limit < 1) {
+		throw new Err("Invalid page or limit number", 400);
+	}
+	const offset = helper.getOffset(page, limit);
+	let data: any[] | Airfield_info = [];
 
-        return {
-            data,
-            message: `Successfully fetched ${table_name} info`,
-        };
-    }
+	if (table_name) {
+		if (!tableNames.includes(table_name)) {
+			throw new Err("Invalid table name", 400);
+		}
 
-    const runwayRows = await db.query(
-        "SELECT * FROM Runways"
-    );
-    const runwayData = helper.emptyOrRows(runwayRows) as Runways[];
+		const { query, queryParams } = helper.buildQuery(
+			table_name,
+			offset,
+			limit,
+			filter,
+			sort
+		);
 
-    const terminalRows = await db.query(
-        "SELECT * FROM Terminals"
-    );
-    const terminalData = helper.emptyOrRows(terminalRows) as Terminals[];
+		const rows = await db.query(query, queryParams);
+		data = helper.emptyOrRows(rows);
 
-    const taxiwayRows = await db.query(
-        "SELECT * FROM Taxiways"
-    );
-    const taxiwayData = helper.emptyOrRows(taxiwayRows) as Taxiways[];
+		if (data.length === 0) {
+			throw new Err("No data found", 400);
+		}
+	} else {
+		const runwayRows = await db.query(
+			"SELECT * FROM Runways LIMIT ? OFFSET ?",
+			[limit, offset]
+		);
+		const runwayData = helper.emptyOrRows(runwayRows) as Runways[];
 
-    if (runwayData.length === 0 && terminalData.length === 0 && taxiwayData.length === 0) {
-        const error = new Err("No airfield info found");
-        error.statusCode = 404;
-        throw error;
-    }
+		const terminalRows = await db.query(
+			"SELECT * FROM Terminals LIMIT ? OFFSET ?",
+			[limit, offset]
+		);
+		const terminalData = helper.emptyOrRows(terminalRows) as Terminals[];
 
-    const airfieldInfo: Airfield_info = {
-        name: "Airport",
-        runways: runwayData,
-        terminals: terminalData,
-        taxiways: taxiwayData,
-    };
+		const taxiwayRows = await db.query(
+			"SELECT * FROM Taxiways LIMIT ? OFFSET ?",
+			[limit, offset]
+		);
+		const taxiwayData = helper.emptyOrRows(taxiwayRows) as Taxiways[];
 
-    return {
-        data: airfieldInfo,
-        message: "Successfully fetched airfield info",
-    };
-};
+		if (
+			runwayData.length === 0 &&
+			terminalData.length === 0 &&
+			taxiwayData.length === 0
+		) {
+			throw new Err("No airfield info found", 400);
+		}
 
-async function update(table_name: string, id: string, newData: Runways | Terminals | Taxiways) {
-    if (table_name !== "Runways" && table_name !== "Terminals" && table_name !== "Taxiways") {
-        const error = new Err("Invalid table name");
-        error.statusCode = 400;
-        throw error;
-    }
+		const airfieldInfo: Airfield_info = {
+			name: "Airport",
+			runways: runwayData,
+			terminals: terminalData,
+			taxiways: taxiwayData,
+		};
 
-    const checkId = await db.query("SELECT '' FROM ?? WHERE id=?", [table_name, id]);
-    const checkIdData = helper.emptyOrRows(checkId);
-    if (checkIdData.length === 0) {
-        const error = new Err(`${table_name} not found`);
-        error.statusCode = 404;
-        throw error;
-    }
+		data = airfieldInfo;
+	}
 
-    let result = await db.query("UPDATE ?? SET ? WHERE id=?", [table_name, newData, id]);
-    result = result as ResultSetHeader;
+	return {
+		data,
+		message: `Successfully fetched airfield info`,
+	};
+}
 
-    if (result.affectedRows === 0) {
-        throw new Err(`${table_name} could not be updated`);
-    }
+async function update(
+	table_name: string,
+	id: string,
+	newData: Runways | Terminals | Taxiways
+) {
+	if (!tableNames.includes(table_name)) {
+		throw new Err("Invalid table name", 400);
+	}
 
-    return {
-        data: newData,
-        message: `${table_name} updated successfully`,
-    };
+	if (table_name === "Runways") {
+		helper.checkObject(newData, runwaysProperties);
+	} else if (table_name === "Terminals") {
+		helper.checkObject(newData, terminalsProperties);
+	} else {
+		helper.checkObject(newData, taxiwaysProperties);
+	}
+
+	if (newData.id != id) {
+		throw new Err("Ids don't match", 400);
+	}
+
+	const checkId = await db.query("SELECT '' FROM ?? WHERE id=?", [
+		table_name,
+		id,
+	]);
+	const checkIdData = helper.emptyOrRows(checkId);
+	if (checkIdData.length === 0) {
+		throw new Err(`${table_name} not found`, 404);
+	}
+
+	let result = await db.query("UPDATE ?? SET ? WHERE id=?", [
+		table_name,
+		newData,
+		id,
+	]);
+	result = result as ResultSetHeader;
+
+	if (result.affectedRows === 0) {
+		throw new Err(`${table_name} could not be updated`);
+	}
+
+	return {
+		data: newData,
+		message: `${table_name} updated successfully`,
+	};
 }
 
 export default {
-    get,
-    update,
+	get,
+	update,
 };

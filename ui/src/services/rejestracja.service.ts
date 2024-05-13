@@ -1,15 +1,8 @@
+import { Users } from "../assets/Data";
 import http from "../http-common";
 
-interface Client {
-    Email: string;
-    Password: string;
-    First_name: string;
-    Last_name: string;
-    Login: string;
-}
-
 class RejestracjaService {
-    create = (data: Client) => {
+    create = (data: Users) => {
         return http.post("/register", data);
     }
 }

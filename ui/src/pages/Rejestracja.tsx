@@ -17,7 +17,6 @@ const Rejestracja = () => {
   const [repeatPassword, setRepeatPassword] = useState("");
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
-  const [login, setLogin] = useState("");
   const [isFormInvalid, setIsFormInvalid] = useState(true);
 
   const emailInputHandler =  (ev: React.ChangeEvent<HTMLInputElement>) => {
@@ -40,17 +39,12 @@ const Rejestracja = () => {
     setLastName(ev.target.value);
   };
 
-  const loginInputHandler = (ev:React.ChangeEvent<HTMLInputElement>) => {
-    setLogin(ev.target.value);
-  };
-
   const resetForm = () => {
     setEmail("");
     setPassword("");
     setRepeatPassword("");
     setFirstName("");
     setLastName("");
-    setLogin("");
     setIsFormInvalid(false);
   };
 
@@ -68,24 +62,13 @@ const Rejestracja = () => {
         console.error("Hasła nie są identyczne");
         alert("Hasła nie są identyczne");
         return;
-      }
-  
-      if (login === "") {
-        console.error("Login nie może być pusty");
-        alert("Login nie może być pusty");
-        return;
-      }
-      
-     
-      
-      
+      }      
   
       const response = await rejestracjaService.create({
-        Email: email,
-        Password: password, 
-        First_name: firstName,
-        Last_name: lastName,
-        Login: login,
+        email,
+        password,
+        first_name: firstName,
+        last_name: lastName,
       });
   
       if (response.status === 201) {
@@ -172,20 +155,6 @@ const Rejestracja = () => {
           required
         />
       </label>
-        <label>
-            <p>Login*</p>
-            <Input
-            type="text"
-            id="login"
-            value={login}
-            minLength={3}
-            onInput={loginInputHandler}
-            validateInput={isEmpty}
-            setIsFormInvalid={setIsFormInvalid}
-            required
-            />
-        </label>
-        
       <button type="submit">Zarejestruj się</button>
       <p>
         Masz już konto? <Link to="/logowanie">Zaloguj się</Link>

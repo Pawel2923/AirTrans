@@ -1,12 +1,20 @@
 import express from "express";
-import { verifyUser } from "../middlewares/verifyUser";
+import { requireRole, verifyUser } from "../middlewares/verifyUser";
 const router = express.Router();
 
 /**
  * @openapi
  * /authenticate:
  *  get:
+ *   tags: 
+ *    - Authentication
  *   description: Check if user is authenticated
+ *   parameters:
+ *    - name: requiredRole
+ *      in: query
+ *      required: false
+ *      description: Required user role
+ *      type: string
  *   responses:
  *    200:
  *     description: Successfully authenticated
@@ -22,18 +30,20 @@ const router = express.Router();
  *          type: object
  *          description: User data
  *          properties:
- *           Id:
+ *           email:
  *            type: string
- *            description: User ID
- *           Login:
+ *            description: Logged in user email
+ *           role:
  *            type: string
- *            description: User login
+ *            description: Logged in user role
  *    401:
  *     description: Unauthorized
+ *    403:
+ *     description: Forbidden
  *    500:
  *     description: Internal server error
  */
-router.get("/", verifyUser, (req, res, next) => {
+router.get("/", verifyUser, requireRole, (req, res, next) => {
 	try {
         res.status(200).json({ auth: true, user: req.user });
 	} catch (error) {

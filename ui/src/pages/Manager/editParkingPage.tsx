@@ -4,7 +4,7 @@ import parkingService from "../../services/parking.service";
 import { ParkingReservations } from "../../assets/Data";
 
 const emptyParking: ParkingReservations = {
-    id: 0,
+    pid: 0,
     Users_uid: 0,
     since: "",
     until: "",
@@ -58,7 +58,7 @@ return(
                 Client ID:
                 <input
                 type="number"
-                name="Client_id"
+                name="Users_uid"
                 placeholder="Client ID"
                 value={parking.Users_uid}
                 onChange={inputChangeHandler}
@@ -68,7 +68,7 @@ return(
                 Since:
                 <input
                 type="datetime-local"
-                name="Since"
+                name="since"
                 placeholder="Since"
                 value={parking.since.toString()}
                 onChange={inputChangeHandler}
@@ -78,7 +78,7 @@ return(
                 Until:
                 <input
                 type="datetime-local"
-                name="Until"
+                name="until"
                 placeholder="Until"
                 value={parking.until.toString()}
                 onChange={inputChangeHandler}
@@ -88,7 +88,7 @@ return(
                 Parking Level:
                 <input
                 type="text"
-                name="Parking_level"
+                name="parking_level"
                 placeholder="Parking level"
                 value={parking.parking_level}
                 onChange={inputChangeHandler}
@@ -98,7 +98,7 @@ return(
                 Space ID:
                 <input
                 type="number"
-                name="Space_id"
+                name="space_id"
                 placeholder="Space ID"
                 value={parking.space_id}
                 onChange={inputChangeHandler}
@@ -108,7 +108,7 @@ return(
                 License Plate:
                 <input
                 type="text"
-                name="License_plate"
+                name="license_plate"
                 placeholder="License plate"
                 value={parking.license_plate}
                 onChange={inputChangeHandler}

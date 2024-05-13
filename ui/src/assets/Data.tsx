@@ -69,7 +69,7 @@ interface Terminals {
 	id?: number;
 	is_available: boolean;
 	num_of_stations: number;
-	status?: "CLOSED" | "OPEN" | "EMPTY" | "FULL";
+	status?: "CLOSED" | "OCCUPIED" | "EMPTY" | "FULL";
 	Flight_id?: string;
 }
 
@@ -106,6 +106,27 @@ interface Users {
 	birth_date?: string;
 	user_img?: number;
 	salt?: string;
+}
+
+interface UserInfo {
+	uid?: number;
+	email: string;
+	first_name?: string;
+	last_name?: string;
+	phone_number?: string;
+	address?: string;
+	gender?: 'M' | 'F';
+	birth_date?: string;
+	create_time?: string;
+	user_img?: number;
+	role?: string;
+}
+
+interface User {
+    exp: number;
+    iat: number;
+    email: string;
+    role: string;
 }
 
 interface Employees {
@@ -230,6 +251,15 @@ interface Sort {
     order?: string;
 }
 
+interface Err extends Error {
+	response: {
+		status: number;
+		data: {
+			message: string;
+		};
+	};
+}
+
 export type {
 	Flights,
 	Departures,
@@ -249,11 +279,14 @@ export type {
 	Luggage,
 	Equipment,
 	Users,
+	UserInfo,
+	User,
 	Gates,
 	AirfieldInfo,
 	Taxiways,
 	Terminals,
 	Runways,
 	FlightData,
-	Employees
+	Employees,
+	Err
 };

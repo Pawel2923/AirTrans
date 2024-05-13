@@ -5,7 +5,7 @@ import { Flights } from "../../assets/Data";
 import { flightsDataParser } from "../../utils/data-parser";
 import Breadcrumb, { BreadcrumbItem } from "../../components/Breadcrumb";
 import ConfirmModal from "../../components/Modals/ConfirmModal";
-import { useDeleteFlight } from "../../hooks/use-flight";
+import { useDeleteFlight } from "../../hooks/flight/useDeleteFlight";
 
 const ScheduleDetails = () => {
 	const { id } = useParams<{ id: string }>();
@@ -59,16 +59,17 @@ const ScheduleDetails = () => {
 			>
 				Usuń
 			</button>
-			<ConfirmModal
-				open={openConfirm}
-				onClose={() => setOpenConfirm(false)}
-				onConfirm={() => {
-					deleteFlight(id || "null");
-					setOpenConfirm(false);
-				}}
-				title="Potwierdź usunięcie"
-				message="Czy na pewno chcesz usunąć lot?"
-			/>
+			{openConfirm && (
+				<ConfirmModal
+					onClose={() => setOpenConfirm(false)}
+					onConfirm={() => {
+						deleteFlight(id || "null");
+						setOpenConfirm(false);
+					}}
+					title="Potwierdź usunięcie"
+					message="Czy na pewno chcesz usunąć lot?"
+				/>
+			)}
 			{alert}
 			{toast}
 		</>

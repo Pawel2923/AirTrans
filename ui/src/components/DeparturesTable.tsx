@@ -10,7 +10,7 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import tableStyles from "./DeparturesTable.module.css";
 import { Departures } from "../assets/Data";
-import { useDeleteFlight } from "../hooks/use-flight";
+import { useDeleteFlight } from "../hooks/flight/useDeleteFlight";
 import ConfirmModal from "./Modals/ConfirmModal";
 
 interface TableProps {
@@ -203,16 +203,17 @@ const DeparturesTable: React.FC<TableProps> = ({
 					)}
 				</tbody>
 			</table>
-			<ConfirmModal
-				open={deleteId !== ""}
-				onClose={() => setDeleteId("")}
-				onConfirm={() => {
-					deleteFlight(deleteId);
-					setDeleteId("");
-				}}
-				title="Potwierdź usunięcie"
-				message="Czy na pewno chcesz usunąć lot?"
-			/>
+			{deleteId !== "" && (
+				<ConfirmModal
+					onClose={() => setDeleteId("")}
+					onConfirm={() => {
+						deleteFlight(deleteId);
+						setDeleteId("");
+					}}
+					title="Potwierdź usunięcie"
+					message="Czy na pewno chcesz usunąć lot?"
+				/>
+			)}
 			{toast}
 		</>
 	);

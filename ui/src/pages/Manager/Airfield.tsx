@@ -50,70 +50,99 @@ const Airfield = () => {
 		<>
 			<h2>Informacje lotniska</h2>
 			<h3>Terminale</h3>
-			{terminalData.map((terminal) => (
-				<div className="card" key={terminal.id}>
-					<div className="card-body">
-						<h5 className="card-title">{terminal.id}</h5>
-						<h6 className="card-subtitle mb-2 text-body-secondary">
-							{terminal.is_available ? "Dostępny" : "Niedostępny"}
-						</h6>
-						<p>{terminal.status}</p>
-						{terminal.status !== "EMPTY" &&
-							terminal.status !== "CLOSED" && (
-								<p>Lot: {terminal.Flight_id}</p>
-							)}
-						<Link
-							to={`terminal/${terminal.id}/edytuj`}
-							className="btn btn-primary"
-						>
-							AKTUALIZUJ <FontAwesomeIcon icon={faPenToSquare} />
-						</Link>
-					</div>
+			<div className="container-fluid px-0">
+				<div className="row gy-3">
+					{terminalData.map((terminal) => (
+						<div className="col-md-6" key={terminal.id}>
+							<div className="card">
+								<div className="card-body">
+									<h5 className="card-title">
+										{terminal.id}
+									</h5>
+									<h6 className="card-subtitle mb-2 text-body-secondary">
+										{terminal.is_available
+											? "Dostępny"
+											: "Niedostępny"}
+									</h6>
+									<p>{terminal.status}</p>
+									{terminal.status !== "EMPTY" &&
+										terminal.status !== "CLOSED" && (
+											<p>Lot: {terminal.Flight_id}</p>
+										)}
+									<Link
+										to={`terminal/${terminal.id}/edytuj`}
+										className="btn btn-primary"
+									>
+										AKTUALIZUJ{" "}
+										<FontAwesomeIcon icon={faPenToSquare} />
+									</Link>
+								</div>
+							</div>
+						</div>
+					))}
 				</div>
-			))}
+			</div>
 			<h3>Drogi kołowania</h3>
-			{taxiwayData.map((taxiway) => (
-				<div className="card" key={taxiway.id}>
-					<div className="card-body">
-						<h5 className="card-title">{taxiway.id}</h5>
-						<h6 className="card-subtitle mb-2 text-body-secondary">
-							{taxiway.is_available ? "Dostępny" : "Niedostępny"}
-						</h6>
-						<p>{taxiway.status}</p>
-						{taxiway.status === "OCCUPIED" && (
-							<p>Lot: {taxiway.Flight_id}</p>
-						)}
-						<Link
-							to={`droga-kolowania/${taxiway.id}/edytuj`}
-							className="btn btn-primary"
-						>
-							AKTUALIZUJ <FontAwesomeIcon icon={faPenToSquare} />
-						</Link>
-					</div>
+			<div className="container-fluid px-0">
+				<div className="row gy-3">
+					{taxiwayData.map((taxiway) => (
+						<div className="col-md-6" key={taxiway.id}>
+							<div className="card">
+								<div className="card-body">
+									<h5 className="card-title">{taxiway.id}</h5>
+									<h6 className="card-subtitle mb-2 text-body-secondary">
+										{taxiway.is_available
+											? "Dostępny"
+											: "Niedostępny"}
+									</h6>
+									<p>{taxiway.status}</p>
+									{taxiway.status === "OCCUPIED" && (
+										<p>Lot: {taxiway.Flight_id}</p>
+									)}
+									<Link
+										to={`droga-kolowania/${taxiway.id}/edytuj`}
+										className="btn btn-primary"
+									>
+										AKTUALIZUJ{" "}
+										<FontAwesomeIcon icon={faPenToSquare} />
+									</Link>
+								</div>
+							</div>
+						</div>
+					))}
 				</div>
-			))}
+			</div>
 			<h3>Pasy startowe</h3>
-			{runwayData.map((runway) => (
-				<div className="card" key={runway.id}>
-					<div className="card-body">
-						<h5 className="card-title">{runway.id}</h5>
-						<h6 className="card-subtitle mb-2 text-body-secondary">
-							{runway.is_available ? "Dostępny" : "Niedostępny"}
-						</h6>
-						<p>{runway.status}</p>
-						<p>Długość pasa: {runway.length}</p>
-						{runway.status === "OCCUPIED" && (
-							<p>Lot: {runway.Flight_id}</p>
-						)}
-						<Link
-							to={`pas-startowy/${runway.id}/edytuj`}
-							className="btn btn-primary"
-						>
-							AKTUALIZUJ <FontAwesomeIcon icon={faPenToSquare} />
-						</Link>
-					</div>
+			<div className="container-fluid px-0">
+				<div className="row gy-3">
+					{runwayData.map((runway) => (
+						<div className="col-md-6" key={runway.id}>
+							<div className="card">
+								<div className="card-body">
+									<h5 className="card-title">{runway.id}</h5>
+									<h6 className="card-subtitle mb-2 text-body-secondary">
+										{runway.is_available
+											? "Dostępny"
+											: "Niedostępny"}
+									</h6>
+									<p>{runway.status}</p>
+									<p>Długość pasa: {runway.length}</p>
+									{runway.status === "OCCUPIED" && (
+										<p>Lot: {runway.Flight_id}</p>
+									)}
+									<Link
+										to={`pas-startowy/${runway.id}/edytuj`}
+										className="btn btn-primary"
+									>
+										AKTUALIZUJ{" "}
+										<FontAwesomeIcon icon={faPenToSquare} />
+									</Link>
+								</div>
+							</div>
+						</div>
+					))}
 				</div>
-			))}
+			</div>
 			{toast}
 		</>
 	);

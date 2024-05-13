@@ -103,8 +103,8 @@ async function update(
 		helper.checkObject(newData, taxiwaysProperties);
 	}
 
-	if (newData.id !== id) {
-		throw new Err("Id does not match", 400);
+	if (newData.id != id) {
+		throw new Err("Ids don't match", 400);
 	}
 
 	const checkId = await db.query("SELECT '' FROM ?? WHERE id=?", [

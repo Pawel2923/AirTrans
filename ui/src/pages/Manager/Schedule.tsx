@@ -8,7 +8,7 @@ import { arrDepDataParser, flightsDataParser } from "../../utils/data-parser";
 import Pagination from "../../components/Pagination";
 import Toast from "../../components/Toast";
 import { faCircleExclamation } from "@fortawesome/free-solid-svg-icons";
-import { useCreateFlight } from "../../hooks/use-flight";
+import { useCreateFlight } from "../../hooks/flight/useCreateFlight";
 
 const emptyFlight: Flights = {
 	id: "",

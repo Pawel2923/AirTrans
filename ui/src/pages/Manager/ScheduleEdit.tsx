@@ -5,7 +5,7 @@ import airplaneService from "../../services/airplane.service";
 import { Flights } from "../../assets/Data";
 import { flightsDataParser } from "../../utils/data-parser";
 import Breadcrumb, { BreadcrumbItem } from "../../components/Breadcrumb";
-import { useUpdateFlight } from "../../hooks/use-flight";
+import useUpdateFlight from "../../hooks/flight/useUpdateFlight";
 import Toast from "../../components/Toast";
 import { faCircleExclamation } from "@fortawesome/free-solid-svg-icons";
 

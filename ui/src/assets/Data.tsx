@@ -237,6 +237,15 @@ interface Sort {
     order?: string;
 }
 
+interface Err extends Error {
+	response: {
+		status: number;
+		data: {
+			message: string;
+		};
+	};
+}
+
 export type {
 	Flights,
 	Departures,
@@ -263,5 +272,6 @@ export type {
 	Terminals,
 	Runways,
 	FlightData,
-	Employees
+	Employees,
+	Err
 };

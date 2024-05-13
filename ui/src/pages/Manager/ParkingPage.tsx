@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import parkingService from "../../services/parking.service";
 import TableParking from "../../components/tableParking";
 
@@ -25,7 +25,7 @@ const Parking = () => {
 		license_plate: "",
 	});
 
-	const retrieveParkings = () => {
+	const retrieveParkings = useCallback(() => {
 		parkingService
 			.getAllParking(pageData.page, 5)
 			.then((response) => {
@@ -35,11 +35,11 @@ const Parking = () => {
 			.catch((error) => {
 				console.log("Error while retrieving parkings:", error);
 			});
-	};
+	}, [pageData.page]);
 
 	useEffect(() => {
 		retrieveParkings();
-	}, [pageData.page]);
+	}, [pageData.page, retrieveParkings]);
 
 	const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
 		const { name, value } = event.target;

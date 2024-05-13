@@ -1,231 +1,82 @@
 import { useEffect, useState } from "react";
-import { NavigateFunction, useNavigate, useParams } from "react-router-dom";
-import AlertModal from "../../components/Modals/AlertModal";
-import Toast from "../../components/Toast";
+import { useParams } from "react-router-dom";
 import Breadcrumb, { BreadcrumbItem } from "../../components/Breadcrumb";
-import flightService from "../../services/flight.service";
-import { faCircleCheck, faCircleExclamation } from "@fortawesome/free-solid-svg-icons";
-import { Runways, Taxiways, Terminals } from "../../assets/Data";
-import airfieldService from "../../services/airfield.service";
+import { faCircleExclamation } from "@fortawesome/free-solid-svg-icons";
+import useGetFlight from "../../hooks/flight/useGetFlight";
+import useGetAirfield from "../../hooks/airfield/useGetAirfield";
+import useToast from "../../hooks/useToast";
+import useUpdateAirfield from "../../hooks/airfield/useUpdateAirfield";
 
-interface Err extends Error {
-	response: {
-		status: number;
-		data: {
-			message: string;
-		};
-	};
-}
-
-const tableServiceMap = {
-	terminal: "Terminals",
-	"droga-kolowania": "Taxiways",
-	"pas-startowy": "Runways",
-};
-
-const isRunways = (
-	data: Runways[] | Taxiways[] | Terminals[]
-): data is Runways[] => {
-	return (data as Runways[])[0]?.length !== undefined;
-};
-
-const statusOptions = [
-	"EMPTY",
-	"OCCUPIED",
-	"CLOSED",
-	"READY",
-	"FULL",
-	undefined,
-];
-
-const handleError = (
-	error: Err,
-	navigate: NavigateFunction,
-	setAlert: React.Dispatch<React.SetStateAction<typeof AlertModal | null>>,
-	setToast: React.Dispatch<React.SetStateAction<typeof Toast | null>>
-) => {
-	if (!error.response) {
-		setAlert(() => (
-			<AlertModal
-				open={true}
-				title="Błąd"
-				message="Wystąpił błąd podczas pobierania informacji"
-				onClose={() => {
-					setAlert(null);
-					navigate("/zarzadzanie/lotnisko");
-				}}
-			/>
-		));
-		return;
-	}
-
-	if (error.response.status === 400 || error.response.status === 404) {
-		setToast(() => (
-			<Toast
-				type="danger"
-				message={
-					error.response.status === 400
-						? "Niepoprawne dane"
-						: "Nie znaleziono informacji"
-				}
-				icon={faCircleExclamation}
-				timeout={10000}
-				action={{
-					label: "Spróbuj ponownie",
-					onClick: () => {
-						setToast(null);
-						navigate(0);
-					},
-				}}
-				onClose={() => {
-					setToast(null);
-				}}
-			/>
-		));
-	} else {
-		setAlert(() => (
-			<AlertModal
-				open={true}
-				title="Błąd"
-				message="Wystąpił błąd podczas pobierania informacji o terminalach"
-				onClose={() => {
-					setAlert(null);
-					navigate("/zarzadzanie/lotnisko");
-				}}
-			/>
-		));
-	}
-};
+type Status = "EMPTY" | "OCCUPIED" | "CLOSED" | "READY" | "FULL";
 
 const AirfieldEdit = () => {
-	const navigate = useNavigate();
 	const { table, id } = useParams();
-	const [alert, setAlert] = useState<typeof AlertModal | null>(null);
-	const [toast, setToast] = useState<typeof Toast | null>(null);
-	const [data, setData] = useState<Runways[] | Taxiways[] | Terminals[]>([]);
-	const [flightIds, setFlightIds] = useState<string[]>([]);
-	const [status, setStatus] = useState<
-		"EMPTY" | "OCCUPIED" | "CLOSED" | "READY" | "FULL" | undefined
-	>("EMPTY");
+	const { toast, createToast } = useToast();
+	const { flightIds, getFlightIds } = useGetFlight();
+	const {
+		runwayData,
+		taxiwayData,
+		terminalData,
+		errorAlert: getErrorAlert,
+		errorToast: getErrorToast,
+		getAirfieldTable,
+	} = useGetAirfield();
+	const {
+		toast: updateToast,
+		errorToast: updateErrorToast,
+		errorAlert: updateErrorAlert,
+		updateAirfield,
+	} = useUpdateAirfield();
+
+	const [status, setStatus] = useState<Status>("CLOSED");
 	const [selectedFlightId, setSelectedFlightId] = useState<string>("");
-	const [runwayLength, setRunwayLength] = useState<number | undefined>(
-		undefined
-	);
+	const [runwayLength, setRunwayLength] = useState<number>(3000);
+	const [numOfStations, setNumOfStations] = useState<number>(1);
 
-	// Check if table name and id are valid
-	useEffect(() => {
-		if (id === undefined || table === undefined) {
-			navigate("/zarzadzanie/lotnisko");
-		}
-
-		if (
-			table !== "terminal" &&
-			table !== "droga-kolowania" &&
-			table !== "pas-startowy"
-		) {
-			setAlert(() => (
-				<AlertModal
-					open={true}
-					title="Błąd"
-					message="Nieprawidłowa nazwa tabeli"
-					onClose={() => {
-						setAlert(null);
-						navigate("/zarzadzanie/lotnisko");
-					}}
-				/>
-			));
-		}
-	}, [table, id, navigate]);
+	const tableName = table === "droga-kolowania" ? "Taxiways" : table === "pas-startowy" ? "Runways" : "Terminals";
 
 	// Fetch data based on table name
 	useEffect(() => {
-		try {
-			if (!table) throw new Error("Table name is not defined");
+		getAirfieldTable(tableName, id as string);
+	}, [getAirfieldTable, id, tableName]);
 
-			const serviceName =
-				tableServiceMap[table as keyof typeof tableServiceMap];
-			if (serviceName) {
-				airfieldService
-					.getTable(serviceName, 1, id)
-					.then((response) => {
-						if (response.status === 200) {
-							setData(response.data.data);
-							setSelectedFlightId(
-								response.data.data[0].flight_id
-							);
-							setStatus(response.data.data[0].status);
-							if (isRunways(response.data.data)) {
-								setRunwayLength(response.data.data[0].length);
-							}
-						}
-					})
-					.catch((error) => {
-						throw error;
-					});
-			}
-		} catch (error: unknown) {
-			const err = error as Err;
-			handleError(err, navigate, setAlert, setToast);
+	// Set initial values
+	useEffect(() => {
+		switch (tableName) {
+			case "Terminals":
+				if (terminalData) {
+					setStatus(terminalData[0].status || "EMPTY");
+					setNumOfStations(terminalData[0].num_of_stations);
+					setSelectedFlightId(terminalData[0].Flight_id || "");
+				}
+				break;
+			case "Taxiways":
+				if (taxiwayData) {
+					setStatus(taxiwayData[0].status || "READY");
+					setSelectedFlightId(taxiwayData[0].Flight_id || "");
+				}
+				break;
+			case "Runways":
+				if (runwayData) {
+					setStatus(runwayData[0].status || "READY");
+					setRunwayLength(runwayData[0].length);
+					setSelectedFlightId(runwayData[0].Flight_id || "");
+				}
+				break;
+			default:
+				break;
 		}
-	}, [id, navigate, table]);
+	}, [runwayData, tableName, taxiwayData, terminalData]);
 
 	// Fetch flight ids if status is OCCUPIED
 	useEffect(() => {
 		if (status === "OCCUPIED") {
-			flightService
-				.getIds()
-				.then((response) => {
-					if (response.status === 200) {
-						setFlightIds(response.data.data);
-					}
-				})
-				.catch((error) => {
-					if (error.response.status === 404) {
-						setToast(() => (
-							<Toast
-								type="danger"
-								message="Nie znaleziono informacji o lotach"
-								icon={faCircleExclamation}
-								timeout={10000}
-								action={{
-									label: "Spróbuj ponownie",
-									onClick: () => {
-										setToast(null);
-										navigate(0);
-									},
-								}}
-								onClose={() => {
-									setToast(null);
-								}}
-							/>
-						));
-					} else {
-						setAlert(() => (
-							<AlertModal
-								open={true}
-								title="Błąd"
-								message="Wystąpił błąd podczas pobierania informacji o lotach"
-								onClose={() => {
-									setAlert(null);
-									navigate("/zarzadzanie/lotnisko");
-								}}
-							/>
-						));
-					}
-				});
+			getFlightIds();
 		}
-	}, [status, navigate]);
+	}, [getFlightIds, status]);
 
 	const selectChangeHandler = (e: React.ChangeEvent<HTMLSelectElement>) => {
-		setStatus(
-			e.target.value as
-				| "EMPTY"
-				| "OCCUPIED"
-				| "CLOSED"
-				| "READY"
-				| "FULL"
-				| undefined
-		);
+		setStatus(e.target.value as Status);
 	};
 
 	const flightIdChangeHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -238,103 +89,65 @@ const AirfieldEdit = () => {
 		setRunwayLength(parseInt(e.target.value));
 	};
 
-	const update = (newData: Runways | Taxiways | Terminals) => {
-		try {
-			if (!id) throw new Error("Id is not defined");
-
-			airfieldService
-				.update(
-					tableServiceMap[table as keyof typeof tableServiceMap],
-					newData,
-                    id
-				)
-				.then((response) => {
-					if (response.status === 200) {
-						setToast(() => (
-							<Toast
-								type="primary"
-                                icon={faCircleCheck}
-								message={`Zaktualizowano dane dla ${table} ${id}`}
-								onClose={() => {
-									setToast(null);
-								}}
-							/>
-						));
-					}
-				})
-				.catch((error) => {
-					throw error;
-				});
-		} catch (error) {
-			const err = error as Err;
-			handleError(err, navigate, setAlert, setToast);
-		}
+	const numOfStationsChangeHandler = (
+		e: React.ChangeEvent<HTMLInputElement>
+	) => {
+		setNumOfStations(parseInt(e.target.value));
 	};
 
 	const submitHandler = (e: React.FormEvent<HTMLFormElement>) => {
 		e.preventDefault();
 
-		if (!statusOptions.includes(status)) {
-			setToast(() => (
-				<Toast
-					type="danger"
-					message="Niepoprawny status"
-					icon={faCircleExclamation}
-					onClose={() => {
-						setToast(null);
-					}}
-				/>
-			));
+		if (!id) {
+			createToast("Id is not defined", "danger", faCircleExclamation);
 			return;
 		}
 
-		const newData = data;
+		let newData = [];
+
+		switch (tableName) {
+			case "Terminals":
+				newData = terminalData || [];
+				if (numOfStations > 0) {
+					newData[0].num_of_stations = numOfStations;
+				}
+				break;
+			case "Taxiways":
+				newData = taxiwayData || [];
+				break;
+			case "Runways":
+				newData = runwayData || [];
+				if (runwayLength > 0) {
+					newData[0].length = runwayLength;
+				}
+				break;
+			default:
+				return;
+		}
 
 		if (status === "OCCUPIED" || status === "FULL") {
-			if (!flightIds.includes(selectedFlightId)) {
-				setToast(() => (
-					<Toast
-						type="danger"
-						message="Wprowadź istniejący numer lotu"
-						icon={faCircleExclamation}
-						onClose={() => {
-							setToast(null);
-						}}
-					/>
-				));
+			if (!flightIds.includes(selectedFlightId as string)) {
+				createToast(
+					"Wprowadź istniejący numer lotu",
+					"danger",
+					faCircleExclamation
+				);
 				return;
 			}
 
 			newData[0].Flight_id = selectedFlightId;
-		} else {
-			newData[0].Flight_id = undefined;
 		}
 
-		if (status) {
-			newData[0].status = status;
-		}
-
-        if (isRunways(newData) && runwayLength) {
-            newData[0].length = runwayLength;
-        }
-
-		update(newData[0]);
+		updateAirfield(tableName as string, newData[0], id);
 	};
 
-    const title =
-    table === "terminal"
-        ? "Terminale"
-        : table === "droga-kolowania"
-        ? "Drogi kołowania"
-        : "Pasy startowe";
+	const title = tableName === "Terminals" ? "terminal" : tableName === "Taxiways" ? "drogę kołowania" : "pas startowy";
 
 	const breadcrumbs: BreadcrumbItem[] = [
 		{ path: "/zarzadzanie/lotnisko", title: "Lotnisko" },
-		{ path: `/zarzadzanie/lotnisko/${table}`, title: title },
-		{ path: `/zarzadzanie/lotnisko/${table}/${id}`, title: id as string },
 		{
 			path: `/zarzadzanie/lotnisko/${table}/${id}/edytuj`,
-			title: "Edytuj",
+			title: `Edytuj ${title}`,
 		},
 	];
 
@@ -343,13 +156,7 @@ const AirfieldEdit = () => {
 			<Breadcrumb items={breadcrumbs} />
 			<div>
 				<h2>
-					Edytuj{" "}
-					{table === "terminal"
-						? "terminal"
-						: table === "droga-kolowania"
-						? "drogę kołowania"
-						: "pas startowy"}{" "}
-					{id}
+					Edytuj {title} {id}
 				</h2>
 				<form onSubmit={submitHandler}>
 					<div className="form-group">
@@ -361,19 +168,38 @@ const AirfieldEdit = () => {
 							value={status}
 							onChange={selectChangeHandler}
 						>
-							<option value="EMPTY">EMPTY</option>
-							<option value="OCCUPIED">OCCUPIED</option>
-							<option value="CLOSED">CLOSED</option>
+							{tableName === "Terminals" && (
+								<>
+									<option value="EMPTY">EMPTY</option>
+									<option value="OCCUPIED">OCCUPIED</option>
+									<option value="CLOSED">CLOSED</option>
+									<option value="FULL">FULL</option>
+								</>
+							)}
+							{tableName === "Taxiways" && (
+								<>
+									<option value="READY">READY</option>
+									<option value="OCCUPIED">OCCUPIED</option>
+									<option value="CLOSED">CLOSED</option>
+								</>
+							)}
+							{tableName === "Runways" && (
+								<>
+									<option value="READY">READY</option>
+									<option value="OCCUPIED">OCCUPIED</option>
+									<option value="CLOSED">CLOSED</option>
+								</>
+							)}
 						</select>
 					</div>
 					{status === "OCCUPIED" && (
 						<div className="form-group">
-							<label htmlFor="flight_id">Numer lotu:</label>
+							<label htmlFor="Flight_id">Numer lotu:</label>
 							<input
 								className="form-control"
 								list="flightIdsOptions"
-								id="flight_id"
-								name="flight_id"
+								id="Flight_id"
+								name="Flight_id"
 								placeholder="Numer lotu"
 								value={selectedFlightId}
 								onChange={flightIdChangeHandler}
@@ -387,7 +213,7 @@ const AirfieldEdit = () => {
 							</datalist>
 						</div>
 					)}
-					{isRunways(data) && (
+					{runwayData && runwayData.length > 0 && (
 						<div className="form-group">
 							<label htmlFor="length">Długość:</label>
 							<input
@@ -400,13 +226,32 @@ const AirfieldEdit = () => {
 							/>
 						</div>
 					)}
+					{terminalData && terminalData.length > 0 && (
+						<div className="form-group">
+							<label htmlFor="num_of_stations">
+								Liczba miejsc:
+							</label>
+							<input
+								className="form-control"
+								type="number"
+								name="num_of_stations"
+								id="num_of_stations"
+								value={numOfStations}
+								onChange={numOfStationsChangeHandler}
+							/>
+						</div>
+					)}
 					<button className="btn btn-primary mt-3" type="submit">
 						Zapisz
 					</button>
 				</form>
 			</div>
-			{alert}
 			{toast}
+			{updateToast}
+			{getErrorAlert}
+			{getErrorToast}
+			{updateErrorAlert}
+			{updateErrorToast}
 		</>
 	);
 };

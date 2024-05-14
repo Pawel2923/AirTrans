@@ -9,6 +9,7 @@ const emptyAnnouncement: Announcements = {
     content: "",
     valid_until: "",
     Employee_id: 0,
+    
 };
 
 const EditOgloszeniaPage = () => {
@@ -23,7 +24,14 @@ const EditOgloszeniaPage = () => {
             try {
                 const response = await announcementService.getById(parseInt(id));
                 if (response.status === 200) {
-                    setAnnouncement(response.data.data[0]);
+                    const data = response.data.data;
+
+                    const formattedValidUntil = new Date(data.valid_until).toISOString().slice(0, 16);
+                    
+                    setAnnouncement({
+                        ...data,
+                        valid_until: formattedValidUntil,
+                    });
                 }
             } catch (error) {
                 console.error("Error while fetching announcement:", error);
@@ -48,18 +56,22 @@ const EditOgloszeniaPage = () => {
     };
 
     const inputChangeHandler = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+        const { name, value } = e.target;
+
+        // Handle null values appropriately for create_time
+        const updatedValue = name === "create_time" && value === "" ? null : value;
+
         setAnnouncement(prevAnnouncement => ({
             ...prevAnnouncement,
-            [e.target.name]: e.target.value,
+            [name]: updatedValue,
         }));
     };
 
     return (
         <div>
-            <h1>Edit Announcement</h1>
+            <h1>Edycja Ogłoszeń</h1>
             <form onSubmit={formSubmitHandler}>
                 <div className="form-group">
-
                     <label htmlFor="id">ID</label>
                     <input
                         type="number"
@@ -68,7 +80,7 @@ const EditOgloszeniaPage = () => {
                         value={announcement.id}
                         onChange={inputChangeHandler}
                     />
-                    <label htmlFor="title">Title</label>
+                    <label htmlFor="title">Tytuł</label>
                     <input
                         type="text"
                         name="title"
@@ -78,7 +90,7 @@ const EditOgloszeniaPage = () => {
                     />
                 </div>
                 <div className="form-group">
-                    <label htmlFor="content">Content</label>
+                    <label htmlFor="content">Treść</label>
                     <textarea
                         name="content"
                         className="form-control"
@@ -87,7 +99,7 @@ const EditOgloszeniaPage = () => {
                     ></textarea>
                 </div>
                 <div className="form-group">
-                    <label htmlFor="valid_until">Valid Until</label>
+                    <label htmlFor="valid_until">Ważne do</label>
                     <input
                         type="datetime-local"
                         name="valid_until"
@@ -97,7 +109,7 @@ const EditOgloszeniaPage = () => {
                     />
                 </div>
                 <div className="form-group">
-                    <label htmlFor="Employee_id">Employee ID</label>
+                    <label htmlFor="Employee_id">ID Pracownika</label>
                     <input
                         type="number"
                         name="Employee_id"

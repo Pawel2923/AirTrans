@@ -14,7 +14,7 @@ async function fetchClient(email: string, userInputPassword: string) {
 	}
 
 	//tu pobranie jest soli
-	const queryGetSalt = "SELECT Salt FROM Client WHERE Email = ?";
+	const queryGetSalt = "SELECT salt FROM Users WHERE email = ?";
 	let saltResult = await db.query(queryGetSalt, [email]);
 	saltResult = helper.emptyOrRows(saltResult) as RowDataPacket[];
 
@@ -24,14 +24,14 @@ async function fetchClient(email: string, userInputPassword: string) {
 		throw error;
 	}
 
-	const salt = saltResult[0].Salt;
+	const salt = saltResult[0].salt;
 
 	//tu haszujes haslo od uzytkowniak
 	const hashedPassword = await bcrypt.hash(userInputPassword, salt);
 
 	//tu sprawdza czy pasuje
 	const queryCheckUser =
-		"SELECT '' FROM Client WHERE Email = ? AND Password = ?";
+		"SELECT uid FROM Users WHERE email = ? AND password = ?";
 	const userExistsRows = await db.query(queryCheckUser, [
 		email,
 		hashedPassword,
@@ -44,7 +44,18 @@ async function fetchClient(email: string, userInputPassword: string) {
 		throw error;
 	}
 
-	return { response: { statusCode: 200 }, id: email };
+	//pobranie roli uzytkownika przy uzyciu endpointa employees
+	const queryGetRole = "SELECT role FROM Employees WHERE Users_uid = ?";
+	let roleResult = await db.query(queryGetRole, [userExistsData[0].uid]);
+	let userRole = helper.emptyOrRows(roleResult);
+
+	if (userRole.length === 0) {
+		userRole = [{ role: "client" }];
+		console.log(userRole);
+	}
+	console.log(userRole[0].role);
+
+	return { response: { statusCode: 200 }, email, userRole: userRole[0].role };
 }
 
 export default {

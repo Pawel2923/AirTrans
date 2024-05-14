@@ -1,17 +1,57 @@
 import express from "express";
 const router = express.Router();
 import airfieldService from "../services/airfield";
+import { Err } from "../Types";
 
 /**
  * @openapi
  * /airfield:
  *  get:
+ *   tags:
+ *    - Airfield
  *   description: Get all airfields
  *   parameters:
  *    - name: table_name
  *      in: query
  *      required: false
  *      description: Get specific table data
+ *      type: string
+ *    - name: page
+ *      in: query
+ *      required: false
+ *      description: Page number
+ *      type: integer
+ *    - name: limit
+ *      in: query
+ *      required: false
+ *      description: Limit number of airfields
+ *      type: integer
+ *    - name: filter
+ *      in: query
+ *      required: false
+ *      description: Filter by list of properties and values using operator
+ *      type: array
+ *      items:
+ *       type: object
+ *       properties:
+ *        by:
+ *         type: string
+ *        operator:
+ *         type: string
+ *        value:
+ *         type: string
+ *    - name: sort
+ *      in: query
+ *      required: false
+ *      description: Sort by properties and order
+ *      type: object
+ *      properties:
+ *       by:
+ *        type: string
+ *       order:
+ *        type: array
+ *        items:
+ *         type: string
  *   responses:
  *    200:
  *     description: Successfully fetched data
@@ -26,6 +66,8 @@ import airfieldService from "../services/airfield";
  *           $ref: '#/components/schemas/Airfield'
  *         message:
  *          type: string
+ *    400:
+ *     description: Invalid table name
  *    404:
  *     description: No airfield info found
  *    500:
@@ -33,9 +75,21 @@ import airfieldService from "../services/airfield";
  */
 router.get("/", async (req, res, next) => {
 	try {
-        const { table_name } = req.query;
+		let { table_name, page, limit, filter, sort } = req.query;
 
-		const { data, message } = await airfieldService.get(table_name as string | undefined);
+		table_name = table_name as string | undefined;
+		const parsedPage = page ? parseInt(page as string) : undefined;
+		const parsedLimit = limit ? parseInt(limit as string) : undefined;
+		filter = (filter as string) || undefined;
+		sort = (sort as string) || undefined;
+
+		const { data, message } = await airfieldService.get(
+			table_name,
+			parsedPage,
+			parsedLimit,
+			filter,
+			sort
+		);
 		res.status(200).json({ data, message });
 	} catch (error) {
 		next(error);
@@ -46,6 +100,8 @@ router.get("/", async (req, res, next) => {
  * @openapi
  * /airfield/{id}:
  *  put:
+ *   tags:
+ *    - Airfield
  *   description: Update airfield info
  *   parameters:
  *    - name: id
@@ -54,35 +110,58 @@ router.get("/", async (req, res, next) => {
  *      description: Airfield ID
  *      type: string
  *    - name: table_name
- *      in: body
+ *      in: query
  *      required: true
  *      description: Table name
  *      type: string
- *    - name: newData
- *      in: body
- *      required: true
- *      description: New data
- *      type: object
+ *   requestBody:
+ *    content:
+ *     application/json:
+ *      schema:
+ *       oneOf:
+ *        - $ref: '#/components/schemas/Runway'
+ *        - $ref: '#/components/schemas/Terminal'
+ *        - $ref: '#/components/schemas/Taxiway'
  *   responses:
  *    200:
  *     description: Successfully updated data
+ *     content:
+ *      application/json:
+ *       schema:
+ *        oneOf:
+ *         - $ref: '#/components/schemas/Runway'
+ *         - $ref: '#/components/schemas/Terminal'
+ *         - $ref: '#/components/schemas/Taxiway'
+ *        properties:
+ *         message:
+ *          type: string
  *    400:
  *     description: Invalid table name
  *    404:
- *     description: Data not found
+ *     description: No airfield info with this id found
  *    500:
  *     description: Internal server error
  */
 router.put("/:id", async (req, res, next) => {
-    try {
-        const { id } = req.params;
-        const { table_name, newData } = req.body;
+	try {
+		const { id } = req.params;
+		let { table_name } = req.query;
 
-        const { data, message } = await airfieldService.update(table_name, id, newData);
-        res.status(200).json({ data, message });
-    } catch (error) {
-        next(error);
-    }
+		if (!table_name) {
+			throw new Err("Table name is required", 400);
+		}
+
+		table_name = table_name as string;
+
+		const { data, message } = await airfieldService.update(
+			table_name,
+			id,
+			req.body
+		);
+		res.status(200).json({ data, message });
+	} catch (error) {
+		next(error);
+	}
 });
 
 export default router;

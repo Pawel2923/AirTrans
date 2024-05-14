@@ -296,13 +296,14 @@ const AirplanesPage = () => {
 					Dodaj
 				</button>
 			</form>
-			<ConfirmModal 
-				open={deleteSerialNo !== ""}
-				onConfirm={deleteAirplane}
-				onClose={() => setDeleteSerialNo("")}
-				title="Potwierdź usunięcie"
-				message="Czy na pewno chcesz usunąć ten samolot?"
-			/>
+			{deleteSerialNo !== "" && (
+				<ConfirmModal 
+					onConfirm={deleteAirplane}
+					onClose={() => setDeleteSerialNo("")}
+					title="Potwierdź usunięcie"
+					message="Czy na pewno chcesz usunąć ten samolot?"
+				/>
+			)}
 		</>
 	);
 };

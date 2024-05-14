@@ -1,7 +1,7 @@
-import React, { useContext, useState, useEffect } from "react";
-import AuthContext, { User } from "../../store/auth-context";
+import React, { useContext } from "react";
+import AuthContext from "../../store/auth-context";
 import classes from "./ManagerTopNav.module.css";
-import useAuth from "../../hooks/use-auth";
+import { useNavigate } from "react-router-dom";
 
 interface ProfileMenuProps {
     setIsOpenProfile: React.Dispatch<React.SetStateAction<boolean>>;
@@ -10,13 +10,8 @@ interface ProfileMenuProps {
 const ProfileMenu: React.FC<ProfileMenuProps> = ({
     setIsOpenProfile,
 }: ProfileMenuProps) => {
-    const { logout } = useAuth();
-    const authCtx = useContext(AuthContext);
-    const [user, setUser] = useState<User>();
-
-	useEffect(() => {
-		setUser(authCtx.user as User);
-	}, [authCtx.user]);
+	const navigate = useNavigate();
+    const { user, logout } = useContext(AuthContext);
 
 	return (
 		<>
@@ -25,7 +20,7 @@ const ProfileMenu: React.FC<ProfileMenuProps> = ({
 				onClick={() => setIsOpenProfile(false)}
 			></div>
 			<div className={classes.profile}>
-				<div>{user ? user.id : "e-mail"}</div>
+				<div>{user ? user.email : "e-mail"}</div>
 				<ul className={classes["profile-menu"]}>
 					<li>
 						<a href="#">Profil</a>
@@ -33,7 +28,10 @@ const ProfileMenu: React.FC<ProfileMenuProps> = ({
 					<li>
 						<a href="#">Ustawienia</a>
 					</li>
-					<li onClick={logout}>
+					<li onClick={() => {
+						logout();
+						navigate(0)
+					}}>
 						<a href="#">Wyloguj</a>
 					</li>
 				</ul>

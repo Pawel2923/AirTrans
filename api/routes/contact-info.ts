@@ -6,6 +6,8 @@ import contactInfo from "../services/contact-info";
  * @openapi
  * /contact-info:
  *  get:
+ *   tags: 
+ *    - Contact-info
  *   description: Get contact info from the database
  *   parameters:
  *    - name: filter
@@ -77,6 +79,8 @@ router.get("/", async function (req, res, next) {
  * @openapi
  * /contact-info/{name}:
  *  put:
+ *   tags: 
+ *    - Contact-info
  *   description: Update contact info
  *   parameters:
  *    - name: name

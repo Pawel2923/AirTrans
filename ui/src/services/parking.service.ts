@@ -13,6 +13,7 @@ class ParkingService {
 		return http.post("/parking", parkingData);
 	}
 
+
 	delete = (id: number) => {
 		return http.delete(`/parking/${id}`);
 	};
@@ -22,7 +23,5 @@ class ParkingService {
 	updateParking = (parking: ParkingReservations) => {
 		return http.put(`/parking/${parking.pid}`, parking);
 	};
-
-}
 
 export default new ParkingService();

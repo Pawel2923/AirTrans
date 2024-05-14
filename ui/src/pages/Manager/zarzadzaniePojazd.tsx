@@ -60,6 +60,8 @@ const ZarzadzanieP = () => {
 	const submitNewCar = async () => {
 		try {
 			const response = await carService.create({ ...newCarData, id: 0 });
+
+
 			setCars([...cars, response.data]);
 			setNewCarData({
 				brand: "",
@@ -157,7 +159,6 @@ const ZarzadzanieP = () => {
 			<div className={tableStyle.tableContainer}>
 				<h2>Lista Wypożyczeń</h2>
 				<TableRent
-					
 					rents={rentals}
 					onEdit={editRent}
 					onDelete={deleteRental}
@@ -169,14 +170,18 @@ const ZarzadzanieP = () => {
 					type="datetime-local"
 					name="since"
 					placeholder="Rental date"
+
 					value={newRentalData.since}
+
 					onChange={handleRentalInputChange}
 				/>
 				<input
 					type="datetime-local"
 					name="until"
 					placeholder="Return date"
+
 					value={newRentalData.until}
+
 					onChange={handleRentalInputChange}
 				/>
 				<input

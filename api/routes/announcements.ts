@@ -6,6 +6,8 @@ import announcements from "../services/announcements";
  * @openapi
  * /announcements:
  *  get:
+ *   tags: 
+ *    - Announcements
  *   description: Get all announcements
  *   parameters:
  *    - name: page
@@ -107,6 +109,8 @@ router.get("/:id", async function (req, res, next) {
  * @openapi
  * /announcements:
  *  post:
+ *   tags: 
+ *    - Announcements
  *   description: Create a new announcement
  *   requestBody:
  *    required: true
@@ -135,6 +139,8 @@ router.post("/", async function (req, res, next) {
  * @openapi
  * /announcements/{id}:
  *  put:
+ *   tags: 
+ *    - Announcements
  *   description: Update an announcement
  *   parameters:
  *    - name: id
@@ -177,6 +183,8 @@ router.put("/:id", async function (req, res, next) {
  * @openapi
  * /announcements/{id}:
  *  delete:
+ *   tags: 
+ *    - Announcements
  *   description: Delete an announcement
  *   parameters:
  *    - name: id

@@ -7,6 +7,8 @@ import { verifyUser } from "../middlewares/verifyUser";
  * @openapi
  * /flights:
  *  get:
+ *   tags: 
+ *    - Flights
  *   description: Get all flights
  *   parameters:
  *    - name: page
@@ -71,6 +73,8 @@ import { verifyUser } from "../middlewares/verifyUser";
  *            type: integer
  *         message:
  *          type: string
+ *    404:
+ *     description: No flights found
  *    500:
  *     description: Internal server error
  */
@@ -79,8 +83,8 @@ router.get("/", async function (req, res, next) {
 		let { page, isarrdep, limit, filter, sort } = req.query;
 		const parsedPage = page ? parseInt(page as string) : undefined;
 		const parsedLimit = limit ? parseInt(limit as string) : undefined;
-		filter = filter as string || undefined;
-		sort = sort as string || undefined;
+		filter = (filter as string) || undefined;
+		sort = (sort as string) || undefined;
 
 		const { data, meta, message } =
 			isarrdep != undefined
@@ -98,8 +102,42 @@ router.get("/", async function (req, res, next) {
 
 /**
  * @openapi
+ * /flights/ids:
+ *  get:
+ *   tags: 
+ *    - Flights
+ *   description: Get all flight ids
+ *   responses:
+ *    200:
+ *     description: Successfully fetched data
+ *     content:
+ *      application/json:
+ *       schema:
+ *        type: array
+ *        items:
+ *         type: string
+ *     message:
+ *      type: string
+ *    404:
+ *     description: No flight id found
+ *    500:
+ *     description: Internal server error
+ */
+router.get("/ids", async function (_req, res, next) {
+	try {
+		const { data, message } = await flight.getFlightIds();
+		res.status(200).json({ data, message });
+	} catch (err) {
+		next(err);
+	}
+});
+
+/**
+ * @openapi
  * /flights/{term}:
  *  get:
+ *   tags: 
+ *    - Flights
  *   description: Get flights by search term
  *   parameters:
  *    - name: term
@@ -174,12 +212,18 @@ router.get("/:term", async function (req, res, next) {
 		let { page, limit, filter, sort } = req.query;
 		const parsedPage = page ? parseInt(page as string) : undefined;
 		const parsedLimit = limit ? parseInt(limit as string) : undefined;
-		filter = filter as string || undefined;
-		sort = sort as string || undefined;
+		filter = (filter as string) || undefined;
+		sort = (sort as string) || undefined;
 
 		const { term } = req.params;
 
-		const { data, meta, message } = await flight.search(term, parsedPage, parsedLimit, filter, sort);
+		const { data, meta, message } = await flight.search(
+			term,
+			parsedPage,
+			parsedLimit,
+			filter,
+			sort
+		);
 		res.status(200).json({ data, meta, message });
 	} catch (err) {
 		next(err);
@@ -190,6 +234,8 @@ router.get("/:term", async function (req, res, next) {
  * @openapi
  * /flights:
  *  post:
+ *   tags: 
+ *    - Flights
  *   description: Create a new flight
  *   requestBody:
  *    required: true
@@ -222,6 +268,8 @@ router.post("/", verifyUser, async function (req, res, next) {
  * @openapi
  * /flights/{id}:
  *  put:
+ *   tags: 
+ *    - Flights
  *   description: Update a flight
  *   parameters:
  *    - name: id
@@ -258,6 +306,8 @@ router.put("/:id", verifyUser, async function (req, res, next) {
  * @openapi
  * /flights/{id}:
  *  delete:
+ *   tags: 
+ *    - Flights
  *   description: Delete a flight
  *   parameters:
  *    - name: id

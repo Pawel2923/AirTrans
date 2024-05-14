@@ -24,9 +24,12 @@ export function verifyUser(req: Request, _res: Response, next: NextFunction) {
 		jwt.verify(
 			token,
 			process.env.SECRET_TOKEN as string,
-			(err: jwt.VerifyErrors | null, user: string | object | undefined) => {
+			(
+				err: jwt.VerifyErrors | null,
+				user: string | object | undefined
+			) => {
 				if (err) {
-					const error = new Err("Unauthorized", 401);
+					const error = new Err("Forbidden", 403);
 					return next(error);
 				}
 
@@ -39,9 +42,12 @@ export function verifyUser(req: Request, _res: Response, next: NextFunction) {
 		jwt.verify(
 			token,
 			process.env.SECRET_TOKEN as string,
-			(err: jwt.VerifyErrors | null, user: string | object | undefined) => {
+			(
+				err: jwt.VerifyErrors | null,
+				user: string | object | undefined
+			) => {
 				if (err) {
-					const error = new Err("Unauthorized", 401);
+					const error = new Err("Forbidden", 403);
 					return next(error);
 				}
 
@@ -50,4 +56,21 @@ export function verifyUser(req: Request, _res: Response, next: NextFunction) {
 			}
 		);
 	}
+}
+
+export function requireRole(req: Request, _res: Response, next: NextFunction) {
+	const role = req.query.requiredRole;
+
+	if (!role) {
+		return next();
+	}
+
+	const user = req.user as { role: string };
+
+	if (user.role !== role) {
+		const error = new Err("Forbidden", 403);
+		return next(error);
+	}
+
+	return next();
 }

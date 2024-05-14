@@ -1,8 +1,8 @@
-import { ArrDepTableProps, Flight } from "../assets/Data";
+import { Departures, Flights } from "../assets/Data";
 
-export const flightsDataParser = (flightsData: Flight[]) => {
-	const flights: Flight[] = [];
-	flightsData.map((flight: Flight) => {
+export const flightsDataParser = (flightsData: Flights[]) => {
+	const flights: Flights[] = [];
+	flightsData.map((flight: Flights) => {
 		flights.push({
 			id: flight.id,
 			status: flight.status,
@@ -16,9 +16,9 @@ export const flightsDataParser = (flightsData: Flight[]) => {
 	return flights;
 };
 
-export const arrDepDataParser = (arrDepData: ArrDepTableProps[]) => {
-	const arrDep: ArrDepTableProps[] = [];
-	arrDepData.map((flight: ArrDepTableProps) => {
+export const arrDepDataParser = (arrDepData: Departures[]) => {
+	const arrDep: Departures[] = [];
+	arrDepData.map((flight: Departures) => {
 		arrDep.push({
 			id: flight.id,
 			status: flight.status,

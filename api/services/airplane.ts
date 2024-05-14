@@ -55,6 +55,24 @@ async function get(
 	};
 }
 
+async function getSerialNumbers() {
+	const rows = await db.query("SELECT DISTINCT serial_no FROM Airplanes");
+	let data = helper.emptyOrRows(rows);
+
+	data = data.map((row: Airplanes) => row.serial_no);
+
+	if (data.length === 0) {
+		const error = new Err("No airplane serial numbers found");
+		error.statusCode = 404;
+		throw error;
+	}
+
+	return {
+		data,
+		message: "Successfully fetched airplane serial numbers",
+	};
+}
+
 async function create(airplane: Airplanes) {
 	validateAirplane(airplane);
 
@@ -149,6 +167,7 @@ async function remove(serial_no: string) {
 
 export default {
 	get,
+	getSerialNumbers,
 	create,
 	update,
 	remove,

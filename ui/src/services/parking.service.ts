@@ -23,5 +23,6 @@ class ParkingService {
 	updateParking = (parking: ParkingReservations) => {
 		return http.put(`/parking/${parking.pid}`, parking);
 	};
+}
 
 export default new ParkingService();

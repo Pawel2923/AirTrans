@@ -1,3 +1,4 @@
+
 import db from "./db";
 import helper from "../helper";
 import config from "../config";
@@ -5,33 +6,35 @@ import { Err } from "../Types";
 import { ResultSetHeader } from "mysql2";
 
 async function getAllRentals(
-    page = 1,
-    limit = config.listPerPage,
-    tableName = "Rentals"
+  page = 1,
+  limit = config.listPerPage,
+  tableName = "Rentals"
 ) {
-    const offset = helper.getOffset(page, config.listPerPage);
+  const offset = helper.getOffset(page, config.listPerPage);
 
-    const rows = await db.query("SELECT * FROM ?? LIMIT ?, ?", [
-        tableName,
-        offset,
-        limit,
-    ]);
+  const rows = await db.query(
+      "SELECT Rentals.*, Users.first_name AS user_first_name FROM ?? AS Rentals LEFT JOIN Users ON Rentals.Users_uid = Users.uid LIMIT ?, ?",
+      [tableName, offset, limit]
+  );
 
-    const data = helper.emptyOrRows(rows);
+  const data = helper.emptyOrRows(rows);
 
-    const pages = await helper.getPages(tableName, limit);
+  const pages = await helper.getPages(tableName, limit);
 
-    const meta = {
-        page,
-        pages,
-    };
+  const meta = {
+      page,
+      pages,
+  };
 
-    return {
-        data,
-        meta,
-        response: { message: `Successfully fetched data`, statusCode: 200 },
-    };
+  return {
+      data,
+      meta,
+      response: { message: `Successfully fetched data`, statusCode: 200 },
+  };
 }
+
+
+
 
 function formatDate(dateString: string) {
     const date = new Date(dateString);
@@ -47,9 +50,9 @@ function formatDate(dateString: string) {
   
   async function createRental(rentalData: any) {
     try {
-      const carAvailability = await db.query(
-        "SELECT * FROM Rentals WHERE Cars_id = ? AND Return_date > NOW()",
-        [rentalData.Cars_id]
+        const carAvailability = await db.query(
+        "SELECT '' FROM Rentals WHERE Cars_id = ? AND until > NOW()",
+        [rentalData.Cars_id,rentalData.until]
       );
 
       if (helper.emptyOrRows(carAvailability).length > 0) {
@@ -61,12 +64,12 @@ function formatDate(dateString: string) {
       }
   
       let result = await db.query(
-        "INSERT INTO Rentals (Rental_date, Return_date, Status, Client_id, Cars_id) VALUES (?, ?, ?, ?, ?)",
+        "INSERT INTO Rentals (since,until, status,Users_uid, Cars_id) VALUES (?, ?, ?, ?, ?)",
         [
-          rentalData.Rental_date,
-          rentalData.Return_date,
-          rentalData.Status,
-          rentalData.Client_id,
+          rentalData.since,
+          rentalData.until,
+          rentalData.status,
+          rentalData.Users_uid,
           rentalData.Cars_id,
         ]
       );
@@ -88,7 +91,7 @@ function formatDate(dateString: string) {
   
   async function removeRent(Id: number) {
     try {
-      const rentExists = await db.query("SELECT * FROM Rentals WHERE Id=?", [
+      const rentExists = await db.query("SELECT * FROM Rentals WHERE id=?", [
         Id,
       ]);
   
@@ -98,7 +101,7 @@ function formatDate(dateString: string) {
         throw error;
       }
   
-      let result = await db.query("DELETE FROM Rentals WHERE Id=?", [Id]);
+      let result = await db.query("DELETE FROM Rentals WHERE id=?", [Id]);
       result = result as ResultSetHeader;
   
       if (result.affectedRows === 0) {
@@ -115,7 +118,7 @@ function formatDate(dateString: string) {
   
   async function getById(rentId: number, tableName = "Rentals") {
     try {
-      const rows = await db.query("SELECT * FROM ?? WHERE Id = ?", [
+      const rows = await db.query("SELECT * FROM ?? WHERE id = ?", [
         tableName,
         rentId,
       ]);
@@ -148,7 +151,7 @@ function formatDate(dateString: string) {
         rent.Id = rentId;
   
         
-        const rentExists = await db.query("SELECT * FROM Rentals WHERE Id=?", [rent.Id]);
+        const rentExists = await db.query("SELECT * FROM Rentals WHERE id=?", [rent.Id]);
 
         if (helper.emptyOrRows(rentExists).length === 0) {
             const error = new Err("Wypożyczenie nie istnieje!");
@@ -158,13 +161,13 @@ function formatDate(dateString: string) {
   
        
         let result = await db.query(
-            "UPDATE Rentals SET Rental_date=?, Return_date=?, Status=?, Client_id=?, Cars_id=? WHERE Id=?",
-            [rent.Rental_date,
-            rent.Return_date,
-            rent.Status, 
-            rent.Client_id,
+            "UPDATE Rentals SET since=?, until=?, status=?, Users_uid=?, Cars_id=? WHERE id=?",
+            [rent.since,
+            rent.until,
+            rent.status, 
+            rent.Users_uid,
             rent.Cars_id,
-            rent.Id]
+            rent.id]
         );
         result = result as ResultSetHeader;
         

@@ -17,22 +17,21 @@ const TableParking:React.FC<TableParkingProps>= ({ parkings, onEdit, onDelete}) 
   return (
     <table className={styles.table}>
       <thead>
-        <tr className="fw-semibold">
+        <tr >
           <th>ID</th>
             <th>ID_Clienta</th>
             <th>Numer_rejestracyjny</th>
             <th>Poziom_parkingu</th>
-            <th>Cena_dzienna</th>
             <th>Od</th>
             <th>Do</th>
             <th>ID_Miejsca</th>
+            <th>Status</th>
           <th></th>
         </tr>
       </thead>
-      <tbody className="text-uppercase">
+      <tbody>
         {parkings.map((park) => (
-        
-            <tr key={park.pid}>
+          <tr key={park.pid}>
               <td>{park.pid}</td>
               <td>{park.Users_uid}</td>
               <td>{park.license_plate}</td>
@@ -40,8 +39,8 @@ const TableParking:React.FC<TableParkingProps>= ({ parkings, onEdit, onDelete}) 
                 <td>{park.since}</td>
                 <td>{park.until}</td>
                 <td>{park.space_id}</td>
-
-              <td>
+                <td>{park.status}</td>
+                <td>
                 <button 
                 className="btn btn-primary me-3"
                 onClick={()=> handleEditParkClick(park)}>EDYTUJ</button>

@@ -1,3 +1,4 @@
+
 import React,{useState,useEffect} from "react";
 import {useParams, useNavigate } from "react-router-dom";
 import parkingService from "../../services/parking.service";
@@ -11,24 +12,25 @@ const emptyParking: ParkingReservations = {
     parking_level: "",
     space_id: "",
     license_plate: "",
+    status: undefined,
 };
 
 const EditParkingPage =()=>{
 const navigate = useNavigate();
-const { id } = useParams<{id:string}>();
+const { pid } = useParams<{pid:string}>();
 const [parking, setParking] = useState<ParkingReservations>(emptyParking);
 useEffect(()=>{
 
-    if(id === undefined) return;
+    if(pid === undefined) return;
 
-    const parkingId = parseInt(id);
+    const parkingId = parseInt(pid);
 
     parkingService.getById(parkingId).then((response)=>{
         if(response.status === 200){
             setParking(response.data.data[0]);
         }
     });
-},[id]);
+},[pid]);
 
 const formSubmitHandler = async (e:React.FormEvent<HTMLFormElement>)=>{
     e.preventDefault();
@@ -70,7 +72,7 @@ return(
                 type="datetime-local"
                 name="since"
                 placeholder="Since"
-                value={parking.since.toString()}
+                value={parking.since?.toString()}
                 onChange={inputChangeHandler}
                 />
             </label>
@@ -80,7 +82,7 @@ return(
                 type="datetime-local"
                 name="until"
                 placeholder="Until"
-                value={parking.until.toString()}
+                value={parking.until?.toString()}
                 onChange={inputChangeHandler}
                 />
             </label>
@@ -111,6 +113,16 @@ return(
                 name="license_plate"
                 placeholder="License plate"
                 value={parking.license_plate}
+                onChange={inputChangeHandler}
+                />
+            </label>
+            <label>
+                Status:
+                <input
+                type="text"
+                name="status"
+                placeholder="Status"
+                value={parking.status}
                 onChange={inputChangeHandler}
                 />
             </label>

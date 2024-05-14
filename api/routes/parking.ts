@@ -1,3 +1,4 @@
+
 import express from "express";
 const router = express.Router();
 import parkingService from "../services/parking";
@@ -65,6 +66,8 @@ router.get("/:id", async function (req, res, next) {
     res.status(500).json({ message: "Internal server error" });
   }
 });
+
+
 
 router.put("/:id", async function (req, res, next) {
   try {

@@ -1,3 +1,4 @@
+
 import React, { useContext, useState } from "react"; // Zmiana importu na pełną ścieżkę do pliku "react"
 import loginService from "../services/login.service";
 import { Link, useNavigate } from "react-router-dom";
@@ -8,6 +9,7 @@ const emailRegex = /^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$/i;
 const isEmpty = (value: string) =>
 	value.trim() !== "" && value.trim().length >= 3;
 const isEmail = (value: string) =>
+
 	emailRegex.test(value.toLowerCase()) &&
 	value.toLowerCase().trim().length >= 3;
 

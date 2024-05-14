@@ -1,3 +1,4 @@
+
 import db from "./db";
 import helper from "../helper";
 import config from "../config";
@@ -73,14 +74,15 @@ async function createParking(parkingData: any) {
 		}
 
 		let result = await db.query(
-			"INSERT INTO Parking_reservations (Client_id, since, until, parking_level, space_id, license_plate) VALUES (?, ?, ?, ?, ?, ?)",
+			"INSERT INTO Parking_reservations (Users_uid, since, until, parking_level, space_id, license_plate,status) VALUES (?, ?, ?, ?, ?, ?, ?)",
 			[
-				parkingData.Client_id,
+				parkingData.Users_uid,
 				parkingData.since,
 				parkingData.until,
 				parkingData.parking_level,
 				parkingData.space_id,
 				parkingData.license_plate,
+				parkingData.status,
 			]
 		);
     result = result as ResultSetHeader;
@@ -98,10 +100,10 @@ async function createParking(parkingData: any) {
 		throw error;
 	}
 }
-async function removeParking(id: number) {
+async function removeParking(pid: number) {
 	const parkingExist = await db.query(
-		"SELECT * FROM Parking_reservations WHERE id = ?",
-		[id]
+		"SELECT * FROM Parking_reservations WHERE pid = ?",
+		[pid]
 	);
 	if (helper.emptyOrRows(parkingExist).length === 0) {
 		const error = new Err("Parking nie istnieje");
@@ -109,8 +111,8 @@ async function removeParking(id: number) {
 		throw error;
 	}
 	let rows = await db.query(
-		"DELETE FROM Parking_reservations WHERE id = ?",
-		[id]
+		"DELETE FROM Parking_reservations WHERE pid = ?",
+		[pid]
 	);
   rows = rows as ResultSetHeader;
 
@@ -124,7 +126,7 @@ async function removeParking(id: number) {
 }
 async function getById(parkingId: number, tableName = "Parking_reservations") {
 	try {
-		const rows = await db.query("SELECT * FROM ?? WHERE id = ?", [
+		const rows = await db.query("SELECT * FROM ?? WHERE pid = ?", [
 			tableName,
 			parkingId,
 		]);
@@ -166,15 +168,15 @@ async function updateParking(parkingId: number, parking: any) {
 		}
 
 		let result = await db.query(
-			"UPDATE Parking_reservations SET Client_id=?, since=?, until=?, parking_level=?, space_id=?, license_plate=?, price_per_day=? WHERE Id=?",
+			"UPDATE Parking_reservations SET Users_uid=?, since=?, until=?, parking_level=?, space_id=?, license_plate=?,  status=?WHERE Id=?",
 			[
-				parking.Client_id,
+				parking.Users_uid,
 				parking.since,
 				parking.until,
 				parking.parking_level,
 				parking.space_id,
 				parking.license_plate,
-				parking.price_per_day,
+				parking.status,
 				parking.Id,
 			]
 		);

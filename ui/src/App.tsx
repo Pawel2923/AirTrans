@@ -20,6 +20,8 @@ import ScheduleDetails from "./pages/Manager/ScheduleDetails";
 import ScheduleEdit from "./pages/Manager/ScheduleEdit";
 import AirplanesPage from "./pages/Manager/AirplanesPage";
 import AirplaneEdit from "./pages/Manager/AirplaneEdit";
+import OgloszeniaZ from "./pages/Manager/ogloszeniaPage";
+import OgloszeniaEdit from "./pages/Manager/editOgloszeniaPage";
 import Manager from "./pages/Manager";
 import Airfield from "./pages/Manager/Airfield";
 import AuthProvider from "./store/AuthProvider";
@@ -37,6 +39,7 @@ export default function App() {
 
 function Root() {
 	return (
+
 		<AuthProvider>
 			<Routes>
 				<Route index element={<Home />} />
@@ -72,6 +75,13 @@ function Root() {
 							element={<EditParkingPage />}
 						/>
 					</Route>
+          <Route path="ogloszenia">
+          <Route index element={<OgloszeniaZ />} />
+          <Route 
+            path="edit-ogloszenia/:id" 
+            element={<OgloszeniaEdit />} 
+            />
+           </Route>
 					<Route path="lotnisko">
 						<Route index element={<Airfield />} />
 						<Route path=":table/:id/edytuj" element={<AirfieldEdit />} />

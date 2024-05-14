@@ -1,4 +1,4 @@
-import { Rentals } from "../assets/Data";
+import { Rentals} from "../assets/Data";
 import styles from '../components/tableCars.module.css';
 import React from "react";
 

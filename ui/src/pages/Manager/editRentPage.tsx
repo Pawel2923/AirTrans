@@ -60,7 +60,7 @@ const EditRentPage = () => {
                         type="datetime-local"
                         name="since"
                         placeholder="Rental Date"
-                        value={carRental.since.toString()}
+                        value={carRental.since?.toString() }
                         onChange={inputChangeHandler}
                     />
                 </label>
@@ -70,7 +70,7 @@ const EditRentPage = () => {
                         type="datetime-local"
                         name="until"
                         placeholder="Return Date"
-                        value={carRental.until.toString()}
+                        value={carRental.until?.toString()}
                         onChange={inputChangeHandler}
                     />
                 </label>

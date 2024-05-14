@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import Input from "../components/input";
 import rejestracjaService from "../services/rejestracja.service";
+import styles from "./rejestracja.module.css";
 
 
 
@@ -10,6 +11,7 @@ const isEmpty = (value:string) => value.trim() !== "" && value.trim().length >= 
 const isEmail = (value:string) =>
   emailRegex.test(value.toLowerCase()) &&
   value.toLowerCase().trim().length >= 3;
+
   
 const Rejestracja = () => {
   const [email, setEmail] = useState("");
@@ -62,6 +64,7 @@ const Rejestracja = () => {
         console.error("Hasła nie są identyczne");
         alert("Hasła nie są identyczne");
         return;
+
       }      
   
       const response = await rejestracjaService.create({
@@ -87,6 +90,7 @@ const Rejestracja = () => {
       alert("Błąd rejestracji - sprawdź konsolę");
     }
   };
+
 
   const registrationForm = (
     <form onSubmit={submitHandler}>
@@ -162,17 +166,8 @@ const Rejestracja = () => {
     </form>
   );
 
-  return (
-    <>
-      <main>
-        <section className="section">
-          <h1>Zarejestruj się</h1>
-          <h2>Wypełnij formularz rejestracji</h2>
-          {registrationForm}
-        </section>
-      </main>
-    </>
-  );
-};
+
+ 
+
 
 export default Rejestracja

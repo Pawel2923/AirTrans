@@ -24,17 +24,23 @@ const OgloszeniaPage = () => {
 
     const handleInputChange = (event: React.ChangeEvent<HTMLInputElement> | React.ChangeEvent<HTMLTextAreaElement>) => {
         const { name, value } = event.target;
-        setNewAnnouncementData((prevData) => ({
+        setNewAnnouncementData(prevData => ({
             ...prevData,
             [name]: value,
         }));
     };
-    
 
     const submitNewAnnouncement = async () => {
         try {
-            const response = await announcementService.create(newAnnouncementData);
-            setAnnouncements([...announcements, response.data]);
+            const validUntil = new Date(newAnnouncementData.valid_until);
+            const formattedDate = validUntil.toISOString().slice(0, 19).replace('T', ' ');
+
+            const response = await announcementService.create({
+                ...newAnnouncementData,
+                valid_until: formattedDate,
+            });
+
+            setAnnouncements(prevAnnouncements => [...prevAnnouncements, response.data]);
             setNewAnnouncementData({
                 id: 0,
                 title: "",
@@ -42,32 +48,43 @@ const OgloszeniaPage = () => {
                 valid_until: "",
                 Employee_id: 0,
             });
+
             alert("Dodano nowe ogłoszenie");
-            navigate(0);
-            
+            fetchAnnouncements();
         } catch (error) {
-            console.error(error);
+            console.error("Error while creating announcement:", error);
+            alert("Wystąpił błąd podczas dodawania ogłoszenia. Spróbuj ponownie.");
         }
     };
 
+    const deleteAnnouncement = async (id: number) => {
+        try {
+            await announcementService.delete(id);
+            setAnnouncements(prevAnnouncements => prevAnnouncements.filter(announcement => announcement.id !== id));
+            alert("Usunięto ogłoszenie");
+        } catch (error) {
+            console.error("Error while deleting announcement:", error);
+            alert("Wystąpił błąd podczas usuwania ogłoszenia. Spróbuj ponownie.");
+        }
+    };
+
+    const editAnnouncement = (announcement: Announcements) => {
+        navigate(`edit-ogloszenia/${announcement.id}`);
+    };
+
     const fetchAnnouncements = async () => {
-        announcementService
-        .get(pagedata.page, )
-        .then((response) => {
+        try {
+            const response = await announcementService.get(pagedata.page);
             setAnnouncements(response.data.data);
             setPageData(response.data.meta);
-            
-        })
-        .catch((error) => {
-            console.error("Error while fetching announcements", error);
-        });
+        } catch (error) {
+            console.error("Error while fetching announcements:", error);
+        }
     };
 
     useEffect(() => {
         fetchAnnouncements();
-    },[pagedata.page] 
-    
-    );
+    }, [pagedata.page]);
 
     return (
         <div className="container">
@@ -76,13 +93,9 @@ const OgloszeniaPage = () => {
                 <h2>Lista ogłoszeń</h2>
                 <AnnouncementTable
                     announcements={announcements}
-                    onEdit={(announcement) => {
-                        navigate(`/manager/ogloszenia/${announcement.id}`);
-                    }}
-
-                    
-                
-                /> 
+                    onEdit={editAnnouncement}
+                    onDelete={deleteAnnouncement}
+                />
                 <Pagination
                     className="mt-3"
                     pageData={pagedata}
@@ -120,11 +133,22 @@ const OgloszeniaPage = () => {
                             <div className="form-group">
                                 <label htmlFor="valid_until">Ważne do</label>
                                 <input
-                                    type="date"
+                                    type="datetime-local"
                                     name="valid_until"
                                     id="valid_until"
                                     className="form-control"
                                     value={newAnnouncementData.valid_until}
+                                    onChange={handleInputChange}
+                                />
+                            </div>
+                            <div className="form-group">
+                                <label htmlFor="Employee_id">Autor</label>
+                                <input
+                                    type="number"
+                                    name="Employee_id"
+                                    id="Employee_id"
+                                    className="form-control"
+                                    value={newAnnouncementData.Employee_id}
                                     onChange={handleInputChange}
                                 />
                             </div>
@@ -140,6 +164,6 @@ const OgloszeniaPage = () => {
             </div>
         </div>
     );
-}
+};
 
 export default OgloszeniaPage;

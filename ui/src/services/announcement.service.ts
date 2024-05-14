@@ -10,10 +10,12 @@ class AnnouncementService {
         return http.post("/announcements", data);
     }
 
-    update = (id: number, data: Announcements) => {
-        return http.put(`/announcements/${id}`, data);
+    update = (data: Announcements) => {
+        return http.put(`/announcements/${data.id}`, data);
     }
-
+    getById(id: number){
+        return http.get(`/announcements/${id}`);
+    }
 
     delete = (id: number) => {
         return http.delete(`/announcements/${id}`);

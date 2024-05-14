@@ -6,9 +6,10 @@ import styles from './tableCars.module.css';
 type AnnouncementTableProps = {
     announcements: Announcements[];
     onEdit: (announcement: Announcements) => void;
+    onDelete: (id: number) => void;
     
 };
-const AnnouncementTable: React.FC<AnnouncementTableProps> = ({ announcements, onEdit }) => {
+const AnnouncementTable: React.FC<AnnouncementTableProps> = ({ announcements, onEdit,onDelete }) => {
 
     const handleEditClick = (announcement: Announcements) => {
         onEdit(announcement);
@@ -24,6 +25,7 @@ const AnnouncementTable: React.FC<AnnouncementTableProps> = ({ announcements, on
                     <th>Ważne do</th>
                     <th>Czas tworzenia</th>
                     <th>Autor</th>
+                    <th>Akcje</th>
                 </tr>
             </thead>
             <tbody>
@@ -39,6 +41,9 @@ const AnnouncementTable: React.FC<AnnouncementTableProps> = ({ announcements, on
                             <button
                                 className="btn btn-primary me-3"
                                 onClick={() => handleEditClick(announcement)}>EDYTUJ</button>
+                            <button
+                                className="btn btn-danger"
+                                onClick={() => onDelete(announcement.id ?? 0)}>Delete</button>
                         </td>
                     </tr>
                 ))}

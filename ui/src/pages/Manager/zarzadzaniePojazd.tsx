@@ -60,7 +60,6 @@ const ZarzadzanieP = () => {
 	const submitNewCar = async () => {
 		try {
 			const response = await carService.create({ ...newCarData, id: 0 });
-			console.log("New Car Data:", response);
 			setCars([...cars, response.data]);
 			setNewCarData({
 				brand: "",

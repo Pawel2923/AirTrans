@@ -92,6 +92,17 @@ router.get("/", async function (req, res, next) {
 	}
 });
 
+router.get("/:id", async function (req, res, next) {
+	try {
+		let { id } = req.params;
+		const parsedId = parseInt(id) || -1;
+
+		const { data, message } = await announcements.getById(parsedId);
+		res.status(200).json({ data, message });
+	} catch (err) {
+		next(err);
+	}
+});
 /**
  * @openapi
  * /announcements:

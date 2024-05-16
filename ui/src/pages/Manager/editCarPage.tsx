@@ -26,7 +26,7 @@ const EditCarPage = () => {
 
     carService.getById(carId).then((response) => {
         if (response.status === 200) {
-            setCarData(response.data);
+            setCarData(response.data.data[0]);
         }
     });
 }, [id]);
@@ -39,7 +39,7 @@ const EditCarPage = () => {
       const response = await carService.update(carData);
       if (response.status === 200) {
         alert("Car updated successfully!");
-        navigate("/car-list");
+        navigate("/zarzadzanie/pojazd");
       }
     } catch (error) {
       console.error("Error while updating car:", error);

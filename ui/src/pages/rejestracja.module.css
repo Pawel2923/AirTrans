@@ -1,0 +1,32 @@
+.container {
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    
+    
+  }
+  
+  .login-container {
+    display: flex; 
+    justify-content: space-between; 
+    align-items: center; 
+    background-color: #FFFFFF;
+    padding: 20px;
+    border-radius: 20px;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+    height: 65vh;
+    width:150vh;
+  }
+  
+  .left {
+    flex: 1;
+  }
+  
+  .right {
+    flex: 1; 
+  }
+  
+  .left > p {
+    margin-right: 10px; 
+  }

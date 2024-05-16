@@ -1,11 +1,10 @@
 import React, { useState, useEffect, useCallback } from "react";
+
 import parkingService from "../../services/parking.service";
 import TableParking from "../../components/tableParking";
-
 import { PageData, ParkingReservations } from "../../assets/Data";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import Pagination from "../../components/Pagination";
-// import '../pages/parking.module.css';
 
 const Parking = () => {
 	const [searchParams] = useSearchParams();
@@ -73,6 +72,7 @@ const Parking = () => {
 	const deleteParking = async (id: number) => {
 		try {
 			await parkingService.delete(id);
+
 			setParkings(parkings.filter((park) => park.pid !== id));
 			alert("Usunięto parking");
 			navigate(0);
@@ -90,6 +90,7 @@ const Parking = () => {
 			<div className="parking-header">
 				<h1>Zarządzanie Parkingami</h1>
 			</div>
+
 			<div className="parking-content-wrapper">
 				<TableParking
 					parkings={parkings}
@@ -112,7 +113,7 @@ const Parking = () => {
 					/>
 					<input
 						type="datetime-local"
-						name="Since"
+						name="since"
 						placeholder="Since"
 						value={newParking.since.toString()}
 						onChange={handleInputChange}

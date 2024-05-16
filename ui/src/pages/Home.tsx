@@ -99,7 +99,7 @@ const Home = () => {
 			}
 		});
 
-		announcementService.getAll().then((response) => {
+		announcementService.get().then((response) => {
 			if (response.status === 200) {
 				setAnnouncementsData(
 					announcementsDataParser(response.data.data)

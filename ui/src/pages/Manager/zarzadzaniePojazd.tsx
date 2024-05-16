@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from "react";
 import carService from "../../services/car.service";
 import rentService from "../../services/rental.service";
@@ -59,7 +60,8 @@ const ZarzadzanieP = () => {
 	const submitNewCar = async () => {
 		try {
 			const response = await carService.create({ ...newCarData, id: 0 });
-			console.log("New Car Data:", response);
+
+
 			setCars([...cars, response.data]);
 			setNewCarData({
 				brand: "",
@@ -168,14 +170,18 @@ const ZarzadzanieP = () => {
 					type="datetime-local"
 					name="since"
 					placeholder="Rental date"
-					value={newRentalData.since.toString()}
+
+					value={newRentalData.since}
+
 					onChange={handleRentalInputChange}
 				/>
 				<input
 					type="datetime-local"
 					name="until"
 					placeholder="Return date"
-					value={newRentalData.until.toString()}
+
+					value={newRentalData.until}
+
 					onChange={handleRentalInputChange}
 				/>
 				<input

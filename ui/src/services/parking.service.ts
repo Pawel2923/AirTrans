@@ -13,11 +13,12 @@ class ParkingService {
 		return http.post("/parking", parkingData);
 	}
 
+
 	delete = (id: number) => {
 		return http.delete(`/parking/${id}`);
 	};
-	getById = (id: number) => {
-		return http.get(`/parking/${id}`);
+	getById = (pid: number) => {
+		return http.get(`/parking/${pid}`);
 	};
 	updateParking = (parking: ParkingReservations) => {
 		return http.put(`/parking/${parking.pid}`, parking);

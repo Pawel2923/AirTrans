@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect, useCallback } from "react";
 
 import parkingService from "../../services/parking.service";
@@ -6,7 +5,6 @@ import TableParking from "../../components/tableParking";
 import { PageData, ParkingReservations } from "../../assets/Data";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import Pagination from "../../components/Pagination";
-import tableStyle from "../../components/tableCars.module.css";
 
 const Parking = () => {
 	const [searchParams] = useSearchParams();
@@ -24,10 +22,9 @@ const Parking = () => {
 		parking_level: "",
 		space_id: "",
 		license_plate: "",
-
+	});
 
 	const retrieveParkings = useCallback(() => {
-
 		parkingService
 			.getAllParking(pageData.page, 5)
 			.then((response) => {
@@ -37,7 +34,6 @@ const Parking = () => {
 			.catch((error) => {
 				console.log("Error while retrieving parkings:", error);
 			});
-
 	}, [pageData.page]);
 
 	useEffect(() => {
@@ -65,7 +61,6 @@ const Parking = () => {
 				parking_level: "",
 				space_id: "",
 				license_plate: "",
-
 			});
 			alert("Dodano nowy parking");
 			navigate(0);
@@ -118,9 +113,7 @@ const Parking = () => {
 					/>
 					<input
 						type="datetime-local"
-
 						name="since"
-
 						placeholder="Since"
 						value={newParking.since.toString()}
 						onChange={handleInputChange}

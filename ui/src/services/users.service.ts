@@ -45,8 +45,12 @@ class UsersService {
         return http.put(`/users/${uid}`, data);
     }
 
+	updateRole = (uid: number, role: string) => {
+		return http.put(`/users/${uid}`, { role }, { withCredentials: true });
+	}
+
     delete = (uid: number) => {
-        return http.delete(`/users/${uid}`);
+        return http.delete(`/users/${uid}`, { withCredentials: true });
     }
 }
 

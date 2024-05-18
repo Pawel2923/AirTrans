@@ -45,8 +45,9 @@ const router = express.Router();
  *    500:
  *     description: Internal server error
  */
-router.get("/", verifyUser, requireRole, (req, res, next) => {
+router.get("/", verifyUser, (req, res, next) => {
 	try {
+		requireRole(req, req.query.requiredRole as string);
 		res.status(200).json({ auth: true, user: req.user });
 	} catch (error) {
 		next(error);

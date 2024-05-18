@@ -208,7 +208,7 @@ interface Cars {
 	license_plate: string;
 	price_per_day: number;
 	fuel_type: string;
-	transmission_type: "MANUAL" | "AUTOMATIC";
+	transmission_type?: "MANUAL" | "AUTOMATIC";
 	img?: number;
 }
 

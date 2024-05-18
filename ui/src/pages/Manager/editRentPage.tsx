@@ -9,6 +9,7 @@ const emptyRental: Rentals = {
   until: "",
   Users_uid: 0,
   Cars_id: 0,
+  status:undefined,
 };
 
 const EditRentPage = () => {
@@ -49,6 +50,12 @@ const EditRentPage = () => {
             [e.target.name]: e.target.value,
         });
     };
+    const selectChangeHandler = (e: React.ChangeEvent<HTMLSelectElement>) => {
+        setCarRent({
+            ...carRental,
+            [e.target.name]: e.target.value,
+        });
+    };
 
     return (
         <div>
@@ -76,13 +83,17 @@ const EditRentPage = () => {
                 </label>
                 <label>
                     status:
-                    <input
-                        type="text"
+                    <select
                         name="status"
-                        placeholder="status"
                         value={carRental.status}
-                        onChange={inputChangeHandler}
-                    />
+                        className="form-control"
+                        onChange={selectChangeHandler}
+                    >
+                        <option value="PENDING">Zarezerwowane</option>
+                        <option value="RENTED">Wypożyczone</option>
+                        <option value="RETURNED">Zwrócone</option>
+                        <option value="CANCELLED">Anulowane</option>
+                    </select>
                 </label>
                 <label>
                     Client ID:

@@ -37,14 +37,13 @@ const ZarzadzanieP = () => {
             [name]: value,
         }));
     };
-	const createCarSelectChangeHandler = (
-		e: React.ChangeEvent<HTMLSelectElement>
-	) => {
-		setNewCarData((prevState) => ({
-			...prevState,
-			[e.target.name]: e.target.value,
-		}));
-	};
+
+    const createCarSelectChangeHandler = (e: React.ChangeEvent<HTMLSelectElement>) => {
+        setNewCarData((prevState) => ({
+            ...prevState,
+            [e.target.name]: e.target.value,
+        }));
+    };
 
     const handleRentalInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value } = event.target;
@@ -53,14 +52,13 @@ const ZarzadzanieP = () => {
             [name]: value,
         }));
     };
-	const createSelectChangeHandler = (
-		e: React.ChangeEvent<HTMLSelectElement>
-	) => {
-		setNewRentalData((prevState) => ({
-			...prevState,
-			[e.target.name]: e.target.value,
-		}));
-	};
+
+    const createSelectChangeHandler = (e: React.ChangeEvent<HTMLSelectElement>) => {
+        setNewRentalData((prevState) => ({
+            ...prevState,
+            [e.target.name]: e.target.value,
+        }));
+    };
 
     const submitNewCar = async () => {
         try {
@@ -85,9 +83,19 @@ const ZarzadzanieP = () => {
     };
 
     const submitNewRental = async () => {
+        const sinceDate = new Date(newRentalData.since);
+        const untilDate = new Date(newRentalData.until);
+        const formatedSince = sinceDate.toISOString().slice(0, 19).replace("T", " ");
+        const formatedUntil = untilDate.toISOString().slice(0, 19).replace("T", " ");
+
+        
         try {
-            const response = await rentService.createRental(newRentalData);
-            console.log("New Rental Data:", response);
+            const response = await rentService.createRental({
+                ...newRentalData,
+                since: formatedSince,
+                until: formatedUntil,
+            });
+
             setRentals([...rentals, response.data]);
             setNewRentalData({
                 id: 0,
@@ -100,7 +108,6 @@ const ZarzadzanieP = () => {
             alert("Rental added successfully!");
             navigate(0);
         } catch (error) {
-            console.error("Error while adding rental:", error);
             alert("An error occurred while adding the rental. Please try again");
         }
     };
@@ -192,18 +199,17 @@ const ZarzadzanieP = () => {
                             <div className="form-group">
                                 <label htmlFor="status">Status</label>
                                 <select
-                                    
                                     name="status"
                                     className="form-control"
                                     value={newRentalData.status}
                                     onChange={createSelectChangeHandler}
                                 >
-									<option value="">Wybierz status</option>
-									<option value="PENDING">Zarezerwowane</option>
-									<option value="RENTED">Wypożyczone</option>
-									<option value="RETURNED">Zwrócone</option>
-									<option value="CANCELLED">Anulowane</option>
-								</select>
+                                    <option value="">Wybierz status</option>
+                                    <option value="PENDING">Zarezerwowane</option>
+                                    <option value="RENTED">Wypożyczone</option>
+                                    <option value="RETURNED">Zwrócone</option>
+                                    <option value="CANCELLED">Anulowane</option>
+                                </select>
                             </div>
                             <div className="form-group">
                                 <label htmlFor="Users_uid">ID klienta</label>

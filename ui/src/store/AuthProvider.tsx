@@ -19,26 +19,47 @@ const AuthProvider: React.ComponentType<AuthProviderProps> = ({
 	const [auth, setAuth] = useState<boolean>(false);
 	const [user, setUser] = useState<User | undefined>(undefined);
 
-	const checkAuth = useCallback(() => {
+	const refreshToken = useCallback(() => new Promise<boolean>((resolve) => {
+		authenticationService
+			.refreshToken()
+			.then((response: AxiosResponse<AuthResponse>) => {
+				if (response.status === 200) {
+					setAuth(response.data.auth);
+					setUser(response.data.user);
+					resolve(true);
+				}
+			})
+			.catch((error) => {
+				if (error.response.status === 401) {
+					console.error("Unauthorized");
+				} else if (error.response.status === 500) {
+					console.error("Internal Server error");
+				}
+				resolve(false);
+			});
+	}), []);
+
+	const checkAuth = useCallback(() => new Promise<boolean>((resolve) => {
 		authenticationService
 			.authenticate()
 			.then((response: AxiosResponse<AuthResponse>) => {
 				if (response.status === 200) {
 					setAuth(response.data.auth);
 					setUser(response.data.user);
+					resolve(true);
 				}
 			})
 			.catch((error) => {
 				if (error.response) {
 					if (error.response.status === 401) {
-						setAuth(false);
-						setUser(undefined);
+						refreshToken().then((result) => resolve(result));
 					} else if (error.response.status === 500) {
 						console.error("Internal server error");
+						resolve(false);
 					}
 				}
 			});
-	}, []);
+	}), [refreshToken]);
 
 	const logout = useCallback(() => {
 		authenticationService
@@ -60,7 +81,7 @@ const AuthProvider: React.ComponentType<AuthProviderProps> = ({
 
 	return (
 		<AuthContext.Provider
-			value={{ auth, user, setAuth, setUser, checkAuth, logout }}
+			value={{ auth, user, setAuth, setUser, checkAuth, refreshToken, logout }}
 		>
 			{children}
 		</AuthContext.Provider>

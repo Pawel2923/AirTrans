@@ -9,6 +9,10 @@ class AuthenticationService {
 		return http.get("/authenticate", { withCredentials: true });
 	};
 
+	refreshToken = () => {
+		return http.post("/authenticate/refresh", {}, { withCredentials: true });
+	};
+
 	logout = () => {
 		return http.get("/logout", { withCredentials: true });
 	};

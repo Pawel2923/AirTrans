@@ -73,6 +73,13 @@ router.post("/", async function (req, res, next) {
 		};
 		// Ustawienie ciasteczka JWT
 		res.cookie("jwt", token, cookieOptions);
+		
+		const refreshCookieOptions = {
+			expires: new Date(Date.now() + 525600 * 1000), // Token wygasa po 1 roku
+			httpOnly: true, // Zapobieganie dostępu do ciasteczka przez JavaScript
+		};
+
+		res.cookie("refreshJwt", refreshToken, refreshCookieOptions);
 
 		return res
 			.status(200)

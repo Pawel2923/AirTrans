@@ -19,6 +19,22 @@ const AuthProvider: React.ComponentType<AuthProviderProps> = ({
 	const [auth, setAuth] = useState<boolean>(false);
 	const [user, setUser] = useState<User | undefined>(undefined);
 
+	const refreshToken = useCallback(() => {
+		authenticationService
+			.refreshToken()
+			.then((response: AxiosResponse<AuthResponse>) => {
+				if (response.status === 200) {
+					setAuth(response.data.auth);
+					setUser(response.data.user);
+				} else if (response.status === 401) {
+					setAuth(false);
+					setUser(undefined);
+				} else if (response.status === 500) {
+					console.error("Internal server error");
+				}
+			});
+	}, []);
+
 	const checkAuth = useCallback(() => {
 		authenticationService
 			.authenticate()
@@ -31,14 +47,13 @@ const AuthProvider: React.ComponentType<AuthProviderProps> = ({
 			.catch((error) => {
 				if (error.response) {
 					if (error.response.status === 401) {
-						setAuth(false);
-						setUser(undefined);
+						refreshToken();
 					} else if (error.response.status === 500) {
 						console.error("Internal server error");
 					}
 				}
 			});
-	}, []);
+	}, [refreshToken]);
 
 	const logout = useCallback(() => {
 		authenticationService
@@ -60,7 +75,7 @@ const AuthProvider: React.ComponentType<AuthProviderProps> = ({
 
 	return (
 		<AuthContext.Provider
-			value={{ auth, user, setAuth, setUser, checkAuth, logout }}
+			value={{ auth, user, setAuth, setUser, checkAuth, refreshToken, logout }}
 		>
 			{children}
 		</AuthContext.Provider>

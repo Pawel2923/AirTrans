@@ -10,7 +10,7 @@ import { AuthResponse } from "../store/AuthProvider";
 
 const Manager = () => {
 	const navigate = useNavigate();
-	const { setAuth, setUser } = useContext(AuthContext);
+	const { setAuth, setUser, refreshToken } = useContext(AuthContext);
 	const [title, setTitle] = useState<string>("");
 
 	useEffect(() => {
@@ -28,9 +28,7 @@ const Manager = () => {
 			.catch((error) => {
 				if (error.response) {
 					if (error.response.status === 401) {
-						setAuth(false);
-						setUser(undefined);
-						navigate("/logowanie");
+						refreshToken();
 					} else if (error.response.status === 403) {
 						navigate("/zabronione");
 					} else {
@@ -39,7 +37,7 @@ const Manager = () => {
 					}
 				}
 			});
-	}, [navigate, setAuth, setUser]);
+	}, [navigate, refreshToken, setAuth, setUser]);
 
 	return (
 		<div className={classes.manager}>

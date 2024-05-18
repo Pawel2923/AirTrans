@@ -7,6 +7,7 @@ interface AuthContextProps {
 	setAuth: React.Dispatch<React.SetStateAction<boolean>>;
 	setUser: React.Dispatch<React.SetStateAction<User | undefined>>;
 	checkAuth: () => void;
+	refreshToken: () => void;
 	logout: () => void;
 }
 

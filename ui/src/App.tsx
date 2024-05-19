@@ -32,6 +32,7 @@ import AirfieldEdit from "./pages/Manager/AirfieldEdit";
 import UsersPage from "./pages/Manager/UsersPage";
 import EquipmentPage from "./pages/Manager/EquipmentPage";
 import EditEquipmentPage from "./pages/Manager/editEquipmentPage";
+import GatesPage from "./pages/Manager/GatesPage";
 
 const router = createBrowserRouter([{ path: "*", Component: Root, errorElement: <ErrorBoundary /> }]);
 
@@ -83,6 +84,9 @@ function Root() {
 							path="edit-sprzet/:serial_no"
 							element={<EditEquipmentPage />}
 						/>
+					</Route>
+					<Route path="bramki">
+						<Route index element={<GatesPage />} />
 					</Route>	
           <Route path="ogloszenia">
           <Route index element={<OgloszeniaZ />} />

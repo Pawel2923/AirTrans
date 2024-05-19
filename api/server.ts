@@ -21,6 +21,7 @@ import logoutRouter from "./routes/logout";
 import employeesRouter from "./routes/employees";
 import usersRouter from "./routes/users";
 import equipmentRouter from "./routes/equipment";
+import gatesRouter from "./routes/gates";
 import { Err } from "./Types";
 
 const app = express();
@@ -63,6 +64,7 @@ app.use("/employees", employeesRouter);
 app.use("/users", usersRouter);
 app.use("/logout", logoutRouter);
 app.use("/sprzet", equipmentRouter);
+app.use("/bramki", gatesRouter);
 
 app.use((err: Err, _req: Request, res: Response, _next: NextFunction): any => {
 	const statusCode = err.statusCode || 500;

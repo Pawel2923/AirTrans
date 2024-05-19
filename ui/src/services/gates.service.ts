@@ -11,6 +11,12 @@ class GatesService{
     delete=(id: number)=>{
         return http.delete(`/bramki/${id}`);
     }
+    updateG=(data: Gates)=>{
+        return http.put(`/bramki/${data.id}`,data);
+    }
+    getById=(id: number)=>{
+        return http.get(`/bramki/${id}`);
+    }
 }
 
 export default new GatesService();

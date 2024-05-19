@@ -101,8 +101,59 @@ async function remove(id:number){
     return"Successfully deleted gates";
 }
 
+async function getById(id: number) {
+    let row = await db.query("SELECT * FROM Gates WHERE id=?", [id]);
+    row = helper.emptyOrRows(row);
+
+    if (row.length === 0) {
+        const error = new Err("Gates with this id does not exist");
+        error.statusCode = 404;
+        throw error;
+    }
+
+    return {
+        data: row[0],
+        message: "Successfully fetched gates",
+    };
+}
+
+async function updateG(id: number, gate: Gates) {
+
+    let gatesExists = await db.query(
+        "SELECT * FROM Gates WHERE id=?",
+        [id]
+    );
+    gatesExists = helper.emptyOrRows(gatesExists);
+
+    if (gatesExists.length === 0) {
+        const error = new Err("Gates with this id does not exist");
+        error.statusCode = 404;
+        throw error;
+    }
+
+    let result = await db.query(
+        "UPDATE Gates SET name=?, status=? WHERE id=?",
+        [
+            gate.name,
+            gate.status,
+            id,   
+        ]
+    );
+    result = result as ResultSetHeader;
+
+    if (result.affectedRows === 0) {
+        throw new Err("Failed to update gates");
+    }
+
+    return {
+        data: gate,
+        message: "Successfully updated gates",
+    };
+}
 export default {
     get,
     create,
     remove,
+    getById,
+    updateG,
 };

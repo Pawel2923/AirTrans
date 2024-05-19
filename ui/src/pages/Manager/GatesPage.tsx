@@ -62,7 +62,9 @@ const GatesPage = () => {
             alert("Wystąpił błąd podczas usuwania bramki. Spróbuj ponownie.");
         }
     };
-
+    const editGates = async (gates:Gates) => {
+        navigate(`edit-bramka/${gates.id}`);
+    }
     const fetchGates= async () => {
         try {
             const response = await gatesService.get();
@@ -84,7 +86,7 @@ const GatesPage = () => {
                 <h2>Lista bramek</h2>
                 <TabelkaGates 
                 gates={gates} 
-                onEdit={console.log}
+                onEdit={editGates}
                 onDelete={deleteGates}
                 />
                 <Pagination

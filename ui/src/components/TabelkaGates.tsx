@@ -5,11 +5,14 @@ import styles from "./tabelkaGates.module.css";
 
 type GatesTableProps = {
     gates: Gates[];
-    onEdit: (id: number) => void;
+    onEdit: (gate:Gates) => void;
     onDelete: (id: number) => void;
 };
 
-const TabelkaGates: React.FC<GatesTableProps> = ({ gates,onDelete }) => {
+const TabelkaGates: React.FC<GatesTableProps> = ({ gates,onDelete,onEdit }) => {
+    const handleEditClick = (gate:Gates) => {
+        onEdit(gate);
+    };
     return (
         <div className={styles.container}>
             {gates.map((gate) => (
@@ -19,7 +22,9 @@ const TabelkaGates: React.FC<GatesTableProps> = ({ gates,onDelete }) => {
                     <div className={styles.gateStatus}>Status: {gate.status}</div>
                     <hr className={styles.separator} />
                     <div className={styles.actions}>
-                        <button onClick={console.log} >Edytuj</button>
+                        <button 
+                        className="btn btn-primary me-3"
+                        onClick={()=>handleEditClick(gate)}>Edytuj</button>
                         <button
                         className="btn btn-danger"
                          onClick={()=>onDelete(gate.id??0)}>Usuń</button>

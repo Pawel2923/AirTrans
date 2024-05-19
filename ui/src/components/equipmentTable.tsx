@@ -5,13 +5,15 @@ import styles from './tableCars.module.css';
 type EquipmentTableProps = {
     equipment: Equipment[];
     onEdit: (equipment: Equipment) => void;
-    onDelete: (id: number) => void;
+    onDelete: (serial_no:string) => void;
 };
-const EquipmentTable: React.FC<EquipmentTableProps> = ({ equipment, onEdit }) => {
+const EquipmentTable: React.FC<EquipmentTableProps> = ({ equipment, onEdit,onDelete }) => {
 
     const handleEditClick = (equipment: Equipment) => {
         onEdit(equipment);
     };
+    
+
     return (
         <table className={styles.table}>
             <thead>
@@ -36,8 +38,10 @@ const EquipmentTable: React.FC<EquipmentTableProps> = ({ equipment, onEdit }) =>
                             <button
                                 className="btn btn-primary me-3"
                                 onClick={() => handleEditClick(equipment)}>EDYTUJ</button>
-                    
-                    </td>
+                            <button
+                                className="btn btn-danger"
+                                onClick={() => onDelete(equipment.serial_no??0)}>Delete</button>
+                        </td>
                     </tr>
                 ))}
             </tbody>

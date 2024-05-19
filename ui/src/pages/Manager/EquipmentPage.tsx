@@ -48,7 +48,19 @@ const EquipmentPage = () => {
             alert("Wystąpił błąd podczas dodawania urządzenia. Spróbuj ponownie.");
         }
     };
-
+    const deleteEquipment = async (serial_no: string) => {
+        try {
+            await equipmentService.deleteEquipment(serial_no);
+            setEquipment(equipment.filter((equipment) => equipment.serial_no !== serial_no));
+            alert("Usunięto urządzenie");
+        } catch (error) {
+            console.error("Error while deleting equipment:", error);
+            alert("Wystąpił błąd podczas usuwania urządzenia. Spróbuj ponownie.");
+        }
+    };
+    const editEquipment = async (equipment: Equipment) => {
+        navigate(`edit-sprzet/${equipment.serial_no}`);
+    };
     const fetchEquipment = async () => {
         try {
             const response = await equipmentService.getaAll(pageData.page);
@@ -70,8 +82,8 @@ const EquipmentPage = () => {
                 <h2>Lista urządzeń</h2>
                 <EquipmentTable 
                     equipment={equipment}
-                    onEdit={(equipment) => { console.log(equipment); }}
-                    onDelete={(id) => { console.log(id); }}
+                    onEdit={editEquipment}
+                    onDelete={deleteEquipment}
                 />
                 <Pagination 
                     className="mt-3"

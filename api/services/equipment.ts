@@ -86,8 +86,94 @@ async function create(equipment: Equipment) {
      }
 }
 
+async function getById(serial_no: string) {
+    let row = await db.query("SELECT * FROM Equipment WHERE serial_no=?", [serial_no]);
+    row = helper.emptyOrRows(row);
+
+    if (row.length === 0) {
+        const error = new Err("Equipment with this serial number does not exist");
+        error.statusCode = 404;
+        throw error;
+    }
+
+    return {
+        data: row[0],
+        message: "Successfully fetched equipment",
+    };
+};
+
+async function update(serial_no: string, equipment: Equipment) {
+
+    let equipmentExists = await db.query(
+        "SELECT * FROM Equipment WHERE serial_no = ?",
+        [serial_no]
+    );
+    equipmentExists = helper.emptyOrRows(equipmentExists);
+
+    if (equipmentExists.length === 0) {
+        const error = new Err("Equipment with this serial number does not exist");
+        error.statusCode = 404;
+        throw error;
+    }
+
+    if(serial_no !== equipment.serial_no){
+        const error = new Err("Equipment serial number in the URL does not match the serial number in the body");
+        error.statusCode = 400;
+        throw error;
+    }
+
+    let result = await db.query(
+        `UPDATE Equipment SET type=?, name=?, location=?, Employee_id=? WHERE serial_no=?`,
+        [
+            equipment.type,
+            equipment.name,
+            equipment.location,
+            equipment.Employee_id,
+            serial_no,
+        ]
+    );
+    result = result as ResultSetHeader;
+
+    if (result.affectedRows === 0) {
+        const error = new Err("Failed to update equipment");
+    }
+
+    return {
+        data: equipment,
+        message: "Successfully updated equipment",
+    };
+}
+
+async function remove(serial_no: string) {
+    let equipmentExists = await db.query(
+        "SELECT * FROM Equipment WHERE serial_no = ?",
+        [serial_no]
+    );
+    equipmentExists = helper.emptyOrRows(equipmentExists);
+
+    if (equipmentExists.length === 0) {
+        const error = new Err("Equipment with this serial number does not exist");
+        error.statusCode = 404;
+        throw error;
+    }
+
+    let result = await db.query("DELETE FROM Equipment WHERE serial_no = ?", [serial_no]);
+    result = result as ResultSetHeader;
+
+    if (result.affectedRows === 0) {
+        const error = new Err("Failed to delete equipment");
+    }
+
+    return {
+        message: "Successfully deleted equipment",
+    };
+}
+
 export default {
     getAll,
     create,
+    getById,
+    update,
+    remove,
 };
 

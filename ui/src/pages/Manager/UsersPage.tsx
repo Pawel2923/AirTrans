@@ -17,14 +17,33 @@ const defaultUserInfo: UserInfo[] = [
 	},
 ];
 
-const RoleSelect = () => {
-	const roles = ["admin", "client"];
+interface RoleSelectProps {
+	setRole: React.Dispatch<React.SetStateAction<string>>;
+}
+
+const RoleSelect: React.FC<RoleSelectProps> = ({ setRole }) => {
+	const { getRoles } = useGetUsers();
+	const [roles, setRoles] = useState<string[]>([]);
+
+	useEffect(() => {
+		getRoles().then((roles) => {
+			setRoles(roles as string[]);
+		});
+	}, [getRoles]);
+
+	const selectChangeHandler = (e: React.ChangeEvent<HTMLSelectElement>) => {
+		setRole(e.target.value);
+	};
 
 	return (
-		<select defaultValue={""}>
-			<option value="" hidden>Wybierz rolę</option>
+		<select defaultValue={""} onChange={selectChangeHandler}>
+			<option value="" hidden>
+				Wybierz rolę
+			</option>
 			{roles.map((role, index) => (
-				<option key={index} value={role}>{role}</option>
+				<option key={index} value={role}>
+					{role}
+				</option>
 			))}
 		</select>
 	);
@@ -37,20 +56,47 @@ const UsersPage = () => {
 		pages: 1,
 	});
 	const { usersData, errorAlert, errorToast, getAllUsers } = useGetUsers();
-	const [confirm, setConfirm] = useState<boolean>(false);
+	const [roleConfirm, setRoleConfirm] = useState<boolean>();
+	const [deleteConfirm, setDeleteConfirm] = useState<boolean>();
+	const [role, setRole] = useState<string>("");
+	const { updateRole, deleteUser } = useGetUsers();
+	const [uid, setUid] = useState<number>(0);
 
 	useEffect(() => {
 		getAllUsers(pageData.page);
 	}, [getAllUsers, pageData.page]);
 
-	const confirmModalHandler = () => {};
+	const roleBtnClickHandler = (e: React.MouseEvent<HTMLButtonElement>) => {
+		setUid(parseInt(e.currentTarget.value));
+		setRoleConfirm(true);
+	};
+
+	const deleteBtnClickHandler = (e: React.MouseEvent<HTMLButtonElement>) => {
+		setUid(parseInt(e.currentTarget.value));
+		setDeleteConfirm(true);
+	};
+
+	const updateModalHandler = () => {
+		updateRole(uid, role).then(() => {
+			getAllUsers(pageData.page);
+			setRoleConfirm(false);
+		});
+	};
+
+	const deleteModalHandler = () => {
+		deleteUser(uid).then(() => {
+			getAllUsers(pageData.page);
+			setDeleteConfirm(false);
+		});
+	};
 
 	return (
 		<>
 			<div style={{ overflowX: "auto" }}>
 				<UsersTable
 					data={usersData || defaultUserInfo}
-					roleBtnClickHandler={() => setConfirm(true)}
+					roleBtnClickHandler={roleBtnClickHandler}
+					deleteBtnClickHandler={deleteBtnClickHandler}
 				/>
 			</div>
 			<Pagination
@@ -60,13 +106,21 @@ const UsersPage = () => {
 			/>
 			{errorAlert}
 			{errorToast}
-			{confirm && (
+			{roleConfirm && (
 				<ConfirmModal
-					onClose={() => setConfirm(false)}
-					onConfirm={confirmModalHandler}
+					onClose={() => setRoleConfirm(false)}
+					onConfirm={updateModalHandler}
 					title="Wybierz rolę użytkownika"
-					children={<RoleSelect />}
-                    confirmBtnText="Zmień"
+					children={<RoleSelect setRole={setRole} />}
+					confirmBtnText="Zapisz"
+				/>
+			)}
+			{deleteConfirm && (
+				<ConfirmModal
+					onClose={() => setDeleteConfirm(false)}
+					onConfirm={deleteModalHandler}
+					title="Czy na pewno chcesz usunąć użytkownika?"
+					message="Tej operacji nie można cofnąć"
 				/>
 			)}
 		</>

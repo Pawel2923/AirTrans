@@ -1,4 +1,4 @@
-import { Filter, Sort, Users } from "../assets/Data";
+import { Filter, Sort, UserInfo } from "../assets/Data";
 import http from "../http-common";
 
 class UsersService {
@@ -34,19 +34,23 @@ class UsersService {
 			url += `&sort=${JSON.stringify(sort)}`;
 		}
 
-		return http.get(url);
+		return http.get(url, {withCredentials: true});
 	};
 
     getById = (uid: number) => {
-		return http.get(`/users?filter=[{"by":"uid","value":"${uid}"}]`);
+		return http.get(`/users?filter=[{"by":"uid","value":"${uid}"}]`, { withCredentials: true });
 	};
 
-    update = (uid: number, data: Users) => {
+	getRoles = () => {
+		return http.get("/users/roles", { withCredentials: true });
+	}
+
+    update = (uid: number, data: UserInfo) => {
         return http.put(`/users/${uid}`, data);
     }
 
 	updateRole = (uid: number, role: string) => {
-		return http.put(`/users/${uid}`, { role }, { withCredentials: true });
+		return http.patch(`/users/${uid}`, { role }, { withCredentials: true });
 	}
 
     delete = (uid: number) => {

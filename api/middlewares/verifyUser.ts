@@ -62,7 +62,7 @@ export function requireRole(req: Request, requiredRole: string) {
 	const role = requiredRole;
 
 		if (!role) {
-			throw new Err("Role not specified", 400);
+			return;
 		}
 	
 		const user = req.user as { role: string };

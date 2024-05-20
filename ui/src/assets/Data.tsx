@@ -226,11 +226,11 @@ interface Rentals {
 	Cars_id: number;
 	Users_uid: number;
 }
-interface Event_logs {
+interface EventLogs {
 	id?: number;
 	table_name: string;
 	by_user: string;
-	timestamp: string;
+	timestamp_log: string;
 	action: string;
 	log_details: string;
 }
@@ -273,7 +273,7 @@ interface Err extends Error {
 }
 
 export type {
-	Event_logs,
+	EventLogs,
 	Flights,
 	Departures,
 	Airplanes,

@@ -4,9 +4,15 @@ import tableStyles from "../DeparturesTable.module.css";
 
 interface UsersTableProps {
 	data: UserInfo[];
+	roleBtnClickHandler: (e: React.MouseEvent<HTMLButtonElement>) => void;
+	deleteBtnClickHandler: (e: React.MouseEvent<HTMLButtonElement>) => void;
 }
 
-const UsersTable: React.FC<UsersTableProps> = ({ data }: UsersTableProps) => {
+const UsersTable: React.FC<UsersTableProps> = ({
+	data,
+	roleBtnClickHandler,
+	deleteBtnClickHandler,
+}: UsersTableProps) => {
 	return (
 		<table className={tableStyles.table}>
 			<thead>
@@ -44,12 +50,28 @@ const UsersTable: React.FC<UsersTableProps> = ({ data }: UsersTableProps) => {
 						<td>{user.phone_number || "Brak"}</td>
 						<td>{user.address || "Brak"}</td>
 						<td>{user.gender || "Brak"}</td>
-						<td>{user.birth_date && user.birth_date.replace("T", " ").slice(0,10) || "Brak"}</td>
-						<td>{user.create_time && user.create_time.replace("T", " ").slice(0,19) || "Brak"}</td>
+						<td>
+							{(user.birth_date &&
+								user.birth_date
+									.replace("T", " ")
+									.slice(0, 10)) ||
+								"Brak"}
+						</td>
+						<td>
+							{(user.create_time &&
+								user.create_time
+									.replace("T", " ")
+									.slice(0, 19)) ||
+								"Brak"}
+						</td>
 						<td>{user.user_img || "Brak"}</td>
 						<td>{user.role || "client"}</td>
 						<td>
-							<button className="btn btn-primary">
+							<button
+								className="btn btn-primary"
+								value={user.uid?.toString() || ""}
+								onClick={roleBtnClickHandler}
+							>
 								Zmień rolę
 							</button>
 						</td>
@@ -59,7 +81,7 @@ const UsersTable: React.FC<UsersTableProps> = ({ data }: UsersTableProps) => {
 							</button>
 						</td>
 						<td>
-							<button className="btn btn-danger">Usuń</button>
+							<button className="btn btn-danger" value={user.uid?.toString()} onClick={deleteBtnClickHandler}>Usuń</button>
 						</td>
 					</tr>
 				))}

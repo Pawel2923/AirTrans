@@ -27,66 +27,72 @@ function checkObject(obj: object, objectProperties: string[]) {
 		if (property in obj === false) {
 			throw new Err(`${property} property is missing`, 400);
 		}
-	});
 
-	for (const [key, value] of Object.entries(obj)) {
-		if (value === null || value === "") {
-			throw new Err(`${key} is empty`, 400);
+		if (!obj[property as keyof object]) {
+			throw new Err(`${property} is empty`, 400);
 		}
-	}
+	});
 }
 
 function buildFilterQuery(filter: string) {
-	let query = " WHERE";
-	const queryParams: any[] = [];
+	try {
+		let query = " WHERE";
+		const queryParams: any[] = [];
 
-	const parsedFilter = JSON.parse(filter) as {
-		by: string;
-		value: string;
-		operator?: string;
-	}[];
+		const parsedFilter = JSON.parse(filter) as {
+			by: string;
+			value: string;
+			operator?: string;
+		}[];
 
-	parsedFilter.forEach((condition) => {
-		if (condition.by && condition.value) {
-			query += ` ?? ${db.getOperator(condition.operator)} ? AND`;
-			queryParams.push(condition.by, condition.value);
-		}
-	});
+		parsedFilter.forEach((condition) => {
+			if (condition.by && condition.value) {
+				query += ` ?? ${db.getOperator(condition.operator)} ? AND`;
+				queryParams.push(condition.by, condition.value);
+			}
+		});
 
-	query = query.slice(0, -4); // Remove the last "AND" from the query
+		query = query.slice(0, -4); // Remove the last "AND" from the query
 
-	return { query, queryParams };
+		return { query, queryParams };
+	} catch (error) {
+		throw new Err("Invalid filter query", 400);
+	}
 }
 
 function buildSortQuery(sort: string) {
-	const parsedSort = JSON.parse(sort) as { by: string; order?: string };
+	try {
+		const parsedSort = JSON.parse(sort) as { by: string; order?: string };
 
-	let query = " ORDER BY ??";
-	const queryParams: any[] = [parsedSort.by];
+		let query = " ORDER BY ??";
+		const queryParams: any[] = [parsedSort.by];
 
-	if (Array.isArray(parsedSort.by)) {
-		parsedSort.by.forEach((sortBy, index) => {
-			if (index === 0) {
-				query += " ORDER BY ??";
-			} else {
-				query += " ??";
-			}
-			queryParams.push(sortBy);
-			if (parsedSort.order && index === parsedSort.by.length - 1) {
+		if (Array.isArray(parsedSort.by)) {
+			parsedSort.by.forEach((sortBy, index) => {
+				if (index === 0) {
+					query += " ORDER BY ??";
+				} else {
+					query += " ??";
+				}
+				queryParams.push(sortBy);
+				if (parsedSort.order && index === parsedSort.by.length - 1) {
+					query += ` ${parsedSort.order}`;
+				}
+				query += ",";
+			});
+			query = query.slice(0, -1); // Remove the last comma from the query
+		} else if (parsedSort.by) {
+			query += " ORDER BY ??";
+			queryParams.push(parsedSort.by);
+			if (parsedSort.order) {
 				query += ` ${parsedSort.order}`;
 			}
-			query += ",";
-		});
-		query = query.slice(0, -1); // Remove the last comma from the query
-	} else if (parsedSort.by) {
-		query += " ORDER BY ??";
-		queryParams.push(parsedSort.by);
-		if (parsedSort.order) {
-			query += ` ${parsedSort.order}`;
 		}
-	}
 
-	return { query, queryParams };
+		return { query, queryParams };
+	} catch (error) {
+		throw new Err("Invalid sort query", 400);
+	}
 }
 
 function buildQuery(

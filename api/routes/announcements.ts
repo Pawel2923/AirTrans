@@ -67,6 +67,8 @@ import announcements from "../services/announcements";
  *            type: integer
  *         message:
  *          type: string
+ *    400:
+ *     description: Bad request
  *    500:
  *     description: Internal server error
  */

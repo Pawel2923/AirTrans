@@ -46,7 +46,7 @@ const AirplaneEdit = () => {
 			if (response.status === 200) {
 				setAirplane(emptyAirplane);
 				alert("Zaktualizowano samolot");
-				navigate("/samoloty");
+				navigate("/zarzadzanie/samoloty");
 			}
 		});
 	};
@@ -134,12 +134,12 @@ const AirplaneEdit = () => {
 					/>
 				</div>
 				<div className="form-group">
-					<label htmlFor="crew_size">Crew Size</label>
+					<label htmlFor="num_of_crew">Crew Size</label>
 					<input
 						type="number"
 						className="form-control"
-						name="crew_size"
-						id="crew_size"
+						name="num_of_crew"
+						id="num_of_crew"
 						value={airplane.num_of_crew}
 						onChange={inputChangeHandler}
 					/>

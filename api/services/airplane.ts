@@ -12,7 +12,7 @@ const airplaneProperties = [
 	"num_of_seats",
 	"fuel_tank",
 	"fuel_quant",
-	"crew_size",
+	"num_of_crew",
 	"max_cargo",
 ];
 

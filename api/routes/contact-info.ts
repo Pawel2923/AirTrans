@@ -50,6 +50,8 @@ import contactInfo from "../services/contact-info";
  *           $ref: '#/components/schemas/contact-info'
  *         message:
  *          type: string
+ *    400:
+ *     description: Bad request
  *    404:
  *     description: Contact info not found
  *    500:

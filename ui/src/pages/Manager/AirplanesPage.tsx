@@ -261,14 +261,14 @@ const AirplanesPage = () => {
 					/>
 				</div>
 				<div className="mb-3">
-					<label htmlFor="crew_size" className="form-label">
+					<label htmlFor="num_of_crew" className="form-label">
 						Stanowiska załogi
 					</label>
 					<input
 						type="number"
 						className="form-control"
-						id="crew_size"
-						name="crew_size"
+						id="num_of_crew"
+						name="num_of_crew"
 						value={createData.num_of_crew}
 						onChange={createInputChangeHandler}
 						min={1}

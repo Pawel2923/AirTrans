@@ -17,7 +17,11 @@ async function getAllRentals(
       [tableName, offset, limit]
   );
 
-  const data = helper.emptyOrRows(rows);
+  const data = helper.emptyOrRows(rows).map((row) => ({
+      ...row,
+      since: formatDate(row.since),
+      until: formatDate(row.until),
+  }));
 
   const pages = await helper.getPages(tableName, limit);
 

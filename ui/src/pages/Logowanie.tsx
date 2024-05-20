@@ -4,6 +4,7 @@ import loginService from "../services/login.service";
 import { Link, useNavigate } from "react-router-dom";
 import Input from "../components/input";
 import AuthContext from "../store/auth-context";
+import styles from "./Logowanie.module.css"; 
 
 const emailRegex = /^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$/i;
 const isEmpty = (value: string) =>
@@ -69,37 +70,40 @@ const Login = () => {
 	};
 	const loginForm = (
 		<form onSubmit={submitHandler}>
-			<label>
-				<p>E-mail*</p>
-				<Input
-					type="email"
-					id="email"
-					value={email}
-					minLength={3}
-					onInput={emailInputHandler}
-					validateInput={isEmail}
-					setIsFormInvalid={setIsFormInvalid}
-					required
-				/>
-			</label>
-			<label>
-				<p>Hasło*</p>
-				<Input
-					type="password"
-					id="password"
-					value={password}
-					minLength={3}
-					onInput={passwordInputHandler}
-					validateInput={isEmpty}
-					setIsFormInvalid={setIsFormInvalid}
-					required
-				/>
-			</label>
-			<button type="submit">Zaloguj się</button>
-			<p>
-				Nie masz jeszcze konta?{" "}
-				<Link to="/rejestracja">Zapisz się</Link>
-			</p>
+			<div className="form-container">
+				<div className="form-group">
+					<label htmlFor="email">
+						<Input
+							type="email"
+							id="email"
+							placeholder="E-mail"
+							value={email}
+							minLength={3}
+							onInput={emailInputHandler}
+							validateInput={isEmail}
+							setIsFormInvalid={setIsFormInvalid}
+							required
+						/>
+					</label>
+				</div>
+				<div className="form-group">
+					<label htmlFor="password">
+						<Input
+							type="password"
+							id="password"
+							placeholder="Hasło"
+							value={password}
+							minLength={3}
+							onInput={passwordInputHandler}
+							validateInput={isEmpty}
+							setIsFormInvalid={setIsFormInvalid}
+							required
+						/>
+					</label>
+				</div>
+			</div>
+			<button type="submit" className="btn btn-primary" style={{ backgroundColor: "#5DA9DB" }}>Zaloguj się</button>
+			
 		</form>
 	);
 
@@ -107,9 +111,25 @@ const Login = () => {
 		<>
 			<main>
 				<section className="section">
-					<h1>Zaloguj się</h1>
-					<h2>Wypełnij formularz logowania</h2>
-					{loginForm}
+					<div className={`container ${styles.container}`}>
+						<div className={`rounded p-4 bg-white ${styles['login-container']}`}>
+							<div className={styles.left}>
+								<h1 className="text-center mb-4">LOGOWANIE DO SYSTEMU</h1>
+								<p className="text-center">
+									Nie masz jeszcze konta? <Link to="/rejestracja">Zarejestruj się</Link>
+								</p>
+								<p className="text-center">
+									Zresetuj hasło <Link to="/resetowanie">tutaj</Link>.
+								</p>
+							</div>
+							<div className={styles.right}>
+								<div className="mb-3">
+									<h2 className="text-center mb-4">Wypełnij formularz logowania</h2>
+									{loginForm}
+								</div>
+							</div>
+						</div>
+					</div>
 				</section>
 			</main>
 		</>

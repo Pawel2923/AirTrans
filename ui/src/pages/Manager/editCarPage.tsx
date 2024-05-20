@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import carService from "../../services/car.service";
 import { Cars } from "../../assets/Data";
+import { Container, Row, Col, Form, Button } from 'react-bootstrap';
 
 const emptyCar: Cars = {
   id: 0,
@@ -11,7 +12,7 @@ const emptyCar: Cars = {
   production_year: 0,
   license_plate: "",
   fuel_type: "",
-  transmission_type: "MANUAL",
+  transmission_type: undefined,
 };
 
 const EditCarPage = () => {
@@ -25,17 +26,16 @@ const EditCarPage = () => {
     const carId = parseInt(id); 
 
     carService.getById(carId).then((response) => {
-        if (response.status === 200) {
-            setCarData(response.data.data[0]);
-        }
+      if (response.status === 200) {
+        setCarData(response.data.data[0]);
+      }
     });
-}, [id]);
+  }, [id]);
 
   const formSubmitHandler = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     try {
-      
       const response = await carService.update(carData);
       if (response.status === 200) {
         alert("Car updated successfully!");
@@ -48,7 +48,13 @@ const EditCarPage = () => {
   };
 
   const inputChangeHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
-    
+    setCarData({
+      ...carData,
+      [e.target.name]: e.target.value,
+    });
+  };
+
+  const selectChangeHandler = (e: React.ChangeEvent<HTMLSelectElement>) => {
     setCarData({
       ...carData,
       [e.target.name]: e.target.value,
@@ -56,61 +62,107 @@ const EditCarPage = () => {
   };
 
   return (
-    <div>
-      <h1>Edit Car</h1>
-      <form onSubmit={formSubmitHandler}>
-        <input
-          type="text"
-          name="brand"
-          placeholder="Brand"
-          onChange={inputChangeHandler}
-          value={carData.brand}
-        />
-        <input
-          type="text"
-          name="model"
-          placeholder="Model"
-          onChange={inputChangeHandler}
-          value={carData.model}
-        />
-        <input
-          type="number"
-          name="price_per_day"
-          placeholder="Price per day"
-          onChange={inputChangeHandler}
-          value={carData.price_per_day}
-        />
-        <input
-          type="number"
-          name="production_year"
-          placeholder="Production year"
-          onChange={inputChangeHandler}
-          value={carData.production_year}
-        />
-        <input
-          type="text"
-          name="license_plate"
-          placeholder="License plate"
-          onChange={inputChangeHandler}
-          value={carData.license_plate}
-        />
-        <input
-          type="text"
-          name="fuel_type"
-          placeholder="Fuel type"
-          onChange={inputChangeHandler}
-          value={carData.fuel_type}
-        />
-        <input
-          type="text"
-          name="transmission_type"
-          placeholder="Transmission type"
-          onChange={inputChangeHandler}
-          value={carData.transmission_type}
-        />
-        <button type="submit">Save Changes</button>
-      </form>
-    </div>
+    <Container>
+      <h1 className="text-center">Edytuj Samochód</h1>
+      <Form onSubmit={formSubmitHandler}>
+        <Row>
+          <Col md={6}>
+            <Form.Group className="mb-3">
+              <Form.Label>Marka</Form.Label>
+              <Form.Control
+                type="text"
+                name="brand"
+                placeholder="Brand"
+                value={carData.brand}
+                onChange={inputChangeHandler}
+              />
+            </Form.Group>
+          </Col>
+          <Col md={6}>
+            <Form.Group className="mb-3">
+              <Form.Label>Model</Form.Label>
+              <Form.Control
+                type="text"
+                name="model"
+                placeholder="Model"
+                value={carData.model}
+                onChange={inputChangeHandler}
+              />
+            </Form.Group>
+          </Col>
+        </Row>
+        <Row>
+          <Col md={6}>
+            <Form.Group className="mb-3">
+              <Form.Label>Cena za dzień</Form.Label>
+              <Form.Control
+                type="number"
+                name="price_per_day"
+                placeholder="Price per day"
+                value={carData.price_per_day}
+                onChange={inputChangeHandler}
+              />
+            </Form.Group>
+          </Col>
+          <Col md={6}>
+            <Form.Group className="mb-3">
+              <Form.Label>Rok produkcji</Form.Label>
+              <Form.Control
+                type="number"
+                name="production_year"
+                placeholder="Production year"
+                value={carData.production_year}
+                onChange={inputChangeHandler}
+              />
+            </Form.Group>
+          </Col>
+        </Row>
+        <Row>
+          <Col md={6}>
+            <Form.Group className="mb-3">
+              <Form.Label>Numer rejestracyjny</Form.Label>
+              <Form.Control
+                type="text"
+                name="license_plate"
+                placeholder="License plate"
+                value={carData.license_plate}
+                onChange={inputChangeHandler}
+              />
+            </Form.Group>
+          </Col>
+          <Col md={6}>
+            <Form.Group className="mb-3">
+              <Form.Label>Rodzaj paliwa</Form.Label>
+              <Form.Control
+                type="text"
+                name="fuel_type"
+                placeholder="Fuel type"
+                value={carData.fuel_type}
+                onChange={inputChangeHandler}
+              />
+            </Form.Group>
+          </Col>
+        </Row>
+        <Row>
+          <Col md={6}>
+            <Form.Group className="mb-3">
+              <Form.Label>Skrzynia biegów</Form.Label>
+              <Form.Select
+                name="transmission_type"
+                value={carData.transmission_type}
+                onChange={selectChangeHandler}
+              >
+                <option value="MANUAL">Manualna</option>
+                <option value="AUTOMATIC">Automatyczna</option>
+              </Form.Select>
+            </Form.Group>
+          </Col>
+        </Row>
+        <Button variant="primary" type="submit">
+          Zapisz zmiany
+        </Button>
+      </Form>
+    </Container>
   );
 };
 

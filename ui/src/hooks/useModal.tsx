@@ -28,6 +28,7 @@ const useModal = () => {
 		title?: string,
 		onConfirm?: () => void,
 		onClose?: () => void
+		
 	) => {
 		setConfirm(() => (
 			<ConfirmModal

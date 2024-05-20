@@ -30,6 +30,10 @@ import InternalServerError from "./pages/InternalServerError";
 import ErrorBoundary from "./pages/ErrorBoundary";
 import AirfieldEdit from "./pages/Manager/AirfieldEdit";
 import UsersPage from "./pages/Manager/UsersPage";
+import EquipmentPage from "./pages/Manager/EquipmentPage";
+import EditEquipmentPage from "./pages/Manager/editEquipmentPage";
+import GatesPage from "./pages/Manager/GatesPage";
+import EditGatePage from "./pages/Manager/editGatesPage";
 
 const router = createBrowserRouter([{ path: "*", Component: Root, errorElement: <ErrorBoundary /> }]);
 
@@ -75,6 +79,20 @@ function Root() {
 							element={<EditParkingPage />}
 						/>
 					</Route>
+					<Route path="sprzet">
+						<Route index element={<EquipmentPage />} />
+						<Route
+							path="edit-sprzet/:serial_no"
+							element={<EditEquipmentPage />}
+						/>
+					</Route>
+					<Route path="bramki">
+						<Route index element={<GatesPage />} />
+						<Route
+							path="edit-bramka/:id"
+							element={<EditGatePage/>}
+						/>
+					</Route>	
           <Route path="ogloszenia">
           <Route index element={<OgloszeniaZ />} />
           <Route 

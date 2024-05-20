@@ -1,6 +1,6 @@
 import React from "react";
 import { Event_logs } from "../assets/Data";
-import styles from "./tableCars.module.css";
+import "./tableCars.module.css";
 
 type Event_logsTableProps = {
   event_logs: Event_logs[];
@@ -8,7 +8,7 @@ type Event_logsTableProps = {
 
 const Event_logsTable: React.FC<Event_logsTableProps> = ({ event_logs }) => {
   return (
-    <table className={styles.table}>
+    <table >
       <thead>
         <tr>
           <th>ID</th>

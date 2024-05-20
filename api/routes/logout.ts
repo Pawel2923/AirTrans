@@ -16,10 +16,11 @@ const router = express.Router();
  *    500:
  *     description: Internal Server Error
  */
-router.get("/", (_req, res, next) => {
+router.get("/", async (_req, res, next) => {
 	try {
 		// Clear the JWT cookie by setting it to an empty value and expiring it
 		res.clearCookie("jwt");
+		res.clearCookie("refreshJwt");
 		res.status(200).json({ message: "Logged out successfully" });
 	} catch (error) {
 		next(error);

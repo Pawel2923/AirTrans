@@ -1,5 +1,5 @@
 import { Link, NavLink } from "react-router-dom";
-import Logo from "/Logo.svg";
+import Logo from "/Logo.png";
 import { useContext, useEffect } from "react";
 import AuthContext from "../store/auth-context";
 
@@ -49,7 +49,7 @@ const Nav = () => {
 					to="/"
 					className="d-flex align-items-center gap-3 navbar-brand fw-bold fs-3"
 				>
-					<img src={Logo} alt="AirTrans Logo" />
+					<img src={Logo} width={64} alt="AirTrans Logo" />
 					AirTrans
 				</Link>
 				<div

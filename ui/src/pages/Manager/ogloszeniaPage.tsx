@@ -46,7 +46,7 @@ const OgloszeniaPage = () => {
                 title: "",
                 content: "",
                 valid_until: "",
-                Employee_id: 0,
+                Employee_id:0,
             });
 
             alert("Dodano nowe ogłoszenie");

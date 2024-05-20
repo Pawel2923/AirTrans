@@ -34,6 +34,7 @@ import EquipmentPage from "./pages/Manager/EquipmentPage";
 import EditEquipmentPage from "./pages/Manager/editEquipmentPage";
 import GatesPage from "./pages/Manager/GatesPage";
 import EditGatePage from "./pages/Manager/editGatesPage";
+import Logi from "./pages/LogsPage";
 
 const router = createBrowserRouter([{ path: "*", Component: Root, errorElement: <ErrorBoundary /> }]);
 
@@ -49,6 +50,7 @@ function Root() {
 				<Route index element={<Home />} />
 				<Route path="ogloszenia" element={<Ogloszenia />} />
 				<Route path="logowanie" element={<Logowanie />} />
+				<Route path="logi" element={<Logi />} />
 				<Route path="rejestracja" element={<Rejestracja />} />
 				<Route path="zarzadzanie" element={<Manager />}>
 					<Route

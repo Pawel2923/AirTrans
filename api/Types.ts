@@ -231,7 +231,17 @@ interface Rentals {
 	Users_uid: number;
 }
 
+interface Event_logs {
+	id?: number;
+	table_name: string;
+	by_user: string;
+	timestamp: string;
+	action: string;
+	log_details: string;
+}
+
 export type {
+	Event_logs,
 	ErrInterface,
 	Flights,
 	Departures,

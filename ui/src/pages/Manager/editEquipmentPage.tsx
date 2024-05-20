@@ -58,83 +58,75 @@ const EditEquipmentPage = () => {
     };
 
     return (
-        <div className="container">
-            <div className="row">
-                <div className="col-12">
-                    <div className="card">
-                        <div className="card-header">
-                            <h2>Edytuj urządzenie</h2>
-                        </div>
-                        <div className="card-body">
-                            <form onSubmit={formSubmitHandler}>
-                                <div className="form-group">
-                                    <label htmlFor="serial_no">Numer seryjny</label>
-                                    <input
-                                        type="text"
-                                        name="serial_no"
-                                        id="serial_no"
-                                        className="form-control"
-                                        value={equipment.serial_no}
-                                        onChange={inputChangeHandler}
-                                        required
-                                    />
-                                </div>
-                                <div className="form-group">
-                                    <label htmlFor="type">Typ</label>
-                                    <input
-                                        type="text"
-                                        name="type"
-                                        id="type"
-                                        className="form-control"
-                                        value={equipment.type}
-                                        onChange={inputChangeHandler}
-                                        required
-                                    />
-                                </div>
-                                <div className="form-group">
-                                    <label htmlFor="name">Nazwa</label>
-                                    <input
-                                        type="text"
-                                        name="name"
-                                        id="name"
-                                        className="form-control"
-                                        value={equipment.name}
-                                        onChange={inputChangeHandler}
-                                        required
-                                    />
-                                </div>
-                                <div className="form-group">
-                                    <label htmlFor="location">Lokalizacja</label>
-                                    <input
-                                        type="text"
-                                        name="location"
-                                        id="location"
-                                        className="form-control"
-                                        value={equipment.location}
-                                        onChange={inputChangeHandler}
-                                        required
-                                    />
-                                </div>
-                                <div className="form-group">
-                                    <label htmlFor="Employee_id">Pracownik</label>
-                                    <input
-                                        type="number"
-                                        name="Employee_id"
-                                        id="Employee_id"
-                                        className="form-control"
-                                        value={equipment.Employee_id}
-                                        onChange={inputChangeHandler}
-                                        required
-                                    />
-                                </div>
-                                <button type="submit" className="btn btn-primary">
-                                    Zapisz
-                                </button>
-                            </form>
-                        </div>
-                    </div>
+        <div>
+            <h1>Edytuj urządzenie</h1>
+            <form onSubmit={formSubmitHandler}>
+                <div className="form-group">
+                    <label htmlFor="serial_no">Numer seryjny</label>
+                    <input
+                        type="text"
+                        id="serial_no"
+                        name="serial_no"
+                        value={equipment.serial_no}
+                        onChange={inputChangeHandler}
+                        className="form-control"
+                        required
+                    />
                 </div>
-            </div>
+                <div className="form-group">
+                    <label htmlFor="type">Typ</label>
+                    <input
+                        type="text"
+                        id="type"
+                        name="type"
+                        value={equipment.type}
+                        onChange={inputChangeHandler}
+                        className="form-control"
+                        required
+                    />
+                </div>
+                <div className="form-group">
+                    <label htmlFor="name">Nazwa</label>
+                    <input
+                        type="text"
+                        id="name"
+                        name="name"
+                        value={equipment.name}
+                        onChange={inputChangeHandler}
+                        className="form-control"
+                        required
+                    />
+                </div>
+                <div className="form-group">
+                    <label htmlFor="location">Lokalizacja</label>
+                    <input
+                        type="text"
+                        id="location"
+                        name="location"
+                        value={equipment.location}
+                        onChange={inputChangeHandler}
+                        className="form-control"
+                        required
+                    />
+                </div>
+                <div className="form-group">
+                    <label htmlFor="Employee_id">Pracownik</label>
+                    <input
+                        type="number"
+                        id="Employee_id"
+                        name="Employee_id"
+                        value={equipment.Employee_id}
+                        onChange={inputChangeHandler}
+                        className="form-control"
+                        required
+                    />
+                </div>
+                <div>
+                    <button type="submit" className="btn btn-primary me-3">
+                        Zapisz
+                    </button>
+                </div>
+            </form>
         </div>
     );
 };

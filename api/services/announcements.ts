@@ -10,6 +10,7 @@ const announcementProperties = [
 	"content",
 	"valid_until",
 	"Employee_id",
+	
 ];
 
 function validateAnnouncement(announcement: Announcements) {
@@ -129,6 +130,7 @@ async function create(announcement: Announcements) {
 			announcement.title,
 			announcement.content,
 			announcement.valid_until,
+			announcement.create_time,
 			announcement.Employee_id,
 		
 		]

@@ -208,14 +208,14 @@ interface Cars {
 	license_plate: string;
 	price_per_day: number;
 	fuel_type: string;
-	transmission_type: "MANUAL" | "AUTOMATIC";
+	transmission_type?: "MANUAL" | "AUTOMATIC";
 	img?: number;
 }
 
 interface Rentals {
 	id?: number;
-	since?: string;
-	until?: string;
+	since: string;
+	until: string;
 	reservation_time?: string;
 	return_time?: string;
 	status?: "PENDING" | "RENTED" | "CANCELLED" | "RETURNED";

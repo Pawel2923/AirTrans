@@ -165,15 +165,19 @@ interface Luggage {
 
 interface Tickets {
 	id?: number;
-	purchase_time?: string;
+	purchase_time: string;
 	expiry_date: string;
 	seat_class: string;
 	seat_number: string;
+	phone_number?: string;
+	address?: string;
+	email: string;
+	first_name?: string;
+	last_name?: string;
 	price: number;
 	status?: "PURCHASED" | "EXPIRED" | "USED" | "REFUNDED";
 	Flight_id: string;
-	Users_uid: number;
-	Gates_id: number;
+	gate_name: string;
 }
 
 interface ParkingReservations {

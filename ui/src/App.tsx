@@ -34,8 +34,11 @@ import EquipmentPage from "./pages/Manager/EquipmentPage";
 import EditEquipmentPage from "./pages/Manager/editEquipmentPage";
 import GatesPage from "./pages/Manager/GatesPage";
 import EditGatePage from "./pages/Manager/editGatesPage";
+import TicketsPage from "./pages/Manager/TicketsPage";
 
-const router = createBrowserRouter([{ path: "*", Component: Root, errorElement: <ErrorBoundary /> }]);
+const router = createBrowserRouter([
+	{ path: "*", Component: Root, errorElement: <ErrorBoundary /> },
+]);
 
 export default function App() {
 	return <RouterProvider router={router} />;
@@ -43,7 +46,6 @@ export default function App() {
 
 function Root() {
 	return (
-
 		<AuthProvider>
 			<Routes>
 				<Route index element={<Home />} />
@@ -90,19 +92,25 @@ function Root() {
 						<Route index element={<GatesPage />} />
 						<Route
 							path="edit-bramka/:id"
-							element={<EditGatePage/>}
+							element={<EditGatePage />}
 						/>
-					</Route>	
-          <Route path="ogloszenia">
-          <Route index element={<OgloszeniaZ />} />
-          <Route 
-            path="edit-ogloszenia/:id" 
-            element={<OgloszeniaEdit />} 
-            />
-           </Route>
+					</Route>
+					<Route path="ogloszenia">
+						<Route index element={<OgloszeniaZ />} />
+						<Route
+							path="edit-ogloszenia/:id"
+							element={<OgloszeniaEdit />}
+						/>
+					</Route>
 					<Route path="lotnisko">
 						<Route index element={<Airfield />} />
-						<Route path=":table/:id/edytuj" element={<AirfieldEdit />} />
+						<Route
+							path=":table/:id/edytuj"
+							element={<AirfieldEdit />}
+						/>
+					</Route>
+					<Route path="bilety">
+						<Route index element={<TicketsPage />} />
 					</Route>
 					<Route path="uzytkownicy">
 						<Route index element={<UsersPage />} />

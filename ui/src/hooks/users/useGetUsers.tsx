@@ -23,63 +23,24 @@ const useGetUsers = () => {
 		[handleError]
 	);
 
-	const getUserById = useCallback((uid: number) => new Promise((resolve) => {
+	const getUserById = useCallback((uid: number) => {
 		usersService
 			.getById(uid)
 			.then((response) => {
 				if (response.status === 200) {
-					resolve(response.data.data);
+					setUsersData(response.data.data);
 				}
 			})
 			.catch((error) => {
 				handleError(error);
 			});
-	}), [handleError]);
+	}, [handleError]);
 
 	const getRoles = useCallback(() => new Promise((resolve) => {
 		usersService
 			.getRoles()
 			.then((response) => {
 				if (response.status === 200) {
-					resolve(response.data.data);
-				}
-			})
-			.catch((error) => {
-				handleError(error);
-			});
-	}), [handleError]);
-
-	const updateUser = useCallback((uid: number, data: UserInfo) => new Promise((resolve) => {
-		usersService
-			.update(uid, data)
-			.then((response) => {
-				if (response.status === 200) {
-					resolve(response.data.data);
-				}
-			})
-			.catch((error) => {
-				handleError(error);
-			});
-	}), [handleError]);
-
-	const updateRole = useCallback((uid: number, role: string) => new Promise((resolve) => {
-		usersService
-			.updateRole(uid, role)
-			.then((response) => {
-				if (response.status === 200) {
-					resolve(response.data.data);
-				}
-			})
-			.catch((error) => {
-				handleError(error);
-			});
-	}), [handleError]);
-
-	const deleteUser = useCallback((uid: number) => new Promise((resolve) => {
-		usersService
-			.delete(uid)
-			.then((response) => {
-				if (response.status === 204) {
 					resolve(response.data.data);
 				}
 			})
@@ -95,9 +56,6 @@ const useGetUsers = () => {
 		getAllUsers,
 		getUserById,
 		getRoles,
-		updateUser,
-		updateRole,
-		deleteUser,
 	} as const;
 };
 

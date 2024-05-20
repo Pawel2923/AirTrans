@@ -44,6 +44,8 @@ import employees from "../services/employees";
  *        oneOf:
  *         - $ref: '#/components/schemas/responseWithMeta'
  *         - $ref: '#/components/schemas/response'
+ *    400:
+ *     description: Bad request
  *    404:
  *     description: No employees found
  *    500:

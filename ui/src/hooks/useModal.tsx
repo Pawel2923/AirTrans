@@ -27,8 +27,8 @@ const useModal = () => {
 		message: string,
 		title?: string,
 		onConfirm?: () => void,
-		onClose?: () => void
-		
+		onClose?: () => void,
+		confirmBtnText?: string,
 	) => {
 		setConfirm(() => (
 			<ConfirmModal
@@ -42,6 +42,7 @@ const useModal = () => {
 					onClose && onClose();
 					setConfirm(null);
 				}}
+				confirmBtnText={confirmBtnText}
 			/>
 		));
 	}, []);

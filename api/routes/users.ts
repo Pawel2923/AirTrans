@@ -68,6 +68,8 @@ import { verifyUser, requireRole } from "../middlewares/verifyUser";
  *           type: integer
  *        message:
  *         type: string
+ *    400:
+ *     description: Bad request
  *    401:
  *     description: Unauthorized
  *    403:

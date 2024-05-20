@@ -12,7 +12,8 @@ import {
 	faBullhorn,
 	faCar,
 	faSquareParking,
-	faUser
+	faUser,
+	faTicket
 } from "@fortawesome/free-solid-svg-icons";
 import {
 	Link,
@@ -65,6 +66,11 @@ const navItems = [
 		id: "uzytkownicy",
 		name: "UŻYTKOWNICY",
 		icon: faUser,
+	},
+	{
+		id: "bilety",
+		name: "BILETY",
+		icon: faTicket,
 	},
 ];
 

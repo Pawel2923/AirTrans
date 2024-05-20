@@ -1,20 +1,28 @@
 import { useEffect, useState } from "react";
-import UsersTable from "../../components/Manager/UsersTable";
 import useGetUsers from "../../hooks/users/useGetUsers";
-import { PageData, UserInfo } from "../../assets/Data";
+import { PageData } from "../../assets/Data";
 import Pagination from "../../components/Pagination";
 import { useSearchParams } from "react-router-dom";
 import ConfirmModal from "../../components/Modals/ConfirmModal";
+import useUpdateUser from "../../hooks/users/useUpdateUser";
+import useDeleteUser from "../../hooks/users/useDeleteUser";
+import DataTable from "../../components/Manager/DataTable";
 
-const defaultUserInfo: UserInfo[] = [
-	{
-		uid: 0,
-		email: "",
-		first_name: "",
-		last_name: "",
-		phone_number: "",
-		address: "",
-	},
+const tableColumnNames = [
+	"UID",
+	"Email",
+	"Imię",
+	"Nazwisko",
+	"Telefon",
+	"Adres",
+	"Płeć",
+	"Data urodzenia",
+	"Data utworzenia konta",
+	"Zdjęcie",
+	"Rola",
+	"",
+	"",
+	"",
 ];
 
 interface RoleSelectProps {
@@ -59,7 +67,16 @@ const UsersPage = () => {
 	const [roleConfirm, setRoleConfirm] = useState<boolean>();
 	const [deleteConfirm, setDeleteConfirm] = useState<boolean>();
 	const [role, setRole] = useState<string>("");
-	const { updateRole, deleteUser } = useGetUsers();
+	const {
+		errorAlert: updateAlert,
+		errorToast: updateToast,
+		updateRole,
+	} = useUpdateUser();
+	const {
+		errorAlert: deleteAlert,
+		errorToast: deleteToast,
+		deleteUser,
+	} = useDeleteUser();
 	const [uid, setUid] = useState<number>(0);
 
 	useEffect(() => {
@@ -92,13 +109,65 @@ const UsersPage = () => {
 
 	return (
 		<>
-			<div style={{ overflowX: "auto" }}>
-				<UsersTable
-					data={usersData || defaultUserInfo}
-					roleBtnClickHandler={roleBtnClickHandler}
-					deleteBtnClickHandler={deleteBtnClickHandler}
+			{usersData && (
+				<DataTable
+					colCount={14}
+					tableTitle="Lista użytkowników"
+					tableHeaders={tableColumnNames.map((name, index) => (
+						<th key={index}>{name}</th>
+					))}
+					tableBody={usersData.map((user, index) => (
+						<tr key={index}>
+							<th scope="row">{user.uid}</th>
+							<td>{user.email}</td>
+							<td>{user.first_name || "Brak"}</td>
+							<td>{user.last_name || "Brak"}</td>
+							<td>{user.phone_number || "Brak"}</td>
+							<td>{user.address || "Brak"}</td>
+							<td>{user.gender || "Brak"}</td>
+							<td>
+								{(user.birth_date &&
+									user.birth_date
+										.replace("T", " ")
+										.slice(0, 10)) ||
+									"Brak"}
+							</td>
+							<td>
+								{(user.create_time &&
+									user.create_time
+										.replace("T", " ")
+										.slice(0, 19)) ||
+									"Brak"}
+							</td>
+							<td>{user.user_img || "Brak"}</td>
+							<td>{user.role || "client"}</td>
+							<td>
+								<button
+									className="btn btn-primary"
+									value={user.uid?.toString() || ""}
+									onClick={roleBtnClickHandler}
+								>
+									Zmień rolę
+								</button>
+							</td>
+							<td>
+								<button className="btn btn-primary">
+									Resetuj hasło
+								</button>
+							</td>
+							<td>
+								<button
+									className="btn btn-danger"
+									value={user.uid?.toString()}
+									onClick={deleteBtnClickHandler}
+								>
+									Usuń
+								</button>
+							</td>
+						</tr>
+					))}
 				/>
-			</div>
+			)}
 			<Pagination
 				pageData={pageData}
 				setPageData={setPageData}
@@ -106,6 +175,10 @@ const UsersPage = () => {
 			/>
 			{errorAlert}
 			{errorToast}
+			{updateAlert}
+			{updateToast}
+			{deleteAlert}
+			{deleteToast}
 			{roleConfirm && (
 				<ConfirmModal
 					onClose={() => setRoleConfirm(false)}

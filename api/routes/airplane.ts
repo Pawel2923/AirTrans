@@ -67,6 +67,8 @@ import airplaneService from "../services/airplane";
  *            type: integer
  *         message:
  *          type: string
+ *    400:
+ *     description: Bad request
  *    404:
  *     description: Airplane not found
  *    500:

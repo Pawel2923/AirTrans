@@ -95,3 +95,22 @@ a.active {
 .navbar-nav .nav-link {
   background-color: transparent;
 }
+
+.manager-block-wrapper {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 3rem;
+}
+
+.manager-block {
+  background-color: #f7f9f9;
+  border-radius: 25px;
+  box-shadow: var(--default-box-shadow);
+  padding: 1rem;
+}
+
+.manager-block h3 {
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin-bottom: .5rem;
+}

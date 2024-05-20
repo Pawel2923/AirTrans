@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import useGetTickets from "../../hooks/tickets/useGetTickets";
 import DataTable from "../../components/Manager/DataTable";
-import Input from "../../components/input";
 import useUpdateTickets from "../../hooks/tickets/useUpdateTickets";
 import useModal from "../../hooks/useModal";
 
@@ -18,9 +17,10 @@ const ticketsColumnNames = [
 
 const TicketsPage = () => {
 	const [ticketId, setTicketId] = useState<number | string>("");
-	const { ticketsData, errorAlert, errorToast, getTicketById } =
+	const { ticketsData, errorAlert, errorToast, getTicketById, getTicketIds } =
 		useGetTickets();
 	const { confirm, createConfirmModal } = useModal();
+	const [ticketIds, setTicketIds] = useState<string[]>([""])
 	const {
 		errorAlert: updateAlert,
 		errorToast: updateToast,
@@ -42,6 +42,10 @@ const TicketsPage = () => {
 		}
 	}, [errorAlert, errorToast]);
 
+	useEffect(() => {
+		getTicketIds().then((ids) => setTicketIds(ids as string[]));
+	}, [getTicketIds]);
+
 	const chooseTicket = (e: React.FormEvent<HTMLFormElement>) => {
 		e.preventDefault();
 		getTicketById(ticketId as number);
@@ -49,7 +53,7 @@ const TicketsPage = () => {
 	};
 
 	const ticketChangeHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
-		setTicketId(parseInt(e.target.value));
+		setTicketId(e.target.value);
 	};
 
 	const confirmTicketValidity = () => {
@@ -79,15 +83,24 @@ const TicketsPage = () => {
 			<div className="manager-block-wrapper">
 				<form onSubmit={chooseTicket} className="manager-block">
 					<h3>Wybierz bilet</h3>
-					<label htmlFor="ticket">ID biletu:</label>
-					<Input
-						type="number"
-						id="ticket"
-						name="ticket"
-						value={ticketId}
-						min={1}
-						onChange={ticketChangeHandler}
-					/>
+					<div className="form-group">
+						<label htmlFor="ticket">ID biletu:</label>
+						<input
+							className="form-control"
+							list="ticketIdsOptions"
+							id="ticket"
+							name="ticket"
+							value={ticketId}
+							onChange={ticketChangeHandler}
+						/>
+						<datalist id="ticketIdsOptions">
+							{ticketIds.map((id) => (
+								<option key={id} value={id}>
+									{id}
+								</option>
+							))}
+						</datalist>
+					</div>
 					<button className="btn btn-primary mt-3" type="submit">
 						SPRAWDŹ
 					</button>

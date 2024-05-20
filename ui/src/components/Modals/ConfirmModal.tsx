@@ -1,4 +1,4 @@
-import React from "react";
+import React, { ReactNode } from "react";
 import classes from "./Modal.module.css";
 import Modal from "./Modal";
 
@@ -6,7 +6,9 @@ interface ConfirmModalProps {
 	onClose: () => void;
 	onConfirm: () => void;
 	title: string;
-	message: string;
+	message?: string;
+	children?: ReactNode;
+	confirmBtnText?: string;
 }
 
 const ConfirmModal: React.FC<ConfirmModalProps> = ({
@@ -14,18 +16,22 @@ const ConfirmModal: React.FC<ConfirmModalProps> = ({
 	onConfirm,
 	title,
 	message,
+	children,
+	confirmBtnText,
 }: ConfirmModalProps) => {
 	return (
 		<Modal onClose={onClose}>
 			<div>
 				<h2>{title}</h2>
-				<p>{message}</p>
+				{message ? (
+					<p>{message}</p>
+				) : children}
 				<div className={classes["modal-buttons"]}>
 					<button className="btn" onClick={onClose}>
 						Anuluj
 					</button>
 					<button className="btn btn-danger" onClick={onConfirm}>
-						Tak, usuń
+						{confirmBtnText || "Tak, usuń"}
 					</button>
 				</div>
 			</div>

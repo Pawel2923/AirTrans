@@ -133,6 +133,20 @@ interface Employees {
 	Users_uid: number;
 }
 
+interface User {
+	uid?: number;
+	email: string;
+	first_name?: string;
+	last_name?: string;
+	phone_number?: string;
+	address?: string;
+	gender?: 'M' | 'F';
+	birth_date?: string;
+	create_time?: string;
+	user_img?: number;
+	role?: string;
+}
+
 interface Announcements {
 	id?: number;
 	title: string;
@@ -230,6 +244,7 @@ export type {
 	Airfield_info,
 	Gates,
 	Users,
+	User,
 	Employees,
 	Announcements,
 	Equipment,

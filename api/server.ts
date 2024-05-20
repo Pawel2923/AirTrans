@@ -23,6 +23,7 @@ import usersRouter from "./routes/users";
 import equipmentRouter from "./routes/equipment";
 import gatesRouter from "./routes/gates";
 import ticketsRouter from "./routes/tickets";
+import logsRouter from "./routes/logs";
 import { Err } from "./Types";
 
 const app = express();
@@ -67,6 +68,7 @@ app.use("/logout", logoutRouter);
 app.use("/sprzet", equipmentRouter);
 app.use("/bramki", gatesRouter);
 app.use("/tickets", ticketsRouter);
+app.use("/logi", logsRouter);
 
 app.use((err: Err, _req: Request, res: Response, _next: NextFunction): any => {
 	const statusCode = err.statusCode || 500;

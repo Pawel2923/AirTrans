@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
-import { Event_logs, PageData } from "../assets/Data";
+import { EventLogs, PageData } from "../assets/Data";
 import logsService from "../services/logs.service";
 import Event_logsTable from "../components/LogiTable";
 import Pagination from "../components/Pagination";
@@ -9,7 +9,7 @@ import { useNavigate } from "react-router-dom";
 const LogsPage = () => {
     const [searchParams] = useSearchParams();
     const navigate = useNavigate(); 
-    const [event_logs, setEvent_logs] = useState<Event_logs[]>([]);
+    const [event_logs, setEvent_logs] = useState<EventLogs[]>([]);
     const [pageData, setPageData] = useState<PageData>({
         page: parseInt(searchParams.get("page") || "1"),
         pages: 1

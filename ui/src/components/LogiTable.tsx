@@ -1,9 +1,9 @@
 import React from "react";
-import { Event_logs } from "../assets/Data";
+import { EventLogs } from "../assets/Data";
 import classes from "./tableCars.module.css";
 
 type Event_logsTableProps = {
-  event_logs: Event_logs[];
+  event_logs: EventLogs[];
 };
 
 const Event_logsTable: React.FC<Event_logsTableProps> = ({ event_logs }) => {
@@ -25,7 +25,7 @@ const Event_logsTable: React.FC<Event_logsTableProps> = ({ event_logs }) => {
             <td>{event_log.id}</td>
             <td>{event_log.table_name}</td>
             <td>{event_log.by_user}</td>
-            <td>{event_log.timestamp}</td>
+            <td>{event_log.timestamp_log.replace("T", " ").slice(0,19)}</td>
             <td>{event_log.action}</td>
             <td>{event_log.log_details}</td>
           </tr>

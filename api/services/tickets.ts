@@ -60,19 +60,40 @@ async function get(
 	};
 }
 
+async function getIds() {
+	const query = "SELECT id FROM Tickets;";
+	const result = await db.query(query);
+	const data = helper.emptyOrRows(result);
+
+	const ids: string[] = data.map((ticketId) => ticketId.id);
+
+	return {
+		data: ids,
+		message: "Successfully fetched ticket ids",
+	};
+}
+
 async function updateStatus(id: number, status: string) {
-    if (status !== "PURCHASED" && status !== "EXPIRED" && status !== "USED" && status !== "REFUNDED") {
-        throw new Err("Invalid status", 400);
-    }
+	if (
+		status !== "PURCHASED" &&
+		status !== "EXPIRED" &&
+		status !== "USED" &&
+		status !== "REFUNDED"
+	) {
+		throw new Err("Invalid status", 400);
+	}
 
-    const oldStatus = await db.query("SELECT status FROM Tickets WHERE id = ?", [id]);
-    if ((oldStatus as Tickets[]).length === 0) {
-        throw new Err("Ticket not found", 404);
-    }
+	const oldStatus = await db.query(
+		"SELECT status FROM Tickets WHERE id = ?",
+		[id]
+	);
+	if ((oldStatus as Tickets[]).length === 0) {
+		throw new Err("Ticket not found", 404);
+	}
 
-    if ((oldStatus as Tickets[])[0].status === status) {
-        throw new Err("Status is already the same", 400);
-    }
+	if ((oldStatus as Tickets[])[0].status === status) {
+		throw new Err("Status is already the same", 400);
+	}
 
 	const query = "UPDATE Tickets SET status = ? WHERE id = ?";
 	const result = await db.query(query, [status, id]);
@@ -81,10 +102,10 @@ async function updateStatus(id: number, status: string) {
 		throw new Err("Could not update ticket status");
 	}
 
-    const newData = { ...(oldStatus as Tickets[])[0] } as Tickets;
-    newData.status = status;
+	const newData = { ...(oldStatus as Tickets[])[0] } as Tickets;
+	newData.status = status;
 
 	return { data: newData, message: "Ticket status updated" };
 }
 
-export default { get, updateStatus };
+export default { get, getIds, updateStatus };

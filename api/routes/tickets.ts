@@ -87,6 +87,41 @@ router.get("/", verifyUser, async function (req, res, next) {
 
 /**
  * @openapi
+ * /tickets/ids:
+ *  get:
+ *   tags:
+ *    - Tickets
+ *   description: Get all ticket ids
+ *   responses:
+ *    200:
+ *     description: Successfully fetched ids
+ *     content:
+ *      application/json:
+ *       schema:
+ *        type: object
+ *        properties:
+ *         data:
+ *          type: array
+ *          items:
+ *           type: string
+ *    401:
+ *     description: Unauthorized
+ *    403:
+ *     description: Forbidden
+ *    500:
+ *     description: Internal server error
+ */
+router.get("/ids", verifyUser, async function (req, res, next) {
+	try {
+		const { data, message } = await ticketService.getIds();
+		res.status(200).json({ data, message });
+	} catch (err) {
+		next(err);
+	}
+});
+
+/**
+ * @openapi
  * /tickets/{id}:
  *  patch:
  *   tags:

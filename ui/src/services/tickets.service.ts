@@ -41,6 +41,10 @@ class TicketsService {
         return http.get(`/tickets?filter=[{"by":"t.id","value":"${id}"}]`, { withCredentials: true });
     }
 
+	getIds () {
+		return http.get("/tickets/ids", { withCredentials: true });
+	}
+
     updateStatus (id: number, status: string) {
         return http.patch(`/tickets/${id}`, { status }, { withCredentials: true });
     }

@@ -9,18 +9,21 @@ import classes from "./input.module.css";
 interface InputProps {
 	type?: string;
 	placeholder?: string;
-	value: string;
+	value: string | number;
 	disabled?: boolean;
 	required?: boolean;
 	className?: string;
 	style?: React.CSSProperties;
 	id?: string;
+	name?: string;
+	min?: number;
+	max?: number;
 	minLength?: number;
 	onInput?: (ev: React.ChangeEvent<HTMLInputElement>) => void;
 	onFocus?: (ev: React.FocusEvent<HTMLInputElement>) => void;
 	onBlur?: (ev: React.FocusEvent<HTMLInputElement>) => void;
 	onChange?: (ev: React.ChangeEvent<HTMLInputElement>) => void;
-	validateInput?: (value: string) => boolean;
+	validateInput?: (value: string | number) => boolean;
 	setIsFormInvalid?: (isInvalid: boolean) => void;
 }
 
@@ -33,6 +36,9 @@ const Input: React.FC<InputProps> = ({
 	className,
 	style,
 	id,
+	name,
+	min,
+	max,
 	minLength,
 	onInput,
 	onFocus,
@@ -85,6 +91,9 @@ const Input: React.FC<InputProps> = ({
 			type={type ? type : "text"}
 			ref={inputRef}
 			id={id}
+			name={name}
+			min={min}
+			max={max}
 			placeholder={placeholder}
 			value={value}
 			disabled={disabled}

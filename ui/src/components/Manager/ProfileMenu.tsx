@@ -28,6 +28,9 @@ const ProfileMenu: React.FC<ProfileMenuProps> = ({
 					<li>
 						<a href="#">Ustawienia</a>
 					</li>
+					<li>
+						<a href="/logi">Logi</a>
+					</li>
 					<li onClick={() => {
 						logout();
 						navigate(0)

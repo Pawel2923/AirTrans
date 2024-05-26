@@ -243,6 +243,13 @@ interface Event_logs {
 	action: string;
 	log_details: string;
 }
+interface Logowanie_log {
+	id?: number;
+	first_name: string;
+	email: string;
+	login_date: string;
+	login_details: string;
+}
 
 export type {
 	Event_logs,
@@ -267,7 +274,8 @@ export type {
 	Parking_reservations,
 	Parking_info,
 	Cars,
-	Rentals
+	Rentals,
+	Logowanie_log
 }
 
 export {

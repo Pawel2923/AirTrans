@@ -43,7 +43,7 @@ interface Airplanes {
 	fuel_quant: number;
 	num_of_crew: number;
 	max_cargo: number;
-	img?: number;
+	img?: string;
 }
 
 interface FlightData {
@@ -94,7 +94,7 @@ interface Gates {
 }
 
 interface Users {
-	uid?: number;
+	id?: number;
 	email: string;
 	password: string;
 	create_time?: string;
@@ -104,12 +104,12 @@ interface Users {
 	address?: string;
 	gender?: 'M' | 'F';
 	birth_date?: string;
-	user_img?: number;
+	img?: string;
 	salt?: string;
 }
 
 interface UserInfo {
-	uid?: number;
+	id?: number;
 	email: string;
 	first_name?: string;
 	last_name?: string;
@@ -118,7 +118,7 @@ interface UserInfo {
 	gender?: 'M' | 'F';
 	birth_date?: string;
 	create_time?: string;
-	user_img?: number;
+	img?: string;
 	role?: string;
 }
 
@@ -135,7 +135,7 @@ interface Employees {
 	department: string;
 	Gates_id?: number;
 	Flight_id?: string;
-	Users_uid: number;
+	Users_id: number;
 }
 
 interface Announcements {
@@ -160,7 +160,7 @@ interface Luggage {
 	type: string;
 	size: string;
 	weight: number;
-	Users_uid: number;
+	Users_id: number;
 }
 
 interface Tickets {
@@ -190,7 +190,7 @@ interface ParkingReservations {
 	license_plate: string;
 	reservation_time?: string;
 	status?: "PENDING" | "RESERVED" | "CANCELLED";
-	Users_uid: number;
+	Users_id: number;
 }
 
 interface ParkingInfo {
@@ -213,7 +213,7 @@ interface Cars {
 	price_per_day: number;
 	fuel_type: string;
 	transmission_type?: "MANUAL" | "AUTOMATIC";
-	img?: number;
+	img?: string;
 }
 
 interface Rentals {
@@ -224,7 +224,7 @@ interface Rentals {
 	return_time?: string;
 	status?: "PENDING" | "RENTED" | "CANCELLED" | "RETURNED";
 	Cars_id: number;
-	Users_uid: number;
+	Users_id: number;
 }
 interface EventLogs {
 	id?: number;

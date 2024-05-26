@@ -8,7 +8,7 @@ const emptyRental: Rentals = {
   id: 0,
   since: "",
   until: "",
-  Users_uid: 0,
+  Users_id: 0,
   Cars_id: 0,
   status: undefined,
 };
@@ -110,9 +110,9 @@ const EditRentPage = () => {
               <Form.Label>ID Klienta</Form.Label>
               <Form.Control
                 type="number"
-                name="Users_uid"
+                name="Users_id"
                 placeholder="ID Klienta"
-                value={carRental.Users_uid}
+                value={carRental.Users_id}
                 onChange={inputChangeHandler}
               />
             </Form.Group>

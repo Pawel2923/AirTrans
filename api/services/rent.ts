@@ -13,7 +13,7 @@ async function getAllRentals(
   const offset = helper.getOffset(page, config.listPerPage);
 
   const rows = await db.query(
-      "SELECT Rentals.*, Users.first_name AS user_first_name FROM ?? AS Rentals LEFT JOIN Users ON Rentals.Users_uid = Users.uid LIMIT ?, ?",
+      "SELECT Rentals.*, Users.first_name AS user_first_name FROM ?? AS Rentals LEFT JOIN Users ON Rentals.Users_id = Users.id LIMIT ?, ?",
       [tableName, offset, limit]
   );
 
@@ -68,12 +68,12 @@ function formatDate(dateString: string) {
       }
   
       let result = await db.query(
-        "INSERT INTO Rentals (since,until, status,Users_uid, Cars_id) VALUES (?, ?, ?, ?, ?)",
+        "INSERT INTO Rentals (since,until, status,Users_id, Cars_id) VALUES (?, ?, ?, ?, ?)",
         [
           rentalData.since,
           rentalData.until,
           rentalData.status,
-          rentalData.Users_uid,
+          rentalData.Users_id,
           rentalData.Cars_id,
         ]
       );
@@ -165,11 +165,11 @@ function formatDate(dateString: string) {
   
        
         let result = await db.query(
-            "UPDATE Rentals SET since=?, until=?, status=?, Users_uid=?, Cars_id=? WHERE id=?",
+            "UPDATE Rentals SET since=?, until=?, status=?, Users_id=?, Cars_id=? WHERE id=?",
             [rent.since,
             rent.until,
             rent.status, 
-            rent.Users_uid,
+            rent.Users_id,
             rent.Cars_id,
             rent.id]
         );

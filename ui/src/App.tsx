@@ -36,6 +36,7 @@ import GatesPage from "./pages/Manager/GatesPage";
 import EditGatePage from "./pages/Manager/editGatesPage";
 import Logi from "./pages/LogsPage";
 import TicketsPage from "./pages/Manager/TicketsPage";
+import UserProfile from "./pages/Manager/UserProfile";
 
 const router = createBrowserRouter([
 	{ path: "*", Component: Root, errorElement: <ErrorBoundary /> },
@@ -116,6 +117,9 @@ function Root() {
 					</Route>
 					<Route path="uzytkownicy">
 						<Route index element={<UsersPage />} />
+					</Route>
+					<Route path="profil">
+						<Route index element={<UserProfile />} />
 					</Route>
 					<Route
 						path="*"

@@ -33,7 +33,7 @@ const TableParking:React.FC<TableParkingProps>= ({ parkings, onEdit, onDelete}) 
         {parkings.map((park) => (
           <tr key={park.pid}>
               <td>{park.pid}</td>
-              <td>{park.Users_uid}</td>
+              <td>{park.Users_id}</td>
               <td>{park.license_plate}</td>
               <td>{park.parking_level}</td>
                 <td>{park.since}</td>

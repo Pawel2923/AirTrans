@@ -37,24 +37,32 @@ class UsersService {
 		return http.get(url, {withCredentials: true});
 	};
 
-    getById = (uid: number) => {
-		return http.get(`/users?filter=[{"by":"uid","value":"${uid}"}]`, { withCredentials: true });
+    getById = (id: number) => {
+		return http.get(`/users?filter=[{"by":"id","value":"${id}"}]`, { withCredentials: true });
+	};
+
+	getByEmail = (email: string) => {
+		return http.get(`/users?filter=[{"by":"email","value":"${email}"}]`, { withCredentials: true });
 	};
 
 	getRoles = () => {
 		return http.get("/users/roles", { withCredentials: true });
 	}
 
-    update = (uid: number, data: UserInfo) => {
-        return http.put(`/users/${uid}`, data);
+    update = (id: number, data: UserInfo) => {
+        return http.put(`/users/${id}`, data, { withCredentials: true });
     }
 
-	updateRole = (uid: number, role: string) => {
-		return http.patch(`/users/${uid}`, { role }, { withCredentials: true });
+	updateRole = (id: number, role: string) => {
+		return http.patch(`/users/${id}`, { role }, { withCredentials: true });
 	}
 
-    delete = (uid: number) => {
-        return http.delete(`/users/${uid}`, { withCredentials: true });
+	updateImg= (id: number, img: string) => {
+		return http.patch(`/users/${id}/img`, { img }, { withCredentials: true });
+	}
+
+    delete = (id: number) => {
+        return http.delete(`/users/${id}`, { withCredentials: true });
     }
 }
 

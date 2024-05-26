@@ -24,6 +24,7 @@ import equipmentRouter from "./routes/equipment";
 import gatesRouter from "./routes/gates";
 import ticketsRouter from "./routes/tickets";
 import logsRouter from "./routes/logs";
+import filesRouter from "./routes/files";
 import { Err } from "./Types";
 
 const app = express();
@@ -69,6 +70,7 @@ app.use("/sprzet", equipmentRouter);
 app.use("/bramki", gatesRouter);
 app.use("/tickets", ticketsRouter);
 app.use("/logi", logsRouter);
+app.use("/files", filesRouter);
 
 app.use((err: Err, _req: Request, res: Response, _next: NextFunction): any => {
 	const statusCode = err.statusCode || 500;

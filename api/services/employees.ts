@@ -11,7 +11,7 @@ const employeesColumns = [
 ];
 
 async function getEmployees(
-	uid?: number,
+	id?: number,
 	limit?: number,
 	page?: number,
 	column?: string,
@@ -36,9 +36,9 @@ async function getEmployees(
 		query = "SELECT * FROM Employees";
 	}
 
-	if (uid) {
-		query += ` WHERE Users_uid = ?`;
-		queryParams.push(uid);
+	if (id) {
+		query += ` WHERE Users_id = ?`;
+		queryParams.push(id);
 	}
 
 	if (sort) {
@@ -88,14 +88,14 @@ async function getEmployees(
 	// check if data is empty
 	if (data.length === 0) {
 		const error = new Err(
-			uid ? "Employee not found" : "No employees found"
+			id ? "Employee not found" : "No employees found"
 		);
 		error.statusCode = 404;
 		throw error;
 	}
 
     response.data = data;
-    response.message = uid ? "Successfully fetched employee" : "Successfully fetched employees";
+    response.message = id ? "Successfully fetched employee" : "Successfully fetched employees";
 
     return response;
 }

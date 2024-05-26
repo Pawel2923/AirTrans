@@ -5,9 +5,9 @@ import useErrorHandler from "../useErrorHandler";
 const useDeleteUser = () => {
 	const { errorToast, errorAlert, handleError } = useErrorHandler();
 
-	const deleteUser = useCallback((uid: number) => new Promise((resolve) => {
+	const deleteUser = useCallback((id: number) => new Promise((resolve) => {
         usersService
-            .delete(uid)
+            .delete(id)
             .then((response) => {
                 if (response.status === 204) {
                     resolve(response.data.data);

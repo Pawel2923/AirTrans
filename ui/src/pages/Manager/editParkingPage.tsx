@@ -6,7 +6,7 @@ import { Container, Row, Col, Form, Button } from 'react-bootstrap';
 
 const emptyParking: ParkingReservations = {
   pid: 0,
-  Users_uid: 0,
+  Users_id: 0,
   since: "",
   until: "",
   parking_level: "",
@@ -64,9 +64,9 @@ const EditParkingPage = () => {
               <Form.Label>ID Klienta</Form.Label>
               <Form.Control
                 type="number"
-                name="Users_uid"
+                name="Users_id"
                 placeholder="ID Klienta"
-                value={parking.Users_uid}
+                value={parking.Users_id}
                 onChange={inputChangeHandler}
               />
             </Form.Group>

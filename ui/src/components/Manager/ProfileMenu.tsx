@@ -1,7 +1,7 @@
 import React, { useContext } from "react";
 import AuthContext from "../../store/auth-context";
 import classes from "./ManagerTopNav.module.css";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 interface ProfileMenuProps {
     setIsOpenProfile: React.Dispatch<React.SetStateAction<boolean>>;
@@ -23,13 +23,10 @@ const ProfileMenu: React.FC<ProfileMenuProps> = ({
 				<div>{user ? user.email : "e-mail"}</div>
 				<ul className={classes["profile-menu"]}>
 					<li>
-						<a href="#">Profil</a>
+						<Link to="/zarzadzanie/profil" onClick={() => setIsOpenProfile(false)}>Profil</Link>
 					</li>
 					<li>
-						<a href="#">Ustawienia</a>
-					</li>
-					<li>
-						<a href="/logi">Logi</a>
+						<Link to="/logi" onClick={() => setIsOpenProfile(false)}>Logi</Link>
 					</li>
 					<li onClick={() => {
 						logout();

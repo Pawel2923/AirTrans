@@ -17,7 +17,7 @@ const useGetUsers = () => {
 					}
 				})
 				.catch((error) => {
-					handleError(error);
+					handleError({error});
 				});
 		},
 		[handleError]
@@ -32,7 +32,7 @@ const useGetUsers = () => {
 				}
 			})
 			.catch((error) => {
-				handleError(error);
+				handleError({error});
 			});
 	}, [handleError]);
 
@@ -45,7 +45,7 @@ const useGetUsers = () => {
 				}
 			})
 			.catch((error) => {
-				handleError(error);
+				handleError({error});
 			});
 	}, [handleError]);
 
@@ -58,7 +58,7 @@ const useGetUsers = () => {
 				}
 			})
 			.catch((error) => {
-				handleError(error);
+				handleError({error});
 			});
 	}), [handleError]);
 

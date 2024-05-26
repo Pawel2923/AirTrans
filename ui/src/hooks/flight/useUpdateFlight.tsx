@@ -18,22 +18,22 @@ const useUpdateFlight = (
 			.then((response) => {
 				if (response.status === 200) {
 					// Show success toast with an action to navigate to the updated flight
-					createToast(
-						"Lot został zaktualizowany",
-						"primary",
-						faCircleCheck,
-						{
+					createToast({
+						message: "Lot został zaktualizowany",
+						type: "primary",
+						icon: faCircleCheck,
+						action: {
 							label: "Zobacz",
 							onClick: () => {
 								navigate(`/zarzadzanie/harmonogram/${id}`);
 							},
-						}
-					);
+						},
+					});
 					setRefreshData && setRefreshData((prev) => !prev);
 				}
 			})
 			.catch((error) => {
-				handleError(error);
+				handleError({ error });
 			});
 	};
 

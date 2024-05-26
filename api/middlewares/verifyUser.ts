@@ -58,16 +58,20 @@ export function verifyUser(req: Request, _res: Response, next: NextFunction) {
 	}
 }
 
-export function requireRole(req: Request, requiredRole: string) {
+export function requireRole(userRole: string, requiredRole: string | string[]) {
 	const role = requiredRole;
 
-		if (!role) {
-			return;
-		}
-	
-		const user = req.user as { role: string };
-	
-		if (user.role !== role) {
+	if (!role) {
+		return;
+	}
+
+	if (Array.isArray(role)) {
+		if (!role.includes(userRole)) {
 			throw new Err("Forbidden", 403);
 		}
+	} else {
+		if (userRole !== role) {
+			throw new Err("Forbidden", 403);
+		}
+	}
 }

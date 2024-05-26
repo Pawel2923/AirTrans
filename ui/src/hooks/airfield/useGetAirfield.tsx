@@ -20,7 +20,7 @@ const useGetAirfield = () => {
 				}
 			})
 			.catch((error) => {
-				handleError(error);
+				handleError({ error });
 			});
 	}, [handleError]);
 
@@ -42,7 +42,7 @@ const useGetAirfield = () => {
 					}
 				})
 				.catch((error: Err) => {
-					handleError(error);
+					handleError({ error });
 				});
 		},
 		[handleError]

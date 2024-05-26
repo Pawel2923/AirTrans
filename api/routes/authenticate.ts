@@ -2,6 +2,7 @@ import express from "express";
 import { requireRole, verifyUser } from "../middlewares/verifyUser";
 import jwt from "jsonwebtoken";
 import { Err } from "../Types";
+import config from "../config";
 const router = express.Router();
 
 /**
@@ -47,7 +48,11 @@ const router = express.Router();
  */
 router.get("/", verifyUser, (req, res, next) => {
 	try {
-		requireRole(req, req.query.requiredRole as string);
+		const userRole = (req.user as { email: string; role: string }).role;
+
+		requireRole(userRole, req.query.requiredRole as string);
+
+		config.getDbUser(userRole);
 		res.status(200).json({ auth: true, user: req.user });
 	} catch (error) {
 		next(error);
@@ -126,6 +131,8 @@ router.post("/refresh", (req, res, next) => {
 				};
 
 				res.cookie("jwt", accessToken, cookieOptions);
+
+				config.getDbUser(tokenUser.role);
 
 				return res
 					.status(200)

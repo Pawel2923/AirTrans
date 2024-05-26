@@ -16,7 +16,7 @@ const useUpdateTickets = () => {
 						}
 					})
 					.catch((error) => {
-						handleError(error);
+						handleError({ error });
 					});
 			}),
 		[handleError]

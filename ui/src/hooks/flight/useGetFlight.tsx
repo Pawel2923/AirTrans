@@ -15,7 +15,7 @@ const useGetFlight = () => {
 				}
 			})
 			.catch((error) => {
-                handleError(error);
+                handleError({ error });
             });
 	}, [handleError]);
 

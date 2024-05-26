@@ -27,10 +27,6 @@ function checkObject(obj: object, objectProperties: string[]) {
 		if (property in obj === false) {
 			throw new Err(`${property} property is missing`, 400);
 		}
-
-		if (!obj[property as keyof object]) {
-			throw new Err(`${property} is empty`, 400);
-		}
 	});
 }
 

@@ -61,12 +61,7 @@ async function get(
 }
 
 async function getRoles() {
-	const query = "SELECT DISTINCT role FROM Employees";
-	const result = await db.query(query);
-	const data = helper.emptyOrRows(result);
-
-	const roles: string[] = data.map((role) => role.role);
-	roles.push("client");
+	const roles: string[] = [...config.employeeRoles, "client"];
 
 	return {
 		data: roles,
@@ -101,11 +96,11 @@ async function update(id: number, user: User) {
 
 async function updateRole(id: number, role: string) {
 	// check if new role is valid
-	if (role !== "admin" && role !== "client" && role !== "parking") {
+	if (!([...config.employeeRoles, "client"].includes(role))) {
 		throw new Err("Invalid role", 400);
 	}
 	
-	const checkResult = await db.query("SELECT role FROM Users u LEFT JOIN Employees e ON e.Users_id=u.id WHERE id = 9;", [id]);
+	const checkResult = await db.query("SELECT role FROM Users u LEFT JOIN Employees e ON e.Users_id=u.id WHERE u.id = ?;", [id]);
 	const checkRows = helper.emptyOrRows(checkResult);
 
 	if (checkRows.length === 0) {

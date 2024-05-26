@@ -7,10 +7,10 @@ import styles from "./rejestracja.module.css";
 
 
 const emailRegex = /^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$/i;
-const isEmpty = (value:string) => value.trim() !== "" && value.trim().length >= 3;
-const isEmail = (value:string) =>
-  emailRegex.test(value.toLowerCase()) &&
-  value.toLowerCase().trim().length >= 3;
+const isEmpty = (value:string | number) => (value as string).trim() !== "" && (value as string).trim().length >= 3;
+const isEmail = (value:string | number) =>
+  emailRegex.test((value as string).toLowerCase()) &&
+(value as string).toLowerCase().trim().length >= 3;
 
   
 const Rejestracja = () => {

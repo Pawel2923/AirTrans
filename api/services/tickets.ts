@@ -13,7 +13,7 @@ async function get(
 	const offset = helper.getOffset(page, limit);
 
 	let query =
-		"SELECT t.id, u.email, u.first_name, u.last_name, u.phone_number, u.address, t.seat_class, t.seat_number, t.status, t.Flight_id, g.name gate_name, t.purchase_time, t.expiry_date, t.price FROM Tickets t LEFT JOIN Users u ON t.Users_uid = u.uid LEFT JOIN Gates g ON t.Gates_id = g.id";
+		"SELECT t.id, u.email, u.first_name, u.last_name, u.phone_number, u.address, t.seat_class, t.seat_number, t.status, t.Flight_id, g.name gate_name, t.purchase_time, t.expiry_date, t.price FROM Tickets t LEFT JOIN Users u ON t.Users_id = u.id LEFT JOIN Gates g ON t.Gates_id = g.id";
 	const queryParams = [];
 
 	// Check if filter is provided

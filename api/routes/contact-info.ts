@@ -47,7 +47,7 @@ import contactInfo from "../services/contact-info";
  *         data:
  *          type: array
  *          items:
- *           $ref: '#/components/schemas/contact-info'
+ *           $ref: '#/components/schemas/Contact-info'
  *         message:
  *          type: string
  *    400:
@@ -95,7 +95,7 @@ router.get("/", async function (req, res, next) {
  *    content:
  *     application/json:
  *      schema:
- *       $ref: '#/components/schemas/contact-info'
+ *       $ref: '#/components/schemas/Contact-info'
  *   responses:
  *    200:
  *     description: Successfully updated contact info

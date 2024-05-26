@@ -31,7 +31,7 @@ const TableRent:React.FC<TableRentProps>= ({ rents, onEdit,onDelete }) => {
         
             <tr key={rent.id}>
               <td>{rent.id}</td>
-              <td>{rent.Users_uid}</td>
+              <td>{rent.Users_id}</td>
               <td>{rent.Cars_id}</td>
               <td>{rent.since}</td>
               <td>{rent.until}</td>

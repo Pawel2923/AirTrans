@@ -74,9 +74,9 @@ async function createParking(parkingData: any) {
 		}
 
 		let result = await db.query(
-			"INSERT INTO Parking_reservations (Users_uid, since, until, parking_level, space_id, license_plate,status) VALUES (?, ?, ?, ?, ?, ?, ?)",
+			"INSERT INTO Parking_reservations (Users_id, since, until, parking_level, space_id, license_plate,status) VALUES (?, ?, ?, ?, ?, ?, ?)",
 			[
-				parkingData.Users_uid,
+				parkingData.Users_id,
 				parkingData.since,
 				parkingData.until,
 				parkingData.parking_level,
@@ -168,9 +168,9 @@ async function updateParking(parkingId: number, parking: any) {
 		}
 
 		let result = await db.query(
-			"UPDATE Parking_reservations SET Users_uid=?, since=?, until=?, parking_level=?, space_id=?, license_plate=?,  status=?WHERE Id=?",
+			"UPDATE Parking_reservations SET Users_id=?, since=?, until=?, parking_level=?, space_id=?, license_plate=?,  status=?WHERE Id=?",
 			[
-				parking.Users_uid,
+				parking.Users_id,
 				parking.since,
 				parking.until,
 				parking.parking_level,

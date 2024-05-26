@@ -6,9 +6,9 @@ import useErrorHandler from "../useErrorHandler";
 const useUpdateUser = () => {
 	const { errorToast, errorAlert, handleError } = useErrorHandler();
 
-	const updateUser = useCallback((uid: number, data: UserInfo) => new Promise((resolve) => {
+	const updateUser = useCallback((id: number, data: UserInfo) => new Promise((resolve) => {
         usersService
-            .update(uid, data)
+            .update(id, data)
             .then((response) => {
                 if (response.status === 200) {
                     resolve(response.data.data);
@@ -19,9 +19,9 @@ const useUpdateUser = () => {
             });
     }), [handleError]);
     
-    const updateRole = useCallback((uid: number, role: string) => new Promise((resolve) => {
+    const updateRole = useCallback((id: number, role: string) => new Promise((resolve) => {
         usersService
-            .updateRole(uid, role)
+            .updateRole(id, role)
             .then((response) => {
                 if (response.status === 200) {
                     resolve(response.data.data);
@@ -32,9 +32,23 @@ const useUpdateUser = () => {
             });
     }), [handleError]);
 
+    const updateImg = useCallback((id: number, path: string) => new Promise((resolve) => {
+        usersService
+            .updateImg(id, path)
+            .then((response) => {
+                if (response.status === 200) {
+                    resolve(response.data);
+                }
+            })
+            .catch((error) => {
+                handleError(error);
+            });
+    }), [handleError]);
+
 	return {
 		updateUser,
         updateRole,
+        updateImg,
 		errorToast,
 		errorAlert,
 	} as const;

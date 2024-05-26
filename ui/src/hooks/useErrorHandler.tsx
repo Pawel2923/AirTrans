@@ -4,80 +4,93 @@ import useToast from "./useToast";
 import useModal from "./useModal";
 import { useCallback } from "react";
 
+interface ErrorHandler {
+	errorToast: ReturnType<typeof useToast>["toast"];
+	errorAlert: ReturnType<typeof useModal>["alert"];
+	handleError: (props: HandleErrorProps) => void;
+}
+
+interface HandleErrorProps {
+	error: Err;
+	onModalClose?: () => void;
+	onToastAction?: () => void;
+}
+
 const useErrorHandler = () => {
 	const { alert: errorAlert, createAlertModal } = useModal();
 	const { toast: errorToast, createToast } = useToast();
 
 	const handleError = useCallback(
-		(error: Err, onAlertClose?: () => void, onToastAction?: () => void) => {
+		({ error, onModalClose, onToastAction }: HandleErrorProps) => {
 			if (!error.response) {
-				createAlertModal(
-					"Wystąpił błąd podczas pobierania informacji",
-					undefined,
-					onAlertClose
-				);
+				createAlertModal({
+					message: "Wystąpił błąd podczas pobierania informacji",
+					onClose: onModalClose,
+				});
 				return;
 			}
 
 			switch (error.response.status) {
 				case 400:
-					createToast(
-						error.response.data.message || "Nieprawidłowe dane",
-						"danger",
-						faCircleExclamation,
-						{
+					createToast({
+						message:
+							error.response.data.message || "Nieprawidłowe dane",
+						type: "danger",
+						icon: faCircleExclamation,
+						action: {
 							label: "Spróbuj ponownie",
 							onClick: () => onToastAction && onToastAction(),
 						},
-						10000
-					);
+						timeout: 10000,
+					});
 					break;
 				case 401:
 				case 403:
-					createAlertModal(
-						error.response.status === 401
-							? "Brak dostępu"
-							: "Brak uprawnień",
-						undefined,
-						onAlertClose
-					);
+					createAlertModal({
+						message:
+							error.response.status === 401
+								? "Brak dostępu"
+								: "Brak uprawnień",
+						onClose: onModalClose,
+					});
 					break;
 				case 404:
-					createToast(
-						error.response.data.message ||
+					createToast({
+						message:
+							error.response.data.message ||
 							"Nie znaleziono informacji",
-						"danger",
-						faCircleExclamation,
-						{
+						type: "danger",
+						icon: faCircleExclamation,
+						action: {
 							label: "Spróbuj ponownie",
 							onClick: () => onToastAction && onToastAction(),
-						}
-					);
+						},
+					});
 					break;
 				case 409:
-					createToast(
-						error.response.data.message ||
+					createToast({
+						message:
+							error.response.data.message ||
 							"Nie można wykonać operacji",
-						"danger",
-						faCircleExclamation,
-						{
+						type: "danger",
+						icon: faCircleExclamation,
+						action: {
 							label: "Spróbuj ponownie",
 							onClick: () => onToastAction && onToastAction(),
-						}
-					);
+						},
+					});
 					break;
 				default:
-					createAlertModal(
-						error.response.data.message || "Wystąpił błąd",
-						undefined,
-						onAlertClose
-					);
+					createAlertModal({
+						message: error.response.data.message || "Wystąpił błąd",
+						onClose: onModalClose,
+					});
 			}
 		},
 		[createAlertModal, createToast]
 	);
 
-	return { errorToast, errorAlert, handleError };
+	return { errorToast, errorAlert, handleError } as ErrorHandler;
 };
 
 export default useErrorHandler;

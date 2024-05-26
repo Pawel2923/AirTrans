@@ -9,6 +9,7 @@ interface ConfirmModalProps {
 	message?: string;
 	children?: ReactNode;
 	confirmBtnText?: string;
+	confirmBtnClass?: string;
 }
 
 const ConfirmModal: React.FC<ConfirmModalProps> = ({
@@ -18,6 +19,7 @@ const ConfirmModal: React.FC<ConfirmModalProps> = ({
 	message,
 	children,
 	confirmBtnText,
+	confirmBtnClass,
 }: ConfirmModalProps) => {
 	return (
 		<Modal onClose={onClose}>
@@ -30,7 +32,7 @@ const ConfirmModal: React.FC<ConfirmModalProps> = ({
 					<button className="btn" onClick={onClose}>
 						Anuluj
 					</button>
-					<button className="btn btn-danger" onClick={onConfirm}>
+					<button className={`btn ${confirmBtnClass ? confirmBtnClass : "btn-danger"}`} onClick={onConfirm}>
 						{confirmBtnText || "Tak, usuń"}
 					</button>
 				</div>

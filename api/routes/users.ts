@@ -137,11 +137,11 @@ router.get("/roles", verifyUser, async function (req, res, next) {
 
 /**
  * @openapi
- * /users/{uid}:
+ * /users/{id}:
  *  put:
  *   tags:
  *    - Users
- *   description: Update user by uid
+ *   description: Update user by id
  *   requestBody:
  *    required: true
  *    content:
@@ -149,7 +149,7 @@ router.get("/roles", verifyUser, async function (req, res, next) {
  *      schema:
  *       $ref: '#/components/schemas/UserInfo'
  *   parameters:
- *    - name: uid
+ *    - name: id
  *      in: path
  *      required: true
  *      description: User ID
@@ -174,16 +174,18 @@ router.get("/roles", verifyUser, async function (req, res, next) {
  *     description: Forbidden
  *    404:
  *     description: User not found
+ *    413:
+ *     description: Request entity too large
  *    500:
  *     description: Internal server error
  */
-router.put("/:uid", verifyUser, async function (req, res, next) {
+router.put("/:id", verifyUser, async function (req, res, next) {
 	try {
-		const { uid } = req.params;
-		const parsedUid = parseInt(uid as string);
+		const { id } = req.params;
+		const parsedId = parseInt(id as string);
 		const userData = req.body;
 
-		const { data, message } = await users.update(parsedUid, userData);
+		const { data, message } = await users.update(parsedId, userData);
 		res.status(200).json({ data, message });
 	} catch (err) {
 		next(err);
@@ -192,11 +194,11 @@ router.put("/:uid", verifyUser, async function (req, res, next) {
 
 /**
  * @openapi
- * /users/{uid}:
+ * /users/{id}:
  *  patch:
  *   tags:
  *    - Users
- *   description: Update user role by uid
+ *   description: Update user role by id
  *   requestBody:
  *    required: true
  *    content:
@@ -207,7 +209,7 @@ router.put("/:uid", verifyUser, async function (req, res, next) {
  *        role:
  *         type: string
  *   parameters:
- *    - name: uid
+ *    - name: id
  *      in: path
  *      required: true
  *      description: User ID
@@ -233,14 +235,27 @@ router.put("/:uid", verifyUser, async function (req, res, next) {
  *    500:
  *     description: Internal server error
  */
-router.patch("/:uid", verifyUser, async function (req, res, next) {
+router.patch("/:id", verifyUser, async function (req, res, next) {
 	try {
 		requireRole(req, "admin");
-		const { uid } = req.params;
-		const parsedUid = parseInt(uid as string);
+		const { id } = req.params;
+		const parsedId = parseInt(id as string);
 		const { role } = req.body;
 
-		const { message } = await users.updateRole(parsedUid, role as string);
+		const { message } = await users.updateRole(parsedId, role as string);
+		res.status(200).json({ message });
+	} catch (err) {
+		next(err);
+	}
+});
+
+router.patch("/:id/img", verifyUser, async function (req, res, next) {
+	try {
+		const { id } = req.params;
+		const parsedId = parseInt(id as string);
+		const { img: imgPath } = req.body;
+
+		const { message } = await users.addImg(parsedId, imgPath as string);
 		res.status(200).json({ message });
 	} catch (err) {
 		next(err);
@@ -249,13 +264,13 @@ router.patch("/:uid", verifyUser, async function (req, res, next) {
 
 /**
  * @openapi
- * /users/{uid}:
+ * /users/{id}:
  *  delete:
  *   tags:
  *    - Users
- *   description: Delete user by uid
+ *   description: Delete user by id
  *   parameters:
- *    - name: uid
+ *    - name: id
  *      in: path
  *      required: true
  *      description: User ID
@@ -272,13 +287,13 @@ router.patch("/:uid", verifyUser, async function (req, res, next) {
  *    500:
  *     description: Internal server error
  */
-router.delete("/:uid", verifyUser, async function (req, res, next) {
+router.delete("/:id", verifyUser, async function (req, res, next) {
 	try {
 		requireRole(req, "admin");
-		const { uid } = req.params;
-		const parsedUid = parseInt(uid as string);
+		const { id } = req.params;
+		const parsedId = parseInt(id as string);
 
-		const { message } = await users.remove(parsedUid);
+		const { message } = await users.remove(parsedId);
 		res.status(204).json({ message });
 	} catch (err) {
 		next(err);
@@ -294,7 +309,7 @@ export default router;
  *   UserInfo:
  *    type: object
  *    properties:
- *     uid:
+ *     id:
  *      type: integer
  *     email:
  *      type: string

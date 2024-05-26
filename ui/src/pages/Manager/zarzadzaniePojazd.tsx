@@ -24,7 +24,7 @@ const ZarzadzanieP = () => {
         since: "",
         until: "",
         status: undefined,
-        Users_uid: 0,
+        Users_id: 0,
         Cars_id: 0,
     });
 
@@ -102,7 +102,7 @@ const ZarzadzanieP = () => {
                 since: "",
                 until: "",
                 status: undefined,
-                Users_uid: 0,
+                Users_id: 0,
                 Cars_id: 0,
             });
             alert("Rental added successfully!");
@@ -212,12 +212,12 @@ const ZarzadzanieP = () => {
                                 </select>
                             </div>
                             <div className="form-group">
-                                <label htmlFor="Users_uid">ID klienta</label>
+                                <label htmlFor="Users_id">ID klienta</label>
                                 <input
                                     type="number"
-                                    name="Users_uid"
+                                    name="Users_id"
                                     className="form-control"
-                                    value={newRentalData.Users_uid}
+                                    value={newRentalData.Users_id}
                                     onChange={handleRentalInputChange}
                                 />
                             </div>

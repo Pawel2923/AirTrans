@@ -8,12 +8,12 @@ import employees from "../services/employees";
  *  get:
  *   tags: 
  *    - Employees
- *   description: Get all employees or a specific employee by uid
+ *   description: Get all employees or a specific employee by id
  *   parameters:
- *    - name: uid
+ *    - name: id
  *      in: query
  *      required: false
- *      description: Employee UID
+ *      description: Employee ID
  *      type: integer
  *    - name: limit
  *      in: query
@@ -37,7 +37,7 @@ import employees from "../services/employees";
  *      type: object
  *   responses:
  *    200:
- *     description: Found employees or employee by uid
+ *     description: Found employees or employee by id
  *     content:
  *      application/json:
  *       schema:
@@ -53,14 +53,14 @@ import employees from "../services/employees";
  */
 router.get("/", async function (req, res, next) {
 	try {
-		let { uid, limit, page, column, sort } = req.query;
+		let { id, limit, page, column, sort } = req.query;
 
-		const parsedUid = uid ? parseInt(uid as string) : undefined;
+		const parsedId = id ? parseInt(id as string) : undefined;
 		const parsedLimit = limit ? parseInt(limit as string) : undefined;
 		const parsedPage = page ? parseInt(page as string) : undefined;
 
 		const { data, meta, message } = await employees.getEmployees(
-			parsedUid,
+			parsedId,
 			parsedLimit,
 			parsedPage,
 			column as string,

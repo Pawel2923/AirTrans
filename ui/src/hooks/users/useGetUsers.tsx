@@ -23,9 +23,22 @@ const useGetUsers = () => {
 		[handleError]
 	);
 
-	const getUserById = useCallback((uid: number) => {
+	const getUserById = useCallback((id: number) => {
 		usersService
-			.getById(uid)
+			.getById(id)
+			.then((response) => {
+				if (response.status === 200) {
+					setUsersData(response.data.data);
+				}
+			})
+			.catch((error) => {
+				handleError(error);
+			});
+	}, [handleError]);
+
+	const getUserByEmail = useCallback((email: string) => {
+		usersService
+			.getByEmail(email)
 			.then((response) => {
 				if (response.status === 200) {
 					setUsersData(response.data.data);
@@ -55,6 +68,7 @@ const useGetUsers = () => {
 		errorAlert,
 		getAllUsers,
 		getUserById,
+		getUserByEmail,
 		getRoles,
 	} as const;
 };

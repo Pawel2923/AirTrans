@@ -15,7 +15,7 @@ const Parking = () => {
     });
     const [newParking, setNewParking] = useState<ParkingReservations>({
         pid: 0,
-        Users_uid: 0,
+        Users_id: 0,
         since: "",
         until: "",
         parking_level: "",
@@ -54,7 +54,7 @@ const Parking = () => {
             setParkings([...parkings, response.data]);
             setNewParking({
                 pid: 0,
-                Users_uid: 0,
+                Users_id: 0,
                 since: "",
                 until: "",
                 parking_level: "",
@@ -109,12 +109,12 @@ const Parking = () => {
                         </div>
                         <div className="card-body">
                             <div className="form-group">
-                                <label htmlFor="Users_uid">ID klienta</label>
+                                <label htmlFor="Users_id">ID klienta</label>
                                 <input
                                     type="number"
-                                    name="Users_uid"
+                                    name="Users_id"
                                     className="form-control"
-                                    value={newParking.Users_uid}
+                                    value={newParking.Users_id}
                                     onChange={handleInputChange}
                                 />
                             </div>

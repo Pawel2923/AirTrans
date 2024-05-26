@@ -9,7 +9,7 @@ import useDeleteUser from "../../hooks/users/useDeleteUser";
 import DataTable from "../../components/Manager/DataTable";
 
 const tableColumnNames = [
-	"UID",
+	"ID",
 	"Email",
 	"Imię",
 	"Nazwisko",
@@ -77,31 +77,31 @@ const UsersPage = () => {
 		errorToast: deleteToast,
 		deleteUser,
 	} = useDeleteUser();
-	const [uid, setUid] = useState<number>(0);
+	const [id, setId] = useState<number>(0);
 
 	useEffect(() => {
 		getAllUsers(pageData.page);
 	}, [getAllUsers, pageData.page]);
 
 	const roleBtnClickHandler = (e: React.MouseEvent<HTMLButtonElement>) => {
-		setUid(parseInt(e.currentTarget.value));
+		setId(parseInt(e.currentTarget.value));
 		setRoleConfirm(true);
 	};
 
 	const deleteBtnClickHandler = (e: React.MouseEvent<HTMLButtonElement>) => {
-		setUid(parseInt(e.currentTarget.value));
+		setId(parseInt(e.currentTarget.value));
 		setDeleteConfirm(true);
 	};
 
 	const updateModalHandler = () => {
-		updateRole(uid, role).then(() => {
+		updateRole(id, role).then(() => {
 			getAllUsers(pageData.page);
 			setRoleConfirm(false);
 		});
 	};
 
 	const deleteModalHandler = () => {
-		deleteUser(uid).then(() => {
+		deleteUser(id).then(() => {
 			getAllUsers(pageData.page);
 			setDeleteConfirm(false);
 		});
@@ -118,7 +118,7 @@ const UsersPage = () => {
 					))}
 					tableBody={usersData.map((user, index) => (
 						<tr key={index}>
-							<th scope="row">{user.uid}</th>
+							<th scope="row">{user.id}</th>
 							<td>{user.email}</td>
 							<td>{user.first_name || "Brak"}</td>
 							<td>{user.last_name || "Brak"}</td>
@@ -139,12 +139,12 @@ const UsersPage = () => {
 										.slice(0, 19)) ||
 									"Brak"}
 							</td>
-							<td>{user.user_img || "Brak"}</td>
+							<td>{user.img || "Brak"}</td>
 							<td>{user.role || "client"}</td>
 							<td>
 								<button
 									className="btn btn-primary"
-									value={user.uid?.toString() || ""}
+									value={user.id?.toString() || ""}
 									onClick={roleBtnClickHandler}
 								>
 									Zmień rolę
@@ -158,7 +158,7 @@ const UsersPage = () => {
 							<td>
 								<button
 									className="btn btn-danger"
-									value={user.uid?.toString()}
+									value={user.id?.toString()}
 									onClick={deleteBtnClickHandler}
 								>
 									Usuń

@@ -57,7 +57,7 @@ import announcements from "../services/announcements";
  *         data:
  *          type: array
  *          items:
- *           $ref: '#/components/schemas/announcement'
+ *           $ref: '#/components/schemas/Announcement'
  *         meta:
  *          type: object
  *          properties:
@@ -119,7 +119,7 @@ router.get("/:id", async function (req, res, next) {
  *    content:
  *     application/json:
  *      schema:
- *       $ref: '#/components/schemas/announcement'
+ *       $ref: '#/components/schemas/Announcement'
  *   responses:
  *    201:
  *     description: Successfully created announcement
@@ -155,7 +155,7 @@ router.post("/", async function (req, res, next) {
  *    content:
  *     application/json:
  *      schema:
- *       $ref: '#/components/schemas/announcement'
+ *       $ref: '#/components/schemas/Announcement'
  *   responses:
  *    200:
  *     description: Successfully updated announcement

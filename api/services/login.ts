@@ -28,21 +28,23 @@ async function fetchClient(email: string, userInputPassword: string) {
 
 	//tu haszujes haslo od uzytkowniak
 	const hashedPassword = await bcrypt.hash(userInputPassword, salt);
-
-	//tu sprawdza czy pasuje
 	const queryCheckUser =
-		"SELECT id FROM Users WHERE email = ? AND password = ?";
+		"SELECT id, first_name FROM Users WHERE email = ? AND password = ?";
 	const userExistsRows = await db.query(queryCheckUser, [
-		email,
-		hashedPassword,
+	email,
+	hashedPassword,
 	]);
 	const userExistsData = helper.emptyOrRows(userExistsRows);
-
-	if (userExistsData.length === 0) {
+	if (userExistsData.length > 0) {
+		await db.query("CALL Logowanie(?, ?, TRUE)", [userExistsData[0].first_name, email]);
+	} else {
+		await db.query("CALL Logowanie(?, ?, FALSE)", [null, email]);
 		const error = new Err("Incorrect email or password");
 		error.statusCode = 401;
 		throw error;
+		
 	}
+	
 
 	//pobranie roli uzytkownika przy uzyciu endpointa employees
 	const queryGetRole = "SELECT role FROM Employees WHERE Users_id = ?";

@@ -32,7 +32,13 @@ interface ContactInfo {
 	email_pr: string;
 	email_marketing: string;
 }
-
+interface Logowanie_log {
+	id?: number;
+	first_name: string;
+	email: string;
+	login_date: string;
+	login_details: string;
+}
 interface Airplanes {
 	serial_no: string;
 	model: string;
@@ -301,5 +307,6 @@ export type {
 	Runways,
 	FlightData,
 	Employees,
+	Logowanie_log,
 	Err
 };

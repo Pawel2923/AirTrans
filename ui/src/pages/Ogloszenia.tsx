@@ -1,26 +1,31 @@
+import React, { useEffect, useState } from "react";
 import Nav from "../components/Nav";
 import Footer from "../components/footer";
-
-import Tabela from "../components/table";
-
+import TabelaOgloszeniaK from "../components/tabelaOgloszeniaK"
+import { Announcements } from "../assets/Data";
+import announcementService from "../services/announcement.service";
 import styles from "./Ogloszenia.module.css";
 
-
 const Ogloszenia = () => {
+    const [ogloszenia, setOgloszenia] = useState<Announcements[]>([]);
+
+    const fetchOgloszenia = async () => {
+       
+            const response = await announcementService.get();
+            setOgloszenia(response.data.data);
+    }
+    useEffect(() => {
+        fetchOgloszenia();
+    }, []);
+
     return (
         <div className={styles.container}>
-            <Nav/>
-            <div style={{width: '100%', backgroundColor: '#ECEFF2',height: '70%',borderRadius:'10px'}}>
-                <h1 style={{marginTop:'2%'}}>Ogłoszenia</h1>
-                <div className={styles["tabela-container"]} style={{marginTop:'5%'}}>
-                <Tabela />
-                <Tabela />
-                <Tabela />
+            <Nav />
+            <div className={styles.content}>
+                <TabelaOgloszeniaK ogloszenia={ogloszenia} />
             </div>
-            </div>
-            <Footer/>
-        </div>   
-        
+            <Footer />
+        </div>
     );
 };
 

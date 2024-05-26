@@ -1,4 +1,3 @@
-// TabelkaGates.js
 import React from "react";
 import { Gates } from "../assets/Data";
 import styles from "./tabelkaGates.module.css";

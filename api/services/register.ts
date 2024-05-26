@@ -10,7 +10,10 @@ async function registerClient(user: Users) {
 	checkResult = helper.emptyOrRows(checkResult);
 
 	if (checkResult.length > 0) {
+		await db.query("CALL Rejestracja(?, ?, FALSE)", [null, user.email]);
 		throw new Err("User with this email already exists", 409);
+	}else{
+		await db.query("CALL Rejestracja(?, ?, TRUE)", [user.first_name, user.email]);
 	}
 
 	const salt = await bcrypt.genSalt(10); //tu tworzy sol

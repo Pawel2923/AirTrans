@@ -28,7 +28,7 @@ const LogsPage = () => {
         navigate("/zarzadzanie/harmonogram"); 
     };
     useEffect(() => {
-         login_logService.get(pageData2.page, 3).then((response) => {
+         login_logService.get(pageData2.page, 10).then((response) => {
             if (response.status === 200) {
                 setLogi(response.data.data);
                  setPageData2(response.data.meta);

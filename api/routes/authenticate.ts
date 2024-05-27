@@ -121,13 +121,13 @@ router.post("/refresh", (req, res, next) => {
 					{ email: tokenUser.email, role: tokenUser.role },
 					process.env.SECRET_TOKEN as string,
 					{
-						expiresIn: 86400,
+						expiresIn: 60000,
 					}
 				);
 
 				const cookieOptions = {
 					httpOnly: true,
-					expires: new Date(Date.now() + 86400000),
+					expires: new Date(Date.now() + 60000),
 				};
 
 				res.cookie("jwt", accessToken, cookieOptions);

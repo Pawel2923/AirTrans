@@ -130,36 +130,6 @@ function buildQuery(
 	return { query, queryParams };
 }
 
-function base64ToBlob(base64: string, type: string) {
-	try {
-		console.log("base64", base64);
-
-		// check if base64 string is valid
-		if (!base64.startsWith("data:image/")) {
-			throw new Err("Invalid base64 string", 400);
-		}
-
-		// remove metadata from base64 string
-		base64 = base64.split(",")[1];
-
-		base64 = base64.trim(); // remove leading/trailing whitespace
-        base64 = base64.replace(/\s/g, ''); // remove all other whitespace characters
-
-		const byteCharacters = atob(base64);
-		const byteNumbers = new Array(byteCharacters.length);
-
-		for (let i = 0; i < byteCharacters.length; i++) {
-			byteNumbers[i] = byteCharacters.charCodeAt(i);
-		}
-
-		const byteArray = new Uint8Array(byteNumbers);
-		return new Blob([byteArray], { type });
-	} catch (error) {
-		console.error(error);
-		throw new Err("Invalid base64 string", 400);
-	}
-}
-
 export default {
 	getOffset,
 	getPages,
@@ -168,5 +138,4 @@ export default {
 	buildFilterQuery,
 	buildSortQuery,
 	buildQuery,
-	base64ToBlob,
 };

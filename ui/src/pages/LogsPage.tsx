@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import { EventLogs,PageData } from "../assets/Data";
 import { Logowanie_log } from "../assets/Data";
@@ -8,6 +8,7 @@ import LogiTable from "../components/Login_LogTable";
 import Event_logsTable from "../components/LogiTable";
 import Pagination from "../components/Pagination";
 import { useNavigate } from "react-router-dom";
+import AuthContext from "../store/auth-context";
 
 
 const LogsPage = () => {
@@ -23,28 +24,47 @@ const LogsPage = () => {
         page: parseInt(searchParams.get("page") || "1"),
         pages: 1
     });
+	const { auth, user, checkAuth } = useContext(AuthContext);
+
+	useEffect(() => {
+		checkAuth().then((auth) => {
+			if (!auth) {
+				navigate("/logowanie");
+			}
+		});
+	}, [checkAuth, navigate]);
 
     const handleBack = () => {
         navigate("/zarzadzanie/harmonogram"); 
     };
     useEffect(() => {
+        if (!auth) return;
+        if (!user || user.role !== "admin") {
+            navigate("/zabronione");
+        }
+
          login_logService.get(pageData2.page, 10).then((response) => {
             if (response.status === 200) {
                 setLogi(response.data.data);
                  setPageData2(response.data.meta);
             }
         });
-    }, [pageData2.page]
+    }, [pageData2.page, auth, user, navigate]
 
 );
     useEffect(() => {
+        if (!auth) return;
+        if (!user || user.role !== "admin") {
+            navigate("/zabronione");
+        }
+
         logsService.get(pageData.page, 10).then((response) => {
             if (response.status === 200) {
                 setEvent_logs(response.data.data);
                 setPageData(response.data.meta);
             }
         });
-    }, [pageData.page]
+    }, [pageData.page, auth, user, navigate]
     
 );
 

@@ -1,0 +1,47 @@
+/* summaryPage.module.css */
+.summaryContainer {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.header {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.summaryContent {
+    padding: 20px;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.summaryContent h2 {
+    margin-top: 0;
+    margin-bottom: 15px;
+    color: #333;
+}
+
+.summaryContent p {
+    margin: 5px 0;
+    color: #555;
+    line-height: 1.6;
+}
+
+.nextButtonContainer {
+    text-align: center;
+    margin-top: 20px;
+}
+
+.nextButtonContainer .btn {
+    padding: 10px 20px;
+    font-size: 16px;
+}
+
+.nextButtonContainer .btn span {
+    margin-left: 10px;
+}

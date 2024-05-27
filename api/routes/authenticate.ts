@@ -1,8 +1,8 @@
 import express from "express";
 import { requireRole, verifyUser } from "../middlewares/verifyUser";
-import jwt from "jsonwebtoken";
-import { Err } from "../Types";
 import config from "../config";
+import { refreshToken } from "../middlewares/refreshToken";
+import { Err } from "../Types";
 const router = express.Router();
 
 /**
@@ -97,52 +97,15 @@ router.get("/", verifyUser, (req, res, next) => {
  *   500:
  *    description: Internal server error
  */
-router.post("/refresh", (req, res, next) => {
+router.post("/refresh", refreshToken, (req, res, next) => {
 	try {
-		const { refreshJwt } = req.cookies;
-		if (!refreshJwt) {
-			throw new Err("No refresh token provided", 401);
+		const response = req.response;
+
+		if (!response) {
+			throw new Err("No response provided");
 		}
 
-		jwt.verify(
-			refreshJwt,
-			process.env.REFRESH_SECRET_TOKEN as string,
-			(
-				err: jwt.VerifyErrors | null,
-				user: string | object | undefined
-			) => {
-				if (err) {
-					throw new Err("Invalid refresh token", 403);
-				}
-
-				const tokenUser = user as { email: string; role: string };
-
-				const accessToken = jwt.sign(
-					{ email: tokenUser.email, role: tokenUser.role },
-					process.env.SECRET_TOKEN as string,
-					{
-						expiresIn: 60000,
-					}
-				);
-
-				const cookieOptions = {
-					httpOnly: true,
-					expires: new Date(Date.now() + 60000),
-				};
-
-				res.cookie("jwt", accessToken, cookieOptions);
-
-				config.getDbUser(tokenUser.role);
-
-				return res
-					.status(200)
-					.json({
-						auth: true,
-						user: tokenUser,
-						message: "Token refreshed successfully",
-					});
-			}
-		);
+		res.status(200).json(response);
 	} catch (error) {
 		next(error);
 	}

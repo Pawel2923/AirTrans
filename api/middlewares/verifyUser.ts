@@ -1,6 +1,7 @@
 import { NextFunction, Request, Response } from "express";
 import { Err } from "../Types";
 import jwt from "jsonwebtoken";
+import { refreshToken } from "./refreshToken";
 
 // Extend Request interface to include user property
 declare global {
@@ -16,8 +17,8 @@ export function verifyUser(req: Request, _res: Response, next: NextFunction) {
 	const authHeader = req.headers.authorization;
 
 	if (!token && !authHeader) {
-		const error = new Err("Unauthorized", 401);
-		return next(error);
+		// try to refresh token
+		refreshToken(req, _res, next);
 	}
 
 	if (token) {

@@ -19,15 +19,15 @@ const useUpdateAirfield = () => {
 			.update(tableName, newData, id)
 			.then((response) => {
 				if (response.status === 200) {
-					createToast(
-						`Zaktualizowano dane dla ${tableName} ${id}`,
-						"primary",
-						faCircleCheck
-					);
+					createToast({
+						message: `Zaktualizowano dane dla ${tableName} ${id}`,
+						type: "primary",
+						icon: faCircleCheck,
+					});
 				}
 			})
 			.catch((error: Err) => {
-				handleError(error);
+				handleError({ error });
 			});
 	};
 

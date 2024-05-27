@@ -127,7 +127,9 @@ router.get("/", verifyUser, async function (req, res, next) {
  */
 router.get("/roles", verifyUser, async function (req, res, next) {
 	try {
-		requireRole(req, "admin");
+		const userRole = (req.user as { role: string }).role;
+
+		requireRole(userRole, "admin");
 		const { data, message } = await users.getRoles();
 		res.status(200).json({ data, message });
 	} catch (err) {
@@ -237,7 +239,9 @@ router.put("/:id", verifyUser, async function (req, res, next) {
  */
 router.patch("/:id", verifyUser, async function (req, res, next) {
 	try {
-		requireRole(req, "admin");
+		const userRole = (req.user as { role: string }).role;
+		requireRole(userRole, "admin");
+
 		const { id } = req.params;
 		const parsedId = parseInt(id as string);
 		const { role } = req.body;
@@ -289,7 +293,6 @@ router.patch("/:id/img", verifyUser, async function (req, res, next) {
  */
 router.delete("/:id", verifyUser, async function (req, res, next) {
 	try {
-		requireRole(req, "admin");
 		const { id } = req.params;
 		const parsedId = parseInt(id as string);
 

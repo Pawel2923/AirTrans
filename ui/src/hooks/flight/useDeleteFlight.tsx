@@ -22,24 +22,24 @@ export const useDeleteFlight = (
 				if (response.status === 204) {
 					if (useAlert) {
 						// Show alert modal if useAlert is true
-						createAlertModal(
-							"Lot został usunięty",
-							"Usunięto lot",
-							() => navigate("/zarzadzanie/harmonogram")
-						);
+						createAlertModal({
+							message: "Lot został usunięty",
+							title: "Usunięto lot",
+							onClose: () => navigate("/zarzadzanie/harmonogram"),
+						});
 					} else {
 						// Show success toast if useAlert is false
-						createToast(
-							"Lot został usunięty",
-							"primary",
-							faCircleCheck
-						);
+						createToast({
+							message: "Lot został usunięty",
+							type: "primary",
+							icon: faCircleCheck,
+						});
 					}
 					setRefreshData && setRefreshData((prev) => !prev);
 				}
 			})
 			.catch((error) => {
-				handleError(error);
+				handleError({ error });
 			});
 	};
 

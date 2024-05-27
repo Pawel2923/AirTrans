@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import classes from "./ManagerNav.module.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -13,64 +13,110 @@ import {
 	faCar,
 	faSquareParking,
 	faUser,
-	faTicket
+	faTicket,
+	IconDefinition,
+	faSuitcase
 } from "@fortawesome/free-solid-svg-icons";
 import {
 	Link,
 	NavLink,
 	useLocation,
 } from "react-router-dom";
+import AuthContext from "../../store/auth-context";
 
-const navItems = [
+interface NavItem {
+	id: string;
+	name: string;
+	icon: IconDefinition;
+	roles: string[];
+}
+
+const employeeRoles = ["atc", "ground_crew", "airport_staff", "parking_staff", "rental_staff", "admin"];
+
+const allNavItems: NavItem[] = [
 	{
 		id: "harmonogram",
 		name: "HARMONOGRAM LOTÓW",
 		icon: faPlaneDeparture,
+		roles: ["atc", "admin"],
 	},
 	{
 		id: "samoloty",
 		name: "SAMOLOTY",
 		icon: faPlane,
+		roles: ["atc", "admin"],
 	},
 	{
 		id: "lotnisko",
 		name: "LOTNISKO",
 		icon: faMapMarkerAlt,
+		roles: ["atc", "admin"],
 	},
 	{
 		id: "sprzet",
 		name: "SPRZĘT LOTNISKA",
 		icon: faTools,
+		roles: ["ground_crew", "admin"],
 	},
 	{
 		id: "bramki",
 		name: "BRAMKI",
 		icon: faDoorOpen,
+		roles: ["airport_staff", "admin"],
 	},
 	{
 		id: "ogloszenia",
 		name: "OGŁOSZENIA",
 		icon: faBullhorn,
+		roles: employeeRoles,
 	},
 	{
 		id: "pojazd",
 		name: "POJAZDY",
 		icon: faCar,
+		roles: ["rental_staff", "admin"],
 	},
 	{
 		id: "parking",
 		name: "PARKING",
 		icon: faSquareParking,
+		roles: ["parking_staff", "admin"],
 	},
 	{
 		id: "uzytkownicy",
 		name: "UŻYTKOWNICY",
 		icon: faUser,
+		roles: ["admin"],
 	},
 	{
 		id: "bilety",
 		name: "BILETY",
 		icon: faTicket,
+		roles: ["airport_staff", "admin"],
+	},
+	{
+		id: "twoje-bilty",
+		name: "TWOJE BILETY",
+		icon: faTicket,
+		roles: ["client"],
+	},
+	{
+		id: "bagaze",
+		name: "BAGAŻE",
+		icon: faSuitcase,
+		roles: ["airport_staff", "admin", "client"],
+	},
+	{
+		id: "parking-rezerwacje",
+		name: "REZERWACJE PARKINGU",
+		icon: faSquareParking,
+		roles: ["client"],
+	},
+	{
+		id: "wypozyczenia",
+		name: "WYPOŻYCZENIA",
+		icon: faCar,
+		roles: ["client"],
 	},
 ];
 
@@ -82,14 +128,22 @@ const ManagerNav: React.FC<ManagerNavProps> = ({
 	setTitle,
 }: ManagerNavProps) => {
 	const location = useLocation();
+	const { user } = useContext(AuthContext);
 	const [expanded, setExpanded] = useState<boolean>(true);
+	const [navItems, setNavItems] = useState<NavItem[]>(allNavItems);
+
+	useEffect(() => {
+		if (user?.role) {
+			setNavItems(allNavItems.filter((item) => item.roles.includes(user.role)));
+		}
+	}, [user?.role]);
 
 	useEffect(() => {
 		setTitle(
 			navItems.find((item) => item.id === location.pathname.split("/")[2])
 				?.name || ""
 		);
-	}, [location, setTitle]);
+	}, [location, navItems, setTitle]);
 
 	const expandHandler = () => {
 		setExpanded(!expanded);

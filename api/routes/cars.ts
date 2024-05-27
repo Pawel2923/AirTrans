@@ -2,6 +2,7 @@ import express from "express";
 const router = express.Router();
 import carService from "../services/cars";
 import { Err } from "../Types";
+import { verifyUser, requireRole } from "../middlewares/verifyUser";
 
 router.get("/", async function (req, res, next) {
 	try {
@@ -48,19 +49,28 @@ router.get("/:id", async function (req, res, next) {
 	}
 });
 
-router.post("/", async function (req, res, next) {
+router.post("/", verifyUser, async function (req, res, next) {
 	try {
 		const { data, message } = await carService.create(req.body);
+
+		const userRole = (req.user as { role: string }).role;
+
+		requireRole(userRole, ["admin", "remtal_staff"]);
+
 		res.status(201).json({ data, message });
 	} catch (err) {
 		next(err);
 	}
 });
 
-router.put("/:id", async function (req, res, next) {
+router.put("/:id", verifyUser, async function (req, res, next) {
 	try {
     const carId = req.params.id;
     const parsedCarId = carId ? parseInt(carId as string) : undefined;
+
+	const userRole = (req.user as { role: string }).role;
+
+	requireRole(userRole, ["admin", "remtal_staff"]);
 
       if (!parsedCarId) {
           throw new Err("Invalid car id", 400);
@@ -76,10 +86,14 @@ router.put("/:id", async function (req, res, next) {
 	}
 });
 
-router.delete("/:id", async function (req, res, next) {
+router.delete("/:id", verifyUser, async function (req, res, next) {
 	try {
     const carId = req.params.id;
     const parsedCarId = carId ? parseInt(carId as string) : undefined;
+
+	const userRole = (req.user as { role: string }).role;
+
+	requireRole(userRole, ["admin", "remtal_staff"]);
 
     if (!parsedCarId) {
         throw new Err("Invalid car id", 400);

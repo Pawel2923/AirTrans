@@ -17,7 +17,7 @@ const useGetTickets = () => {
 					}
 				})
 				.catch((error) => {
-					handleError(error);
+					handleError({ error });
 				});
 		},
 		[handleError]
@@ -33,7 +33,7 @@ const useGetTickets = () => {
 					}
 				})
 				.catch((error) => {
-					handleError(error);
+					handleError({ error });
 				});
 		},
 		[handleError]
@@ -50,7 +50,7 @@ const useGetTickets = () => {
 						}
 					})
 					.catch((error) => {
-						handleError(error);
+						handleError({ error });
 					});
 			}),
 		[handleError]

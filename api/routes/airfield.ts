@@ -2,6 +2,7 @@ import express from "express";
 const router = express.Router();
 import airfieldService from "../services/airfield";
 import { Err } from "../Types";
+import { requireRole, verifyUser } from "../middlewares/verifyUser";
 
 /**
  * @openapi
@@ -142,7 +143,7 @@ router.get("/", async (req, res, next) => {
  *    500:
  *     description: Internal server error
  */
-router.put("/:id", async (req, res, next) => {
+router.put("/:id", verifyUser, async (req, res, next) => {
 	try {
 		const { id } = req.params;
 		let { table_name } = req.query;
@@ -152,6 +153,10 @@ router.put("/:id", async (req, res, next) => {
 		}
 
 		table_name = table_name as string;
+
+		const userRole = (req.user as { role: string }).role;
+
+		requireRole(userRole, ["admin", "atc"]);
 
 		const { data, message } = await airfieldService.update(
 			table_name,
@@ -202,7 +207,10 @@ export default router;
  *     is_available:
  *      type: boolean
  *      description: Runway availability
- *     flight_id:
+ *     status:
+ *      type: string
+ *      description: Runway status
+ *     Flight_id:
  *      type: string
  *      description: Flight ID
  *      nullable: true
@@ -215,10 +223,13 @@ export default router;
  *     is_available:
  *      type: boolean
  *      description: Terminal availability
- *     capacity:
+ *     num_of_stations:
  *      type: number
- *      description: Terminal capacity
- *     flight_id:
+ *      description: Number of stations
+ *     status:
+ *      type: string
+ *      description: Terminal status
+ *     Flight_id:
  *      type: string
  *      description: Flight ID
  *      nullable: true
@@ -231,7 +242,10 @@ export default router;
  *     is_available:
  *      type: boolean
  *      description: Taxiway availability
- *     flight_id:
+ *     status:
+ *      type: string
+ *      description: Taxiway status
+ *     Flight_id:
  *      type: string
  *      description: Flight ID
  *      nullable: true

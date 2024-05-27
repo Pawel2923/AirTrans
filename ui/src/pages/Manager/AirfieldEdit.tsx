@@ -33,7 +33,12 @@ const AirfieldEdit = () => {
 	const [runwayLength, setRunwayLength] = useState<number>(3000);
 	const [numOfStations, setNumOfStations] = useState<number>(1);
 
-	const tableName = table === "droga-kolowania" ? "Taxiways" : table === "pas-startowy" ? "Runways" : "Terminals";
+	const tableName =
+		table === "droga-kolowania"
+			? "Taxiways"
+			: table === "pas-startowy"
+			? "Runways"
+			: "Terminals";
 
 	// Fetch data based on table name
 	useEffect(() => {
@@ -99,7 +104,11 @@ const AirfieldEdit = () => {
 		e.preventDefault();
 
 		if (!id) {
-			createToast("Id is not defined", "danger", faCircleExclamation);
+			createToast({
+				message: "Id is not defined",
+				type: "danger",
+				icon: faCircleExclamation,
+			});
 			return;
 		}
 
@@ -127,21 +136,28 @@ const AirfieldEdit = () => {
 
 		if (status === "OCCUPIED" || status === "FULL") {
 			if (!flightIds.includes(selectedFlightId as string)) {
-				createToast(
-					"Wprowadź istniejący numer lotu",
-					"danger",
-					faCircleExclamation
-				);
+				createToast({
+					message: "Wprowadź istniejący numer lotu",
+					type: "danger",
+					icon: faCircleExclamation,
+				});
 				return;
 			}
 
 			newData[0].Flight_id = selectedFlightId;
 		}
 
+		newData[0].status = status;
+
 		updateAirfield(tableName as string, newData[0], id);
 	};
 
-	const title = tableName === "Terminals" ? "terminal" : tableName === "Taxiways" ? "drogę kołowania" : "pas startowy";
+	const title =
+		tableName === "Terminals"
+			? "terminal"
+			: tableName === "Taxiways"
+			? "drogę kołowania"
+			: "pas startowy";
 
 	const breadcrumbs: BreadcrumbItem[] = [
 		{ path: "/zarzadzanie/lotnisko", title: "Lotnisko" },

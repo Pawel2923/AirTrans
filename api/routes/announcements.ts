@@ -1,6 +1,8 @@
 import express from "express";
 const router = express.Router();
 import announcements from "../services/announcements";
+import { requireRole, verifyUser } from "../middlewares/verifyUser";
+import config from "../config";
 
 /**
  * @openapi
@@ -107,6 +109,7 @@ router.get("/:id", async function (req, res, next) {
 		next(err);
 	}
 });
+
 /**
  * @openapi
  * /announcements:
@@ -128,8 +131,12 @@ router.get("/:id", async function (req, res, next) {
  *    500:
  *     description: Failed to create announcement
  */
-router.post("/", async function (req, res, next) {
+router.post("/", verifyUser, async function (req, res, next) {
 	try {
+		const userRole = (req.user as { role: string }).role;
+
+		requireRole(userRole, config.employeeRoles);
+
 		const message = await announcements.create(req.body);
 		res.status(201).json({ message });
 	} catch (err) {
@@ -166,10 +173,14 @@ router.post("/", async function (req, res, next) {
  *    500:
  *     description: Internal server error
  */
-router.put("/:id", async function (req, res, next) {
+router.put("/:id", verifyUser, async function (req, res, next) {
 	try {
 		let { id } = req.params;
 		const parsedId = parseInt(id) || -1;
+
+		const userRole = (req.user as { role: string }).role;
+
+		requireRole(userRole, config.employeeRoles);
 
 		const message = await announcements.update(
 			parsedId,
@@ -200,10 +211,14 @@ router.put("/:id", async function (req, res, next) {
  *    500:
  *     description: Announcement could not be deleted
  */
-router.delete("/:id", async function (req, res, next) {
+router.delete("/:id", verifyUser, async function (req, res, next) {
 	try {
 		let { id } = req.params;
 		const parsedId = parseInt(id) || -1;
+		
+		const userRole = (req.user as { role: string }).role;
+
+		requireRole(userRole, config.employeeRoles);
 
 		const message = await announcements.remove(parsedId);
 		res.status(204).json({ message });

@@ -38,6 +38,8 @@ import Logi from "./pages/LogsPage";
 import TicketsPage from "./pages/Manager/TicketsPage";
 import UserProfile from "./pages/Manager/UserProfile";
 import RentCar from "./pages/RentCar";
+import FormPage from "./pages/formPage";
+import DatePagek from "./pages/dataPagek";
 
 const router = createBrowserRouter([
 	{ path: "*", Component: Root, errorElement: <ErrorBoundary /> },
@@ -52,7 +54,11 @@ function Root() {
 		<AuthProvider>
 			<Routes>
 				<Route index element={<Home />} />
-				<Route path="wynajem" element={<RentCar />} />
+				<Route path="wynajemC">
+					<Route index element={<RentCar />} />
+					<Route path="data" element={<DatePagek />} />
+					<Route path="data/form" element={<FormPage/>} />
+				</Route>
 				<Route path="ogloszenia" element={<Ogloszenia />} />
 				<Route path="logowanie" element={<Logowanie />} />
 				<Route path="logi" element={<Logi />} />

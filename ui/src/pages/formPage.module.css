@@ -1,0 +1,31 @@
+.formContainer {
+    padding: 20px;
+}
+
+.header {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.contactForm {
+    background-color: #f0f4f8;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.registerBox {
+    text-align: left;
+    padding: 20px;
+}
+
+.payButtonContainer {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+}
+
+.payButtonContainer .btn {
+    padding: 10px 20px;
+    font-size: 18px;
+}

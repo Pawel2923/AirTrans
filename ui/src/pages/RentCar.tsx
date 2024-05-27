@@ -3,18 +3,21 @@ import carService from '../services/car.service';
 import { Cars } from '../assets/Data';
 import TabelkaCarsk from '../components/tabelkaCarK';
 import Footer from '../components/footer';
-import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 
 
 const RentCar = () => {
     const [cars,setCars] = useState<Cars[]>([]);
-
+    const navigate = useNavigate();
     useEffect(() => {
         carService.getAll().then((response) => {
             setCars(response.data);
         });
     }, []);
+    const chooseCar = (car: Cars) => {
+        navigate(`data/${car.id}`);
+    }
 
     return (
         <div>
@@ -23,16 +26,11 @@ const RentCar = () => {
             </div>
             <div>
                 <h4>I Wybierz AUTO</h4>
-                <TabelkaCarsk cars={cars} onSelect={(car) => console.log(car)} />
+                <TabelkaCarsk cars={cars}
+                 onSelect={chooseCar} 
+                />
             </div>
-            <div>
-            <Link to="data" 
-                className="btn btn-primary py-2 px-5">
-				Wybierz date
-                <span>&#10132;</span>
-			</Link>
-            </div>
-            
+
             <div>
                 <Footer />
             </div>

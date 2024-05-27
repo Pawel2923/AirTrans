@@ -1,3 +1,5 @@
+import mysql from "mysql2/promise";
+
 const config = {
 	db: {
 		host: process.env.DB_HOST,
@@ -33,9 +35,9 @@ function getDbUser(role: string) {
 		config.db.password = process.env.DB_PARKING_STAFF_PASSWORD;
 	} else if (role === "rental_staff") {
 		config.db.password = process.env.DB_RENTAL_STAFF_PASSWORD;
-	} else if (role === "client") {
-		config.db.password = process.env.DB_CLIENT_PASSWORD;
 	} else {
+		config.db.password = process.env.DB_CLIENT_PASSWORD;
+		config.db.user = "client";
 		return;
 	}
 

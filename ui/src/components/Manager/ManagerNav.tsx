@@ -14,7 +14,8 @@ import {
 	faSquareParking,
 	faUser,
 	faTicket,
-	IconDefinition
+	IconDefinition,
+	faSuitcase
 } from "@fortawesome/free-solid-svg-icons";
 import {
 	Link,
@@ -92,6 +93,30 @@ const allNavItems: NavItem[] = [
 		name: "BILETY",
 		icon: faTicket,
 		roles: ["airport_staff", "admin"],
+	},
+	{
+		id: "twoje-bilty",
+		name: "TWOJE BILETY",
+		icon: faTicket,
+		roles: ["client"],
+	},
+	{
+		id: "bagaze",
+		name: "BAGAŻE",
+		icon: faSuitcase,
+		roles: ["airport_staff", "admin", "client"],
+	},
+	{
+		id: "parking-rezerwacje",
+		name: "REZERWACJE PARKINGU",
+		icon: faSquareParking,
+		roles: ["client"],
+	},
+	{
+		id: "wypozyczenia",
+		name: "WYPOŻYCZENIA",
+		icon: faCar,
+		roles: ["client"],
 	},
 ];
 

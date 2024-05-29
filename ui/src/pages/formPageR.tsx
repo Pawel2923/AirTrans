@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import styles from './formPage.module.css';
 import { Link, useNavigate } from 'react-router-dom';
 
-const FormPage= () => {
+const FormPageR= () => {
     const [contactInfo, setContactInfo] = useState({
         firstName: '',
         lastName: '',
@@ -21,7 +21,7 @@ const FormPage= () => {
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
-        navigate('/wynajemC/summary', { state: contactInfo });
+        navigate('/WynajemP/summary', { state: contactInfo });
     };
 
     return (
@@ -74,4 +74,4 @@ const FormPage= () => {
     );
 };
 
-export default FormPage;
+export default FormPageR;

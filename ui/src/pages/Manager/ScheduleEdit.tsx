@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import { useParams } from "react-router-dom";
 import flightService from "../../services/flight.service";
 import airplaneService from "../../services/airplane.service";
@@ -6,8 +6,8 @@ import { Flights } from "../../assets/Data";
 import { flightsDataParser } from "../../utils/data-parser";
 import Breadcrumb, { BreadcrumbItem } from "../../components/Breadcrumb";
 import useUpdateFlight from "../../hooks/flight/useUpdateFlight";
-import Toast from "../../components/Toast";
 import { faCircleExclamation } from "@fortawesome/free-solid-svg-icons";
+import ToastModalContext from "../../store/toast-modal-context";
 
 const emptyFlight: Flights = {
 	id: "",
@@ -25,9 +25,8 @@ const ScheduleEdit = () => {
 	const [flightData, setFlightData] = useState<Flights>(emptyFlight);
 	const [newFlightData, setNewFlightData] = useState<Flights>(emptyFlight);
 	const [refreshData, setRefreshData] = useState<boolean>(false);
-	const [toast, setToast] = useState<typeof Toast | null>(null);
-	const { toast: updateToast, updateFlight } =
-		useUpdateFlight(setRefreshData);
+	const { updateFlight } = useUpdateFlight(setRefreshData);
+	const { createToast } = useContext(ToastModalContext);
 
 	useEffect(() => {
 		if (id === undefined) return;
@@ -70,26 +69,20 @@ const ScheduleEdit = () => {
 
 		// Validate Arrival and Departure date and time format
 		if (!datetimeRegex.test(submittedData.arrival)) {
-			setToast(() => (
-				<Toast
-					icon={faCircleExclamation}
-					message="Niepoprawna data i godzina przylotu"
-					onClose={() => setToast(null)}
-					type="danger"
-				/>
-			));
+			createToast({
+				icon: faCircleExclamation,
+				message: "Niepoprawna data i godzina przylotu",
+				type: "danger",
+			});
 			return;
 		}
 
 		if (!datetimeRegex.test(submittedData.departure)) {
-			setToast(() => (
-				<Toast
-					icon={faCircleExclamation}
-					message="Niepoprawna data i godzina odlotu"
-					onClose={() => setToast(null)}
-					type="danger"
-				/>
-			));
+			createToast({
+				icon: faCircleExclamation,
+				message: "Niepoprawna data i godzina odlotu",
+				type: "danger",
+			});
 			return;
 		}
 
@@ -102,14 +95,11 @@ const ScheduleEdit = () => {
 			submittedData.airline_name === flightData.airline_name &&
 			submittedData.airplane_serial_no === flightData.airplane_serial_no
 		) {
-			setToast(() => (
-				<Toast
-					icon={faCircleExclamation}
-					message="Nie dokonano zmian"
-					onClose={() => setToast(null)}
-					type="warning"
-				/>
-			));
+			createToast({
+				icon: faCircleExclamation,
+				message: "Nie dokonano zmian",
+				type: "warning",
+			});
 			return;
 		}
 
@@ -230,8 +220,6 @@ const ScheduleEdit = () => {
 					Zapisz
 				</button>
 			</form>
-			{toast}
-			{updateToast}
 		</>
 	);
 };

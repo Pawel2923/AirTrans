@@ -1,25 +1,11 @@
 import { useCallback, useState } from "react";
 import AlertModal from "../components/Modals/AlertModal";
 import ConfirmModal from "../components/Modals/ConfirmModal";
-
-interface AlertModalProps {
-	title?: string;
-	message: string;
-	onClose?: () => void;
-}
-
-interface ConfirmModalProps {
-	title?: string;
-	message: string;
-	onConfirm?: () => void;
-	onClose?: () => void;
-	confirmBtnText?: string;
-	confirmBtnClass?: string;
-}
+import { AlertModalProps, ConfirmModalProps } from "../assets/Data";
 
 const useModal = () => {
-	const [alert, setAlert] = useState<typeof AlertModal | null>(null);
-	const [confirm, setConfirm] = useState<typeof ConfirmModal | null>(null);
+	const [alert, setAlert] = useState<JSX.Element | null>(null);
+	const [confirm, setConfirm] = useState<JSX.Element | null>(null);
 
 	const createAlertModal = useCallback(
 		({ message, title, onClose }: AlertModalProps) => {

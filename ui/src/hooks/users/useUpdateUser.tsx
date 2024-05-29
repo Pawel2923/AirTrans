@@ -4,7 +4,7 @@ import usersService from "../../services/users.service";
 import useErrorHandler from "../useErrorHandler";
 
 const useUpdateUser = () => {
-	const { errorToast, errorAlert, handleError } = useErrorHandler();
+	const { handleError } = useErrorHandler();
 
 	const updateUser = useCallback((id: number, data: UserInfo) => new Promise((resolve) => {
         usersService
@@ -49,8 +49,6 @@ const useUpdateUser = () => {
 		updateUser,
         updateRole,
         updateImg,
-		errorToast,
-		errorAlert,
 	} as const;
 };
 

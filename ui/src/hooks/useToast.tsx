@@ -1,21 +1,9 @@
 import { useCallback, useState } from "react";
 import Toast from "../components/Toast";
-import { IconDefinition } from "@fortawesome/fontawesome-svg-core";
-
-interface ToastProps {
-	message: string;
-	type?: "primary" | "alt" | "warning" | "danger";
-	icon?: IconDefinition;
-	action?: {
-		label: string;
-		onClick: () => void;
-	};
-	timeout?: number;
-	onClose?: () => void;
-}
+import { ToastProps } from "../assets/Data";
 
 const useToast = () => {
-	const [toast, setToast] = useState<typeof Toast | null>(null);
+	const [toast, setToast] = useState<JSX.Element | null>(null);
 
 	const createToast = useCallback(
 		({

@@ -11,7 +11,7 @@ const ScheduleDetails = () => {
 	const { id } = useParams<{ id: string }>();
 	const [flightData, setFlightData] = useState<Flights[]>([]);
 	const [openConfirm, setOpenConfirm] = useState<boolean>(false);
-	const { deleteFlight, toast, alert } = useDeleteFlight(undefined, true);
+	const { deleteFlight } = useDeleteFlight(undefined, true);
 
 	useEffect(() => {
 		if (id === undefined) return;
@@ -70,8 +70,6 @@ const ScheduleDetails = () => {
 					message="Czy na pewno chcesz usunąć lot?"
 				/>
 			)}
-			{alert}
-			{toast}
 		</>
 	);
 };

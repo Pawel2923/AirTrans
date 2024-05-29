@@ -3,7 +3,7 @@ import flightService from "../../services/flight.service";
 import useErrorHandler from "../useErrorHandler";
 
 const useGetFlight = () => {
-	const { errorAlert, errorToast, handleError } = useErrorHandler();
+	const { handleError } = useErrorHandler();
     const [flightIds, setFlightIds] = useState<string[]>([]);
 
 	const getFlightIds = useCallback(() => {
@@ -21,8 +21,6 @@ const useGetFlight = () => {
 
 	return {
         flightIds,
-		errorAlert,
-		errorToast,
 		getFlightIds,
 	};
 };

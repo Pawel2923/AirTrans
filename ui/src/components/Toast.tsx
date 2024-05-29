@@ -37,47 +37,56 @@ const Toast: React.FC<ToastProps> = ({
 				setOpen(false);
 				resolve(true);
 			}, 500);
-		}).then(() => {
-			setStyles({});
 		})
-		.finally(() => {
-			onClose();
-		});
+			.then(() => {
+				setStyles({});
+			})
+			.finally(() => {
+				onClose();
+			});
 	}, [onClose]);
 
 	useEffect(() => {
 		const timer = setTimeout(() => {
 			closeHandler();
-		}, timeout);
+		}, (timeout));
 
 		return () => {
 			clearTimeout(timer);
 		};
 	}, [closeHandler, timeout]);
 
+	const animationDuration = timeout ? `${timeout}ms` : "5s";
+
 	return (
 		open && (
 			<div className={classes.toast} style={styles}>
 				<div
-					className={`${classes["toast-content"]} ${
+					className={`${classes["toast-container"]} ${
 						type ? classes[type] : ""
 					}`}
 				>
-					{icon && <FontAwesomeIcon icon={icon} />}
-					<p>{message}</p>
-					{action && (
-						<button
-							className={`btn ${
-								type ? `btn-outline-${type}` : ""
-							} ${classes["toast-btn"]}`}
-							onClick={action.onClick}
-						>
-							{action.label}
-						</button>
-					)}
-					<span className={classes.close} onClick={closeHandler}>
-						<FontAwesomeIcon icon={faTimes} />
-					</span>
+					<div className={classes["toast-body"]}>
+						{icon && <FontAwesomeIcon icon={icon} />}
+						<p>{message}</p>
+						{action && (
+							<button
+								className={`btn ${
+									type ? `btn-outline-${type}` : ""
+								} ${classes["toast-btn"]}`}
+								onClick={action.onClick}
+							>
+								{action.label}
+							</button>
+						)}
+						<span className={classes.close} onClick={closeHandler}>
+							<FontAwesomeIcon icon={faTimes} />
+						</span>
+					</div>
+					<div
+						className={classes["progress-bar"]}
+						style={{ animationDuration: animationDuration }}
+					></div>
 				</div>
 			</div>
 		)

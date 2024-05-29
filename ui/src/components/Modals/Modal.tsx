@@ -17,6 +17,7 @@ const Modal: React.FC<ModalProps> = ({ onClose, children }: ModalProps) => {
 				</span>
 				{children}
 			</div>
+			<div className={classes["modal-backdrop"]} onClick={onClose}></div>
 		</div>
 	);
 };

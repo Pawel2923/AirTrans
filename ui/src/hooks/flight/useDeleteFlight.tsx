@@ -1,9 +1,9 @@
 import { faCircleCheck } from "@fortawesome/free-solid-svg-icons";
 import { useNavigate } from "react-router-dom";
 import flightService from "../../services/flight.service";
-import useModal from "../useModal";
-import useToast from "../useToast";
 import useErrorHandler from "../useErrorHandler";
+import { useContext } from "react";
+import ToastModalContext from "../../store/toast-modal-context";
 
 // Custom hook for deleting a flight
 export const useDeleteFlight = (
@@ -11,9 +11,8 @@ export const useDeleteFlight = (
 	useAlert?: boolean
 ) => {
 	const navigate = useNavigate();
-	const { toast, createToast } = useToast();
-	const { alert, createAlertModal } = useModal();
-	const { errorAlert, errorToast, handleError } = useErrorHandler();
+	const { createAlertModal, createToast } = useContext(ToastModalContext);
+	const { handleError } = useErrorHandler();
 
 	const deleteFlight = (deleteId: string) => {
 		flightService
@@ -44,10 +43,6 @@ export const useDeleteFlight = (
 	};
 
 	return {
-		alert,
-		toast,
-		errorAlert,
-		errorToast,
 		deleteFlight,
 	};
 };

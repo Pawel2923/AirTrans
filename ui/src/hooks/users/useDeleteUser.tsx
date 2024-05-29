@@ -3,7 +3,7 @@ import usersService from "../../services/users.service";
 import useErrorHandler from "../useErrorHandler";
 
 const useDeleteUser = () => {
-	const { errorToast, errorAlert, handleError } = useErrorHandler();
+	const { handleError } = useErrorHandler();
 
 	const deleteUser = useCallback((id: number) => new Promise((resolve) => {
         usersService
@@ -20,8 +20,6 @@ const useDeleteUser = () => {
 
 	return {
         deleteUser,
-		errorToast,
-		errorAlert,
 	} as const;
 };
 

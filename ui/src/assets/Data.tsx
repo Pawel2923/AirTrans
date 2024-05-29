@@ -1,3 +1,5 @@
+import { IconDefinition } from "@fortawesome/fontawesome-svg-core";
+
 interface Flights {
 	id: string;
 	status: "SCHEDULED" | "WAITING" | "AIRBORNE" | "TAKE OFF" | "LANDING" | "FINISHED" | "CANCELLED" | "DELAYED";
@@ -278,6 +280,33 @@ interface Err extends Error {
 	};
 }
 
+interface AlertModalProps {
+	title?: string;
+	message: string;
+	onClose?: () => void;
+}
+
+interface ConfirmModalProps {
+	title?: string;
+	message: string;
+	onConfirm?: () => void;
+	onClose?: () => void;
+	confirmBtnText?: string;
+	confirmBtnClass?: string;
+}
+
+interface ToastProps {
+	message: string;
+	type?: "primary" | "alt" | "warning" | "danger";
+	icon?: IconDefinition;
+	action?: {
+		label: string;
+		onClick: () => void;
+	};
+	timeout?: number;
+	onClose?: () => void;
+}
+
 export type {
 	EventLogs,
 	Flights,
@@ -309,5 +338,8 @@ export type {
 	Employees,
 	// eslint-disable-next-line react-refresh/only-export-components
 	Logowanie_log,
-	Err
+	Err,
+	AlertModalProps,
+	ConfirmModalProps,
+	ToastProps,
 };

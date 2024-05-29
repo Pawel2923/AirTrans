@@ -1,5 +1,6 @@
 import mysql from "mysql2/promise";
 import config from "../config";
+import { Err } from "../Types";
 
 // query database
 async function query(sql: string, params?: any[]) {
@@ -11,7 +12,7 @@ async function query(sql: string, params?: any[]) {
 		return results;
 	} catch (error: any) {
 		console.error("Database error:", error);
-		throw error.sqlMessage;
+		throw new Err(error.sqlMessage, error.sqlState === "45000" ? 400 : 500);
 	} finally {
 		connection.end();
 	}
@@ -26,8 +27,14 @@ async function startTransaction() {
 
 // query transaction
 async function queryTransaction(connection: any, sql: string, params?: any[]) {
-	const [results] = await connection.query(sql, params);
-	return results;
+	try {
+		const [results] = await connection.query(sql, params);
+		return results;
+	} catch (error: any) {
+		console.error("Database error:", error);
+		await connection.rollback();
+		throw new Err(error.sqlMessage, error.sqlState === "45000" ? 400 : 500);
+	}
 }
 
 // commit a transaction

@@ -1,32 +1,21 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import Breadcrumb, { BreadcrumbItem } from "../../components/Breadcrumb";
 import { faCircleExclamation } from "@fortawesome/free-solid-svg-icons";
 import useGetFlight from "../../hooks/flight/useGetFlight";
 import useGetAirfield from "../../hooks/airfield/useGetAirfield";
-import useToast from "../../hooks/useToast";
 import useUpdateAirfield from "../../hooks/airfield/useUpdateAirfield";
+import ToastModalContext from "../../store/toast-modal-context";
 
 type Status = "EMPTY" | "OCCUPIED" | "CLOSED" | "READY" | "FULL";
 
 const AirfieldEdit = () => {
 	const { table, id } = useParams();
-	const { toast, createToast } = useToast();
+	const { createToast } = useContext(ToastModalContext);
 	const { flightIds, getFlightIds } = useGetFlight();
-	const {
-		runwayData,
-		taxiwayData,
-		terminalData,
-		errorAlert: getErrorAlert,
-		errorToast: getErrorToast,
-		getAirfieldTable,
-	} = useGetAirfield();
-	const {
-		toast: updateToast,
-		errorToast: updateErrorToast,
-		errorAlert: updateErrorAlert,
-		updateAirfield,
-	} = useUpdateAirfield();
+	const { runwayData, taxiwayData, terminalData, getAirfieldTable } =
+		useGetAirfield();
+	const { updateAirfield } = useUpdateAirfield();
 
 	const [status, setStatus] = useState<Status>("CLOSED");
 	const [selectedFlightId, setSelectedFlightId] = useState<string>("");
@@ -262,12 +251,6 @@ const AirfieldEdit = () => {
 					</button>
 				</form>
 			</div>
-			{toast}
-			{updateToast}
-			{getErrorAlert}
-			{getErrorToast}
-			{updateErrorAlert}
-			{updateErrorToast}
 		</>
 	);
 };

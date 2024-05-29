@@ -1,8 +1,7 @@
 import { faCircleExclamation } from "@fortawesome/free-solid-svg-icons";
 import { Err } from "../assets/Data";
-import useToast from "./useToast";
-import useModal from "./useModal";
-import { useCallback } from "react";
+import { useCallback, useContext } from "react";
+import ToastModalContext from "../store/toast-modal-context";
 
 interface HandleErrorProps {
 	error: Err;
@@ -11,8 +10,7 @@ interface HandleErrorProps {
 }
 
 const useErrorHandler = () => {
-	const { alert: errorAlert, createAlertModal } = useModal();
-	const { toast: errorToast, createToast } = useToast();
+	const { createAlertModal, createToast, setIsError } = useContext(ToastModalContext);
 
 	const handleError = useCallback(
 		({ error, onModalClose, onToastAction }: HandleErrorProps) => {
@@ -80,11 +78,13 @@ const useErrorHandler = () => {
 						onClose: onModalClose,
 					});
 			}
+
+			setIsError(true);
 		},
-		[createAlertModal, createToast]
+		[createAlertModal, createToast, setIsError]
 	);
 
-	return { errorToast, errorAlert, handleError } as const;
+	return { handleError } as const;
 };
 
 export default useErrorHandler;

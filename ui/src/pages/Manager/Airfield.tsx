@@ -1,19 +1,19 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { Runways, Taxiways, Terminals } from "../../assets/Data";
 import airfieldService from "../../services/airfield.service";
-import Toast from "../../components/Toast";
 import {
 	faCircleExclamation,
 	faPenToSquare,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Link } from "react-router-dom";
+import ToastModalContext from "../../store/toast-modal-context";
 
 const Airfield = () => {
+	const { createToast } = useContext(ToastModalContext);
 	const [terminalData, setTerminalData] = useState<Terminals[]>([]);
 	const [taxiwayData, setTaxiwayData] = useState<Taxiways[]>([]);
 	const [runwayData, setRunwayData] = useState<Runways[]>([]);
-	const [toast, setToast] = useState<typeof Toast | null>(null);
 
 	useEffect(() => {
 		airfieldService
@@ -27,24 +27,20 @@ const Airfield = () => {
 			})
 			.catch((error) => {
 				if (error.response.status === 404) {
-					setToast(() => (
-						<Toast
-							icon={faCircleExclamation}
-							message="Nie znaleziono informacji o lotnisku"
-							onClose={() => setToast(null)}
-							type="danger"
-						/>
-					));
+					createToast({
+						icon: faCircleExclamation,
+						message: "Nie znaleziono informacji o lotnisku",
+						type: "danger",
+					});
 				} else {
-					<Toast
-						icon={faCircleExclamation}
-						message="Wystąpił błąd podczas pobierania informacji o lotnisku"
-						onClose={() => setToast(null)}
-						type="danger"
-					/>;
+					createToast({
+						icon: faCircleExclamation,
+						message: "Wystąpił błąd podczas pobierania informacji o lotnisku",
+						type: "danger",
+					});
 				}
 			});
-	}, []);
+	}, [createToast]);
 
 	return (
 		<>
@@ -143,7 +139,6 @@ const Airfield = () => {
 					))}
 				</div>
 			</div>
-			{toast}
 		</>
 	);
 };

@@ -1,8 +1,8 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import useGetTickets from "../../hooks/tickets/useGetTickets";
 import DataTable from "../../components/Manager/DataTable";
 import useUpdateTickets from "../../hooks/tickets/useUpdateTickets";
-import useModal from "../../hooks/useModal";
+import ToastModalContext from "../../store/toast-modal-context";
 
 const ticketsColumnNames = [
 	"Klasa",
@@ -17,15 +17,10 @@ const ticketsColumnNames = [
 
 const TicketsPage = () => {
 	const [ticketId, setTicketId] = useState<number | string>("");
-	const { ticketsData, errorAlert, errorToast, getTicketById, getTicketIds } =
-		useGetTickets();
-	const { confirm, createConfirmModal } = useModal();
+	const { ticketsData, getTicketById, getTicketIds } = useGetTickets();
+	const { isError, createConfirmModal } = useContext(ToastModalContext);
 	const [ticketIds, setTicketIds] = useState<string[]>([""]);
-	const {
-		errorAlert: updateAlert,
-		errorToast: updateToast,
-		updateStatus,
-	} = useUpdateTickets();
+	const { updateStatus } = useUpdateTickets();
 
 	useEffect(() => {
 		if (sessionStorage.getItem("ticketId")) {
@@ -37,10 +32,10 @@ const TicketsPage = () => {
 	}, [getTicketById]);
 
 	useEffect(() => {
-		if (errorAlert || errorToast) {
+		if (isError) {
 			sessionStorage.removeItem("ticketId");
 		}
-	}, [errorAlert, errorToast]);
+	}, [isError]);
 
 	useEffect(() => {
 		getTicketIds().then((ids) => setTicketIds(ids as string[]));
@@ -180,11 +175,6 @@ const TicketsPage = () => {
 					</button>
 				</div>
 			)}
-			{errorAlert}
-			{errorToast}
-			{updateAlert}
-			{updateToast}
-			{confirm}
 		</>
 	);
 };

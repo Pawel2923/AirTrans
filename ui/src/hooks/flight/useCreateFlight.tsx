@@ -2,17 +2,17 @@ import { faCircleCheck } from "@fortawesome/free-solid-svg-icons";
 import { useNavigate } from "react-router-dom";
 import { Flights } from "../../assets/Data";
 import flightService from "../../services/flight.service";
-import useToast from "../useToast";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import useErrorHandler from "../useErrorHandler";
+import ToastModalContext from "../../store/toast-modal-context";
 
 export const useCreateFlight = (
 	setRefreshData?: React.Dispatch<React.SetStateAction<boolean>>
 ) => {
 	const navigate = useNavigate();
-	const { toast, createToast } = useToast();
+	const { createToast } = useContext(ToastModalContext);
 	const [message, setMessage] = useState<string>("");
-	const { errorToast, errorAlert, handleError } = useErrorHandler();
+	const { handleError } = useErrorHandler();
 
 	const createFlight = (data: Flights) => {
 		flightService
@@ -43,9 +43,6 @@ export const useCreateFlight = (
 
 	return {
 		message,
-		toast,
-		errorToast,
-		errorAlert,
 		createFlight,
 	};
 };

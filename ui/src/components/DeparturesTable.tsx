@@ -29,7 +29,7 @@ const DeparturesTable: React.FC<TableProps> = ({
 	const [isArrivalTab, setIsArrivalTab] = useState(false);
 	const [filteredData, setFilteredData] = useState<Departures[]>([]);
 	const [deleteId, setDeleteId] = useState<string>("");
-	const { toast, deleteFlight } = useDeleteFlight(setRefreshData);
+	const { deleteFlight } = useDeleteFlight(setRefreshData);
 
 	useEffect(() => {
 		if (!isArrivalTab) {
@@ -214,7 +214,6 @@ const DeparturesTable: React.FC<TableProps> = ({
 					message="Czy na pewno chcesz usunąć lot?"
 				/>
 			)}
-			{toast}
 		</>
 	);
 };

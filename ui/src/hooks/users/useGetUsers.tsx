@@ -5,7 +5,7 @@ import useErrorHandler from "../useErrorHandler";
 
 const useGetUsers = () => {
 	const [usersData, setUsersData] = useState<UserInfo[]>();
-	const { errorToast, errorAlert, handleError } = useErrorHandler();
+	const { handleError } = useErrorHandler();
 
 	const getAllUsers = useCallback(
 		(page: number = 1, limit?: number, filter?: Filter[], sort?: Sort) => {
@@ -64,8 +64,6 @@ const useGetUsers = () => {
 
 	return {
 		usersData,
-		errorToast,
-		errorAlert,
 		getAllUsers,
 		getUserById,
 		getUserByEmail,

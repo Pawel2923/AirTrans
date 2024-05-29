@@ -3,7 +3,7 @@ import useErrorHandler from "../useErrorHandler";
 import ticketsService from "../../services/tickets.service";
 
 const useUpdateTickets = () => {
-	const { errorToast, errorAlert, handleError } = useErrorHandler();
+	const { handleError } = useErrorHandler();
 
 	const updateStatus = useCallback(
 		(id: number, status: string) =>
@@ -23,8 +23,6 @@ const useUpdateTickets = () => {
 	);
 
 	return {
-		errorToast,
-		errorAlert,
 		updateStatus,
 	} as const;
 };

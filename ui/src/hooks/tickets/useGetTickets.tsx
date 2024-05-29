@@ -5,7 +5,7 @@ import ticketsService from "../../services/tickets.service";
 
 const useGetTickets = () => {
 	const [ticketsData, setTicketsData] = useState<Tickets[]>();
-	const { errorToast, errorAlert, handleError } = useErrorHandler();
+	const { handleError } = useErrorHandler();
 
 	const getAllTickets = useCallback(
 		(page: number = 1, limit?: number, filter?: Filter[], sort?: Sort) => {
@@ -58,8 +58,6 @@ const useGetTickets = () => {
 
 	return {
 		ticketsData,
-		errorToast,
-		errorAlert,
 		getAllTickets,
 		getTicketById,
 		getTicketIds,

@@ -1,4 +1,8 @@
-import { faArrowLeft, faPen, faXmarkCircle } from "@fortawesome/free-solid-svg-icons";
+import {
+	faArrowLeft,
+	faPen,
+	faXmarkCircle,
+} from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Link, useNavigate } from "react-router-dom";
 import classes from "./UserProfile.module.css";
@@ -9,13 +13,12 @@ import useUpdateUser from "../../hooks/users/useUpdateUser";
 import { UserInfo } from "../../assets/Data";
 import ConfirmModal from "../../components/Modals/ConfirmModal";
 import filesService from "../../services/files.service";
-import useModal from "../../hooks/useModal";
 import useDeleteUser from "../../hooks/users/useDeleteUser";
-import useToast from "../../hooks/useToast";
+import ToastModalContext from "../../store/toast-modal-context";
 
 const UserProfile = () => {
 	const navigate = useNavigate();
-
+	const { createToast, createConfirmModal } = useContext(ToastModalContext);
 	const [editMode, setEditMode] = useState({
 		name: false,
 		email: false,
@@ -24,23 +27,9 @@ const UserProfile = () => {
 		gender: false,
 		birthDate: false,
 	});
-	const {
-		errorAlert,
-		errorToast,
-		usersData: userInfo,
-		getUserByEmail,
-	} = useGetUsers();
-	const {
-		errorAlert: updateAlert,
-		errorToast: updateToast,
-		updateUser,
-		updateImg,
-	} = useUpdateUser();
-	const {
-		errorAlert: deleteAlert,
-		errorToast: deleteToast,
-		deleteUser,
-	} = useDeleteUser();
+	const { usersData: userInfo, getUserByEmail } = useGetUsers();
+	const { updateUser, updateImg } = useUpdateUser();
+	const { deleteUser } = useDeleteUser();
 	const { user } = useContext(AuthContext);
 	const [inputData, setInputData] = useState({
 		name: "",
@@ -50,8 +39,6 @@ const UserProfile = () => {
 		gender: "",
 		birthDate: "",
 	});
-	const { toast, createToast } = useToast();
-	const { createConfirmModal, confirm: confirmModal } = useModal();
 	const [isChangeImgModalVisible, setIsChangeImgModalVisible] =
 		useState<boolean>(false);
 	const [userImg, setUserImg] = useState<File>();
@@ -409,14 +396,6 @@ const UserProfile = () => {
 			<button className="btn btn-danger mt-3" onClick={deleteBtnHandler}>
 				Usuń konto
 			</button>
-			{errorAlert}
-			{errorToast}
-			{updateAlert}
-			{updateToast}
-			{deleteAlert}
-			{deleteToast}
-			{confirmModal}
-			{toast}
 			{isChangeImgModalVisible && (
 				<ConfirmModal
 					title="Zmień zdjęcie"

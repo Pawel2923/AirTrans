@@ -63,20 +63,12 @@ const UsersPage = () => {
 		page: parseInt(searchParams.get("page") || "1"),
 		pages: 1,
 	});
-	const { usersData, errorAlert, errorToast, getAllUsers } = useGetUsers();
+	const { usersData, getAllUsers } = useGetUsers();
 	const [roleConfirm, setRoleConfirm] = useState<boolean>();
 	const [deleteConfirm, setDeleteConfirm] = useState<boolean>();
 	const [role, setRole] = useState<string>("");
-	const {
-		errorAlert: updateAlert,
-		errorToast: updateToast,
-		updateRole,
-	} = useUpdateUser();
-	const {
-		errorAlert: deleteAlert,
-		errorToast: deleteToast,
-		deleteUser,
-	} = useDeleteUser();
+	const { updateRole } = useUpdateUser();
+	const { deleteUser } = useDeleteUser();
 	const [id, setId] = useState<number>(0);
 
 	useEffect(() => {
@@ -139,7 +131,15 @@ const UsersPage = () => {
 										.slice(0, 19)) ||
 									"Brak"}
 							</td>
-							<td style={{maxWidth: "100px", overflow: "auto", overflowWrap: "break-word"}}>{user.img || "Brak"}</td>
+							<td
+								style={{
+									maxWidth: "100px",
+									overflow: "auto",
+									overflowWrap: "break-word",
+								}}
+							>
+								{user.img || "Brak"}
+							</td>
 							<td>{user.role || "client"}</td>
 							<td>
 								<button
@@ -173,12 +173,6 @@ const UsersPage = () => {
 				setPageData={setPageData}
 				className="mt-3"
 			/>
-			{errorAlert}
-			{errorToast}
-			{updateAlert}
-			{updateToast}
-			{deleteAlert}
-			{deleteToast}
 			{roleConfirm && (
 				<ConfirmModal
 					onClose={() => setRoleConfirm(false)}

@@ -1,12 +1,13 @@
 import { faCircleCheck } from "@fortawesome/free-solid-svg-icons";
 import { Runways, Taxiways, Terminals, Err } from "../../assets/Data";
 import airfieldService from "../../services/airfield.service";
-import useToast from "../useToast";
 import useErrorHandler from "../useErrorHandler";
+import { useContext } from "react";
+import ToastModalContext from "../../store/toast-modal-context";
 
 const useUpdateAirfield = () => {
-	const { toast, createToast } = useToast();
-	const { errorAlert, errorToast, handleError } = useErrorHandler();
+	const { createToast } = useContext(ToastModalContext);
+	const { handleError } = useErrorHandler();
 
 	const updateAirfield = (
 		tableName: string,
@@ -31,7 +32,7 @@ const useUpdateAirfield = () => {
 			});
 	};
 
-	return { updateAirfield, toast, errorToast, errorAlert };
+	return { updateAirfield };
 };
 
 export default useUpdateAirfield;

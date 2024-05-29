@@ -4,7 +4,7 @@ import airfieldService from "../../services/airfield.service";
 import useErrorHandler from "../useErrorHandler";
 
 const useGetAirfield = () => {
-	const { errorAlert, errorToast, handleError } = useErrorHandler();
+	const { handleError } = useErrorHandler();
 	const [terminalData, setTerminalData] = useState<Terminals[]>();
 	const [taxiwayData, setTaxiwayData] = useState<Taxiways[]>();
 	const [runwayData, setRunwayData] = useState<Runways[]>();
@@ -52,8 +52,6 @@ const useGetAirfield = () => {
 		terminalData,
 		taxiwayData,
 		runwayData,
-		errorAlert,
-		errorToast,
 		getAirfieldInfo,
 		getAirfieldTable,
 	};

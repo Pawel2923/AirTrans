@@ -41,15 +41,15 @@ class AirplaneService {
     };
     
     create = (data: Airplanes) => {
-        return http.post("/airplane", data);
+        return http.post("/airplane", data,  { withCredentials: true });
     };
 
     update = (serial_no: string, data: Airplanes) => {
-        return http.put(`/airplane/${serial_no}`, data);
+        return http.put(`/airplane/${serial_no}`, data,  { withCredentials: true });
     };
 
     delete = (serial_no: string) => {
-        return http.delete(`/airplane/${serial_no}`);
+        return http.delete(`/airplane/${serial_no}`,  { withCredentials: true });
     };
 }
 

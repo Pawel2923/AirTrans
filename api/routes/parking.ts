@@ -2,6 +2,7 @@
 import express from "express";
 const router = express.Router();
 import parkingService from "../services/parking";
+import { verifyUser } from "../middlewares/verifyUser";
 
 router.get("/", async function (req, res, next) {
   try {
@@ -21,7 +22,7 @@ router.get("/", async function (req, res, next) {
     res.status(500).json({ message: "Internal server error" });
   }
 });
-router.post("/", async function (req, res, next) {
+router.post("/", verifyUser, async function (req, res, next) {
     try {
       const { data, message } = await parkingService.createParking(req.body);
       res.status(201).json({ data, message });
@@ -31,7 +32,7 @@ router.post("/", async function (req, res, next) {
   });
   
  
-router.delete("/:id", async function (req, res, next) {
+router.delete("/:id", verifyUser, async function (req, res, next) {
     try {
       const { id } = req.params;
       const rentId = parseInt(id as string);  
@@ -69,7 +70,7 @@ router.get("/:id", async function (req, res, next) {
 
 
 
-router.put("/:id", async function (req, res, next) {
+router.put("/:id", verifyUser, async function (req, res, next) {
   try {
     const { id } = req.params;
 		const parkingId = parseInt(id as string);

@@ -1,5 +1,5 @@
-import { useState, useEffect } from "react";
-import { useSearchParams } from "react-router-dom";
+import { useState, useEffect, useContext } from "react";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import DeparturesTable from "../../components/DeparturesTable";
 import flightService from "../../services/flight.service";
 import airplaneService from "../../services/airplane.service";
@@ -9,6 +9,7 @@ import Pagination from "../../components/Pagination";
 import Toast from "../../components/Toast";
 import { faCircleExclamation } from "@fortawesome/free-solid-svg-icons";
 import { useCreateFlight } from "../../hooks/flight/useCreateFlight";
+import AuthContext from "../../store/auth-context";
 
 const emptyFlight: Flights = {
 	id: "",
@@ -21,7 +22,9 @@ const emptyFlight: Flights = {
 };
 
 const Schedule = () => {
+	const navigate = useNavigate();
 	const [searchParams] = useSearchParams();
+	const { user } = useContext(AuthContext);
 	const [flights, setFlights] = useState<Departures[]>([]);
 	const [refreshData, setRefreshData] = useState<boolean>(false);
 	const [serialNumbers, setSerialNumbers] = useState<string[]>([]);
@@ -33,6 +36,14 @@ const Schedule = () => {
 	const [toast, setToast] = useState<typeof Toast | null>(null);
 	const { toast: createToast, createFlight } =
 		useCreateFlight(setRefreshData);
+
+	useEffect(() => {
+		if (user) {
+			if (user.role === "client") {
+				navigate("/zarzadzanie/profil");
+			}
+		}
+	}, [navigate, user]);
 
 	useEffect(() => {
 		flightService

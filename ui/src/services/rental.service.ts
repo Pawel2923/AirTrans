@@ -10,11 +10,11 @@ class RentalService {
       });
   }
   createRental(carRental: Rentals) {
-    return http.post("/rent", carRental)
+    return http.post("/rent", carRental,  { withCredentials: true })
   }
 
   removeRent(id: number) {
-    return http.delete(`/rent/${id}`)
+    return http.delete(`/rent/${id}`,  { withCredentials: true })
   }
 
   getById(id: number) {
@@ -22,7 +22,7 @@ class RentalService {
   }
  
   updateRent(carRental: Rentals) {
-    return http.put(`/rent/${carRental.id}`, carRental);
+    return http.put(`/rent/${carRental.id}`, carRental,  { withCredentials: true });
   }
 }
 

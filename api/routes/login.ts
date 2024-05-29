@@ -68,14 +68,14 @@ router.post("/", async function (req, res, next) {
 		});
 
 		const cookieOptions = {
-			expires: new Date(Date.now() + 86400 * 1000), // Token wygasa po 24 godzinach
+			expires: new Date(Date.now() + 60000), // Token wygasa po 1 minucie
 			httpOnly: true, // Zapobieganie dostępu do ciasteczka przez JavaScript
 		};
 		// Ustawienie ciasteczka JWT
 		res.cookie("jwt", token, cookieOptions);
 		
 		const refreshCookieOptions = {
-			expires: new Date(Date.now() + 525600 * 1000), // Token wygasa po 1 roku
+			expires: new Date(Date.now() + 604800 * 1000), // Token wygasa po 7 dniach
 			httpOnly: true, // Zapobieganie dostępu do ciasteczka przez JavaScript
 		};
 

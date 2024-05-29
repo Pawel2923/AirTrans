@@ -1,6 +1,8 @@
 import express from "express";
 const router = express.Router();
 import equipment from "../services/equipment";
+import { verify } from "crypto";
+import { verifyUser, requireRole } from "../middlewares/verifyUser";
 
 router.get("/", async (req, res, next) => {
     try {
@@ -23,8 +25,12 @@ router.get("/", async (req, res, next) => {
     }
 });
 
-router.post("/", async (req, res, next) => {
+router.post("/", verifyUser, async (req, res, next) => {
     try {
+        const userRole = (req.user as { role: string }).role;
+
+		requireRole(userRole, ["admin", "ground_crew"]);
+
         let message = await equipment.create(req.body);
         res.status(201).json({ message });
     } catch (err) {
@@ -45,6 +51,11 @@ router.get("/:serial_no", async (req, res, next) => {
 router.put("/:serial_no", async (req, res, next) => {
     try {
         let { serial_no } = req.params;
+
+        const userRole = (req.user as { role: string }).role;
+
+        requireRole(userRole, ["admin", "ground_crew"]);
+
         let message = await equipment.update(serial_no, req.body);
         res.status(200).json({ message });
     } catch (err) {
@@ -55,6 +66,11 @@ router.put("/:serial_no", async (req, res, next) => {
 router.delete("/:serial_no", async (req, res, next) => {
     try {
         let { serial_no } = req.params;
+
+        const userRole = (req.user as { role: string }).role;
+
+        requireRole(userRole, ["admin", "ground_crew"]);
+        
         let message = await equipment.remove(serial_no);
         res.status(200).json({ message });
     } catch (err) {

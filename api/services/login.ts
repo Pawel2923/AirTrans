@@ -53,9 +53,7 @@ async function fetchClient(email: string, userInputPassword: string) {
 
 	if (userRole.length === 0) {
 		userRole = [{ role: "client" }];
-		console.log(userRole);
 	}
-	console.log(userRole[0].role);
 
 	return { response: { statusCode: 200 }, email, userRole: userRole[0].role };
 }

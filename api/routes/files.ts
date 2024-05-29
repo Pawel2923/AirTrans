@@ -20,7 +20,7 @@ const upload = multer({
     }),
 });
 
-router.get("/:file", verifyUser, async function (req, res, next) {
+router.get("/:file", async function (req, res, next) {
     try {
         const file = path.join("/api/files/", req.params.file);
         if (fs.existsSync(file)) {

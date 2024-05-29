@@ -88,7 +88,7 @@ async function get(
 
 async function update(
 	table_name: string,
-	id: string,
+	id: string | number,
 	newData: Runways | Terminals | Taxiways
 ) {
 	if (!tableNames.includes(table_name)) {
@@ -106,6 +106,8 @@ async function update(
 	if (newData.id != id) {
 		throw new Err("Ids don't match", 400);
 	}
+
+	id = table_name === "Terminals" ? parseInt(id as string) : id;
 
 	const checkId = await db.query("SELECT '' FROM ?? WHERE id=?", [
 		table_name,

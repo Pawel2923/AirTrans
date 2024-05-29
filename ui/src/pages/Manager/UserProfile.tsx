@@ -1,4 +1,4 @@
-import { faArrowLeft, faPen } from "@fortawesome/free-solid-svg-icons";
+import { faArrowLeft, faPen, faXmarkCircle } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Link, useNavigate } from "react-router-dom";
 import classes from "./UserProfile.module.css";
@@ -11,9 +11,11 @@ import ConfirmModal from "../../components/Modals/ConfirmModal";
 import filesService from "../../services/files.service";
 import useModal from "../../hooks/useModal";
 import useDeleteUser from "../../hooks/users/useDeleteUser";
+import useToast from "../../hooks/useToast";
 
 const UserProfile = () => {
 	const navigate = useNavigate();
+
 	const [editMode, setEditMode] = useState({
 		name: false,
 		email: false,
@@ -37,7 +39,7 @@ const UserProfile = () => {
 	const {
 		errorAlert: deleteAlert,
 		errorToast: deleteToast,
-		deleteUser
+		deleteUser,
 	} = useDeleteUser();
 	const { user } = useContext(AuthContext);
 	const [inputData, setInputData] = useState({
@@ -48,6 +50,7 @@ const UserProfile = () => {
 		gender: "",
 		birthDate: "",
 	});
+	const { toast, createToast } = useToast();
 	const { createConfirmModal, confirm: confirmModal } = useModal();
 	const [isChangeImgModalVisible, setIsChangeImgModalVisible] =
 		useState<boolean>(false);
@@ -197,7 +200,13 @@ const UserProfile = () => {
 				}
 			})
 			.catch((error) => {
-				console.log(error);
+				console.error(error);
+				createToast({
+					message: "Nie udało się zmienić zdjęcia",
+					type: "danger",
+					icon: faXmarkCircle,
+					timeout: 10000,
+				});
 			})
 			.finally(() => {
 				setIsChangeImgModalVisible(false);
@@ -397,7 +406,9 @@ const UserProfile = () => {
 				</div>
 			</div>
 			<button className="btn btn-alt mt-3 me-3">Zmień hasło</button>
-			<button className="btn btn-danger mt-3" onClick={deleteBtnHandler}>Usuń konto</button>
+			<button className="btn btn-danger mt-3" onClick={deleteBtnHandler}>
+				Usuń konto
+			</button>
 			{errorAlert}
 			{errorToast}
 			{updateAlert}
@@ -405,6 +416,7 @@ const UserProfile = () => {
 			{deleteAlert}
 			{deleteToast}
 			{confirmModal}
+			{toast}
 			{isChangeImgModalVisible && (
 				<ConfirmModal
 					title="Zmień zdjęcie"

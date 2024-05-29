@@ -149,9 +149,10 @@ async function create(flight: Flights) {
 	await validateFlight(flight);
 
 	// Check if flight with given id already exists
-	let flightExists = await db.query("SELECT '' FROM Flights WHERE id=?", [
-		flight.id,
-	]);
+	let flightExists = await db.query(
+		"SELECT '' FROM Flights WHERE id=?",
+		[flight.id]
+	);
 
 	flightExists = helper.emptyOrRows(flightExists);
 

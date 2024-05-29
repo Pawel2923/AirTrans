@@ -10,18 +10,18 @@ class ParkingService {
 			});
 	}
 	createParking(parkingData: ParkingReservations) {
-		return http.post("/parking", parkingData);
+		return http.post("/parking", parkingData,  { withCredentials: true });
 	}
 
 
 	delete = (id: number) => {
-		return http.delete(`/parking/${id}`);
+		return http.delete(`/parking/${id}`,  { withCredentials: true });
 	};
 	getById = (pid: number) => {
 		return http.get(`/parking/${pid}`);
 	};
 	updateParking = (parking: ParkingReservations) => {
-		return http.put(`/parking/${parking.pid}`, parking);
+		return http.put(`/parking/${parking.pid}`, parking,  { withCredentials: true });
 	};
 }
 

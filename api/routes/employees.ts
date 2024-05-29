@@ -1,6 +1,8 @@
 import express from "express";
 const router = express.Router();
 import employees from "../services/employees";
+import config from "../config";
+import { verifyUser, requireRole } from "../middlewares/verifyUser";
 
 /**
  * @openapi
@@ -51,13 +53,17 @@ import employees from "../services/employees";
  *    500:
  *     description: Internal server error
  */
-router.get("/", async function (req, res, next) {
+router.get("/", verifyUser, async function (req, res, next) {
 	try {
 		let { id, limit, page, column, sort } = req.query;
 
 		const parsedId = id ? parseInt(id as string) : undefined;
 		const parsedLimit = limit ? parseInt(limit as string) : undefined;
 		const parsedPage = page ? parseInt(page as string) : undefined;
+
+		const userRole = (req.user as { role: string }).role;
+
+		requireRole(userRole, config.employeeRoles);
 
 		const { data, meta, message } = await employees.getEmployees(
 			parsedId,

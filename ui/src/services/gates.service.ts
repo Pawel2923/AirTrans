@@ -6,13 +6,13 @@ class GatesService{
         return http.get(`/bramki?page=${page}`);
     }
     create=(data: Gates)=>{
-        return http.post("/bramki",data);
+        return http.post("/bramki",data, { withCredentials: true });
     }
     delete=(id: number)=>{
-        return http.delete(`/bramki/${id}`);
+        return http.delete(`/bramki/${id}`, { withCredentials: true });
     }
     updateG=(data: Gates)=>{
-        return http.put(`/bramki/${data.id}`,data);
+        return http.put(`/bramki/${data.id}`,data, { withCredentials: true });
     }
     getById=(id: number)=>{
         return http.get(`/bramki/${id}`);

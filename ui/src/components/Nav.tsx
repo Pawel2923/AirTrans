@@ -4,7 +4,7 @@ import { useContext, useEffect } from "react";
 import AuthContext from "../store/auth-context";
 
 const Nav = () => {
-	const { auth, user, checkAuth, logout } = useContext(AuthContext);
+	const { auth, checkAuth, logout } = useContext(AuthContext);
 
 	useEffect(() => {
 		checkAuth();
@@ -19,18 +19,14 @@ const Nav = () => {
 	);
 
 	const loginItem = auth ? (
-		user?.role === "client" ? (
-			logoutItem
-		) : (
-			<>
-				<li className="nav-item">
-					<NavLink to="/zarzadzanie" className="nav-link">
-						PANEL
-					</NavLink>
-				</li>
-				{logoutItem}
-			</>
-		)
+		<>
+			<li className="nav-item">
+				<NavLink to="/zarzadzanie" className="nav-link">
+					PANEL
+				</NavLink>
+			</li>
+			{logoutItem}
+		</>
 	) : (
 		<li className="nav-item">
 			<NavLink to="/logowanie" className="nav-link">

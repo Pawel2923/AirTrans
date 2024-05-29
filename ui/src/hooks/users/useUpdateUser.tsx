@@ -15,7 +15,7 @@ const useUpdateUser = () => {
                 }
             })
             .catch((error) => {
-                handleError(error);
+                handleError({ error });
             });
     }), [handleError]);
     
@@ -28,7 +28,7 @@ const useUpdateUser = () => {
                 }
             })
             .catch((error) => {
-                handleError(error);
+                handleError({ error });
             });
     }), [handleError]);
 
@@ -41,7 +41,7 @@ const useUpdateUser = () => {
                 }
             })
             .catch((error) => {
-                handleError(error);
+                handleError({ error });
             });
     }), [handleError]);
 

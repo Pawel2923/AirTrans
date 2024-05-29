@@ -1,13 +1,14 @@
 import express from "express";
 const router = express.Router();
 import { flight } from "../services/flights";
-import { verifyUser } from "../middlewares/verifyUser";
+import { requireRole, verifyUser } from "../middlewares/verifyUser";
+import config from "../config";
 
 /**
  * @openapi
  * /flights:
  *  get:
- *   tags: 
+ *   tags:
  *    - Flights
  *   description: Get all flights
  *   parameters:
@@ -106,7 +107,7 @@ router.get("/", async function (req, res, next) {
  * @openapi
  * /flights/ids:
  *  get:
- *   tags: 
+ *   tags:
  *    - Flights
  *   description: Get all flight ids
  *   responses:
@@ -138,7 +139,7 @@ router.get("/ids", async function (_req, res, next) {
  * @openapi
  * /flights/{term}:
  *  get:
- *   tags: 
+ *   tags:
  *    - Flights
  *   description: Get flights by search term
  *   parameters:
@@ -236,7 +237,7 @@ router.get("/:term", async function (req, res, next) {
  * @openapi
  * /flights:
  *  post:
- *   tags: 
+ *   tags:
  *    - Flights
  *   description: Create a new flight
  *   requestBody:
@@ -259,6 +260,9 @@ router.get("/:term", async function (req, res, next) {
  */
 router.post("/", verifyUser, async function (req, res, next) {
 	try {
+		const userRole = (req.user as { role: string }).role;
+
+		requireRole(userRole, ["admin", "atc"]);
 		const { data, message } = await flight.create(req.body);
 		res.status(201).json({ data, message });
 	} catch (err) {
@@ -270,7 +274,7 @@ router.post("/", verifyUser, async function (req, res, next) {
  * @openapi
  * /flights/{id}:
  *  put:
- *   tags: 
+ *   tags:
  *    - Flights
  *   description: Update a flight
  *   parameters:
@@ -297,6 +301,9 @@ router.post("/", verifyUser, async function (req, res, next) {
  */
 router.put("/:id", verifyUser, async function (req, res, next) {
 	try {
+		const userRole = (req.user as { role: string }).role;
+
+		requireRole(userRole, ["admin", "atc"]);
 		const { data, message } = await flight.update(req.params.id, req.body);
 		res.status(200).json({ data, message });
 	} catch (err) {
@@ -308,7 +315,7 @@ router.put("/:id", verifyUser, async function (req, res, next) {
  * @openapi
  * /flights/{id}:
  *  delete:
- *   tags: 
+ *   tags:
  *    - Flights
  *   description: Delete a flight
  *   parameters:
@@ -327,6 +334,9 @@ router.put("/:id", verifyUser, async function (req, res, next) {
  */
 router.delete("/:id", verifyUser, async function (req, res, next) {
 	try {
+		const userRole = (req.user as { role: string }).role;
+
+		requireRole(userRole, ["admin", "atc"]);
 		const message = await flight.remove(req.params.id);
 		res.status(204).json({ message });
 	} catch (err) {

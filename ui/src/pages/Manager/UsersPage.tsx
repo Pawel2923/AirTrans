@@ -139,7 +139,7 @@ const UsersPage = () => {
 										.slice(0, 19)) ||
 									"Brak"}
 							</td>
-							<td>{user.img || "Brak"}</td>
+							<td style={{maxWidth: "100px", overflow: "auto", overflowWrap: "break-word"}}>{user.img || "Brak"}</td>
 							<td>{user.role || "client"}</td>
 							<td>
 								<button

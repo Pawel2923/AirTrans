@@ -4,12 +4,6 @@ import useToast from "./useToast";
 import useModal from "./useModal";
 import { useCallback } from "react";
 
-interface ErrorHandler {
-	errorToast: ReturnType<typeof useToast>["toast"];
-	errorAlert: ReturnType<typeof useModal>["alert"];
-	handleError: (props: HandleErrorProps) => void;
-}
-
 interface HandleErrorProps {
 	error: Err;
 	onModalClose?: () => void;
@@ -90,7 +84,7 @@ const useErrorHandler = () => {
 		[createAlertModal, createToast]
 	);
 
-	return { errorToast, errorAlert, handleError } as ErrorHandler;
+	return { errorToast, errorAlert, handleError } as const;
 };
 
 export default useErrorHandler;

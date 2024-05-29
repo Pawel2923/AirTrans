@@ -14,7 +14,7 @@ const useDeleteUser = () => {
                 }
             })
             .catch((error) => {
-                handleError(error);
+                handleError({error});
             });
     }), [handleError]);
 

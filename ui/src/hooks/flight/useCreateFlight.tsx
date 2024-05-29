@@ -1,6 +1,4 @@
-import {
-	faCircleCheck,
-} from "@fortawesome/free-solid-svg-icons";
+import { faCircleCheck } from "@fortawesome/free-solid-svg-icons";
 import { useNavigate } from "react-router-dom";
 import { Flights } from "../../assets/Data";
 import flightService from "../../services/flight.service";
@@ -13,7 +11,7 @@ export const useCreateFlight = (
 ) => {
 	const navigate = useNavigate();
 	const { toast, createToast } = useToast();
-    const [message, setMessage] = useState<string>("");
+	const [message, setMessage] = useState<string>("");
 	const { errorToast, errorAlert, handleError } = useErrorHandler();
 
 	const createFlight = (data: Flights) => {
@@ -23,29 +21,29 @@ export const useCreateFlight = (
 				if (response.status === 201) {
 					const { id } = response.data.data;
 
-					createToast(
-						"Lot został dodany",
-						"primary",
-						faCircleCheck,
-						{
+					createToast({
+						message: "Lot został dodany",
+						type: "primary",
+						icon: faCircleCheck,
+						action: {
 							label: "Zobacz",
 							onClick: () => {
 								navigate(id);
 							},
-						}
-					);
-                    setMessage(response.data.message);
+						},
+					});
+					setMessage(response.data.message);
 					setRefreshData && setRefreshData((prev) => !prev);
 				}
 			})
 			.catch((error) => {
-				handleError(error);
+				handleError({ error });
 			});
 	};
 
 	return {
-        message,
-        toast,
+		message,
+		toast,
 		errorToast,
 		errorAlert,
 		createFlight,

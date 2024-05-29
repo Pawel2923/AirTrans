@@ -20,7 +20,7 @@ const TicketsPage = () => {
 	const { ticketsData, errorAlert, errorToast, getTicketById, getTicketIds } =
 		useGetTickets();
 	const { confirm, createConfirmModal } = useModal();
-	const [ticketIds, setTicketIds] = useState<string[]>([""])
+	const [ticketIds, setTicketIds] = useState<string[]>([""]);
 	const {
 		errorAlert: updateAlert,
 		errorToast: updateToast,
@@ -69,13 +69,12 @@ const TicketsPage = () => {
 	};
 
 	const createConfirm = (confirmFunction: () => void) => {
-		createConfirmModal(
-			"Czy na pewno chcesz dokonać zmian?",
-			"Potwierdź zmiany",
-			confirmFunction,
-			undefined,
-			"Tak, zapisz"
-		);
+		createConfirmModal({
+			message: "Czy na pewno chcesz dokonać zmian?",
+			title: "Potwierdź zmiany",
+			onConfirm: confirmFunction,
+			confirmBtnText: "Tak, zapisz",
+		});
 	};
 
 	return (

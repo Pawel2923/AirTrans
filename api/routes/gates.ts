@@ -1,6 +1,7 @@
 import  express  from "express";
 const router = express.Router();
 import gates from "../services/gates";
+import { verifyUser, requireRole } from "../middlewares/verifyUser";
 
 
 router.get("/", async (req, res,next) => {
@@ -27,19 +28,26 @@ router.get("/", async (req, res,next) => {
     }
 });
 
-router.post("/", async function (req,res,next) {
+router.post("/", verifyUser, async function (req,res,next) {
    try{
     const message = await gates.create(req.body);
+
+    const userRole = (req.user as {role:string}).role;
+    requireRole(userRole, ["admin","airport_staff"]);
+
     res.status(201).json({message});
    }catch(err){
          next(err);
    }
 });
 
-router.delete("/:id", async function (req,res,next) {
+router.delete("/:id", verifyUser, async function (req,res,next) {
     try{
         let {id} = req.params;
         const parsedId = parseInt(id) || -1;
+
+        const userRole = (req.user as {role:string}).role;
+        requireRole(userRole, ["admin","airport_staff"]);
 
         const message = await gates.remove(parsedId);
         res.status(200).json({message});
@@ -47,10 +55,13 @@ router.delete("/:id", async function (req,res,next) {
         next(err);
     }
 });
-router.put("/:id", async function (req,res,next) {
+router.put("/:id", verifyUser, async function (req,res,next) {
     try{
         let {id} = req.params;
         const parsedId = parseInt(id) || -1;
+
+        const userRole = (req.user as {role:string}).role;
+        requireRole(userRole, ["admin","airport_staff"]);
 
         const message = await gates.updateG(
             parsedId,

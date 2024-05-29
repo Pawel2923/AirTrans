@@ -1,6 +1,7 @@
 import express from "express";
 const router = express.Router();
 import contactInfo from "../services/contact-info";
+import { verifyUser, requireRole } from "../middlewares/verifyUser";
 
 /**
  * @openapi
@@ -104,9 +105,13 @@ router.get("/", async function (req, res, next) {
  *    500:
  *     description: Could not update contact info
  */
-router.put("/:name", async function (req, res, next) {
+router.put("/:name", verifyUser, async function (req, res, next) {
 	try {
 		const { name } = req.params;
+
+		const userRole = (req.user as { role: string }).role;
+
+		requireRole(userRole, ["admin", "airport_staff"]);
 
 		const { data, message } = await contactInfo.update(name, req.body);
 		res.status(200).json({

@@ -1,6 +1,7 @@
 import express from "express";
 const router = express.Router();
 import airplaneService from "../services/airplane";
+import { requireRole, verifyUser } from "../middlewares/verifyUser";
 
 /**
  * @openapi
@@ -161,8 +162,12 @@ router.get("/serial_numbers", async function (_req, res, next) {
  *    500:
  *     description: Internal server error
  */
-router.post("/", async function (req, res, next) {
+router.post("/", verifyUser, async function (req, res, next) {
 	try {
+		const userRole = (req.user as { role: string }).role;
+
+		requireRole(userRole, "admin");
+
 		const { data, message } = await airplaneService.create(req.body);
 		res.status(201).json({
 			data,
@@ -200,8 +205,12 @@ router.post("/", async function (req, res, next) {
  *    500:
  *     description: Internal server error
  */
-router.put("/:serial_no", async function (req, res, next) {
+router.put("/:serial_no", verifyUser, async function (req, res, next) {
 	try {
+		const userRole = (req.user as { role: string }).role;
+
+		requireRole(userRole, "admin");
+
 		const { data, message } = await airplaneService.update(
 			req.params.serial_no,
 			req.body
@@ -236,8 +245,12 @@ router.put("/:serial_no", async function (req, res, next) {
  *    500:
  *     description: Internal server error
  */
-router.delete("/:serial_no", async function (req, res, next) {
+router.delete("/:serial_no", verifyUser, async function (req, res, next) {
 	try {
+		const userRole = (req.user as { role: string }).role;
+
+		requireRole(userRole, "admin");
+
 		const { serial_no } = req.params;
 		const message = await airplaneService.remove(serial_no);
 		res.status(204).json({ message });

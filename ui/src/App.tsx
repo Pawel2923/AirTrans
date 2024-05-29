@@ -41,6 +41,7 @@ import RentCar from "./pages/RentCar";
 import FormPage from "./pages/formPage";
 import DatePagek from "./pages/dataPagek";
 import SummaryPage from "./pages/summaryPage";
+import ParkingPageK from "./pages/ParkingPageK";
 
 const router = createBrowserRouter([
 	{ path: "*", Component: Root, errorElement: <ErrorBoundary /> },
@@ -61,6 +62,11 @@ function Root() {
 					<Route path="data/:id/form" element={<FormPage/>} />
 				</Route>
 				<Route path="wynajemC/summary" element={<SummaryPage />} />
+				<Route path="WynajemP">
+					<Route index element={<ParkingPageK />} />
+					<Route path = "parking/:id" element={<FormPage />} />
+					
+				</Route>
 				
 				<Route path="ogloszenia" element={<Ogloszenia />} />
 				<Route path="logowanie" element={<Logowanie />} />

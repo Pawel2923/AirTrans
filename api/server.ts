@@ -26,6 +26,7 @@ import ticketsRouter from "./routes/tickets";
 import logsRouter from "./routes/logs";
 import login_logRouter from "./routes/login_log";
 import filesRouter from "./routes/files";
+import stripeRouter from './routes/stripe';
 import { Err } from "./Types";
 
 const app = express();
@@ -73,6 +74,8 @@ app.use("/tickets", ticketsRouter);
 app.use("/logi", logsRouter);
 app.use("/login_log", login_logRouter);
 app.use("/files", filesRouter);
+app.use('/stripe', stripeRouter);
+
 
 app.use((err: Err, _req: Request, res: Response, _next: NextFunction): any => {
 	const statusCode = err.statusCode || 500;

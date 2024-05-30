@@ -44,6 +44,8 @@ import SummaryPage from "./pages/summaryPage";
 import ParkingPageK from "./pages/ParkingPageK";
 import SummaryPageR from "./pages/sumaryPageR";
 import FormPageR from "./pages/formPageR";
+import Payment from "./pages/Payment";
+
 
 const router = createBrowserRouter([
 	{ path: "*", Component: Root, errorElement: <ErrorBoundary /> },
@@ -64,6 +66,7 @@ function Root() {
 					<Route path="data/:id/form" element={<FormPage/>} />
 				</Route>
 				<Route path="wynajemC/summary" element={<SummaryPage />} />
+				<Route path="payment" element={<Payment />} />
 				<Route path="WynajemP">
 					<Route index element={<ParkingPageK />} />
 					<Route path = "formR" element={<FormPageR />} />

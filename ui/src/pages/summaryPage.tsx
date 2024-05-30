@@ -1,6 +1,7 @@
 import React from 'react';
 import { useLocation } from 'react-router-dom';
 import styles from './sumaryPage.module.css';
+import { useNavigate } from 'react-router-dom';
 
 const SummaryPage: React.FC = () => {
     const location = useLocation();
@@ -11,6 +12,13 @@ const SummaryPage: React.FC = () => {
     
     const daysCount = Math.round((new Date(rentalDates.endDate).getTime() - new Date(rentalDates.startDate).getTime()) / (1000 * 3600 * 24)) + 1;
     const totalPrice = daysCount * carInfo.price_per_day;
+
+    const navigate = useNavigate();
+
+    const handlePayment = () => {
+        navigate('/payment');
+    };
+    
 
     return (
         <div className={styles.summaryContainer}>
@@ -39,7 +47,9 @@ const SummaryPage: React.FC = () => {
                 <p>Całkowita cena: {totalPrice} PLN</p>
             </div>
             <div className={styles.nextButtonContainer}>
-                <button className="btn btn-primary">
+                <button className="btn btn-primary"
+                onClick={handlePayment}
+                >
                     Potwierdź i zapłać <span>&#10132;</span>
                 </button>
             </div>

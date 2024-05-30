@@ -11,9 +11,8 @@ async function get(
 	sort?: string
 ) {
 	const offset = helper.getOffset(page, limit);
-
 	let query =
-		"SELECT t.id, u.email, u.first_name, u.last_name, u.phone_number, u.address, t.seat_class, t.seat_number, t.status, t.Flight_id, g.name gate_name, t.purchase_time, t.expiry_date, t.price FROM Tickets t LEFT JOIN Users u ON t.Users_id = u.id LEFT JOIN Gates g ON t.Gates_id = g.id";
+		"SELECT t.id, u.email, u.first_name, u.last_name, u.phone_number, u.address, t.class, t.seat_number, t.status, f.id Flight_id, f.airline_name, f.destination, f.origin, f.departure, g.name gate_name, t.purchase_time, t.update_time, t.price FROM Tickets t LEFT JOIN Users u ON t.Users_id = u.id LEFT JOIN Gates g ON t.Gates_id = g.id LEFT JOIN Flights f on t.Flight_id = f.id";
 	const queryParams = [];
 
 	// Check if filter is provided
@@ -78,17 +77,34 @@ async function updateStatus(id: number, status: string) {
 		status !== "PURCHASED" &&
 		status !== "EXPIRED" &&
 		status !== "USED" &&
-		status !== "REFUNDED"
+		status !== "REFUNDED" &&
+		status !== "CANCELLED"
 	) {
 		throw new Err("Invalid status", 400);
 	}
 
 	const oldStatus = await db.query(
-		"SELECT status FROM Tickets WHERE id = ?",
+		"SELECT status, purchase_time FROM Tickets WHERE id = ?",
 		[id]
 	);
 	if ((oldStatus as Tickets[]).length === 0) {
 		throw new Err("Ticket not found", 404);
+	}
+
+	if ((oldStatus as Tickets[])[0].status === "EXPIRED") {
+		throw new Err("Ticket has expired", 400);
+	}
+
+	if (status === "USED" && (oldStatus as Tickets[])[0].status !== "PURCHASED") {
+		throw new Err("Ticket must be purchased first", 400);
+	}
+
+	if (status === "REFUNDED" && (oldStatus as Tickets[])[0].status !== "PURCHASED") {
+		throw new Err("Ticket must be purchased first", 400);
+	}
+
+	if (status === "REFUNDED" && new Date() > new Date((oldStatus as Tickets[])[0].purchase_time)) {
+		throw new Err("Cannot refund after 24 hours", 400);
 	}
 
 	if ((oldStatus as Tickets[])[0].status === status) {

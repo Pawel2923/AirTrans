@@ -1,15 +1,16 @@
 import { useState, useEffect, useContext } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import DeparturesTable from "../../components/DeparturesTable";
-import flightService from "../../services/flight.service";
 import airplaneService from "../../services/airplane.service";
-import { Departures, Flights, PageData } from "../../assets/Data";
-import { arrDepDataParser, flightsDataParser } from "../../utils/data-parser";
+import { Flights, PageData } from "../../assets/Data";
+import { flightsDataParser } from "../../utils/data-parser";
 import Pagination from "../../components/Pagination";
 import { faCircleExclamation } from "@fortawesome/free-solid-svg-icons";
 import { useCreateFlight } from "../../hooks/flight/useCreateFlight";
 import AuthContext from "../../store/auth-context";
 import ToastModalContext from "../../store/toast-modal-context";
+import useErrorHandler from "../../hooks/useErrorHandler";
+import useGetFlight from "../../hooks/flight/useGetFlight";
 
 const emptyFlight: Flights = {
 	id: "",
@@ -26,15 +27,17 @@ const Schedule = () => {
 	const [searchParams] = useSearchParams();
 	const { user } = useContext(AuthContext);
 	const { createToast } = useContext(ToastModalContext);
-	const [flights, setFlights] = useState<Departures[]>([]);
-	const [refreshData, setRefreshData] = useState<boolean>(false);
+	const { handleError } = useErrorHandler();
 	const [serialNumbers, setSerialNumbers] = useState<string[]>([]);
 	const [pageData, setPageData] = useState<PageData>({
 		page: parseInt(searchParams.get("page") || "1"),
 		pages: 1,
 	});
 	const [createData, setCreateData] = useState<Flights>(emptyFlight);
+	const [refreshData, setRefreshData] = useState<boolean>(false)
+	const { departureData: flights, getDepartures, isLoading } = useGetFlight();
 	const { createFlight } = useCreateFlight(setRefreshData);
+
 
 	useEffect(() => {
 		if (user) {
@@ -45,23 +48,19 @@ const Schedule = () => {
 	}, [navigate, user]);
 
 	useEffect(() => {
-		flightService
-			.getByArrivalOrDeparture(pageData.page, 5)
-			.then((response) => {
-				if (response.status === 200) {
-					setFlights(arrDepDataParser(response.data.data));
-					setPageData(response.data.meta);
-				}
-			});
-	}, [pageData.page, refreshData]);
-
-	useEffect(() => {
 		airplaneService.getSerialNumbers().then((response) => {
 			if (response.status === 200) {
 				setSerialNumbers(response.data.data);
 			}
+		})
+		.catch((error) => {
+			handleError(error)
 		});
-	}, []);
+	}, [handleError]);
+
+	useEffect(() => {
+		getDepartures(pageData.page);
+	}, [getDepartures, pageData.page, refreshData]);
 
 	const createInputChangeHandler = (
 		e: React.ChangeEvent<HTMLInputElement>
@@ -122,6 +121,7 @@ const Schedule = () => {
 				<h2>Harmonogram odlotów i przylotów</h2>
 				<DeparturesTable
 					data={flights}
+					isLoading={isLoading}
 					hasActionButtons={true}
 					setRefreshData={setRefreshData}
 				/>

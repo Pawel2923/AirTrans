@@ -19,6 +19,7 @@ interface Flights {
 	status: "SCHEDULED" | "WAITING" | "AIRBORNE" | "TAKE OFF" | "LANDING" | "FINISHED" | "CANCELLED" | "DELAYED";
 	airline_name: string;
 	destination: string;
+	origin: string;
 	arrival: string;
 	departure: string;
 	airplane_serial_no: string;
@@ -29,6 +30,7 @@ interface Departures {
 	status?: "SCHEDULED" | "WAITING" | "AIRBORNE" | "TAKE OFF" | "LANDING" | "FINISHED" | "CANCELLED" | "DELAYED";
 	airline_name: string;
 	destination: string;
+	orgin: string;
 	arrival: string;
 	departure: string;
 	airplane_serial_no: string;
@@ -184,7 +186,7 @@ interface Tickets {
 	first_name?: string;
 	last_name?: string;
 	price: number;
-	status?: "PURCHASED" | "EXPIRED" | "USED" | "REFUNDED";
+	status?: "PURCHASED" | "EXPIRED" | "USED" | "REFUNDED" | "CANCELLED";
 	Flight_id: string;
 	gate_name: string;
 }

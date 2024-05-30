@@ -15,6 +15,7 @@ import ConfirmModal from "./Modals/ConfirmModal";
 
 interface TableProps {
 	data: Departures[];
+	isLoading: boolean;
 	isExtended?: boolean;
 	hasActionButtons?: boolean;
 	setRefreshData?: React.Dispatch<React.SetStateAction<boolean>>;
@@ -22,6 +23,7 @@ interface TableProps {
 
 const DeparturesTable: React.FC<TableProps> = ({
 	data,
+	isLoading,
 	isExtended = false,
 	hasActionButtons = false,
 	setRefreshData,
@@ -53,7 +55,7 @@ const DeparturesTable: React.FC<TableProps> = ({
 				)
 			);
 		}
-	}, [isArrivalTab, data]);
+	}, [data, isArrivalTab]);
 
 	let headButtonsColSpan: number = isExtended ? 6 : 2;
 	let noDataColSpan: number = headButtonsColSpan;
@@ -115,18 +117,20 @@ const DeparturesTable: React.FC<TableProps> = ({
 								<tr key={index}>
 									{isExtended ? (
 										Object.entries(flight).map(
-											([key, value]) => (
-												<td key={key}>
-													{key === "departure" ||
-													key === "arrival"
-														? new Date(
+											([key, value]) => {
+												return (
+													<td key={key}>
+														{key === "departure" ||
+															key === "arrival"
+															? new Date(
 																value
-														).toLocaleString()
-														: key !==
-																"is_departure" &&
-														value}
-												</td>
-											)
+															).toLocaleString()
+															: key !==
+															"is_departure" &&
+															value}
+													</td>
+												);
+											}
 										)
 									) : (
 										<>
@@ -194,6 +198,20 @@ const DeparturesTable: React.FC<TableProps> = ({
 								</tr>
 							)
 						)
+					) : isLoading ? (
+						Array.from({ length: 5 }).map((_, index) => (
+							<tr key={index} className="placeholder-wave">
+								<td
+									colSpan={noDataColSpan}
+									style={{ width: "200%", backgroundColor: "#ccc"}}
+									className="placeholder text-center"
+								>
+									<span style={{ visibility: "hidden" }}>
+										D
+									</span>
+								</td>
+							</tr>
+						))
 					) : (
 						<tr>
 							<td colSpan={noDataColSpan} className="text-center">

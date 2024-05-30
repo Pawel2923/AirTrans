@@ -5,6 +5,7 @@ import ticketsService from "../../services/tickets.service";
 
 const useGetTickets = () => {
 	const [ticketsData, setTicketsData] = useState<Tickets[]>();
+	const [isLoading, setIsLoading] = useState<boolean>(true);
 	const { handleError } = useErrorHandler();
 
 	const getAllTickets = useCallback(
@@ -18,10 +19,26 @@ const useGetTickets = () => {
 				})
 				.catch((error) => {
 					handleError({ error });
+				})
+				.finally(() => {
+					setIsLoading(false);
 				});
 		},
 		[handleError]
 	);
+
+	const getByUserEmail = useCallback((email: string) => {
+		ticketsService.getByUserEmail(email).then((response) => {
+			if (response.status === 200) {
+				setTicketsData(response.data.data);
+			}
+		}).catch((error) => {
+			handleError({ error });
+		})
+		.finally(() => {
+			setIsLoading(false);
+		});
+	}, [handleError]);
 
 	const getTicketById = useCallback(
 		(id: number) => {
@@ -58,7 +75,9 @@ const useGetTickets = () => {
 
 	return {
 		ticketsData,
+		isLoading,
 		getAllTickets,
+		getByUserEmail,
 		getTicketById,
 		getTicketIds,
 	} as const;

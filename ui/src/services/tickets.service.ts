@@ -41,6 +41,10 @@ class TicketsService {
         return http.get(`/tickets?filter=[{"by":"t.id","value":"${id}"}]`, { withCredentials: true });
     }
 
+	getByUserEmail (email: string) {
+		return http.get(`/tickets?filter=[{"by":"u.email","value":"${email}"}]`, { withCredentials: true });
+	}
+
 	getIds () {
 		return http.get("/tickets/ids", { withCredentials: true });
 	}

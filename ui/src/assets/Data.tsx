@@ -5,6 +5,7 @@ interface Flights {
 	status: "SCHEDULED" | "WAITING" | "AIRBORNE" | "TAKE OFF" | "LANDING" | "FINISHED" | "CANCELLED" | "DELAYED";
 	airline_name: string;
 	destination: string;
+	origin: string;
 	arrival: string;
 	departure: string;
 	airplane_serial_no: string;
@@ -15,6 +16,7 @@ interface Departures {
 	status?: "SCHEDULED" | "WAITING" | "AIRBORNE" | "TAKE OFF" | "LANDING" | "FINISHED" | "CANCELLED" | "DELAYED";
 	airline_name: string;
 	destination: string;
+	orgin: string;
 	arrival: string;
 	departure: string;
 	airplane_serial_no: string;
@@ -174,8 +176,8 @@ interface Luggage {
 interface Tickets {
 	id?: number;
 	purchase_time: string;
-	expiry_date: string;
-	seat_class: string;
+	update_time: string;
+	class: string;
 	seat_number: string;
 	phone_number?: string;
 	address?: string;
@@ -183,9 +185,29 @@ interface Tickets {
 	first_name?: string;
 	last_name?: string;
 	price: number;
-	status?: "PURCHASED" | "EXPIRED" | "USED" | "REFUNDED";
+	airline_name: string;
+	destination: string;
+	origin: string;
+	departure: string;
+	status?: "PURCHASED" | "EXPIRED" | "USED" | "REFUNDED" | "CANCELLED";
 	Flight_id: string;
 	gate_name: string;
+}
+
+interface Ticket {
+    airlineName: string;
+    gateName: string;
+    flightNumber: string;
+    seatNumber: string;
+	class: string;
+    passengerName: string;
+	departureDate: string;
+    departureTime: string;
+    destination: string;
+	destinationShort: string;
+    origin: string;
+	originShort: string;
+	updateTime?: string;
 }
 
 interface ParkingReservations {
@@ -324,6 +346,7 @@ export type {
 	Sort,
 	ParkingReservations,
 	Tickets,
+	Ticket,
 	Luggage,
 	Equipment,
 	Users,

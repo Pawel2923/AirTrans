@@ -14,6 +14,8 @@ const useErrorHandler = () => {
 
 	const handleError = useCallback(
 		({ error, onModalClose, onToastAction }: HandleErrorProps) => {
+			console.error(error);
+
 			if (!error.response) {
 				createAlertModal({
 					message: "Wystąpił błąd podczas pobierania informacji",
@@ -29,20 +31,22 @@ const useErrorHandler = () => {
 							error.response.data.message || "Nieprawidłowe dane",
 						type: "danger",
 						icon: faCircleExclamation,
-						action: {
+						action: onToastAction && {
 							label: "Spróbuj ponownie",
-							onClick: () => onToastAction && onToastAction(),
+							onClick: () => onToastAction(),
 						},
 						timeout: 10000,
 					});
 					break;
 				case 401:
+					createAlertModal({
+						message: "Brak dostępu",
+						onClose: onModalClose,
+					});
+					break;
 				case 403:
 					createAlertModal({
-						message:
-							error.response.status === 401
-								? "Brak dostępu"
-								: "Brak uprawnień",
+						message: "Brak uprawnień",
 						onClose: onModalClose,
 					});
 					break;
@@ -53,9 +57,9 @@ const useErrorHandler = () => {
 							"Nie znaleziono informacji",
 						type: "danger",
 						icon: faCircleExclamation,
-						action: {
+						action: onToastAction && {
 							label: "Spróbuj ponownie",
-							onClick: () => onToastAction && onToastAction(),
+							onClick: () => onToastAction(),
 						},
 					});
 					break;
@@ -66,9 +70,9 @@ const useErrorHandler = () => {
 							"Nie można wykonać operacji",
 						type: "danger",
 						icon: faCircleExclamation,
-						action: {
+						action: onToastAction && {
 							label: "Spróbuj ponownie",
-							onClick: () => onToastAction && onToastAction(),
+							onClick: () => onToastAction(),
 						},
 					});
 					break;

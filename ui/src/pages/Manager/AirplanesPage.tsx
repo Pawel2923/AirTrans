@@ -6,6 +6,7 @@ import Pagination from "../../components/Pagination";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPenToSquare, faTrashCan } from "@fortawesome/free-solid-svg-icons";
 import ConfirmModal from "../../components/Modals/ConfirmModal";
+import useErrorHandler from "../../hooks/useErrorHandler";
 
 const emptyAirplane: Airplanes = {
 	serial_no: "",
@@ -22,6 +23,7 @@ const emptyAirplane: Airplanes = {
 const AirplanesPage = () => {
 	const [searchParams] = useSearchParams();
 	const navigate = useNavigate();
+	const { handleError } = useErrorHandler();
 	const [airplaneData, setAirplaneData] = useState<Airplanes[]>([]);
 	const [pageData, setPageData] = useState<PageData>({
 		page: parseInt(searchParams.get("page") || "1"),
@@ -57,6 +59,9 @@ const AirplanesPage = () => {
 				alert("Airplane added successfully!");
 				navigate(0);
 			}
+		})
+		.catch((error) => {
+			handleError(error);
 		});
 	};
 
@@ -71,6 +76,9 @@ const AirplanesPage = () => {
 				alert("Airplane deleted successfully!");
 				navigate(0);
 			}
+		})
+		.catch((error) => {
+			handleError(error);
 		});
 	};
 

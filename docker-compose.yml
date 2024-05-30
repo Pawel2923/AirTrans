@@ -6,6 +6,7 @@ services:
     environment:
       - MYSQL_ROOT_PASSWORD=$MYSQLDB_ROOT_PASSWORD
       - MYSQL_DATABASE=$MYSQLDB_DATABASE
+      - TZ=Europe/Warsaw
     ports:
       - $MYSQLDB_LOCAL_PORT:$MYSQLDB_DOCKER_PORT
     volumes:
@@ -15,6 +16,7 @@ services:
       - backend
     command: 
       --secure-file-priv="/db-dump/"
+      --default-time-zone=+02:00
     hostname: mysqldb
   api:
     depends_on:
@@ -36,6 +38,7 @@ services:
       - DB_NAME=$MYSQLDB_DATABASE
       - DB_PORT=$MYSQLDB_DOCKER_PORT
       - CLIENT_ORIGIN=$CLIENT_ORIGIN
+      - TZ=Europe/Warsaw
     volumes:
       - ./api/files:/api/files
     networks:
@@ -56,6 +59,9 @@ services:
       - $REACT_LOCAL_PORT:$REACT_DOCKER_PORT
     networks:
       - frontend
+    environment:
+      - NODE_ENV=development
+      - TZ=Europe/Warsaw
     command: npm run dev
 
 volumes:

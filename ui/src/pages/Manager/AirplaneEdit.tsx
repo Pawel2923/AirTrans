@@ -1,7 +1,10 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import airplaneService from "../../services/airplane.service";
 import { useParams, useNavigate } from "react-router-dom";
 import { Airplanes } from "../../assets/Data";
+import useErrorHandler from "../../hooks/useErrorHandler";
+import ToastModalContext from "../../store/toast-modal-context";
+import { faCircleCheck } from "@fortawesome/free-solid-svg-icons";
 
 const emptyAirplane: Airplanes = {
 	serial_no: "",
@@ -17,6 +20,8 @@ const emptyAirplane: Airplanes = {
 
 const AirplaneEdit = () => {
 	const navigate = useNavigate();
+	const { createToast } = useContext(ToastModalContext);
+	const { handleError } = useErrorHandler();
 	const { id } = useParams<{ id: string }>();
 	const [airplane, setAirplane] = useState<Airplanes>(emptyAirplane);
 
@@ -42,13 +47,22 @@ const AirplaneEdit = () => {
 
 		if (id === undefined) return;
 
-		airplaneService.update(id, airplane).then((response) => {
-			if (response.status === 200) {
-				setAirplane(emptyAirplane);
-				alert("Zaktualizowano samolot");
-				navigate("/zarzadzanie/samoloty");
-			}
-		});
+		airplaneService
+			.update(id, airplane)
+			.then((response) => {
+				if (response.status === 200) {
+					createToast({
+						message: "Dane samolotu zostały zaktualizowane",
+						type: "primary",
+						icon: faCircleCheck,
+						timeout: 10000,
+					});
+					navigate("/zarzadzanie/samoloty");
+				}
+			})
+			.catch((error) => {
+				handleError({ error });
+			});
 	};
 
 	return (

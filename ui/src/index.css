@@ -75,6 +75,17 @@ h1 {
   --bs-btn-disabled-border-color: var(--alt-color) !important;
 }
 
+.btn-danger {
+  --bs-btn-bg: #db5d5c !important;
+  --bs-btn-border-color: #db5d5c !important;
+  --bs-btn-hover-bg: #c55555 !important;
+  --bs-btn-hover-border-color: #c55555 !important;
+  --bs-btn-active-bg: #c55555 !important;
+  --bs-btn-active-border-color: #c55555 !important;
+  --bs-btn-disabled-bg: #db5d5c !important;
+  --bs-btn-disabled-border-color: #db5d5c !important;
+}
+
 .btn-link {
   box-shadow: none !important;
   border-radius: unset !important;

@@ -374,6 +374,7 @@ export default router;
  *     status: "SCHEDULED"
  *     airline_name: "Lufthansa"
  *     destination: "Frankfurt"
+ *     origin: "Warsaw"
  *     arrival: "2024-07-01 12:00:00"
  *     departure: "2024-07-01 10:00:00"
  *     airplane_serial_no: "D-AIMD"

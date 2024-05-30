@@ -12,6 +12,7 @@ async function validateFlight(flight: Flights) {
 		"status",
 		"airline_name",
 		"destination",
+		"origin",
 		"arrival",
 		"departure",
 		"airplane_serial_no",

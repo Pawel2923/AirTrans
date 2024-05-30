@@ -29,6 +29,7 @@ interface NavItem {
 	name: string;
 	icon: IconDefinition;
 	roles: string[];
+	hidden?: boolean;
 }
 
 const employeeRoles = ["atc", "ground_crew", "airport_staff", "parking_staff", "rental_staff", "admin"];
@@ -95,29 +96,36 @@ const allNavItems: NavItem[] = [
 		roles: ["airport_staff", "admin"],
 	},
 	{
-		id: "twoje-bilty",
+		id: "twoje-bilety",
 		name: "TWOJE BILETY",
 		icon: faTicket,
-		roles: ["client"],
+		roles: [...employeeRoles, "client"],
 	},
 	{
 		id: "bagaze",
 		name: "BAGAŻE",
 		icon: faSuitcase,
-		roles: ["airport_staff", "admin", "client"],
+		roles: [...employeeRoles, "client"],
 	},
 	{
 		id: "parking-rezerwacje",
 		name: "REZERWACJE PARKINGU",
 		icon: faSquareParking,
-		roles: ["client"],
+		roles: [...employeeRoles, "client"],
 	},
 	{
 		id: "wypozyczenia",
 		name: "WYPOŻYCZENIA",
 		icon: faCar,
-		roles: ["client"],
+		roles: [...employeeRoles, "client"],
 	},
+	{
+		id: "profil",
+		name: "PROFIL UŻYTKOWNIKA",
+		icon: faUser,
+		roles: [...employeeRoles, "client"],
+		hidden: true,
+	}
 ];
 
 interface ManagerNavProps {
@@ -163,27 +171,31 @@ const ManagerNav: React.FC<ManagerNavProps> = ({
 			<ul className={classes["nav-items"]}>
 				{expanded
 					? navItems.map((item) => (
-							<li key={item.id} className={classes["nav-item"]}>
-								<NavLink
-									to={`/zarzadzanie/${item.id}`}
-									id={item.id}
-								>
-									{item.name}
-								</NavLink>
-							</li>
+							(!item.hidden) && (
+								<li key={item.id} className={classes["nav-item"]}>
+									<NavLink
+										to={`/zarzadzanie/${item.id}`}
+										id={item.id}
+									>
+										{item.name}
+									</NavLink>
+								</li>
+							)
 					))
 					: navItems.map((item) => (
-							<li
-								key={item.id}
-								className={`${classes["nav-item"]} ${classes.shrank}`}
-							>
-								<NavLink
-									to={`/zarzadzanie/${item.id}`}
-									id={item.id}
+							(!item.hidden) && (
+								<li
+									key={item.id}
+									className={`${classes["nav-item"]} ${classes.shrank}`}
 								>
-									<FontAwesomeIcon icon={item.icon} />
-								</NavLink>
+									<NavLink
+										to={`/zarzadzanie/${item.id}`}
+										id={item.id}
+									>
+										<FontAwesomeIcon icon={item.icon} />
+									</NavLink>
 							</li>
+							)
 					))}
 				<li
 					className={`${classes["nav-item"]} ${classes.logout} ${

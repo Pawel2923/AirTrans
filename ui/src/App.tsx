@@ -40,6 +40,7 @@ import RentCar from "./pages/RentCar";
 import FormPage from "./pages/formPage";
 import DatePagek from "./pages/dataPagek";
 import SummaryPage from "./pages/summaryPage";
+import ClientTickets from "./pages/Manager/ClientTickets";
 
 const router = createBrowserRouter([
 	{ path: "*", Component: Root, errorElement: <ErrorBoundary /> },
@@ -123,6 +124,9 @@ function Root() {
 				</Route>
 				<Route path="profil">
 					<Route index element={<UserProfile />} />
+				</Route>
+				<Route path="twoje-bilety">
+					<Route index element={<ClientTickets />} />
 				</Route>
 				<Route
 					path="*"

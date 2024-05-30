@@ -7,7 +7,7 @@ const useUpdateTickets = () => {
 
 	const updateStatus = useCallback(
 		(id: number, status: string) =>
-			new Promise((resolve) => {
+			new Promise((resolve, reject) => {
 				ticketsService
 					.updateStatus(id, status)
 					.then((response) => {
@@ -17,6 +17,7 @@ const useUpdateTickets = () => {
 					})
 					.catch((error) => {
 						handleError({ error });
+						reject(error);
 					});
 			}),
 		[handleError]

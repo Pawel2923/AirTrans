@@ -21,7 +21,8 @@
 }
 
 .user-info-container > p {
-    margin-top: 2rem;
+    margin-top: 3rem;
+    margin-bottom: 0;
     font-size: 1.1rem;
 }
 

@@ -1,8 +1,11 @@
-import React, { useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import classes from "./ManagerTopNav.module.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCircleUser } from "@fortawesome/free-solid-svg-icons";
 import ProfileMenu from "./ProfileMenu";
+import useGetUsers from "../../hooks/users/useGetUsers";
+import AuthContext from "../../store/auth-context";
+import filesService from "../../services/files.service";
 
 interface ManagerTopNavProps {
 	title: string;
@@ -11,7 +14,15 @@ interface ManagerTopNavProps {
 const ManagerTopNav: React.FC<ManagerTopNavProps> = ({
 	title,
 }: ManagerTopNavProps) => {
+	const { user } = useContext(AuthContext);
+	const { usersData, getUserByEmail } = useGetUsers();
 	const [isOpenProfile, setIsOpenProfile] = useState<boolean>(false);
+
+	useEffect(() => {
+		if (user?.email) {
+			getUserByEmail(user.email);
+		}
+	}, [getUserByEmail, user]);
 
 	return (
 		<nav className={classes["top-nav"]}>
@@ -20,9 +31,19 @@ const ManagerTopNav: React.FC<ManagerTopNavProps> = ({
 			</div>
 			<div className={classes["nav-right"]}>
 				<button onClick={() => setIsOpenProfile((prev) => !prev)}>
-					<FontAwesomeIcon icon={faCircleUser} />
+					{usersData && usersData[0].img ? (
+						<img
+							src={filesService.getImgUrl(usersData[0].img)}
+							className={classes["profile-img"]}
+							alt="profile"
+						/>
+					) : (
+						<FontAwesomeIcon className={classes["profile-img"]} icon={faCircleUser} />
+					)}
 				</button>
-				{isOpenProfile && <ProfileMenu setIsOpenProfile={setIsOpenProfile} />}
+				{isOpenProfile && (
+					<ProfileMenu setIsOpenProfile={setIsOpenProfile} />
+				)}
 			</div>
 		</nav>
 	);

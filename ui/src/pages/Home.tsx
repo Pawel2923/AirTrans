@@ -5,18 +5,16 @@ import Nav from "../components/Nav";
 import Footer from "../components/footer";
 import homeStyles from "./Home.module.css";
 import {
-	Departures,
 	Announcements,
 	ContactInfo,
 	Cars,
 	Offer,
 	RawOffer,
 } from "../assets/Data";
-import flightService from "../services/flight.service";
 import contactInfoService from "../services/contactInfo.service";
 import announcementService from "../services/announcement.service";
 import offerService from "../services/offer.service";
-import { arrDepDataParser } from "../utils/data-parser";
+import useGetFlight from "../hooks/flight/useGetFlight";
 
 const announcementsDataParser = (announcementsData: Announcements[]) => {
 	const announcements: Announcements[] = [];
@@ -78,7 +76,7 @@ const defaultContactInfo: ContactInfo = {
 };
 
 const Home = () => {
-	const [flightsData, setFlightsData] = useState<Departures[]>([]);
+	const { departureData: flightsData, isLoading, getDepartures } = useGetFlight();
 	const [contactInfo, setContactInfo] =
 		useState<ContactInfo>(defaultContactInfo);
 	const [announcementsData, setAnnouncementsData] = useState<Announcements[]>(
@@ -87,11 +85,7 @@ const Home = () => {
 	const [offerData, setOfferData] = useState<Offer[]>([]);
 
 	useEffect(() => {
-		flightService.getByArrivalOrDeparture().then((response) => {
-			if (response.status === 200) {
-				setFlightsData(arrDepDataParser(response.data.data));
-			}
-		});
+		getDepartures(1);
 
 		contactInfoService.getContactInfo().then((response) => {
 			if (response.status === 200) {
@@ -112,7 +106,7 @@ const Home = () => {
 				setOfferData(offerDataParser(response.data.data));
 			}
 		});
-	}, []);
+	}, [getDepartures]);
 
 	return (
 		<>
@@ -129,7 +123,7 @@ const Home = () => {
 							<p className="lead">Zaplanuj swoją podróż z nami</p>
 						</div>
 						<div className="col-lg-6">
-							<DeparturesTable data={flightsData} />
+							<DeparturesTable data={flightsData} isLoading={isLoading} />
 						</div>
 					</div>
 				</div>

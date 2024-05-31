@@ -1,30 +1,29 @@
 import { Rentals } from "../assets/Data";
 import http from "../http-common";
 
-
-class RentalService { 
+class RentalService {
   getAll(page = 1, limit = 10) {
-    return http.get(`/rent?page=${page}&limit=${limit}`) 
-      .then(response => {
-        return response.data;
-      });
+    return http.get(`/rent?page=${page}&limit=${limit}`).then((response) => {
+      return response.data;
+    });
   }
   createRental(carRental: Rentals) {
-    return http.post("/rent", carRental,  { withCredentials: true })
+    return http.post("/rent", carRental, { withCredentials: true });
   }
 
   removeRent(id: number) {
-    return http.delete(`/rent/${id}`,  { withCredentials: true })
+    return http.delete(`/rent/${id}`, { withCredentials: true });
   }
 
   getById(id: number) {
-    return http.get(`/rent/${id}`)
+    return http.get(`/rent/${id}`);
   }
- 
+
   updateRent(carRental: Rentals) {
-    return http.put(`/rent/${carRental.id}`, carRental,  { withCredentials: true });
+    return http.put(`/rent/${carRental.id}`, carRental, {
+      withCredentials: true,
+    });
   }
 }
 
-
-export default new RentalService(); 
+export default new RentalService();

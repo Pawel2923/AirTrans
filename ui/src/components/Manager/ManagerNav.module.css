@@ -1,73 +1,73 @@
 .nav {
-    display: flex;
-    flex-direction: column;
-    padding: 1rem;
-    align-items: center;
-    height: 100vh;
-    width: fit-content;
-    background-color: var(--background-white);
-    position: sticky;
-    position: -webkit-sticky;
-    top: 0;
+  display: flex;
+  flex-direction: column;
+  padding: 1rem;
+  align-items: center;
+  height: 100vh;
+  width: fit-content;
+  background-color: var(--background-white);
+  position: sticky;
+  position: -webkit-sticky;
+  top: 0;
 }
 
 .navbar-toggler {
-    cursor: pointer;
-    padding: 0;
-    border: none;
-    border-radius: 50px;
-    width: 39px;
-    height: 39px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: transparent;
-    font-size: inherit;
-    box-shadow: var(--default-box-shadow);
+  cursor: pointer;
+  padding: 0;
+  border: none;
+  border-radius: 50px;
+  width: 39px;
+  height: 39px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  font-size: inherit;
+  box-shadow: var(--default-box-shadow);
 }
 
 .navbar-toggler:focus-visible {
-    outline: -webkit-focus-ring-color auto 1px;
+  outline: -webkit-focus-ring-color auto 1px;
 }
 
 .nav-items {
-    display: flex;
-    flex-direction: column;
-    height: 100%;
-    list-style: none;
-    padding: 0;
-    margin-top: 1rem;
-    margin-bottom: 0;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  list-style: none;
+  padding: 0;
+  margin-top: 1rem;
+  margin-bottom: 0;
 }
 
 .nav-item {
-    margin-bottom: 1rem;
+  margin-bottom: 1rem;
 }
 
 .nav-item a {
-    display: block;
-    width: 100%;
-    box-shadow: var(--default-box-shadow);
-    border-radius: 50px;
-    text-decoration: none;
-    text-align: center;
-    text-transform: uppercase;
-    font-weight: 500;
-    color: #000;
-    padding: 0.5rem 1rem;
+  display: block;
+  width: 100%;
+  box-shadow: var(--default-box-shadow);
+  border-radius: 50px;
+  text-decoration: none;
+  text-align: center;
+  text-transform: uppercase;
+  font-weight: 500;
+  color: #000;
+  padding: 0.5rem 1rem;
 }
 
 .logout {
-    margin-top: auto;
-    margin-bottom: 0;
+  margin-top: auto;
+  margin-bottom: 0;
 }
 
 .shrank a {
-    padding: 0;
-    width: 39px;
-    margin: 0 auto;
-    height: 39px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+  padding: 0;
+  width: 39px;
+  margin: 0 auto;
+  height: 39px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }

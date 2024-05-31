@@ -1,4 +1,4 @@
-import express, { Request, Response, NextFunction } from "express";
+import express from "express";
 const router = express.Router();
 import users from "../services/users";
 import { verifyUser, requireRole } from "../middlewares/verifyUser";
@@ -80,23 +80,25 @@ import { verifyUser, requireRole } from "../middlewares/verifyUser";
  *     description: Internal server error
  */
 router.get("/", verifyUser, async function (req, res, next) {
-	try {
-		let { page, limit, filter, sort } = req.query;
-		const parsedPage = page ? parseInt(page as string) : undefined;
-		const parsedLimit = limit ? parseInt(limit as string) : undefined;
-		filter = (filter as string) || undefined;
-		sort = (sort as string) || undefined;
+  try {
+    let { filter, sort } = req.query;
+    const { page, limit } = req.query;
 
-		const { data, meta, message } = await users.get(
-			parsedPage,
-			parsedLimit,
-			filter,
-			sort
-		);
-		res.status(200).json({ data, meta, message });
-	} catch (err) {
-		next(err);
-	}
+    const parsedPage = page ? parseInt(page as string) : undefined;
+    const parsedLimit = limit ? parseInt(limit as string) : undefined;
+    filter = (filter as string) || undefined;
+    sort = (sort as string) || undefined;
+
+    const { data, meta, message } = await users.get(
+      parsedPage,
+      parsedLimit,
+      filter,
+      sort
+    );
+    res.status(200).json({ data, meta, message });
+  } catch (err) {
+    next(err);
+  }
 });
 
 /**
@@ -126,15 +128,15 @@ router.get("/", verifyUser, async function (req, res, next) {
  *     description: Internal server error
  */
 router.get("/roles", verifyUser, async function (req, res, next) {
-	try {
-		const userRole = (req.user as { role: string }).role;
+  try {
+    const userRole = (req.user as { role: string }).role;
 
-		requireRole(userRole, "admin");
-		const { data, message } = await users.getRoles();
-		res.status(200).json({ data, message });
-	} catch (err) {
-		next(err);
-	}
+    requireRole(userRole, "admin");
+    const { data, message } = await users.getRoles();
+    res.status(200).json({ data, message });
+  } catch (err) {
+    next(err);
+  }
 });
 
 /**
@@ -182,16 +184,16 @@ router.get("/roles", verifyUser, async function (req, res, next) {
  *     description: Internal server error
  */
 router.put("/:id", verifyUser, async function (req, res, next) {
-	try {
-		const { id } = req.params;
-		const parsedId = parseInt(id as string);
-		const userData = req.body;
+  try {
+    const { id } = req.params;
+    const parsedId = parseInt(id as string);
+    const userData = req.body;
 
-		const { data, message } = await users.update(parsedId, userData);
-		res.status(200).json({ data, message });
-	} catch (err) {
-		next(err);
-	}
+    const { data, message } = await users.update(parsedId, userData);
+    res.status(200).json({ data, message });
+  } catch (err) {
+    next(err);
+  }
 });
 
 /**
@@ -238,32 +240,32 @@ router.put("/:id", verifyUser, async function (req, res, next) {
  *     description: Internal server error
  */
 router.patch("/:id", verifyUser, async function (req, res, next) {
-	try {
-		const userRole = (req.user as { role: string }).role;
-		requireRole(userRole, "admin");
+  try {
+    const userRole = (req.user as { role: string }).role;
+    requireRole(userRole, "admin");
 
-		const { id } = req.params;
-		const parsedId = parseInt(id as string);
-		const { role } = req.body;
+    const { id } = req.params;
+    const parsedId = parseInt(id as string);
+    const { role } = req.body;
 
-		const { message } = await users.updateRole(parsedId, role as string);
-		res.status(200).json({ message });
-	} catch (err) {
-		next(err);
-	}
+    const { message } = await users.updateRole(parsedId, role as string);
+    res.status(200).json({ message });
+  } catch (err) {
+    next(err);
+  }
 });
 
 router.patch("/:id/img", verifyUser, async function (req, res, next) {
-	try {
-		const { id } = req.params;
-		const parsedId = parseInt(id as string);
-		const { img: imgPath } = req.body;
+  try {
+    const { id } = req.params;
+    const parsedId = parseInt(id as string);
+    const { img: imgPath } = req.body;
 
-		const { message } = await users.addImg(parsedId, imgPath as string);
-		res.status(200).json({ message });
-	} catch (err) {
-		next(err);
-	}
+    const { message } = await users.addImg(parsedId, imgPath as string);
+    res.status(200).json({ message });
+  } catch (err) {
+    next(err);
+  }
 });
 
 /**
@@ -292,15 +294,15 @@ router.patch("/:id/img", verifyUser, async function (req, res, next) {
  *     description: Internal server error
  */
 router.delete("/:id", verifyUser, async function (req, res, next) {
-	try {
-		const { id } = req.params;
-		const parsedId = parseInt(id as string);
+  try {
+    const { id } = req.params;
+    const parsedId = parseInt(id as string);
 
-		const { message } = await users.remove(parsedId);
-		res.status(204).json({ message });
-	} catch (err) {
-		next(err);
-	}
+    const { message } = await users.remove(parsedId);
+    res.status(204).json({ message });
+  } catch (err) {
+    next(err);
+  }
 });
 
 export default router;

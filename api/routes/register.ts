@@ -6,8 +6,7 @@ import { Users } from "../Types";
  * @openapi
  * /register:
  *   post:
- *    tags: 
- *     - Authentication
+ *    tags: [Authentication, Users]
  *    summary: User registration
  *    description: Register a new user with the provided details.
  *    requestBody:
@@ -42,14 +41,14 @@ import { Users } from "../Types";
  *        description: Internal server error.
  */
 router.post("/", async function (req, res, next) {
-	try {
-		const user: Users = req.body;
+  try {
+    const user: Users = req.body;
 
-		const message = await registerService.registerClient(user);
-		res.status(201).json({ message });
-	} catch (err) {
-		next(err);
-	}
+    const message = await registerService.registerClient(user);
+    res.status(201).json({ message });
+  } catch (err) {
+    next(err);
+  }
 });
 
 export default router;

@@ -7,7 +7,7 @@ import { requireRole, verifyUser } from "../middlewares/verifyUser";
  * @openapi
  * /airplane:
  *  get:
- *   tags: 
+ *   tags:
  *    - Airplane
  *   description: Get all airplanes or a specific airplane by serial number
  *   parameters:
@@ -76,34 +76,36 @@ import { requireRole, verifyUser } from "../middlewares/verifyUser";
  *     description: Internal server error
  */
 router.get("/", async function (req, res, next) {
-	try {
-		let { page, limit, filter, sort } = req.query;
-		const parsedPage = page ? parseInt(page as string) : undefined;
-		const parsedLimit = limit ? parseInt(limit as string) : undefined;
-		filter = filter as string || undefined;
-		sort = sort as string || undefined;
+  try {
+    let { filter, sort } = req.query;
+    const { page, limit } = req.query;
 
-		const { data, meta, message } = await airplaneService.get(
-			parsedPage,
-			parsedLimit,
-			filter,
-			sort
-		);
-		res.status(200).json({
-			data,
-			meta,
-			message,
-		});
-	} catch (err) {
-		next(err);
-	}
+    const parsedPage = page ? parseInt(page as string) : undefined;
+    const parsedLimit = limit ? parseInt(limit as string) : undefined;
+    filter = (filter as string) || undefined;
+    sort = (sort as string) || undefined;
+
+    const { data, meta, message } = await airplaneService.get(
+      parsedPage,
+      parsedLimit,
+      filter,
+      sort
+    );
+    res.status(200).json({
+      data,
+      meta,
+      message,
+    });
+  } catch (err) {
+    next(err);
+  }
 });
 
 /**
  * @openapi
  * /airplane/serial_numbers:
  *  get:
- *   tags: 
+ *   tags:
  *    - Airplane
  *   description: Get all airplane serial numbers
  *   responses:
@@ -127,23 +129,22 @@ router.get("/", async function (req, res, next) {
  *     description: Internal server error
  */
 router.get("/serial_numbers", async function (_req, res, next) {
-	try {
-		const { data, message } = await airplaneService.getSerialNumbers();
-		res.status(200).json({
-			data,
-			message,
-		});
-	
-	} catch (error) {
-		next(error);
-	}
+  try {
+    const { data, message } = await airplaneService.getSerialNumbers();
+    res.status(200).json({
+      data,
+      message,
+    });
+  } catch (error) {
+    next(error);
+  }
 });
 
 /**
  * @openapi
  * /airplane:
  *  post:
- *   tags: 
+ *   tags:
  *    - Airplane
  *   description: Create a new airplane
  *   requestBody:
@@ -163,26 +164,26 @@ router.get("/serial_numbers", async function (_req, res, next) {
  *     description: Internal server error
  */
 router.post("/", verifyUser, async function (req, res, next) {
-	try {
-		const userRole = (req.user as { role: string }).role;
+  try {
+    const userRole = (req.user as { role: string }).role;
 
-		requireRole(userRole, "admin");
+    requireRole(userRole, "admin");
 
-		const { data, message } = await airplaneService.create(req.body);
-		res.status(201).json({
-			data,
-			message,
-		});
-	} catch (err) {
-		next(err);
-	}
+    const { data, message } = await airplaneService.create(req.body);
+    res.status(201).json({
+      data,
+      message,
+    });
+  } catch (err) {
+    next(err);
+  }
 });
 
 /**
  * @openapi
  * /airplane/{serial_no}:
  *  put:
- *   tags: 
+ *   tags:
  *    - Airplane
  *   description: Update an airplane
  *   parameters:
@@ -206,29 +207,29 @@ router.post("/", verifyUser, async function (req, res, next) {
  *     description: Internal server error
  */
 router.put("/:serial_no", verifyUser, async function (req, res, next) {
-	try {
-		const userRole = (req.user as { role: string }).role;
+  try {
+    const userRole = (req.user as { role: string }).role;
 
-		requireRole(userRole, "admin");
+    requireRole(userRole, "admin");
 
-		const { data, message } = await airplaneService.update(
-			req.params.serial_no,
-			req.body
-		);
-		res.status(200).json({
-			data,
-			message,
-		});
-	} catch (err) {
-		next(err);
-	}
+    const { data, message } = await airplaneService.update(
+      req.params["serial_no"] as string,
+      req.body
+    );
+    res.status(200).json({
+      data,
+      message,
+    });
+  } catch (err) {
+    next(err);
+  }
 });
 
 /**
  * @openapi
  * /airplane/{serial_no}:
  *  delete:
- *   tags: 
+ *   tags:
  *    - Airplane
  *   description: Delete an airplane
  *   parameters:
@@ -246,17 +247,17 @@ router.put("/:serial_no", verifyUser, async function (req, res, next) {
  *     description: Internal server error
  */
 router.delete("/:serial_no", verifyUser, async function (req, res, next) {
-	try {
-		const userRole = (req.user as { role: string }).role;
+  try {
+    const userRole = (req.user as { role: string }).role;
 
-		requireRole(userRole, "admin");
+    requireRole(userRole, "admin");
 
-		const { serial_no } = req.params;
-		const message = await airplaneService.remove(serial_no);
-		res.status(204).json({ message });
-	} catch (err) {
-		next(err);
-	}
+    const { serial_no } = req.params;
+    const message = await airplaneService.remove(serial_no as string);
+    res.status(204).json({ message });
+  } catch (err) {
+    next(err);
+  }
 });
 
 export default router;

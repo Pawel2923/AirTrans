@@ -4,14 +4,13 @@ import styles from "./tableCars.module.css";
 
 type CarsTableProps = {
   cars: Cars[];
-  onEdit: (car: Cars) => void; 
+  onEdit: (car: Cars) => void;
   onDelete: (id: number) => void;
 };
 
-const CarsTable: React.FC<CarsTableProps> = ({ cars, onEdit,onDelete }) => {
- 
+const CarsTable: React.FC<CarsTableProps> = ({ cars, onEdit, onDelete }) => {
   const handleEditClick = (car: Cars) => {
-    onEdit(car); 
+    onEdit(car);
   };
 
   return (
@@ -26,7 +25,7 @@ const CarsTable: React.FC<CarsTableProps> = ({ cars, onEdit,onDelete }) => {
           <th>Nr rejestacji</th>
           <th>Paliwo</th>
           <th>Skrzynia biegów</th>
-          <th></th> 
+          <th></th>
         </tr>
       </thead>
       <tbody>
@@ -41,12 +40,18 @@ const CarsTable: React.FC<CarsTableProps> = ({ cars, onEdit,onDelete }) => {
             <td>{car.fuel_type}</td>
             <td>{car.transmission_type}</td>
             <td>
-              <button 
-              className="btn btn-primary me-3"
-              onClick={() => handleEditClick(car)}>EDYTUJ</button>
-              <button 
-              className="btn btn-danger"
-              onClick={() => onDelete(car.id ?? 0)}>Delete</button>
+              <button
+                className="btn btn-primary me-3"
+                onClick={() => handleEditClick(car)}
+              >
+                EDYTUJ
+              </button>
+              <button
+                className="btn btn-danger"
+                onClick={() => onDelete(car.id ?? 0)}
+              >
+                Delete
+              </button>
             </td>
           </tr>
         ))}

@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import rentalService from "../../services/rental.service";
 import { Rentals } from "../../assets/Data";
-import { Container, Row, Col, Form, Button } from 'react-bootstrap';
+import { Container, Row, Col, Form, Button } from "react-bootstrap";
 
 const emptyRental: Rentals = {
   id: 0,
@@ -41,7 +41,9 @@ const EditRentPage = () => {
       }
     } catch (error) {
       console.error("Error while updating rent:", error);
-      alert("Wystąpił błąd podczas aktualizacji wypożyczenia. Spróbuj ponownie");
+      alert(
+        "Wystąpił błąd podczas aktualizacji wypożyczenia. Spróbuj ponownie"
+      );
     }
   };
 

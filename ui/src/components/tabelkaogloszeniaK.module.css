@@ -1,50 +1,50 @@
 /* Container for all announcement cards */
 .container {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 20px;
-    justify-content: center;
-    padding: 20px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  justify-content: center;
+  padding: 20px;
 }
 
 /* Each announcement card */
 .gateCard {
-    background-color: #fff;
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    padding: 20px;
-    width: 300px;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
+  background-color: #fff;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+  width: 300px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
 }
 
 /* Title of the announcement */
 .title {
-    font-size: 1.5em;
-    font-weight: bold;
-    margin-bottom: 10px;
+  font-size: 1.5em;
+  font-weight: bold;
+  margin-bottom: 10px;
 }
 
 /* Content of the announcement */
 .content {
-    font-size: 1em;
-    margin-bottom: 20px;
+  font-size: 1em;
+  margin-bottom: 20px;
 }
 
 /* Metadata section */
 .meta {
-    display: flex;
-    flex-direction: column;
-    gap: 5px;
-    font-size: 0.9em;
-    color: #555;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  font-size: 0.9em;
+  color: #555;
 }
 
 /* Individual metadata items */
 .valid_until,
 .create_time,
 .Employee_id {
-    margin-top: 5px;
+  margin-top: 5px;
 }

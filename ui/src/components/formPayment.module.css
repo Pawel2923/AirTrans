@@ -1,0 +1,48 @@
+.checkout-form {
+    max-width: 600px;
+    margin: auto;
+    padding: 1rem;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  }
+  
+  .checkout-table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  
+  .checkout-table td {
+    padding: 0.5rem;
+    vertical-align: top;
+  }
+  
+  label {
+    font-weight: bold;
+  }
+  
+  button {
+    width: 100%;
+    padding: 0.75rem;
+    border: none;
+    border-radius: 5px;
+    background-color: #007bff;
+    color: #fff;
+    font-size: 1rem;
+    cursor: pointer;
+  }
+  
+  button:disabled {
+    background-color: #ccc;
+  }
+  
+  .error {
+    color: red;
+    margin-top: 1rem;
+  }
+  
+  .success {
+    color: green;
+    margin-top: 1rem;
+  }
+  

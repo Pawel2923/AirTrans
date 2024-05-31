@@ -11,12 +11,12 @@ router.post('/create-payment-intent', async (req: Request, res: Response) => {
     const paymentIntent = await stripe.paymentIntents.create({
       amount,
       currency: 'pln',
+      payment_method_types: ['card', 'p24', 'blik'],
     });
-    res.status(200).send({
-      clientSecret: paymentIntent.client_secret,
-    });
+
+    res.send({ clientSecret: paymentIntent.client_secret });
   } catch (error) {
-    res.status(500).send({ error: error });
+    res.status(500).send({ error });
   }
 });
 

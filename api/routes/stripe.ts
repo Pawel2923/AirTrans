@@ -1,7 +1,15 @@
 import { Router, Request, Response } from 'express';
 import Stripe from 'stripe';
 
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!);
+const stripeSecretKey = process.env['STRIPE_SECRET_KEY'];
+if (!stripeSecretKey) {
+  throw new Error('STRIPE_SECRET_KEY environment variable is not defined');
+}
+
+const stripe = new Stripe(stripeSecretKey, {
+
+});
+
 const router = Router();
 
 router.post('/create-payment-intent', async (req: Request, res: Response) => {
@@ -16,7 +24,7 @@ router.post('/create-payment-intent', async (req: Request, res: Response) => {
 
     res.send({ clientSecret: paymentIntent.client_secret });
   } catch (error) {
-    res.status(500).send({ error });
+    res.status(500).send({ error});
   }
 });
 

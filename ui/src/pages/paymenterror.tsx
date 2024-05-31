@@ -2,6 +2,7 @@ import React,{useEffect} from 'react';
 import styles from './PaymentSuccess.module.css';
 import Footer from '../components/footer';
 import { useNavigate } from 'react-router-dom';
+import Loader from '../components/Loader';
 
 const PaymentError = () => {
 
@@ -37,9 +38,9 @@ const PaymentError = () => {
         <p>E-mail: {contactInfo.email}</p>
         <p>Nr Telefonu: {contactInfo.phone}</p>
       </div>
-      <div className="spinner-border mt-4" role="status">
+      
         
-      </div>
+      <Loader/>
       <Footer />
     </div>
   );

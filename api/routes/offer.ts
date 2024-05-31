@@ -6,7 +6,7 @@ import offer from "../services/offer";
  * @openapi
  * /offer:
  *  get:
- *   tags: 
+ *   tags:
  *    - Offer
  *   description: Get all offers
  *   parameters:
@@ -46,16 +46,16 @@ import offer from "../services/offer";
  *     description: Internal server error
  */
 router.get("/", async function (req, res, next) {
-	try {
-		const { page, limit } = req.query;
-		const parsedPage = page ? parseInt(page as string) : undefined;
-		const parsedLimit = limit ? parseInt(limit as string) : undefined;
+  try {
+    const { page, limit } = req.query;
+    const parsedPage = page ? parseInt(page as string) : undefined;
+    const parsedLimit = limit ? parseInt(limit as string) : undefined;
 
-		const { data, meta, message } = await offer.get(parsedPage, parsedLimit);
-		res.status(200).json({ data, meta, message });
-	} catch (err) {
-		next(err);
-	}
+    const { data, meta, message } = await offer.get(parsedPage, parsedLimit);
+    res.status(200).json({ data, meta, message });
+  } catch (err) {
+    next(err);
+  }
 });
 
 export default router;

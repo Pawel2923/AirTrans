@@ -1,15 +1,14 @@
-import { Rentals} from "../assets/Data";
-import styles from '../components/tableCars.module.css';
+import { Rentals } from "../assets/Data";
+import styles from "../components/tableCars.module.css";
 import React from "react";
 
-type TableRentProps={
+type TableRentProps = {
   rents: Rentals[];
   onEdit: (rent: Rentals) => void;
   onDelete: (id: number) => void;
 };
 
-const TableRent:React.FC<TableRentProps>= ({ rents, onEdit,onDelete }) => {
-
+const TableRent: React.FC<TableRentProps> = ({ rents, onEdit, onDelete }) => {
   const handleEditRentClick = (rent: Rentals) => {
     onEdit(rent);
   };
@@ -28,25 +27,28 @@ const TableRent:React.FC<TableRentProps>= ({ rents, onEdit,onDelete }) => {
       </thead>
       <tbody>
         {rents.map((rent) => (
-        
-            <tr key={rent.id}>
-              <td>{rent.id}</td>
-              <td>{rent.Users_id}</td>
-              <td>{rent.Cars_id}</td>
-              <td>{rent.since}</td>
-              <td>{rent.until}</td>
-              <td>{rent.status}</td>
-              <td>
-                <button 
+          <tr key={rent.id}>
+            <td>{rent.id}</td>
+            <td>{rent.Users_id}</td>
+            <td>{rent.Cars_id}</td>
+            <td>{rent.since}</td>
+            <td>{rent.until}</td>
+            <td>{rent.status}</td>
+            <td>
+              <button
                 className="btn btn-primary me-3"
-                onClick={()=> handleEditRentClick(rent)}>EDYTUJ</button>
-                <button 
+                onClick={() => handleEditRentClick(rent)}
+              >
+                EDYTUJ
+              </button>
+              <button
                 className="btn btn-danger"
-                onClick={() => onDelete(rent.id ?? 0)}>Delete</button>
-              </td>
-             
-            </tr>
-          
+                onClick={() => onDelete(rent.id ?? 0)}
+              >
+                Delete
+              </button>
+            </td>
+          </tr>
         ))}
       </tbody>
     </table>

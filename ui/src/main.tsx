@@ -9,11 +9,11 @@ import AuthProvider from "./store/AuthProvider.tsx";
 import ToastModalProvider from "./store/ToastModalProvider.tsx";
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
-	<React.StrictMode>
-		<ToastModalProvider>
-			<AuthProvider>
-				<App />
-			</AuthProvider>
-		</ToastModalProvider>
-	</React.StrictMode>
+  <React.StrictMode>
+    <ToastModalProvider>
+      <AuthProvider>
+        <App />
+      </AuthProvider>
+    </ToastModalProvider>
+  </React.StrictMode>
 );

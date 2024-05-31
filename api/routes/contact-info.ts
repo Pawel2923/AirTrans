@@ -7,7 +7,7 @@ import { verifyUser, requireRole } from "../middlewares/verifyUser";
  * @openapi
  * /contact-info:
  *  get:
- *   tags: 
+ *   tags:
  *    - Contact-info
  *   description: Get contact info from the database
  *   parameters:
@@ -59,30 +59,32 @@ import { verifyUser, requireRole } from "../middlewares/verifyUser";
  *     description: Internal server error
  */
 router.get("/", async function (req, res, next) {
-	try {
-		let { page, limit, filter, sort } = req.query;
-		const parsedPage = page ? parseInt(page as string) : undefined;
-		const parsedLimit = limit ? parseInt(limit as string) : undefined;
-		filter = filter as string || undefined;
-		sort = sort as string || undefined;
+  try {
+    let { filter, sort } = req.query;
+    const { page, limit } = req.query;
 
-		const { data, meta, message } = await contactInfo.get(
-			parsedPage,
-			parsedLimit,
-			filter,
-			sort
-		);
-		res.status(200).json({ data, meta, message });
-	} catch (err) {
-		next(err);
-	}
+    const parsedPage = page ? parseInt(page as string) : undefined;
+    const parsedLimit = limit ? parseInt(limit as string) : undefined;
+    filter = (filter as string) || undefined;
+    sort = (sort as string) || undefined;
+
+    const { data, meta, message } = await contactInfo.get(
+      parsedPage,
+      parsedLimit,
+      filter,
+      sort
+    );
+    res.status(200).json({ data, meta, message });
+  } catch (err) {
+    next(err);
+  }
 });
 
 /**
  * @openapi
  * /contact-info/{name}:
  *  put:
- *   tags: 
+ *   tags:
  *    - Contact-info
  *   description: Update contact info
  *   parameters:
@@ -106,21 +108,24 @@ router.get("/", async function (req, res, next) {
  *     description: Could not update contact info
  */
 router.put("/:name", verifyUser, async function (req, res, next) {
-	try {
-		const { name } = req.params;
+  try {
+    const { name } = req.params;
 
-		const userRole = (req.user as { role: string }).role;
+    const userRole = (req.user as { role: string }).role;
 
-		requireRole(userRole, ["admin", "airport_staff"]);
+    requireRole(userRole, ["admin", "airport_staff"]);
 
-		const { data, message } = await contactInfo.update(name, req.body);
-		res.status(200).json({
-			data,
-			message,
-		});
-	} catch (err) {
-		next(err);
-	}
+    const { data, message } = await contactInfo.update(
+      name as string,
+      req.body
+    );
+    res.status(200).json({
+      data,
+      message,
+    });
+  } catch (err) {
+    next(err);
+  }
 });
 
 export default router;

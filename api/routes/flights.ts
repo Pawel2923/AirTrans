@@ -2,7 +2,6 @@ import express from "express";
 const router = express.Router();
 import { flight } from "../services/flights";
 import { requireRole, verifyUser } from "../middlewares/verifyUser";
-import config from "../config";
 
 /**
  * @openapi
@@ -82,25 +81,27 @@ import config from "../config";
  *     description: Internal server error
  */
 router.get("/", async function (req, res, next) {
-	try {
-		let { page, isarrdep, limit, filter, sort } = req.query;
-		const parsedPage = page ? parseInt(page as string) : undefined;
-		const parsedLimit = limit ? parseInt(limit as string) : undefined;
-		filter = (filter as string) || undefined;
-		sort = (sort as string) || undefined;
+  try {
+    let { filter, sort } = req.query;
+    const { page, limit, isarrdep } = req.query;
 
-		const { data, meta, message } =
-			isarrdep != undefined
-				? await flight.getByDepartureOrArrival(parsedPage, parsedLimit)
-				: await flight.get(parsedPage, parsedLimit, filter, sort);
-		res.status(200).json({
-			data,
-			meta,
-			message,
-		});
-	} catch (err) {
-		next(err);
-	}
+    const parsedPage = page ? parseInt(page as string) : undefined;
+    const parsedLimit = limit ? parseInt(limit as string) : undefined;
+    filter = (filter as string) || undefined;
+    sort = (sort as string) || undefined;
+
+    const { data, meta, message } =
+      isarrdep != undefined
+        ? await flight.getByDepartureOrArrival(parsedPage, parsedLimit)
+        : await flight.get(parsedPage, parsedLimit, filter, sort);
+    res.status(200).json({
+      data,
+      meta,
+      message,
+    });
+  } catch (err) {
+    next(err);
+  }
 });
 
 /**
@@ -127,12 +128,12 @@ router.get("/", async function (req, res, next) {
  *     description: Internal server error
  */
 router.get("/ids", async function (_req, res, next) {
-	try {
-		const { data, message } = await flight.getFlightIds();
-		res.status(200).json({ data, message });
-	} catch (err) {
-		next(err);
-	}
+  try {
+    const { flightIds, message } = await flight.getFlightIds();
+    res.status(200).json({ data: flightIds, message });
+  } catch (err) {
+    next(err);
+  }
 });
 
 /**
@@ -211,26 +212,28 @@ router.get("/ids", async function (_req, res, next) {
  *     description: Internal server error
  */
 router.get("/:term", async function (req, res, next) {
-	try {
-		let { page, limit, filter, sort } = req.query;
-		const parsedPage = page ? parseInt(page as string) : undefined;
-		const parsedLimit = limit ? parseInt(limit as string) : undefined;
-		filter = (filter as string) || undefined;
-		sort = (sort as string) || undefined;
+  try {
+    let { filter, sort } = req.query;
+    const { page, limit } = req.query;
 
-		const { term } = req.params;
+    const parsedPage = page ? parseInt(page as string) : undefined;
+    const parsedLimit = limit ? parseInt(limit as string) : undefined;
+    filter = (filter as string) || undefined;
+    sort = (sort as string) || undefined;
 
-		const { data, meta, message } = await flight.search(
-			term,
-			parsedPage,
-			parsedLimit,
-			filter,
-			sort
-		);
-		res.status(200).json({ data, meta, message });
-	} catch (err) {
-		next(err);
-	}
+    const { term } = req.params;
+
+    const { data, meta, message } = await flight.search(
+      term,
+      parsedPage,
+      parsedLimit,
+      filter,
+      sort
+    );
+    res.status(200).json({ data, meta, message });
+  } catch (err) {
+    next(err);
+  }
 });
 
 /**
@@ -259,15 +262,15 @@ router.get("/:term", async function (req, res, next) {
  *     description: Flight could not be created
  */
 router.post("/", verifyUser, async function (req, res, next) {
-	try {
-		const userRole = (req.user as { role: string }).role;
+  try {
+    const userRole = (req.user as { role: string }).role;
 
-		requireRole(userRole, ["admin", "atc"]);
-		const { data, message } = await flight.create(req.body);
-		res.status(201).json({ data, message });
-	} catch (err) {
-		next(err);
-	}
+    requireRole(userRole, ["admin", "atc"]);
+    const { data, message } = await flight.create(req.body);
+    res.status(201).json({ data, message });
+  } catch (err) {
+    next(err);
+  }
 });
 
 /**
@@ -300,15 +303,18 @@ router.post("/", verifyUser, async function (req, res, next) {
  *     description: Flight could not be updated
  */
 router.put("/:id", verifyUser, async function (req, res, next) {
-	try {
-		const userRole = (req.user as { role: string }).role;
+  try {
+    const userRole = (req.user as { role: string }).role;
 
-		requireRole(userRole, ["admin", "atc"]);
-		const { data, message } = await flight.update(req.params.id, req.body);
-		res.status(200).json({ data, message });
-	} catch (err) {
-		next(err);
-	}
+    requireRole(userRole, ["admin", "atc"]);
+    const { data, message } = await flight.update(
+      req.params["id"] as string,
+      req.body
+    );
+    res.status(200).json({ data, message });
+  } catch (err) {
+    next(err);
+  }
 });
 
 /**
@@ -333,15 +339,15 @@ router.put("/:id", verifyUser, async function (req, res, next) {
  *     description: Flight could not be deleted
  */
 router.delete("/:id", verifyUser, async function (req, res, next) {
-	try {
-		const userRole = (req.user as { role: string }).role;
+  try {
+    const userRole = (req.user as { role: string }).role;
 
-		requireRole(userRole, ["admin", "atc"]);
-		const message = await flight.remove(req.params.id);
-		res.status(204).json({ message });
-	} catch (err) {
-		next(err);
-	}
+    requireRole(userRole, ["admin", "atc"]);
+    const message = await flight.remove(req.params["id"] as string);
+    res.status(204).json({ message });
+  } catch (err) {
+    next(err);
+  }
 });
 
 export default router;

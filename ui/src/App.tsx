@@ -1,9 +1,9 @@
 import {
-	Routes,
-	Route,
-	createBrowserRouter,
-	RouterProvider,
-	Navigate,
+  Routes,
+  Route,
+  createBrowserRouter,
+  RouterProvider,
+  Navigate,
 } from "react-router-dom";
 import Home from "./pages/Home";
 import Ogloszenia from "./pages/Ogloszenia";
@@ -43,99 +43,84 @@ import SummaryPage from "./pages/summaryPage";
 import ClientTickets from "./pages/Manager/ClientTickets";
 
 const router = createBrowserRouter([
-	{ path: "*", Component: Root, errorElement: <ErrorBoundary /> },
+  { path: "*", Component: Root, errorElement: <ErrorBoundary /> },
 ]);
 
 export default function App() {
-	return <RouterProvider router={router} />;
+  return <RouterProvider router={router} />;
 }
 
 function Root() {
-	return (
-		<Routes>
-			<Route index element={<Home />} />
-			<Route path="wynajemC">
-				<Route index element={<RentCar />} />
-				<Route path="data/:id" element={<DatePagek />} />
-				<Route path="data/:id/form" element={<FormPage />} />
-			</Route>
-			<Route path="wynajemC/summary" element={<SummaryPage />} />
+  return (
+    <Routes>
+      <Route index element={<Home />} />
+      <Route path="wynajemC">
+        <Route index element={<RentCar />} />
+        <Route path="data/:id" element={<DatePagek />} />
+        <Route path="data/:id/form" element={<FormPage />} />
+      </Route>
+      <Route path="wynajemC/summary" element={<SummaryPage />} />
 
-			<Route path="ogloszenia" element={<Ogloszenia />} />
-			<Route path="logowanie" element={<Logowanie />} />
-			<Route path="logi" element={<Logi />} />
-			<Route path="rejestracja" element={<Rejestracja />} />
-			<Route path="zarzadzanie" element={<Manager />}>
-				<Route
-					index
-					element={<Navigate to="/zarzadzanie/harmonogram" />}
-				/>
-				<Route path="harmonogram">
-					<Route index element={<Schedule />} />
-					<Route path=":id" element={<ScheduleDetails />} />
-					<Route path=":id/edytuj" element={<ScheduleEdit />} />
-				</Route>
-				<Route path="samoloty">
-					<Route index element={<AirplanesPage />} />
-					<Route path=":id/edytuj" element={<AirplaneEdit />} />
-				</Route>
-				<Route path="pojazd">
-					<Route index element={<ZarzadzanieP />} />
-					<Route path="edit-car/:id" element={<EditCarPage />} />
-					<Route path="edit-rent/:id" element={<EditRentPage />} />
-				</Route>
-				<Route path="parking">
-					<Route index element={<ParkingPage />} />
-					<Route
-						path="edit-parking/:id"
-						element={<EditParkingPage />}
-					/>
-				</Route>
-				<Route path="sprzet">
-					<Route index element={<EquipmentPage />} />
-					<Route
-						path="edit-sprzet/:serial_no"
-						element={<EditEquipmentPage />}
-					/>
-				</Route>
-				<Route path="bramki">
-					<Route index element={<GatesPage />} />
-					<Route path="edit-bramka/:id" element={<EditGatePage />} />
-				</Route>
-				<Route path="ogloszenia">
-					<Route index element={<OgloszeniaZ />} />
-					<Route
-						path="edit-ogloszenia/:id"
-						element={<OgloszeniaEdit />}
-					/>
-				</Route>
-				<Route path="lotnisko">
-					<Route index element={<Airfield />} />
-					<Route
-						path=":table/:id/edytuj"
-						element={<AirfieldEdit />}
-					/>
-				</Route>
-				<Route path="bilety">
-					<Route index element={<TicketsPage />} />
-				</Route>
-				<Route path="uzytkownicy">
-					<Route index element={<UsersPage />} />
-				</Route>
-				<Route path="profil">
-					<Route index element={<UserProfile />} />
-				</Route>
-				<Route path="twoje-bilety">
-					<Route index element={<ClientTickets />} />
-				</Route>
-				<Route
-					path="*"
-					element={<Navigate to="/zarzadzanie/harmonogram" />}
-				/>
-			</Route>
-			<Route path="zabronione" element={<Forbidden />} />
-			<Route path="blad" element={<InternalServerError />} />
-			<Route path="*" element={<NotFound />} />
-		</Routes>
-	);
+      <Route path="ogloszenia" element={<Ogloszenia />} />
+      <Route path="logowanie" element={<Logowanie />} />
+      <Route path="logi" element={<Logi />} />
+      <Route path="rejestracja" element={<Rejestracja />} />
+      <Route path="zarzadzanie" element={<Manager />}>
+        <Route index element={<Navigate to="/zarzadzanie/harmonogram" />} />
+        <Route path="harmonogram">
+          <Route index element={<Schedule />} />
+          <Route path=":id" element={<ScheduleDetails />} />
+          <Route path=":id/edytuj" element={<ScheduleEdit />} />
+        </Route>
+        <Route path="samoloty">
+          <Route index element={<AirplanesPage />} />
+          <Route path=":id/edytuj" element={<AirplaneEdit />} />
+        </Route>
+        <Route path="pojazd">
+          <Route index element={<ZarzadzanieP />} />
+          <Route path="edit-car/:id" element={<EditCarPage />} />
+          <Route path="edit-rent/:id" element={<EditRentPage />} />
+        </Route>
+        <Route path="parking">
+          <Route index element={<ParkingPage />} />
+          <Route path="edit-parking/:id" element={<EditParkingPage />} />
+        </Route>
+        <Route path="sprzet">
+          <Route index element={<EquipmentPage />} />
+          <Route
+            path="edit-sprzet/:serial_no"
+            element={<EditEquipmentPage />}
+          />
+        </Route>
+        <Route path="bramki">
+          <Route index element={<GatesPage />} />
+          <Route path="edit-bramka/:id" element={<EditGatePage />} />
+        </Route>
+        <Route path="ogloszenia">
+          <Route index element={<OgloszeniaZ />} />
+          <Route path="edit-ogloszenia/:id" element={<OgloszeniaEdit />} />
+        </Route>
+        <Route path="lotnisko">
+          <Route index element={<Airfield />} />
+          <Route path=":table/:id/edytuj" element={<AirfieldEdit />} />
+        </Route>
+        <Route path="bilety">
+          <Route index element={<TicketsPage />} />
+        </Route>
+        <Route path="uzytkownicy">
+          <Route index element={<UsersPage />} />
+        </Route>
+        <Route path="profil">
+          <Route index element={<UserProfile />} />
+        </Route>
+        <Route path="twoje-bilety">
+          <Route index element={<ClientTickets />} />
+        </Route>
+        <Route path="*" element={<Navigate to="/zarzadzanie/harmonogram" />} />
+      </Route>
+      <Route path="zabronione" element={<Forbidden />} />
+      <Route path="blad" element={<InternalServerError />} />
+      <Route path="*" element={<NotFound />} />
+    </Routes>
+  );
 }

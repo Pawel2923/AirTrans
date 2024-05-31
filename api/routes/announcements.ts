@@ -8,7 +8,7 @@ import config from "../config";
  * @openapi
  * /announcements:
  *  get:
- *   tags: 
+ *   tags:
  *    - Announcements
  *   description: Get all announcements
  *   parameters:
@@ -75,46 +75,48 @@ import config from "../config";
  *     description: Internal server error
  */
 router.get("/", async function (req, res, next) {
-	try {
-		let { page, limit, filter, sort } = req.query;
-		const parsedPage = page ? parseInt(page as string) : undefined;
-		const parsedLimit = limit ? parseInt(limit as string) : undefined;
-		filter = filter as string || undefined;
-		sort = sort as string || undefined;
+  try {
+    let { filter, sort } = req.query;
+    const { page, limit } = req.query;
 
-		const { data, meta, message } = await announcements.get(
-			parsedPage,
-			parsedLimit,
-			filter,
-			sort
-		);
-		res.status(200).json({
-			data,
-			meta,
-			message,
-		});
-	} catch (err) {
-		next(err);
-	}
+    const parsedPage = page ? parseInt(page as string) : undefined;
+    const parsedLimit = limit ? parseInt(limit as string) : undefined;
+    filter = (filter as string) || undefined;
+    sort = (sort as string) || undefined;
+
+    const { data, meta, message } = await announcements.get(
+      parsedPage,
+      parsedLimit,
+      filter,
+      sort
+    );
+    res.status(200).json({
+      data,
+      meta,
+      message,
+    });
+  } catch (err) {
+    next(err);
+  }
 });
 
 router.get("/:id", async function (req, res, next) {
-	try {
-		let { id } = req.params;
-		const parsedId = parseInt(id) || -1;
+  try {
+    const { id } = req.params;
+    const parsedId = parseInt(id) || -1;
 
-		const { data, message } = await announcements.getById(parsedId);
-		res.status(200).json({ data, message });
-	} catch (err) {
-		next(err);
-	}
+    const { data, message } = await announcements.getById(parsedId);
+    res.status(200).json({ data, message });
+  } catch (err) {
+    next(err);
+  }
 });
 
 /**
  * @openapi
  * /announcements:
  *  post:
- *   tags: 
+ *   tags:
  *    - Announcements
  *   description: Create a new announcement
  *   requestBody:
@@ -132,23 +134,23 @@ router.get("/:id", async function (req, res, next) {
  *     description: Failed to create announcement
  */
 router.post("/", verifyUser, async function (req, res, next) {
-	try {
-		const userRole = (req.user as { role: string }).role;
+  try {
+    const userRole = (req.user as { role: string }).role;
 
-		requireRole(userRole, config.employeeRoles);
+    requireRole(userRole, config.employeeRoles);
 
-		const message = await announcements.create(req.body);
-		res.status(201).json({ message });
-	} catch (err) {
-		next(err);
-	}
+    const message = await announcements.create(req.body);
+    res.status(201).json({ message });
+  } catch (err) {
+    next(err);
+  }
 });
 
 /**
  * @openapi
  * /announcements/{id}:
  *  put:
- *   tags: 
+ *   tags:
  *    - Announcements
  *   description: Update an announcement
  *   parameters:
@@ -174,29 +176,26 @@ router.post("/", verifyUser, async function (req, res, next) {
  *     description: Internal server error
  */
 router.put("/:id", verifyUser, async function (req, res, next) {
-	try {
-		let { id } = req.params;
-		const parsedId = parseInt(id) || -1;
+  try {
+    const { id } = req.params;
+    const parsedId = parseInt(id as string) || -1;
 
-		const userRole = (req.user as { role: string }).role;
+    const userRole = (req.user as { role: string }).role;
 
-		requireRole(userRole, config.employeeRoles);
+    requireRole(userRole, config.employeeRoles);
 
-		const message = await announcements.update(
-			parsedId,
-			req.body
-		);
-		res.status(200).json({ message });
-	} catch (err) {
-		next(err);
-	}
+    const message = await announcements.update(parsedId, req.body);
+    res.status(200).json({ message });
+  } catch (err) {
+    next(err);
+  }
 });
 
 /**
  * @openapi
  * /announcements/{id}:
  *  delete:
- *   tags: 
+ *   tags:
  *    - Announcements
  *   description: Delete an announcement
  *   parameters:
@@ -212,19 +211,19 @@ router.put("/:id", verifyUser, async function (req, res, next) {
  *     description: Announcement could not be deleted
  */
 router.delete("/:id", verifyUser, async function (req, res, next) {
-	try {
-		let { id } = req.params;
-		const parsedId = parseInt(id) || -1;
-		
-		const userRole = (req.user as { role: string }).role;
+  try {
+    const { id } = req.params;
+    const parsedId = parseInt(id as string) || -1;
 
-		requireRole(userRole, config.employeeRoles);
+    const userRole = (req.user as { role: string }).role;
 
-		const message = await announcements.remove(parsedId);
-		res.status(204).json({ message });
-	} catch (err) {
-		next(err);
-	}
+    requireRole(userRole, config.employeeRoles);
+
+    const message = await announcements.remove(parsedId);
+    res.status(204).json({ message });
+  } catch (err) {
+    next(err);
+  }
 });
 
 export default router;

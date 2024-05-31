@@ -1,121 +1,121 @@
 .toast {
-    position: fixed;
-    top: 0;
-    left: 0;
-    z-index: 20;
-    width: 100%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    margin-top: 1rem;
-    animation: slideIn 0.5s forwards;
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 20;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 1rem;
+  animation: slideIn 0.5s forwards;
 }
 
 .toast-container {
-    width: 60%;
-    min-height: 50px;
-    background-color: var(--background-white);
-    border-radius: 25px;
-    box-shadow: var(--default-box-shadow);
-    color: #000;
-    overflow: hidden;
-    position: relative;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
+  width: 60%;
+  min-height: 50px;
+  background-color: var(--background-white);
+  border-radius: 25px;
+  box-shadow: var(--default-box-shadow);
+  color: #000;
+  overflow: hidden;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 }
 
 .toast-container.primary {
-    background-color: var(--primary-color);
-    color: #fff;
+  background-color: var(--primary-color);
+  color: #fff;
 }
 
 .toast-container.primary .progress-bar {
-    background-color: #4781a7;
+  background-color: #4781a7;
 }
 
 .toast-container.alt {
-    background-color: var(--alt-color);
+  background-color: var(--alt-color);
 }
 
 .toast-container.alt .progress-bar {
-    background-color: #c5def0;
+  background-color: #c5def0;
 }
 
 .toast-container.warning {
-    background-color: var(--bs-warning);
+  background-color: var(--bs-warning);
 }
 
 .toast-container.warning .progress-bar {
-    background-color: #f0ad4e;
+  background-color: #f0ad4e;
 }
 
 .toast-container.danger {
-    background-color: var(--bs-danger);
-    color: #fff;    
+  background-color: var(--bs-danger);
+  color: #fff;
 }
 
 .toast-container.danger .progress-bar {
-    background-color: #a92835;
+  background-color: #a92835;
 }
 
 .toast-body {
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-    padding: 0.5rem 1rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.5rem 1rem;
 }
 
 .progress-bar {
-    width: 100%;
-    height: 5px;    
-    background-color: #e4e4e4;
-    position: absolute;
-    bottom: 0;
-    animation-name: progress;
-    animation-timing-function: linear;
-    animation-fill-mode: forwards;
+  width: 100%;
+  height: 5px;
+  background-color: #e4e4e4;
+  position: absolute;
+  bottom: 0;
+  animation-name: progress;
+  animation-timing-function: linear;
+  animation-fill-mode: forwards;
 }
 
 .toast-container p {
-    margin: 0;
-    width: 100%;
+  margin: 0;
+  width: 100%;
 }
 
 .toast-btn {
-    color: inherit !important;
-    box-shadow: none !important;
-    text-wrap: nowrap;
+  color: inherit !important;
+  box-shadow: none !important;
+  text-wrap: nowrap;
 }
 
 .close {
-    font-weight: bold;
-    cursor: pointer;
+  font-weight: bold;
+  cursor: pointer;
 }
 
 @keyframes slideIn {
-    from {
-        top: -100%;
-    }
-    to {
-        top: 0;
-    }
+  from {
+    top: -100%;
+  }
+  to {
+    top: 0;
+  }
 }
 
 @keyframes slideOut {
-    from {
-        top: 0;
-    }
-    to {
-        top: -100%;
-    }
+  from {
+    top: 0;
+  }
+  to {
+    top: -100%;
+  }
 }
 
 @keyframes progress {
-    from {
-        width: 100%;
-    }
-    to {
-        width: 0;
-    }
+  from {
+    width: 100%;
+  }
+  to {
+    width: 0;
+  }
 }

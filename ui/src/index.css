@@ -2,7 +2,8 @@
   box-sizing: border-box;
 }
 
-:root, [data-theme="light"] {
+:root,
+[data-theme="light"] {
   font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
   font-weight: 400;
@@ -99,7 +100,7 @@ h1 {
 
 button.active,
 a.active {
-  background-color: #5DA9DB;
+  background-color: #5da9db;
   color: #fff;
 }
 
@@ -123,5 +124,5 @@ a.active {
 .manager-block h3 {
   font-size: 1.5rem;
   font-weight: 600;
-  margin-bottom: .5rem;
+  margin-bottom: 0.5rem;
 }

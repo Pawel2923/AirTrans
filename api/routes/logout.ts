@@ -5,7 +5,7 @@ const router = express.Router();
  * @openapi
  * /logout:
  *  get:
- *   tags: 
+ *   tags:
  *    - Authentication
  *   description: Logs out the user by clearing the JWT cookie
  *   responses:
@@ -17,14 +17,14 @@ const router = express.Router();
  *     description: Internal Server Error
  */
 router.get("/", async (_req, res, next) => {
-	try {
-		// Clear the JWT cookie by setting it to an empty value and expiring it
-		res.clearCookie("jwt");
-		res.clearCookie("refreshJwt");
-		res.status(200).json({ message: "Logged out successfully" });
-	} catch (error) {
-		next(error);
-	}
+  try {
+    // Clear the JWT cookie by setting it to an empty value and expiring it
+    res.clearCookie("jwt");
+    res.clearCookie("refreshJwt");
+    res.status(200).json({ message: "Logged out successfully" });
+  } catch (error) {
+    next(error);
+  }
 });
 
 export default router;

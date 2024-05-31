@@ -6,33 +6,33 @@ import { useContext } from "react";
 import ToastModalContext from "../../store/toast-modal-context";
 
 const useUpdateAirfield = () => {
-	const { createToast } = useContext(ToastModalContext);
-	const { handleError } = useErrorHandler();
+  const { createToast } = useContext(ToastModalContext);
+  const { handleError } = useErrorHandler();
 
-	const updateAirfield = (
-		tableName: string,
-		newData: Runways | Taxiways | Terminals,
-		id: string
-	) => {
-		if (!id) throw new Error("Id is not defined");
+  const updateAirfield = (
+    tableName: string,
+    newData: Runways | Taxiways | Terminals,
+    id: string
+  ) => {
+    if (!id) throw new Error("Id is not defined");
 
-		airfieldService
-			.update(tableName, newData, id)
-			.then((response) => {
-				if (response.status === 200) {
-					createToast({
-						message: `Zaktualizowano dane dla ${tableName} ${id}`,
-						type: "primary",
-						icon: faCircleCheck,
-					});
-				}
-			})
-			.catch((error: Err) => {
-				handleError({ error });
-			});
-	};
+    airfieldService
+      .update(tableName, newData, id)
+      .then((response) => {
+        if (response.status === 200) {
+          createToast({
+            message: `Zaktualizowano dane dla ${tableName} ${id}`,
+            type: "primary",
+            icon: faCircleCheck,
+          });
+        }
+      })
+      .catch((error: Err) => {
+        handleError({ error });
+      });
+  };
 
-	return { updateAirfield };
+  return { updateAirfield };
 };
 
 export default useUpdateAirfield;

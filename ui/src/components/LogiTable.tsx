@@ -12,7 +12,7 @@ const Event_logsTable: React.FC<Event_logsTableProps> = ({ event_logs }) => {
       <thead>
         <tr>
           <th>ID</th>
-          <th>Nazwa Tabeli</th>       
+          <th>Nazwa Tabeli</th>
           <th>Użytkownik</th>
           <th>Czas</th>
           <th>Akcja</th>
@@ -25,7 +25,7 @@ const Event_logsTable: React.FC<Event_logsTableProps> = ({ event_logs }) => {
             <td>{event_log.id}</td>
             <td>{event_log.table_name}</td>
             <td>{event_log.by_user}</td>
-            <td>{event_log.timestamp_log.replace("T", " ").slice(0,19)}</td>
+            <td>{event_log.timestamp_log.replace("T", " ").slice(0, 19)}</td>
             <td>{event_log.action}</td>
             <td>{event_log.log_details}</td>
           </tr>

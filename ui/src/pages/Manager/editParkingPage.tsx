@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import parkingService from "../../services/parking.service";
 import { ParkingReservations } from "../../assets/Data";
-import { Container, Row, Col, Form, Button } from 'react-bootstrap';
+import { Container, Row, Col, Form, Button } from "react-bootstrap";
 
 const emptyParking: ParkingReservations = {
   pid: 0,
@@ -52,7 +52,6 @@ const EditParkingPage = () => {
       [e.target.name]: e.target.value,
     });
   };
-
 
   return (
     <Container>

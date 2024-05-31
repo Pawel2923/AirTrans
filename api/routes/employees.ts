@@ -8,7 +8,7 @@ import { verifyUser, requireRole } from "../middlewares/verifyUser";
  * @openapi
  * /employees:
  *  get:
- *   tags: 
+ *   tags:
  *    - Employees
  *   description: Get all employees or a specific employee by id
  *   parameters:
@@ -54,32 +54,32 @@ import { verifyUser, requireRole } from "../middlewares/verifyUser";
  *     description: Internal server error
  */
 router.get("/", verifyUser, async function (req, res, next) {
-	try {
-		let { id, limit, page, column, sort } = req.query;
+  try {
+    const { id, limit, page, column, sort } = req.query;
 
-		const parsedId = id ? parseInt(id as string) : undefined;
-		const parsedLimit = limit ? parseInt(limit as string) : undefined;
-		const parsedPage = page ? parseInt(page as string) : undefined;
+    const parsedId = id ? parseInt(id as string) : undefined;
+    const parsedLimit = limit ? parseInt(limit as string) : undefined;
+    const parsedPage = page ? parseInt(page as string) : undefined;
 
-		const userRole = (req.user as { role: string }).role;
+    const userRole = (req.user as { role: string }).role;
 
-		requireRole(userRole, config.employeeRoles);
+    requireRole(userRole, config.employeeRoles);
 
-		const { data, meta, message } = await employees.getEmployees(
-			parsedId,
-			parsedLimit,
-			parsedPage,
-			column as string,
-			sort as string
-		);
-		if (meta) {
-			res.status(200).json({ data, meta, message });
-		} else {
-			res.status(200).json({ data, message });
-		}
-	} catch (err) {
-		next(err);
-	}
+    const { data, meta, message } = await employees.getEmployees(
+      parsedId,
+      parsedLimit,
+      parsedPage,
+      column as string,
+      sort as string
+    );
+    if (meta) {
+      res.status(200).json({ data, meta, message });
+    } else {
+      res.status(200).json({ data, message });
+    }
+  } catch (err) {
+    next(err);
+  }
 });
 
 export default router;

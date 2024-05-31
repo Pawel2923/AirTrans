@@ -59,9 +59,6 @@ services:
       - $REACT_LOCAL_PORT:$REACT_DOCKER_PORT
     networks:
       - frontend
-    environment:
-      - NODE_ENV=development
-      - TZ=Europe/Warsaw
     command: npm run dev
 
 volumes:

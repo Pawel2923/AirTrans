@@ -47,16 +47,16 @@ const router = express.Router();
  *     description: Internal server error
  */
 router.get("/", verifyUser, (req, res, next) => {
-	try {
-		const userRole = (req.user as { email: string; role: string }).role;
+  try {
+    const userRole = (req.user as { email: string; role: string }).role;
 
-		requireRole(userRole, req.query.requiredRole as string);
+    requireRole(userRole, req.query["requiredRole"] as string);
 
-		config.getDbUser(userRole);
-		res.status(200).json({ auth: true, user: req.user });
-	} catch (error) {
-		next(error);
-	}
+    config.getDbUser(userRole);
+    res.status(200).json({ auth: true, user: req.user });
+  } catch (error) {
+    next(error);
+  }
 });
 
 /**
@@ -98,17 +98,17 @@ router.get("/", verifyUser, (req, res, next) => {
  *    description: Internal server error
  */
 router.post("/refresh", refreshToken, (req, res, next) => {
-	try {
-		const response = req.response;
+  try {
+    const response = req.response;
 
-		if (!response) {
-			throw new Err("No response provided");
-		}
+    if (!response) {
+      throw new Err("No response provided");
+    }
 
-		res.status(200).json(response);
-	} catch (error) {
-		next(error);
-	}
+    res.status(200).json(response);
+  } catch (error) {
+    next(error);
+  }
 });
 
 export default router;

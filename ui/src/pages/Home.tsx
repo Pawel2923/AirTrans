@@ -138,7 +138,7 @@ const Home = () => {
             <div className="col-lg-3">
               <h2 className="display-6 text-uppercase">Parking</h2>
               <p>Sprawdź dostępne miejsca parkingowe</p>
-              <Link to="/" className="btn btn-primary py-2 px-5">
+              <Link to="/WynajemP" className="btn btn-primary py-2 px-5">
                 Sprawdź
               </Link>
             </div>

@@ -45,7 +45,7 @@ import ParkingPageK from "./pages/ParkingPageK";
 import SummaryPageR from "./pages/sumaryPageR";
 import FormPageR from "./pages/formPageR";
 import Payment from "./pages/Payment";
-
+import PaymentSuccess from './pages/PaymentSuccess'
 
 const router = createBrowserRouter([
 	{ path: "*", Component: Root, errorElement: <ErrorBoundary /> },
@@ -63,16 +63,21 @@ function Root() {
 				<Route path="wynajemC">
 					<Route index element={<RentCar />} />
 					<Route path="data/:id" element={<DatePagek />} />
-					<Route path="data/:id/form" element={<FormPage/>} />
+					<Route path="data/:id/form" element={<FormPage />} />
+					<Route path="summary" element={<SummaryPage />} />
 				</Route>
-				<Route path="wynajemC/summary" element={<SummaryPage />} />
-				<Route path="payment" element={<Payment />} />
+
+				<Route path="payment">
+					<Route index element={<Payment />} />
+					<Route path="/payment/success" element={<PaymentSuccess />} />
+				</Route>
+
 				<Route path="WynajemP">
 					<Route index element={<ParkingPageK />} />
-					<Route path = "formR" element={<FormPageR />} />
+					<Route path="formR" element={<FormPageR />} />
+					<Route path="summary" element={<SummaryPageR />} />
 				</Route>
-				<Route path="WynajemP/summary" element={<SummaryPageR />} />
-				
+
 				<Route path="ogloszenia" element={<Ogloszenia />} />
 				<Route path="logowanie" element={<Logowanie />} />
 				<Route path="logi" element={<Logi />} />
@@ -94,45 +99,27 @@ function Root() {
 					<Route path="pojazd">
 						<Route index element={<ZarzadzanieP />} />
 						<Route path="edit-car/:id" element={<EditCarPage />} />
-						<Route
-							path="edit-rent/:id"
-							element={<EditRentPage />}
-						/>
+						<Route path="edit-rent/:id" element={<EditRentPage />} />
 					</Route>
 					<Route path="parking">
 						<Route index element={<ParkingPage />} />
-						<Route
-							path="edit-parking/:id"
-							element={<EditParkingPage />}
-						/>
+						<Route path="edit-parking/:id" element={<EditParkingPage />} />
 					</Route>
 					<Route path="sprzet">
 						<Route index element={<EquipmentPage />} />
-						<Route
-							path="edit-sprzet/:serial_no"
-							element={<EditEquipmentPage />}
-						/>
+						<Route path="edit-sprzet/:serial_no" element={<EditEquipmentPage />} />
 					</Route>
 					<Route path="bramki">
 						<Route index element={<GatesPage />} />
-						<Route
-							path="edit-bramka/:id"
-							element={<EditGatePage />}
-						/>
+						<Route path="edit-bramka/:id" element={<EditGatePage />} />
 					</Route>
 					<Route path="ogloszenia">
 						<Route index element={<OgloszeniaZ />} />
-						<Route
-							path="edit-ogloszenia/:id"
-							element={<OgloszeniaEdit />}
-						/>
+						<Route path="edit-ogloszenia/:id" element={<OgloszeniaEdit />} />
 					</Route>
 					<Route path="lotnisko">
 						<Route index element={<Airfield />} />
-						<Route
-							path=":table/:id/edytuj"
-							element={<AirfieldEdit />}
-						/>
+						<Route path=":table/:id/edytuj" element={<AirfieldEdit />} />
 					</Route>
 					<Route path="bilety">
 						<Route index element={<TicketsPage />} />
@@ -143,10 +130,7 @@ function Root() {
 					<Route path="profil">
 						<Route index element={<UserProfile />} />
 					</Route>
-					<Route
-						path="*"
-						element={<Navigate to="/zarzadzanie/harmonogram" />}
-					/>
+					<Route path="*" element={<Navigate to="/zarzadzanie/harmonogram" />} />
 				</Route>
 				<Route path="zabronione" element={<Forbidden />} />
 				<Route path="blad" element={<InternalServerError />} />

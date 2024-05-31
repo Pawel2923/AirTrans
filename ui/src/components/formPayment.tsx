@@ -1,11 +1,15 @@
 import React, { useState } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { CardElement, useStripe, useElements } from '@stripe/react-stripe-js';
 
 const CheckoutForm: React.FC = () => {
   const stripe = useStripe();
   const elements = useElements();
+  const navigate = useNavigate();
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<boolean>(false);
+  const location = useLocation();
+  const { totalPrice } = location.state as { totalPrice: number };
 
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
@@ -27,18 +31,16 @@ const CheckoutForm: React.FC = () => {
         setSuccess(false);
       } else {
         try {
-          
           const response = await fetch('http://localhost:6868/stripe/create-payment-intent', {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',
             },
-            body: JSON.stringify({ amount: 1000 }),
+            body: JSON.stringify({ amount: totalPrice * 100 }), 
           });
 
           const { clientSecret } = await response.json();
 
-          // Potwierdź płatność przy użyciu Stripe
           const { error: confirmError } = await stripe.confirmCardPayment(clientSecret, {
             payment_method: paymentMethod.id,
           });
@@ -50,9 +52,10 @@ const CheckoutForm: React.FC = () => {
             setError(null);
             setSuccess(true);
             console.log('Payment successful');
+            navigate('/payment/success'); 
           }
         } catch (error) {
-          
+          setError('An error occurred while processing your payment');
           setSuccess(false);
         }
       }
@@ -63,7 +66,7 @@ const CheckoutForm: React.FC = () => {
     <form onSubmit={handleSubmit}>
       <CardElement />
       <button type="submit" disabled={!stripe}>
-        Pay
+        Pay {totalPrice} PLN
       </button>
       {error && <div>{error}</div>}
       {success && <div>Payment Successful!</div>}

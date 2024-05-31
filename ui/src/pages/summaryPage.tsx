@@ -16,9 +16,9 @@ const SummaryPage: React.FC = () => {
     const navigate = useNavigate();
 
     const handlePayment = () => {
-        navigate('/payment');
+        sessionStorage.setItem('contactInfo', JSON.stringify(contactInfo));
+        navigate('/payment', { state: { totalPrice } });
     };
-    
 
     return (
         <div className={styles.summaryContainer}>

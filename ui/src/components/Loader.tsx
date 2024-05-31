@@ -24,3 +24,4 @@ const Loader = ({ style, className, loadingText }: LoaderProps) => {
 };
 
 export default Loader;
+

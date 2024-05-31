@@ -46,6 +46,7 @@ import SummaryPageR from "./pages/sumaryPageR";
 import FormPageR from "./pages/formPageR";
 import Payment from "./pages/Payment";
 import PaymentSuccess from './pages/PaymentSuccess'
+import PaymentError from "./pages/paymenterror";
 
 const router = createBrowserRouter([
 	{ path: "*", Component: Root, errorElement: <ErrorBoundary /> },
@@ -70,6 +71,7 @@ function Root() {
 				<Route path="payment">
 					<Route index element={<Payment />} />
 					<Route path="/payment/success" element={<PaymentSuccess />} />
+					<Route path="/payment/error" element={<PaymentError />} />
 				</Route>
 
 				<Route path="WynajemP">

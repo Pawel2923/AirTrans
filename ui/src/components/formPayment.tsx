@@ -121,7 +121,7 @@ const CheckoutForm: React.FC = () => {
   return (
     <div className="container">
       <div className="card mx-auto my-5 p-4" style={{ maxWidth: '500px' }}>
-      <h2 className="mb-4">Zapłać teraz</h2>
+      <h2 className="mb-4">Zapłać teraz </h2>
         <form onSubmit={handleSubmit} className="checkout-form">
           <div className="form-group">
             <label htmlFor="name">Imie</label>

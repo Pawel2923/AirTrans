@@ -2,7 +2,8 @@
   box-sizing: border-box;
 }
 
-:root, [data-theme="light"] {
+:root,
+[data-theme="light"] {
   font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
   font-weight: 400;
@@ -75,6 +76,17 @@ h1 {
   --bs-btn-disabled-border-color: var(--alt-color) !important;
 }
 
+.btn-danger {
+  --bs-btn-bg: #db5d5c !important;
+  --bs-btn-border-color: #db5d5c !important;
+  --bs-btn-hover-bg: #c55555 !important;
+  --bs-btn-hover-border-color: #c55555 !important;
+  --bs-btn-active-bg: #c55555 !important;
+  --bs-btn-active-border-color: #c55555 !important;
+  --bs-btn-disabled-bg: #db5d5c !important;
+  --bs-btn-disabled-border-color: #db5d5c !important;
+}
+
 .btn-link {
   box-shadow: none !important;
   border-radius: unset !important;
@@ -88,7 +100,7 @@ h1 {
 
 button.active,
 a.active {
-  background-color: #5DA9DB;
+  background-color: #5da9db;
   color: #fff;
 }
 
@@ -112,5 +124,5 @@ a.active {
 .manager-block h3 {
   font-size: 1.5rem;
   font-weight: 600;
-  margin-bottom: .5rem;
+  margin-bottom: 0.5rem;
 }

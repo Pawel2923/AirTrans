@@ -1,4 +1,4 @@
-import express from "express";
+import express, { NextFunction, Request, Response } from "express";
 const router = express.Router();
 import airfieldService from "../services/airfield";
 import { Err } from "../Types";
@@ -74,27 +74,28 @@ import { requireRole, verifyUser } from "../middlewares/verifyUser";
  *    500:
  *     description: Internal server error
  */
-router.get("/", async (req, res, next) => {
-	try {
-		let { table_name, page, limit, filter, sort } = req.query;
+router.get("/", async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    let { table_name, filter, sort } = req.query;
+    const { page, limit } = req.query;
 
-		table_name = table_name as string | undefined;
-		const parsedPage = page ? parseInt(page as string) : undefined;
-		const parsedLimit = limit ? parseInt(limit as string) : undefined;
-		filter = (filter as string) || undefined;
-		sort = (sort as string) || undefined;
+    table_name = table_name as string | undefined;
+    const parsedPage = page ? parseInt(page as string) : undefined;
+    const parsedLimit = limit ? parseInt(limit as string) : undefined;
+    filter = (filter as string) || undefined;
+    sort = (sort as string) || undefined;
 
-		const { data, message } = await airfieldService.get(
-			table_name,
-			parsedPage,
-			parsedLimit,
-			filter,
-			sort
-		);
-		res.status(200).json({ data, message });
-	} catch (error) {
-		next(error);
-	}
+    const { data, message } = await airfieldService.get(
+      table_name,
+      parsedPage,
+      parsedLimit,
+      filter,
+      sort
+    );
+    res.status(200).json({ data, message });
+  } catch (error) {
+    next(error);
+  }
 });
 
 /**
@@ -144,29 +145,29 @@ router.get("/", async (req, res, next) => {
  *     description: Internal server error
  */
 router.put("/:id", verifyUser, async (req, res, next) => {
-	try {
-		const { id } = req.params;
-		let { table_name } = req.query;
+  try {
+    const { id } = req.params;
+    let { table_name } = req.query;
 
-		if (!table_name) {
-			throw new Err("Table name is required", 400);
-		}
+    if (!table_name) {
+      throw new Err("Table name is required", 400);
+    }
 
-		table_name = table_name as string;
+    table_name = table_name as string;
 
-		const userRole = (req.user as { role: string }).role;
+    const userRole = (req.user as { role: string }).role;
 
-		requireRole(userRole, ["admin", "atc"]);
+    requireRole(userRole, ["admin", "atc"]);
 
-		const { data, message } = await airfieldService.update(
-			table_name,
-			id,
-			req.body
-		);
-		res.status(200).json({ data, message });
-	} catch (error) {
-		next(error);
-	}
+    const { data, message } = await airfieldService.update(
+      table_name,
+      id as string,
+      req.body
+    );
+    res.status(200).json({ data, message });
+  } catch (error) {
+    next(error);
+  }
 });
 
 export default router;

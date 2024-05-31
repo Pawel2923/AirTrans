@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import carService from "../../services/car.service";
 import { Cars } from "../../assets/Data";
-import { Container, Row, Col, Form, Button } from 'react-bootstrap';
+import { Container, Row, Col, Form, Button } from "react-bootstrap";
 
 const emptyCar: Cars = {
   id: 0,
@@ -23,7 +23,7 @@ const EditCarPage = () => {
   useEffect(() => {
     if (id === undefined) return;
 
-    const carId = parseInt(id); 
+    const carId = parseInt(id);
 
     carService.getById(carId).then((response) => {
       if (response.status === 200) {

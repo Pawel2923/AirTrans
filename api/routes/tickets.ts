@@ -66,23 +66,25 @@ import ticketService from "../services/tickets";
  *     description: Internal server error
  */
 router.get("/", verifyUser, async function (req, res, next) {
-	try {
-		let { page, limit, filter, sort } = req.query;
-		const parsedPage = page ? parseInt(page as string) : undefined;
-		const parsedLimit = limit ? parseInt(limit as string) : undefined;
-		filter = (filter as string) || undefined;
-		sort = (sort as string) || undefined;
+  try {
+    let { filter, sort } = req.query;
+    const { page, limit } = req.query;
 
-		const { data, meta, message } = await ticketService.get(
-			parsedPage,
-			parsedLimit,
-			filter,
-			sort
-		);
-		res.status(200).json({ data, meta, message });
-	} catch (err) {
-		next(err);
-	}
+    const parsedPage = page ? parseInt(page as string) : undefined;
+    const parsedLimit = limit ? parseInt(limit as string) : undefined;
+    filter = (filter as string) || undefined;
+    sort = (sort as string) || undefined;
+
+    const { data, meta, message } = await ticketService.get(
+      parsedPage,
+      parsedLimit,
+      filter,
+      sort
+    );
+    res.status(200).json({ data, meta, message });
+  } catch (err) {
+    next(err);
+  }
 });
 
 /**
@@ -111,13 +113,13 @@ router.get("/", verifyUser, async function (req, res, next) {
  *    500:
  *     description: Internal server error
  */
-router.get("/ids", verifyUser, async function (req, res, next) {
-	try {
-		const { data, message } = await ticketService.getIds();
-		res.status(200).json({ data, message });
-	} catch (err) {
-		next(err);
-	}
+router.get("/ids", verifyUser, async function (_req, res, next) {
+  try {
+    const { data, message } = await ticketService.getIds();
+    res.status(200).json({ data, message });
+  } catch (err) {
+    next(err);
+  }
 });
 
 /**
@@ -170,17 +172,20 @@ router.get("/ids", verifyUser, async function (req, res, next) {
  *     description: Internal server error
  */
 router.patch("/:id", verifyUser, async function (req, res, next) {
-    try {
-        const { id } = req.params;
-        const { status } = req.body;
+  try {
+    const { id } = req.params;
+    const { status } = req.body;
 
-        const parsedId = parseInt(id);
+    const parsedId = parseInt(id as string);
 
-        const { data, message } = await ticketService.updateStatus(parsedId, status);
-        res.status(200).json({ data, message });
-    } catch (err) {
-        next(err);
-    }
+    const { data, message } = await ticketService.updateStatus(
+      parsedId,
+      status
+    );
+    res.status(200).json({ data, message });
+  } catch (err) {
+    next(err);
+  }
 });
 
 export default router;

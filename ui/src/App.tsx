@@ -46,7 +46,7 @@ import SummaryPageR from "./pages/sumaryPageR";
 import FormPageR from "./pages/formPageR";
 import Payment from "./pages/Payment";
 import PaymentSuccess from './pages/PaymentSuccess'
-import PaymentError from "./pages/paymenterror";
+import PaymentError from "./pages/PaymentError";
 
 const router = createBrowserRouter([
 	{ path: "*", Component: Root, errorElement: <ErrorBoundary /> },

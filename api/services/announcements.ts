@@ -131,7 +131,6 @@ async function create(announcement: Announcements) {
       announcement.title,
       announcement.content,
       announcement.valid_until,
-      announcement.create_time,
       announcement.Employee_id,
     ]
   );

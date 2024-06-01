@@ -96,19 +96,100 @@ async function get(
 }
 
 // Function to get flights by departure or arrival
-async function getByDepartureOrArrival(page = 1, limit = 5) {
+async function getByDepartureOrArrival(
+  page = 1,
+  limit = config.listPerPage,
+  filter?: string,
+  sort?: string
+) {
   // Get offset for pagination
   const offset = helper.getOffset(page, limit);
 
-  // Execute the query to get flights by departure or arrival
-  const rows = await db.query(
-    "(SELECT * FROM Departures WHERE is_departure=1 ORDER BY departure LIMIT ?,?) UNION (SELECT * FROM Departures WHERE is_departure=0 ORDER BY arrival LIMIT ?,?)",
-    [offset, limit, offset, limit]
-  );
+  // Build SQL query with filter, sort, offset and limit parameters
+  let subquery1 = "SELECT * FROM Departures ";
+  let subquery2 = "SELECT * FROM Departures ";
+  const queryParams1: unknown[] = [];
+  const queryParams2: unknown[] = [];
+
+  // Check if filter is provided
+  if (filter) {
+    const filterQuery = helper.buildFilterQuery(filter);
+    subquery1 += filterQuery.query + " AND is_departure=1";
+    subquery2 += filterQuery.query + " AND is_departure=0";
+    filterQuery.queryParams.forEach((param) => {
+      queryParams1.push(param as string);
+      queryParams2.push(param as string);
+    });
+  } else {
+    // If no filter is provided, get all departures and arrivals
+    subquery1 += "WHERE is_departure=1";
+    subquery2 += "WHERE is_departure=0";
+  }
+
+  // Check if sort is provided
+  if (sort) {
+    const sortQuery = helper.buildSortQuery(sort);
+    subquery1 += sortQuery.query;
+    subquery2 += sortQuery.query;
+    sortQuery.queryParams.forEach((param) => {
+      queryParams1.push(param as string);
+      queryParams2.push(param as string);
+    });
+  } else {
+    // If no sort is provided, sort by departure and arrival
+    subquery1 += " ORDER BY departure";
+    subquery2 += " ORDER BY arrival";
+  }
+
+  // Add limit and offset
+  subquery1 += ` LIMIT ?, ?`;
+  subquery2 += ` LIMIT ?, ?`;
+  queryParams1.push(offset, limit);
+  queryParams2.push(offset, limit);
+
+  // Combine subqueries
+  const query = `(${subquery1}) UNION (${subquery2})`;
+  const queryParams = queryParams1.concat(queryParams2);
+
+  // Execute the query
+  const rows = await db.query(query, queryParams);
   const data = helper.emptyOrRows(rows) as Departures[];
 
+  if (data.length === 0) {
+    throw new Err("No departures or arrivals found", 404);
+  }
+
+  // Build subqueries to get total number of pages
+  subquery1 = `SELECT COUNT(*) count FROM Departures `;
+  subquery2 = `SELECT COUNT(*) count FROM Departures `;
+
+  // Check if filter is provided
+  if (filter) {
+    const filterQuery = helper.buildFilterQuery(filter);
+    subquery1 += filterQuery.query + " AND is_departure=1";
+    subquery2 += filterQuery.query + " AND is_departure=0";
+  } else {
+    // If no filter is provided, get all departures and arrivals
+    subquery1 += "WHERE is_departure=1";
+    subquery2 += "WHERE is_departure=0";
+  }
+
+  // Execute subqueries
+  const count1 = await db.query(subquery1, queryParams1);
+  const count2 = await db.query(subquery2, queryParams2);
+
+  const countData1 = helper.emptyOrRows(count1);
+  const countData2 = helper.emptyOrRows(count2);
+
+  // If no data found, throw an error
+  if (countData1.length === 0 || countData2.length === 0) {
+    throw new Err("No departures or arrivals found", 404);
+  }
+
   // Get total number of pages
-  const pages = await helper.getPages("Departures", limit * 2);
+  const pages = Math.ceil(
+    (parseFloat(countData1[0]?.["count"] as string) + parseFloat((countData2[0]?.["count"]) as string)) / (limit * 2)
+  );
 
   // Prepare meta data for response
   const meta = {
@@ -124,23 +205,23 @@ async function getByDepartureOrArrival(page = 1, limit = 5) {
   };
 }
 
-// Function to get flight ids
-async function getFlightIds() {
-  // Execute the query to get flight ids
-  const rows = await db.query("SELECT DISTINCT id FROM Flights");
-  const data: RowDataPacket[] = helper.emptyOrRows(rows);
+// Function to get flight data
+async function getData(column: string) {
+  // Execute the query
+  const rows = await db.query("SELECT DISTINCT ?? FROM Flights", [column]);
+  const resultData: RowDataPacket[] = helper.emptyOrRows(rows);
 
-  // Map the data to array of flight ids
-  const flightIds: string[] = data.map((row: RowDataPacket) => row["id"]);
+  // Map the data to array
+  const data: string[] = resultData.map((row: RowDataPacket) => row[column]);
 
   // If no data found, throw an error
-  if (flightIds.length === 0) {
+  if (data.length === 0) {
     throw new Err("No flight id found", 404);
   }
 
   // Return data and success message
   return {
-    flightIds,
+    data,
     message: "Successfully fetched data",
   };
 }
@@ -316,7 +397,7 @@ async function search(
 export const flight = {
   get,
   getByDepartureOrArrival,
-  getFlightIds,
+  getData,
   create,
   update,
   remove,

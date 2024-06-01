@@ -5,6 +5,7 @@ import TabelkaCarsk from "../components/tabelkaCarK";
 import Footer from "../components/footer";
 import { useNavigate } from "react-router-dom";
 import styles from "./RentCar.module.css";
+import Nav from "../components/Nav";
 
 const RentCar = () => {
   const [cars, setCars] = useState<Cars[]>([]);
@@ -22,6 +23,7 @@ const RentCar = () => {
 
   return (
     <div>
+      <Nav />
       <div className={styles.rentCarContainer}>
         <div className={styles.header}>
           <h1>Wypożycz Auto</h1>

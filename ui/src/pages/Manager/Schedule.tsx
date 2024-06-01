@@ -61,7 +61,7 @@ const Schedule = () => {
   }, [handleError]);
 
   useEffect(() => {
-    getDepartures(pageData.page);
+    getDepartures({ page: pageData.page, limit: 5, setPageData });
   }, [getDepartures, pageData.page, refreshData]);
 
   const createInputChangeHandler = (e: React.ChangeEvent<HTMLInputElement>) => {

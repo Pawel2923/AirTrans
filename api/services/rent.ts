@@ -8,11 +8,12 @@ import { Rentals } from "../Types";
 async function getAllRentals(
   page = 1,
   limit = config.listPerPage,
-  userEmail?: string,
+  userEmail?: string
 ) {
   const offset = helper.getOffset(page, config.listPerPage);
 
-  let query = "SELECT r.*, u.first_name, u.last_name, u.email, u.phone_number, c.brand, c.model, c.price_per_day  FROM Rentals AS r LEFT JOIN Users u ON r.Users_id = u.id LEFT JOIN Cars c ON r.Cars_id = c.id";
+  let query =
+    "SELECT r.*, u.first_name, u.last_name, u.email, u.phone_number, c.brand, c.model, c.price_per_day  FROM Rentals AS r LEFT JOIN Users u ON r.Users_id = u.id LEFT JOIN Cars c ON r.Cars_id = c.id";
   const queryParams = [];
 
   if (userEmail) {

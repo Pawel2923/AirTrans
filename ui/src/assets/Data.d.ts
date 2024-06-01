@@ -32,7 +32,7 @@ interface Departures {
     | "DELAYED";
   airline_name: string;
   destination: string;
-  orgin: string;
+  origin: string;
   arrival: string;
   departure: string;
   airplane_serial_no: string;
@@ -170,7 +170,7 @@ interface Announcements {
   content: string;
   valid_until: string;
   create_time?: string;
-  Employee_id?: number;
+  Employee_id: number;
 }
 
 interface Equipment {
@@ -307,7 +307,7 @@ interface PageData {
 interface Filter {
   by: string;
   operator?: string;
-  value: string;
+  value: string | string[];
 }
 
 interface Sort {

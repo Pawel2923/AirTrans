@@ -14,7 +14,7 @@ const Parking = () => {
     pages: 1,
   });
   const [newParking, setNewParking] = useState<ParkingReservations>({
-    pid: 0,
+    id: 0,
     Users_id: 0,
     since: "",
     until: "",
@@ -53,7 +53,7 @@ const Parking = () => {
       const response = await parkingService.createParking(newParking);
       setParkings([...parkings, response.data]);
       setNewParking({
-        pid: 0,
+        id: 0,
         Users_id: 0,
         since: "",
         until: "",
@@ -72,7 +72,7 @@ const Parking = () => {
   const deleteParking = async (id: number) => {
     try {
       await parkingService.delete(id);
-      setParkings(parkings.filter((park) => park.pid !== id));
+      setParkings(parkings.filter((park) => park.id !== id));
       alert("Usunięto parking");
       navigate(0);
     } catch (error) {
@@ -81,7 +81,7 @@ const Parking = () => {
   };
 
   const editParking = async (parking: ParkingReservations) => {
-    navigate(`edit-parking/${parking.pid}`);
+    navigate(`edit-parking/${parking.id}`);
   };
 
   return (

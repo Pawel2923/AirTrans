@@ -2,14 +2,15 @@ import React, { useState } from "react";
 import styles from "./formPage.module.css";
 import { Link, useNavigate } from "react-router-dom";
 
-const FormPage: React.FC = () => {
-  const [contactInfo, setContactInfo] = useState({
-    firstName: "",
-    lastName: "",
-    email: "",
-    phone: "",
-  });
-  const navigate = useNavigate();
+
+const FormPage= () => {
+    const [contactInfo, setContactInfo] = useState({
+        firstName: '',
+        lastName: '',
+        email: '',
+        phone: '',
+    });
+    const navigate = useNavigate();
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { id, value } = e.target;

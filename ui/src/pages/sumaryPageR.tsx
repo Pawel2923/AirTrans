@@ -3,27 +3,27 @@ import { useLocation } from 'react-router-dom';
 import styles from './sumaryPage.module.css';
 import { useNavigate } from 'react-router-dom';
 
-const SummaryPage: React.FC = () => {
+const SummaryPageR=() => {
     const location = useLocation();
     const contactInfo = location.state;
-    
-    const carInfo = JSON.parse(sessionStorage.getItem('selectedCar') || '{}');
-    const rentalDates = JSON.parse(sessionStorage.getItem('rentalDates') || '{}');
-    
-    const daysCount = Math.round((new Date(rentalDates.endDate).getTime() - new Date(rentalDates.startDate).getTime()) / (1000 * 3600 * 24)) + 1;
-    const totalPrice = daysCount * carInfo.price_per_day;
-
     const navigate = useNavigate();
+    
+    const reservationDates = JSON.parse(sessionStorage.getItem('reservationDates') || '{}');
+    const licensePlate = sessionStorage.getItem('licensePlate') || '';
+    const parkingLevel = sessionStorage.getItem('parkingLevel') || '';
+
+    const daysCount = Math.round((new Date(reservationDates.endDate).getTime() - new Date(reservationDates.startDate).getTime()) / (1000 * 3600 * 24)) + 1;
+    const totalPrice = daysCount * 50;
 
     const handlePayment = () => {
         sessionStorage.setItem('contactInfo', JSON.stringify(contactInfo));
         navigate('/payment', { state: { totalPrice } });
-    };
+    };  
 
     return (
         <div className={styles.summaryContainer}>
             <header className={styles.header}>
-                <h1>Podsumowanie Wypożyczenia</h1>
+                <h1>Podsumowanie Rezerwacji Parkingu</h1>
             </header>
             <div className={styles.summaryContent}>
                 <h2>Dane kontaktowe</h2>
@@ -32,17 +32,10 @@ const SummaryPage: React.FC = () => {
                 <p>E-mail: {contactInfo.email}</p>
                 <p>Nr Telefonu: {contactInfo.phone}</p>
 
-                <h2>Dane samochodu</h2>
-                <p>Marka: {carInfo.brand}</p>
-                <p>Model: {carInfo.model}</p>
-                <p>Rok produkcji: {carInfo.production_year}</p>
-                <p>Typ skrzyni biegów: {carInfo.transmission_type}</p>
-                <p>Rodzaj paliwa: {carInfo.fuel_type}</p>
-                <p>Numer rejestracyjny: {carInfo.license_plate}</p>
-                <p>Cena za dzień: {carInfo.price_per_day} PLN</p>
-
-                <h2>Szczegóły wynajmu</h2>
-                <p>Daty wynajmu: {new Date(rentalDates.startDate).toLocaleDateString()} - {new Date(rentalDates.endDate).toLocaleDateString()}</p>
+                <h2>Szczegóły rezerwacji</h2>
+                <p>Numer rejestracyjny pojazdu: {licensePlate}</p>
+                <p>Poziom parkingu: {parkingLevel}</p>
+                <p>Daty rezerwacji: {new Date(reservationDates.startDate).toLocaleDateString()} - {new Date(reservationDates.endDate).toLocaleDateString()}</p>
                 <p>Liczba dni: {daysCount}</p>
                 <p>Całkowita cena: {totalPrice} PLN</p>
             </div>
@@ -57,4 +50,4 @@ const SummaryPage: React.FC = () => {
     );
 };
 
-export default SummaryPage;
+export default SummaryPageR;

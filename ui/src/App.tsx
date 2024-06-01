@@ -40,10 +40,17 @@ import RentCar from "./pages/RentCar";
 import FormPage from "./pages/formPage";
 import DatePagek from "./pages/dataPagek";
 import SummaryPage from "./pages/summaryPage";
+import ParkingPageK from "./pages/ParkingPageK";
+import SummaryPageR from "./pages/sumaryPageR";
+import FormPageR from "./pages/formPageR";
+import Payment from "./pages/Payment";
+import PaymentSuccess from './pages/PaymentSuccess'
+import PaymentError from "./pages/paymenterror";
 import ClientTickets from "./pages/Manager/ClientTickets";
 import LuggagePage from "./pages/Manager/LuggagePage";
 import ParkingReservationsPage from "./pages/Manager/ParkingReservationsPage";
 import RentalsPage from "./pages/Manager/RentalsPage";
+
 
 const router = createBrowserRouter([
   { path: "*", Component: Root, errorElement: <ErrorBoundary /> },
@@ -58,11 +65,23 @@ function Root() {
     <Routes>
       <Route index element={<Home />} />
       <Route path="wynajemC">
-        <Route index element={<RentCar />} />
-        <Route path="data/:id" element={<DatePagek />} />
-        <Route path="data/:id/form" element={<FormPage />} />
-      </Route>
-      <Route path="wynajemC/summary" element={<SummaryPage />} />
+					<Route index element={<RentCar />} />
+					<Route path="data/:id" element={<DatePagek />} />
+					<Route path="data/:id/form" element={<FormPage />} />
+					<Route path="summary" element={<SummaryPage />} />
+				</Route>
+
+				<Route path="payment">
+					<Route index element={<Payment />} />
+					<Route path="/payment/success" element={<PaymentSuccess />} />
+					<Route path="/payment/error" element={<PaymentError />} />
+				</Route>
+
+				<Route path="WynajemP">
+					<Route index element={<ParkingPageK />} />
+					<Route path="formR" element={<FormPageR />} />
+					<Route path="summary" element={<SummaryPageR />} />
+				</Route>
 
       <Route path="ogloszenia" element={<Ogloszenia />} />
       <Route path="logowanie" element={<Logowanie />} />
@@ -124,4 +143,5 @@ function Root() {
       <Route path="*" element={<NotFound />} />
     </Routes>
   );
+
 }

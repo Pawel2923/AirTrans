@@ -274,7 +274,7 @@ const FlightsFilter = ({
             ))}
           </select>
           <label htmlFor="origin" className="mt-2">
-            Miejsca startu
+            Miejsce startu
           </label>
           <select
             name="origin"

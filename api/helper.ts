@@ -73,8 +73,8 @@ function buildSortQuery(sort: string) {
   try {
     const parsedSort = JSON.parse(sort) as { by: string; order?: string };
 
-    let query = " ORDER BY ??";
-    const queryParams: unknown[] = [parsedSort.by];
+    let query = "";
+    const queryParams: unknown[] = [];
 
     if (Array.isArray(parsedSort.by)) {
       parsedSort.by.forEach((sortBy, index) => {

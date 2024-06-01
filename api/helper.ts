@@ -47,8 +47,17 @@ function buildFilterQuery(filter: string) {
 
     parsedFilter.forEach((condition) => {
       if (condition.by && condition.value) {
-        query += ` ?? ${db.getOperator(condition.operator)} ? AND`;
-        queryParams.push(condition.by, condition.value);
+        if (condition.operator === "BETWEEN") {
+          query += ` (?? ${db.getOperator(condition.operator)} ? AND ?) AND`;
+          queryParams.push(
+            condition.by,
+            condition.value[0],
+            condition.value[1]
+          );
+        } else {
+          query += ` (?? ${db.getOperator(condition.operator)} ?) AND`;
+          queryParams.push(condition.by, condition.value);
+        }
       }
     });
 

@@ -61,7 +61,7 @@ const AirplanesPage = () => {
         }
       })
       .catch((error) => {
-        handleError(error);
+        handleError({ error });
       });
   };
 
@@ -80,7 +80,7 @@ const AirplanesPage = () => {
         }
       })
       .catch((error) => {
-        handleError(error);
+        handleError({ error });
       });
   };
 

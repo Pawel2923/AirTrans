@@ -1,8 +1,17 @@
 import { useCallback, useState } from "react";
 import flightService from "../../services/flight.service";
 import useErrorHandler from "../useErrorHandler";
-import { Departures } from "../../assets/Data";
+import { Departures, Filter, PageData, Sort } from "../../assets/Data";
 import { arrDepDataParser } from "../../utils/data-parser";
+import { AxiosResponse } from "axios";
+
+interface getDeparturesParams {
+  page?: number;
+  limit?: number;
+  filter?: Filter[];
+  sort?: Sort;
+  setPageData?: React.Dispatch<React.SetStateAction<PageData>>;
+}
 
 const useGetFlight = () => {
   const { handleError } = useErrorHandler();
@@ -11,9 +20,15 @@ const useGetFlight = () => {
   const [isLoading, setIsLoading] = useState<boolean>(true);
 
   const getDepartures = useCallback(
-    (page: number, limit = 5) => {
+    ({
+      filter,
+      sort,
+      page = 1,
+      limit = 5,
+      setPageData,
+    }: getDeparturesParams) => {
       flightService
-        .getByArrivalOrDeparture(page, limit)
+        .getAll({ page, limit, filter: filter, sort: sort, isarrdep: true })
         .then((response) => {
           if (response.status === 200) {
             const departures = response.data.data;
@@ -21,6 +36,11 @@ const useGetFlight = () => {
             if (departures.length > 0) {
               const parsedData = arrDepDataParser(departures);
               setDepartureData(parsedData);
+              if (setPageData) {
+                setPageData(response.data.meta);
+              }
+            } else {
+              setDepartureData([]);
             }
           }
         })
@@ -36,7 +56,7 @@ const useGetFlight = () => {
 
   const getFlightIds = useCallback(() => {
     flightService
-      .getIds()
+      .getData("id")
       .then((response) => {
         if (response.status === 200) {
           setFlightIds(response.data.data);
@@ -50,9 +70,31 @@ const useGetFlight = () => {
       });
   }, [handleError]);
 
+  const getData = useCallback(
+    (column: string) =>
+      new Promise<AxiosResponse>((resolve, reject) => {
+        flightService
+          .getData(column)
+          .then((response) => {
+            if (response.status === 200) {
+              resolve(response);
+            }
+          })
+          .catch((error) => {
+            reject(error);
+            handleError({ error });
+          })
+          .finally(() => {
+            setIsLoading(false);
+          });
+      }),
+    [handleError]
+  );
+
   return {
     departureData,
     flightIds,
+    getData,
     getDepartures,
     getFlightIds,
     isLoading,

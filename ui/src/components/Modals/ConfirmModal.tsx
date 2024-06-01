@@ -10,6 +10,7 @@ interface ConfirmModalProps {
   children?: ReactNode;
   confirmBtnText?: string;
   confirmBtnClass?: string;
+  modalContentStyle?: React.CSSProperties;
 }
 
 const ConfirmModal: React.FC<ConfirmModalProps> = ({
@@ -20,9 +21,10 @@ const ConfirmModal: React.FC<ConfirmModalProps> = ({
   children,
   confirmBtnText,
   confirmBtnClass,
+  modalContentStyle,
 }: ConfirmModalProps) => {
   return (
-    <Modal onClose={onClose}>
+    <Modal onClose={onClose} modalContentStyle={modalContentStyle}>
       <div>
         <h2>{title}</h2>
         {message ? <p>{message}</p> : children}

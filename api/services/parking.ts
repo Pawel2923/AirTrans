@@ -8,15 +8,23 @@ import { Parking_reservations } from "../Types";
 async function getAllParking(
   page = 1,
   limit = config.listPerPage,
-  tableName = "Parking_reservations"
+  userEmail?: string
 ) {
   const offset = helper.getOffset(page, config.listPerPage);
 
-  const rows = await db.query("SELECT * FROM ?? LIMIT ?, ?", [
-    tableName,
-    offset,
-    limit,
-  ]);
+  let query = "SELECT p.* FROM Parking_reservations p JOIN Users u ON p.Users_id = u.id";
+  const queryParams = [];
+
+  if (userEmail) {
+    query += " WHERE u.email = ?";
+    queryParams.push(userEmail);
+  }
+
+  query += " LIMIT ? OFFSET ?";
+  queryParams.push(limit, offset);
+
+
+  const rows = await db.query(query, queryParams);
 
   const data = helper.emptyOrRows(rows).map((row) => ({
     ...row,
@@ -24,7 +32,7 @@ async function getAllParking(
     until: formatDate(row["until"]),
   }));
 
-  const pages = await helper.getPages(tableName, limit);
+  const pages = await helper.getPages("Parking_reservations", limit);
 
   const meta = {
     page,

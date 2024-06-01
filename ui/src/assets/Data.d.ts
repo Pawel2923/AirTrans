@@ -32,7 +32,7 @@ interface Departures {
     | "DELAYED";
   airline_name: string;
   destination: string;
-  orgin: string;
+  origin: string;
   arrival: string;
   departure: string;
   airplane_serial_no: string;
@@ -170,7 +170,7 @@ interface Announcements {
   content: string;
   valid_until: string;
   create_time?: string;
-  Employee_id?: number;
+  Employee_id: number;
 }
 
 interface Equipment {
@@ -228,7 +228,6 @@ interface Ticket {
 
 interface ParkingReservations {
   id?: number;
-  pid?: number;
   parking_level: string;
   space_id: string;
   since: string;
@@ -240,7 +239,7 @@ interface ParkingReservations {
 }
 
 interface ParkingInfo {
-  pid?: number;
+  id?: number;
   name: string;
   capacity: number;
   price_per_day: number;
@@ -271,6 +270,13 @@ interface Rentals {
   status?: "PENDING" | "RENTED" | "CANCELLED" | "RETURNED";
   Cars_id: number;
   Users_id: number;
+  first_name?: string;
+  last_name?: string;
+  email?: string;
+  phone_number?: string;
+  brand?: string;
+  model?: string;
+  price_per_day?: number;
 }
 interface EventLogs {
   id?: number;
@@ -301,7 +307,7 @@ interface PageData {
 interface Filter {
   by: string;
   operator?: string;
-  value: string;
+  value: string | string[];
 }
 
 interface Sort {

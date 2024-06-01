@@ -11,7 +11,7 @@ export default defineConfig({
     port: 80,
     watch: {
       usePolling: true,
-    }
+    },
   },
   plugins: [react()],
   build: {

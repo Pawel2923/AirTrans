@@ -51,15 +51,6 @@ const useErrorHandler = () => {
           });
           break;
         case 404:
-          createToast({
-            message: error.response.data.message || "Nie znaleziono informacji",
-            type: "danger",
-            icon: faCircleExclamation,
-            action: onToastAction && {
-              label: "Spróbuj ponownie",
-              onClick: () => onToastAction(),
-            },
-          });
           break;
         case 409:
           createToast({

@@ -1,13 +1,22 @@
 import http from "../http-common";
 import { Flights, Filter, Sort } from "../assets/Data";
 
+interface FlightServiceGetAllParams {
+  page: number;
+  limit?: number;
+  filter?: Filter[];
+  sort?: Sort;
+  isarrdep?: boolean;
+}
+
 class FlightService {
-  getAll = (
-    page: number = 1,
-    limit?: number,
-    filter?: Filter[],
-    sort?: Sort
-  ) => {
+  getAll = ({
+    page = 1,
+    limit,
+    filter,
+    sort,
+    isarrdep,
+  }: FlightServiceGetAllParams) => {
     let url = `/flights?page=${page}`;
 
     if (limit) {
@@ -34,23 +43,19 @@ class FlightService {
       url += `&sort=${JSON.stringify(sort)}`;
     }
 
-    return http.get(url);
-  };
-
-  getByArrivalOrDeparture = (page: number = 1, limit: number = -1) => {
-    if (limit > 0) {
-      return http.get(`/flights/?isarrdep=true&page=${page}&limit=${limit}`);
-    } else {
-      return http.get(`/flights/?isarrdep=true&page=${page}`);
+    if (isarrdep) {
+      url += `&isarrdep=${isarrdep}`;
     }
+
+    return http.get(url);
   };
 
   getById = (id: string) => {
     return http.get(`/flights?filter=[{"by":"id","value":"${id}"}]`);
   };
 
-  getIds = () => {
-    return http.get("/flights/ids");
+  getData = (column: string) => {
+    return http.get("/flights/data?column=" + column);
   };
 
   create = (data: Flights) => {

@@ -90,7 +90,7 @@ const Home = () => {
   const [offerData, setOfferData] = useState<Offer[]>([]);
 
   useEffect(() => {
-    getDepartures(1);
+    getDepartures({ page: 1 });
 
     contactInfoService.getContactInfo().then((response) => {
       if (response.status === 200) {

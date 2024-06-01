@@ -8,14 +8,23 @@ import { Rentals } from "../Types";
 async function getAllRentals(
   page = 1,
   limit = config.listPerPage,
-  tableName = "Rentals"
+  userEmail?: string
 ) {
   const offset = helper.getOffset(page, config.listPerPage);
 
-  const rows = await db.query(
-    "SELECT Rentals.*, Users.first_name AS user_first_name FROM ?? AS Rentals LEFT JOIN Users ON Rentals.Users_id = Users.id LIMIT ?, ?",
-    [tableName, offset, limit]
-  );
+  let query =
+    "SELECT r.*, u.first_name, u.last_name, u.email, u.phone_number, c.brand, c.model, c.price_per_day  FROM Rentals AS r LEFT JOIN Users u ON r.Users_id = u.id LEFT JOIN Cars c ON r.Cars_id = c.id";
+  const queryParams = [];
+
+  if (userEmail) {
+    query += " WHERE u.email = ?";
+    queryParams.push(userEmail);
+  }
+
+  query += " ORDER BY r.id DESC LIMIT ? OFFSET ?";
+  queryParams.push(limit, offset);
+
+  const rows = await db.query(query, queryParams);
 
   const data = helper.emptyOrRows(rows).map((row) => ({
     ...row,
@@ -23,7 +32,7 @@ async function getAllRentals(
     until: formatDate(row["until"]),
   }));
 
-  const pages = await helper.getPages(tableName, limit);
+  const pages = await helper.getPages("Rentals", limit);
 
   const meta = {
     page,

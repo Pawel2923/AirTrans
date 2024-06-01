@@ -24,6 +24,15 @@ class RentalService {
       withCredentials: true,
     });
   }
+
+  getByUserEmail({ page = 1, limit = 10, userEmail = "" }) {
+    return http.get(
+      `/rent/?page=${page}&limit=${limit}&userEmail=${userEmail}`,
+      {
+        withCredentials: true,
+      }
+    );
+  }
 }
 
 export default new RentalService();

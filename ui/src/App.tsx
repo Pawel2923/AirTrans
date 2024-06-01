@@ -44,10 +44,13 @@ import ParkingPageK from "./pages/ParkingPageK";
 import SummaryPageR from "./pages/sumaryPageR";
 import FormPageR from "./pages/formPageR";
 import Payment from "./pages/Payment";
-import PaymentSuccess from './pages/PaymentSuccess'
+import PaymentSuccess from "./pages/PaymentSuccess";
 import PaymentError from "./pages/paymenterror";
 import ClientTickets from "./pages/Manager/ClientTickets";
-
+import LuggagePage from "./pages/Manager/LuggagePage";
+import ParkingReservationsPage from "./pages/Manager/ParkingReservationsPage";
+import RentalsPage from "./pages/Manager/RentalsPage";
+import FlightSchedule from "./pages/FlightSchedule";
 
 const router = createBrowserRouter([
   { path: "*", Component: Root, errorElement: <ErrorBoundary /> },
@@ -62,24 +65,24 @@ function Root() {
     <Routes>
       <Route index element={<Home />} />
       <Route path="wynajemC">
-					<Route index element={<RentCar />} />
-					<Route path="data/:id" element={<DatePagek />} />
-					<Route path="data/:id/form" element={<FormPage />} />
-					<Route path="summary" element={<SummaryPage />} />
-				</Route>
+        <Route index element={<RentCar />} />
+        <Route path="data/:id" element={<DatePagek />} />
+        <Route path="data/:id/form" element={<FormPage />} />
+        <Route path="summary" element={<SummaryPage />} />
+      </Route>
 
-				<Route path="payment">
-					<Route index element={<Payment />} />
-					<Route path="/payment/success" element={<PaymentSuccess />} />
-					<Route path="/payment/error" element={<PaymentError />} />
-				</Route>
+      <Route path="payment">
+        <Route index element={<Payment />} />
+        <Route path="/payment/success" element={<PaymentSuccess />} />
+        <Route path="/payment/error" element={<PaymentError />} />
+      </Route>
 
-				<Route path="WynajemP">
-					<Route index element={<ParkingPageK />} />
-					<Route path="formR" element={<FormPageR />} />
-					<Route path="summary" element={<SummaryPageR />} />
-				</Route>
-
+      <Route path="WynajemP">
+        <Route index element={<ParkingPageK />} />
+        <Route path="formR" element={<FormPageR />} />
+        <Route path="summary" element={<SummaryPageR />} />
+      </Route>
+      <Route path="harmonogram" element={<FlightSchedule />} />
       <Route path="ogloszenia" element={<Ogloszenia />} />
       <Route path="logowanie" element={<Logowanie />} />
       <Route path="logi" element={<Logi />} />
@@ -123,18 +126,16 @@ function Root() {
           <Route index element={<Airfield />} />
           <Route path=":table/:id/edytuj" element={<AirfieldEdit />} />
         </Route>
-        <Route path="bilety">
-          <Route index element={<TicketsPage />} />
-        </Route>
-        <Route path="uzytkownicy">
-          <Route index element={<UsersPage />} />
-        </Route>
-        <Route path="profil">
-          <Route index element={<UserProfile />} />
-        </Route>
-        <Route path="twoje-bilety">
-          <Route index element={<ClientTickets />} />
-        </Route>
+        <Route path="bilety" element={<TicketsPage />} />
+        <Route path="uzytkownicy" element={<UsersPage />} />
+        <Route path="profil" element={<UserProfile />} />
+        <Route path="twoje-bilety" element={<ClientTickets />} />
+        <Route path="bagaze" element={<LuggagePage />} />
+        <Route
+          path="parking-rezerwacje"
+          element={<ParkingReservationsPage />}
+        />
+        <Route path="wypozyczenia" element={<RentalsPage />} />
         <Route path="*" element={<Navigate to="/zarzadzanie/harmonogram" />} />
       </Route>
       <Route path="zabronione" element={<Forbidden />} />
@@ -142,5 +143,4 @@ function Root() {
       <Route path="*" element={<NotFound />} />
     </Routes>
   );
-
 }

@@ -55,9 +55,9 @@ const DeparturesTable: React.FC<TableProps> = ({
     }
   }, [data, isArrivalTab]);
 
-  let headButtonsColSpan: number = isExtended ? 6 : 2;
+  let headButtonsColSpan: number = isExtended ? 5 : 2;
   let noDataColSpan: number = headButtonsColSpan;
-  noDataColSpan += 2;
+  noDataColSpan += 3;
 
   if (hasActionButtons) {
     headButtonsColSpan += 1;
@@ -85,7 +85,10 @@ const DeparturesTable: React.FC<TableProps> = ({
                 <span> Odloty</span>
               </button>
             </th>
-            <th className={isArrivalTab ? tableStyles.active : ""}>
+            <th
+              className={isArrivalTab ? tableStyles.active : ""}
+              colSpan={isExtended ? 14 : 0}
+            >
               <button
                 className={tableStyles["thead-btn"]}
                 onClick={() => setIsArrivalTab(true)}
@@ -103,6 +106,7 @@ const DeparturesTable: React.FC<TableProps> = ({
               <td>Odlot</td>
               <td>Przylot</td>
               <td>Miejsce docelowe</td>
+              <td>Miejsce startu</td>
               <td>Nr. seryjny samolotu</td>
               {hasActionButtons && <td></td>}
             </tr>
@@ -114,8 +118,31 @@ const DeparturesTable: React.FC<TableProps> = ({
               <tr key={index}>
                 {isExtended ? (
                   Object.entries(flight).map(([key, value]) => {
+                    if (key === "is_departure") return null;
+                    if (key === "status")
+                      return (
+                        <td key={key} style={{ width: "auto" }}>
+                          {value === "SCHEDULED"
+                            ? "Zaplanowany"
+                            : value === "WAITING"
+                            ? "Oczekujący"
+                            : value === "AIRBORNE"
+                            ? "W powietrzu"
+                            : value === "TAKE OFF"
+                            ? "Start"
+                            : value === "LANDING"
+                            ? "Lądowanie"
+                            : value === "FINISHED"
+                            ? "Zakończony"
+                            : value === "CANCELED"
+                            ? "Anulowany"
+                            : value === "DELAYED"
+                            ? "Opóźniony"
+                            : value}
+                        </td>
+                      );
                     return (
-                      <td key={key}>
+                      <td key={key} style={{ width: "auto" }}>
                         {key === "departure" || key === "arrival"
                           ? new Date(value).toLocaleString()
                           : key !== "is_departure" && value}

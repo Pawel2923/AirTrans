@@ -242,6 +242,7 @@ const UserProfile = () => {
                     type="text"
                     value={inputData.name}
                     name="name"
+                    className="form-control"
                     onChange={nameChangeHandler}
                     onBlur={() => switchOffEditMode("name")}
                   />
@@ -251,10 +252,10 @@ const UserProfile = () => {
                   <>
                     Imię i nazwisko: {userInfo[0].first_name}{" "}
                     {userInfo[0].last_name}
+                    <FontAwesomeIcon icon={faPen} />
                   </>
                 )
               )}
-              <FontAwesomeIcon icon={faPen} />
             </div>
             <div onClick={() => switchOnEditMode("email")}>
               {editMode.email ? (
@@ -262,13 +263,18 @@ const UserProfile = () => {
                   type="email"
                   value={inputData.email}
                   name="email"
+                  className="form-control"
                   onChange={emailChangeHandler}
                   onBlur={() => switchOffEditMode("email")}
                 />
               ) : (
-                userInfo && <>Email: {userInfo[0].email}</>
+                userInfo && (
+                  <>
+                    Email: {userInfo[0].email}
+                    <FontAwesomeIcon icon={faPen} />
+                  </>
+                )
               )}
-              <FontAwesomeIcon icon={faPen} />
             </div>
             <div onClick={() => switchOnEditMode("phoneNumber")}>
               {editMode.phoneNumber ? (
@@ -276,13 +282,18 @@ const UserProfile = () => {
                   type="tel"
                   value={inputData.phoneNumber}
                   name="phoneNumber"
+                  className="form-control"
                   onChange={phoneNumberChangeHandler}
                   onBlur={() => switchOffEditMode("phoneNumber")}
                 />
               ) : (
-                userInfo && <>Numer telefonu: {userInfo[0].phone_number}</>
+                userInfo && (
+                  <>
+                    Numer telefonu: {userInfo[0].phone_number}
+                    <FontAwesomeIcon icon={faPen} />
+                  </>
+                )
               )}
-              <FontAwesomeIcon icon={faPen} />
             </div>
             <div onClick={() => switchOnEditMode("address")}>
               {editMode.address ? (
@@ -290,19 +301,25 @@ const UserProfile = () => {
                   type="text"
                   value={inputData.address}
                   name="address"
+                  className="form-control"
                   onChange={addressChangeHandler}
                   onBlur={() => switchOffEditMode("address")}
                 />
               ) : (
-                userInfo && <>Adres: {userInfo[0].address}</>
+                userInfo && (
+                  <>
+                    Adres: {userInfo[0].address}
+                    <FontAwesomeIcon icon={faPen} />
+                  </>
+                )
               )}
-              <FontAwesomeIcon icon={faPen} />
             </div>
             <div onClick={() => switchOnEditMode("gender")}>
               {editMode.gender ? (
                 <select
                   value={inputData.gender}
                   name="gender"
+                  className="form-select"
                   onChange={genderChangeHandler}
                   onBlur={() => switchOffEditMode("gender")}
                 >
@@ -313,10 +330,10 @@ const UserProfile = () => {
                 userInfo && (
                   <>
                     Płeć: {userInfo[0].gender === "F" ? "Kobieta" : "Mężczyzna"}
+                    <FontAwesomeIcon icon={faPen} />
                   </>
                 )
               )}
-              <FontAwesomeIcon icon={faPen} />
             </div>
             <div onClick={() => switchOnEditMode("birthDate")}>
               {editMode.birthDate ? (
@@ -324,6 +341,7 @@ const UserProfile = () => {
                   type="date"
                   value={inputData.birthDate}
                   name="birthDate"
+                  className="form-control"
                   onChange={birthDateChangeHandler}
                   onBlur={() => switchOffEditMode("birthDate")}
                 />
@@ -339,10 +357,10 @@ const UserProfile = () => {
                       .map((el, index, arr) =>
                         index !== arr.length - 1 ? el + "." : el
                       )}
+                    <FontAwesomeIcon icon={faPen} />
                   </>
                 )
               )}
-              <FontAwesomeIcon icon={faPen} />
             </div>
             {userInfo && (
               <p>

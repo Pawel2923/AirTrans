@@ -92,7 +92,7 @@ router.get("/", async function (req, res, next) {
 
     const { data, meta, message } =
       isarrdep != undefined
-        ? await flight.getByDepartureOrArrival(parsedPage, parsedLimit)
+        ? await flight.getByDepartureOrArrival(parsedPage, parsedLimit, filter, sort)
         : await flight.get(parsedPage, parsedLimit, filter, sort);
     res.status(200).json({
       data,
@@ -106,11 +106,17 @@ router.get("/", async function (req, res, next) {
 
 /**
  * @openapi
- * /flights/ids:
+ * /flights/data:
  *  get:
  *   tags:
  *    - Flights
- *   description: Get all flight ids
+ *   description: Get unique data from a column
+ *   parameters:
+ *    - name: column
+ *      in: query
+ *      required: false
+ *      description: Column name to get data from
+ *      type: string
  *   responses:
  *    200:
  *     description: Successfully fetched data
@@ -123,14 +129,16 @@ router.get("/", async function (req, res, next) {
  *     message:
  *      type: string
  *    404:
- *     description: No flight id found
+ *     description: No flight data found
  *    500:
  *     description: Internal server error
  */
-router.get("/ids", async function (_req, res, next) {
+router.get("/data", async function (req, res, next) {
   try {
-    const { flightIds, message } = await flight.getFlightIds();
-    res.status(200).json({ data: flightIds, message });
+    const { column } = req.query;
+
+    const { data, message } = await flight.getData(column as string);
+    res.status(200).json({ data, message });
   } catch (err) {
     next(err);
   }

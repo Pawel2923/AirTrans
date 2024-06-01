@@ -202,14 +202,14 @@ const AirfieldEdit = () => {
               <label htmlFor="Flight_id">Numer lotu:</label>
               <input
                 className="form-control"
-                list="flightIdsOptions"
+                list="flightDataOptions"
                 id="Flight_id"
                 name="Flight_id"
                 placeholder="Numer lotu"
                 value={selectedFlightId}
                 onChange={flightIdChangeHandler}
               />
-              <datalist id="flightIdsOptions">
+              <datalist id="flightDataOptions">
                 {flightIds.map((id) => (
                   <option key={id} value={id}>
                     {id}

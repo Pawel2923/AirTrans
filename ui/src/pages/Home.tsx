@@ -98,7 +98,7 @@ const Home = () => {
       }
     });
 
-    announcementService.get().then((response) => {
+    announcementService.getk().then((response) => {
       if (response.status === 200) {
         setAnnouncementsData(announcementsDataParser(response.data.data));
       }

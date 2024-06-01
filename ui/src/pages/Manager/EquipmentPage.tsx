@@ -1,9 +1,11 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import equipmentService from "../../services/equipment.service";
 import EquipmentTable from "../../components/equipmentTable";
 import { PageData, Equipment } from "../../assets/Data";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import Pagination from "../../components/Pagination";
+import ToastModalContext from "../../store/toast-modal-context";
+import { faCircleCheck } from "@fortawesome/free-solid-svg-icons";
 
 const EquipmentPage = () => {
   const [searchParams] = useSearchParams();
@@ -12,6 +14,7 @@ const EquipmentPage = () => {
     page: parseInt(searchParams.get("page") || "1"),
     pages: 1,
   });
+  const {createAlertModal,createConfirmModal,createToast} = useContext(ToastModalContext);
   const [equipment, setEquipment] = useState<Equipment[]>([]);
   const [newEquipment, setNewEquipment] = useState<Equipment>({
     serial_no: "",
@@ -30,52 +33,70 @@ const EquipmentPage = () => {
   };
 
   const submitNewEquipment = async () => {
-    try {
-      const response = await equipmentService.createEquipment(newEquipment);
-      setEquipment([...equipment, response.data]);
-      setNewEquipment({
-        serial_no: "",
-        type: "",
-        name: "",
-        location: "",
-        Employee_id: 0,
-      });
-      alert("Dodano nowe urządzenie");
-      fetchEquipment();
-      navigate(0);
-    } catch (error) {
-      console.error("Error while creating equipment:", error);
-      alert("Wystąpił błąd podczas dodawania urządzenia. Spróbuj ponownie.");
-    }
-  };
+    equipmentService.createEquipment(newEquipment).then((response) => {
+      if (response.status === 201) {
+        createToast({
+          message: "Dodano nowe urządzenie",
+          type: "primary",
+          icon: faCircleCheck,
+          timeout: 10000,
+        });
+        setNewEquipment({
+          serial_no: "",
+          type: "",
+          name: "",
+          location: "",
+          Employee_id: 0,
+        });
+        fetchEquipment();
+      }
+    });
+  }
   const deleteEquipment = async (serial_no: string) => {
-    try {
-      await equipmentService.deleteEquipment(serial_no);
-      setEquipment(
-        equipment.filter((equipment) => equipment.serial_no !== serial_no)
-      );
-      alert("Usunięto urządzenie");
-    } catch (error) {
-      console.error("Error while deleting equipment:", error);
-      alert("Wystąpił błąd podczas usuwania urządzenia. Spróbuj ponownie.");
-    }
-  };
+    createConfirmModal({
+      message: "Czy na pewno chcesz usunąć to urządzenie?",
+      onConfirm: async () => {
+        try {
+          await equipmentService.deleteEquipment(serial_no);
+          setEquipment((prevEquipment) =>prevEquipment.filter((equipment) => equipment.serial_no !== serial_no));
+          createToast({
+            message: "Usunięto urządzenie",
+            type: "primary",
+            icon: faCircleCheck,
+            timeout: 10000,
+          });
+
+        }catch (error) {
+          console.error("Error while deleting equipment:", error);
+          createToast({
+            message: "Wystąpił błąd podczas usuwania urządzenia. Spróbuj ponownie.",
+            type: "danger",
+            icon: faCircleCheck,
+            timeout: 10000,
+          });
+
+        }
+      },
+    });
+  }
   const editEquipment = async (equipment: Equipment) => {
     navigate(`edit-sprzet/${equipment.serial_no}`);
   };
-  const fetchEquipment = useCallback(async () => {
+  const fetchEquipment = async () => {
     try {
-      const response = await equipmentService.getaAll(pageData.page);
+      const response = await equipmentService.getaAll(pageData.page, 4);
       setEquipment(response.data.data);
       setPageData(response.data.meta);
     } catch (error) {
-      console.error("Error while retrieving equipment:", error);
+      console.error("Error while fetching equipment:", error)
+      createAlertModal({
+        message: "Wystąpił błąd podczas pobierania sprzętu. Spróbuj ponownie.",
+      });
     }
-  }, [pageData.page]);
-
+  }
   useEffect(() => {
     fetchEquipment();
-  }, [fetchEquipment]);
+  }, [pageData.page]);
 
   return (
     <div className="container">

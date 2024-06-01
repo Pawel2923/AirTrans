@@ -27,9 +27,8 @@ async function get(
   );
 
   const rows = await db.query(query, queryParams);
-  const data = helper.emptyOrRows(rows).map((row) => ({
-    ...row,
-  }));
+  const data = helper.emptyOrRows(rows) as Gates[];
+
 
   if (data.length === 0) {
     const error = new Err("No gates found");

@@ -1,8 +1,9 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import rentalService from "../../services/rental.service";
 import { Rentals } from "../../assets/Data";
 import { Container, Row, Col, Form, Button } from "react-bootstrap";
+import ToastModalContext from "../../store/toast-modal-context";
 
 const emptyRental: Rentals = {
   id: 0,
@@ -17,6 +18,7 @@ const EditRentPage = () => {
   const navigate = useNavigate();
   const { id } = useParams<{ id: string }>();
   const [carRental, setCarRent] = useState<Rentals>(emptyRental);
+  const { createAlertModal, createConfirmModal } = useContext(ToastModalContext);
 
   useEffect(() => {
     if (id === undefined) return;
@@ -33,18 +35,24 @@ const EditRentPage = () => {
   const formSubmitHandler = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    try {
-      const response = await rentalService.updateRent(carRental);
-      if (response.status === 200) {
-        alert("Edycja zakończona sukcesem!");
-        navigate("/zarzadzanie/pojazd");
-      }
-    } catch (error) {
-      console.error("Error while updating rent:", error);
-      alert(
-        "Wystąpił błąd podczas aktualizacji wypożyczenia. Spróbuj ponownie"
-      );
-    }
+    createConfirmModal({
+      message: "Czy na pewno chcesz zaktualizować te dane?",
+      onConfirm: async () => {
+        try {
+          const response = await rentalService.updateRent(carRental);
+          if (response.status === 200) {
+            createAlertModal({ message: "Edycja zakończona sukcesem!" });
+            navigate("/zarzadzanie/pojazd");
+          }
+        } catch (error) {
+          console.error("Error while updating rent:", error);
+          createAlertModal({
+            message:
+              "Wystąpił błąd podczas aktualizacji wypożyczenia. Spróbuj ponownie",
+          });
+        }
+      },
+    });
   };
 
   const inputChangeHandler = (e: React.ChangeEvent<HTMLInputElement>) => {

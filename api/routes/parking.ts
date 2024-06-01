@@ -5,13 +5,14 @@ import { verifyUser } from "../middlewares/verifyUser";
 
 router.get("/", async function (req, res, next) {
   try {
-    const { page, limit } = req.query;
+    const { page, limit, userEmail } = req.query;
     const parsedPage = page ? parseInt(page as string) : undefined;
     const parsedLimit = limit ? parseInt(limit as string) : undefined;
 
     const { data, meta, response } = await parkingService.getAllParking(
       parsedPage,
-      parsedLimit
+      parsedLimit,
+      userEmail as string
     );
 
     res.status(response.statusCode).json({

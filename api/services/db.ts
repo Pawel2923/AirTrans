@@ -65,7 +65,7 @@ function getOperator(operator?: string) {
     return "=";
   }
 
-  const validOperators = ["=", "<>", "<", ">", "<=", ">=", "LIKE"];
+  const validOperators = ["=", "<>", "<", ">", "<=", ">=", "LIKE", "BETWEEN"];
   if (validOperators.includes(operator)) {
     return operator;
   }

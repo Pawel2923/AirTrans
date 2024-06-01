@@ -28,10 +28,10 @@ body {
   margin: 0;
 }
 
-h1 {
-  font-size: 3.2em;
-  line-height: 1.1;
-  font-weight: 700;
+#root {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
 }
 
 .btn {
@@ -96,6 +96,13 @@ h1 {
   --bs-pagination-color: var(--primary-color) !important;
   --bs-pagination-active-bg: var(--primary-color) !important;
   --bs-pagination-active-border-color: var(--primary-color) !important;
+}
+
+.form-control,
+.form-select {
+  border-radius: 25px;
+  box-shadow: var(--default-box-shadow);
+  border: 0;
 }
 
 button.active,

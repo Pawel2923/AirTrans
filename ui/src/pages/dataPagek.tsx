@@ -6,6 +6,7 @@ import "react-date-range/dist/styles.css";
 import "react-date-range/dist/theme/default.css";
 import { Cars } from "../assets/Data";
 import carService from "../services/car.service";
+import Nav from "../components/Nav";
 
 const emptyCar: Cars = {
   id: 0,
@@ -65,47 +66,53 @@ const DatePagek = () => {
   const totalPrice = daysCount * selectedCar.price_per_day;
 
   return (
-    <div className={styles.pageContainer}>
-      <header className={styles.header}>
-        <h1>WYBIERZ DATY WYPOŻYCZENIA</h1>
-      </header>
-      <div className="row">
-        <div className="col-md-6">
-          <DateRangePicker ranges={[selectionRange]} onChange={handleSelect} />
-          <div className={styles.dateInfo}>
-            {`${selectionRange.startDate.toLocaleDateString()} - ${selectionRange.endDate.toLocaleDateString()}`}
-          </div>
-          <div className={styles.totalPrice}>
-            Cena wypożyczenia za {daysCount} dni: {totalPrice} PLN
-          </div>
-        </div>
-        <div className="col-md-6">
-          <div className={styles.carDetails}>
-            <img
-              src={selectedCar.img}
-              alt={`${selectedCar.brand} ${selectedCar.model}`}
-              className={styles.carImage}
+    <>
+      <Nav />
+      <div className={styles.pageContainer}>
+        <header className={styles.header}>
+          <h1>WYBIERZ DATY WYPOŻYCZENIA</h1>
+        </header>
+        <div className="row">
+          <div className="col-md-6">
+            <DateRangePicker
+              ranges={[selectionRange]}
+              onChange={handleSelect}
             />
-            <div>
-              <h2>
-                {selectedCar.brand} {selectedCar.model}
-              </h2>
-              <p>Rok produkcji: {selectedCar.production_year}</p>
-              <p>Typ skrzyni biegów: {selectedCar.transmission_type}</p>
-              <p>Rodzaj paliwa: {selectedCar.fuel_type}</p>
-              <p>Numer rejestracyjny: {selectedCar.license_plate}</p>
-              <p>Cena za dzień: {selectedCar.price_per_day} PLN</p>
+            <div className={styles.dateInfo}>
+              {`${selectionRange.startDate.toLocaleDateString()} - ${selectionRange.endDate.toLocaleDateString()}`}
+            </div>
+            <div className={styles.totalPrice}>
+              Cena wypożyczenia za {daysCount} dni: {totalPrice} PLN
+            </div>
+          </div>
+          <div className="col-md-6">
+            <div className={styles.carDetails}>
+              <img
+                src={selectedCar.img}
+                alt={`${selectedCar.brand} ${selectedCar.model}`}
+                className={styles.carImage}
+              />
+              <div>
+                <h2>
+                  {selectedCar.brand} {selectedCar.model}
+                </h2>
+                <p>Rok produkcji: {selectedCar.production_year}</p>
+                <p>Typ skrzyni biegów: {selectedCar.transmission_type}</p>
+                <p>Rodzaj paliwa: {selectedCar.fuel_type}</p>
+                <p>Numer rejestracyjny: {selectedCar.license_plate}</p>
+                <p>Cena za dzień: {selectedCar.price_per_day} PLN</p>
+              </div>
             </div>
           </div>
         </div>
+        <div className={styles.nextButtonContainer}>
+          <Link to="form" className="btn btn-primary py-2 px-5">
+            Wprowadź dane
+            <span>&#10132;</span>
+          </Link>
+        </div>
       </div>
-      <div className={styles.nextButtonContainer}>
-        <Link to="form" className="btn btn-primary py-2 px-5">
-          Wprowadź dane
-          <span>&#10132;</span>
-        </Link>
-      </div>
-    </div>
+    </>
   );
 };
 

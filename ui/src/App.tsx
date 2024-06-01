@@ -41,6 +41,9 @@ import FormPage from "./pages/formPage";
 import DatePagek from "./pages/dataPagek";
 import SummaryPage from "./pages/summaryPage";
 import ClientTickets from "./pages/Manager/ClientTickets";
+import LuggagePage from "./pages/Manager/LuggagePage";
+import ParkingReservationsPage from "./pages/Manager/ParkingReservationsPage";
+import RentalsPage from "./pages/Manager/RentalsPage";
 
 const router = createBrowserRouter([
   { path: "*", Component: Root, errorElement: <ErrorBoundary /> },
@@ -104,18 +107,16 @@ function Root() {
           <Route index element={<Airfield />} />
           <Route path=":table/:id/edytuj" element={<AirfieldEdit />} />
         </Route>
-        <Route path="bilety">
-          <Route index element={<TicketsPage />} />
-        </Route>
-        <Route path="uzytkownicy">
-          <Route index element={<UsersPage />} />
-        </Route>
-        <Route path="profil">
-          <Route index element={<UserProfile />} />
-        </Route>
-        <Route path="twoje-bilety">
-          <Route index element={<ClientTickets />} />
-        </Route>
+        <Route path="bilety" element={<TicketsPage />} />
+        <Route path="uzytkownicy" element={<UsersPage />} />
+        <Route path="profil" element={<UserProfile />} />
+        <Route path="twoje-bilety" element={<ClientTickets />} />
+        <Route path="bagaze" element={<LuggagePage />} />
+        <Route
+          path="parking-rezerwacje"
+          element={<ParkingReservationsPage />}
+        />
+        <Route path="wypozyczenia" element={<RentalsPage />} />
         <Route path="*" element={<Navigate to="/zarzadzanie/harmonogram" />} />
       </Route>
       <Route path="zabronione" element={<Forbidden />} />

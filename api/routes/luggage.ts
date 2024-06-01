@@ -15,10 +15,17 @@ import { verifyUser } from "../middlewares/verifyUser";
  *      name: page
  *      type: integer
  *      description: Page number
+ *      required: false
  *    - in: query
  *      name: limit
  *      type: integer
  *      description: Number of items per page
+ *      required: false
+ *    - in: query
+ *      name: userEmail
+ *      type: string
+ *      description: Filter by user email
+ *      required: false
  *   responses:
  *    200:
  *     description: Successfully fetched data
@@ -33,11 +40,11 @@ import { verifyUser } from "../middlewares/verifyUser";
  */
 router.get("/", verifyUser, async (req, res, next) => {
   try {
-    const { page, limit } = req.query;
+    const { page, limit, userEmail } = req.query;
     const parsedPage = page ? parseInt(page as string) : undefined;
     const parsedLimit = limit ? parseInt(limit as string) : undefined;
 
-    const { data, meta, message } = await luggage.get(parsedPage, parsedLimit);
+    const { data, meta, message } = await luggage.get(parsedPage, parsedLimit, userEmail as string);
     res.status(200).json({
       data,
       meta,

@@ -18,7 +18,13 @@ class ParkingService {
     return http.get(`/parking/${pid}`);
   };
   updateParking = (parking: ParkingReservations) => {
-    return http.put(`/parking/${parking.pid}`, parking, {
+    return http.put(`/parking/${parking.id}`, parking, {
+      withCredentials: true,
+    });
+  };
+
+  getByUserEmail = ({ page = 1, limit = 10, userEmail = "" }) => {
+    return http.get(`/parking/?page=${page}&limit=${limit}&userEmail=${userEmail}`, {
       withCredentials: true,
     });
   };

@@ -56,7 +56,7 @@ const Schedule = () => {
         }
       })
       .catch((error) => {
-        handleError(error);
+        handleError({ error });
       });
   }, [handleError]);
 

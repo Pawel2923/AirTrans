@@ -1,10 +1,12 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import { Gates, PageData } from "../../assets/Data";
 import gatesService from "../../services/gates.service";
 import TabelkaGates from "../../components/TabelkaGates";
 import Pagination from "../../components/Pagination";
 import styles from "../../components/tableCars.module.css";
+import ToastModalContext from "../../store/toast-modal-context";
+import { faCircleCheck } from "@fortawesome/free-solid-svg-icons";
 
 const GatesPage = () => {
   const [pagedata, setPageData] = useState<PageData>({
@@ -18,6 +20,7 @@ const GatesPage = () => {
     status: undefined,
   });
   const navigate = useNavigate();
+  const { createAlertModal, createConfirmModal,createToast } = useContext(ToastModalContext);
 
   const handleInputChange = (
     event:
@@ -39,45 +42,61 @@ const GatesPage = () => {
     }));
   };
   const submitNewGates = async () => {
-    try {
-      const response = await gatesService.create({
-        ...newGatesData,
-      });
-      setGates((prevGates) => [...prevGates, response.data]);
-      setNewGatesData({
-        id: 0,
-        name: "",
-        status: undefined,
-      });
-      alert("Dodano nowe bramki");
-      navigate(0);
-      fetchGates();
-    } catch (error) {
-      console.error("Error while creating gates:", error);
-      alert("Wystąpił błąd podczas dodawania bramek. Spróbuj ponownie.");
-    }
-  };
+        gatesService.create(newGatesData).then((response) => {
+          if (response.status === 201) {
+            createToast({
+              message: "Dodano nową bramkę",
+              type: "primary",
+              icon: faCircleCheck,
+              timeout: 10000,
+            });
+            setNewGatesData({
+              id: 0,
+              name: "",
+              status: undefined,
+            });
+            fetchGates();
+          }
+        });
+      };
   const deleteGates = async (id: number) => {
-    try {
-      await gatesService.delete(id);
-      setGates((prevGates) => prevGates.filter((gate) => gate.id !== id));
-      alert("Usunięto bramke");
-    } catch (error) {
-      console.error("Error while deleting gates:", error);
-      alert("Wystąpił błąd podczas usuwania bramki. Spróbuj ponownie.");
-    }
+    createConfirmModal({
+      message: "Czy na pewno chcesz usunąć tę bramkę?",
+      onConfirm: async () => {
+        try {
+          await gatesService.delete(id);
+          setGates((prevGates) => prevGates.filter((gate) => gate.id !== id));
+          createToast({
+            message: "Usunięto bramkę",
+            type: "primary",
+            icon: faCircleCheck,
+            timeout: 10000,
+          });
+        } catch (error) {
+          console.error("Error while deleting gates:", error);
+          createToast({
+            message: "Wystąpił błąd podczas usuwania bramki. Spróbuj ponownie.",
+            type: "danger",
+            icon: faCircleCheck,
+            timeout: 10000,
+          });
+        }
+      },
+    });
   };
   const editGates = async (gates: Gates) => {
     navigate(`edit-bramka/${gates.id}`);
   };
   const fetchGates = async () => {
     try {
-      const response = await gatesService.get();
+      const response = await gatesService.get(pagedata.page , 4);
       setGates(response.data.data);
       setPageData(response.data.meta);
     } catch (error) {
       console.error("Error while fetching gates:", error);
-      alert("Wystąpił błąd podczas pobierania bramek. Spróbuj ponownie.");
+      createAlertModal({
+        message: "Wystąpił błąd podczas pobierania bramek. Spróbuj ponownie.",
+      });
     }
   };
   useEffect(() => {
@@ -99,7 +118,7 @@ const GatesPage = () => {
         <div className="col-12">
           <div className="card">
             <div className="card-header">
-              <h4>Dodaj nowa bramke</h4>
+              <h4>Dodaj nową bramkę</h4>
             </div>
             <div className="card-body">
               <div className="form-group">

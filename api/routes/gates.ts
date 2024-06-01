@@ -5,19 +5,15 @@ import { verifyUser, requireRole } from "../middlewares/verifyUser";
 
 router.get("/", async (req, res, next) => {
   try {
-    let { filter, sort } = req.query;
+    
     const { page, limit } = req.query;
 
     const parsedPage = page ? parseInt(page as string) : undefined;
     const parsedLimit = limit ? parseInt(limit as string) : undefined;
-    filter = (filter as string) || undefined;
-    sort = (sort as string) || undefined;
 
     const { data, meta, message } = await gates.get(
       parsedPage,
       parsedLimit,
-      filter,
-      sort
     );
     res.status(200).json({
       data,

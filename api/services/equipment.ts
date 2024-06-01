@@ -6,7 +6,7 @@ import { Err } from "../Types";
 import { ResultSetHeader } from "mysql2";
 
 async function getAll(
-  page = 1,
+ page = 1,
   limit = config.listPerPage,
   filter?: string,
   sort?: string
@@ -27,9 +27,7 @@ async function getAll(
   );
 
   const rows = await db.query(query, queryParams);
-  const data = helper.emptyOrRows(rows).map((row) => ({
-    ...row,
-  }));
+  const data = helper.emptyOrRows(rows) as Equipment[];
 
   if (data.length === 0) {
     const error = new Err("No equipment found");
@@ -164,10 +162,7 @@ async function remove(serial_no: string) {
   if (result.affectedRows === 0) {
     throw new Err("Failed to delete equipment");
   }
-
-  return {
-    message: "Successfully deleted equipment",
-  };
+  return "Successfully deleted equipment";
 }
 
 export default {

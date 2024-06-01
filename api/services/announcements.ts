@@ -47,7 +47,53 @@ function formatDate(dateString: string) {
 
   return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
 }
+async function getk(
+  page = 1,
+  limit = config.listPerPage,
+  filter?: string,
+  sort?: string
+) {
+  if (page < 1 || limit < 1) {
+    const error = new Err("Invalid page or limit number");
+    error.statusCode = 400;
+    throw error;
+  }
+  const offset = helper.getOffset(page, limit);
 
+  const { query, queryParams } = helper.buildQuery(
+    "Announcements",
+    offset,
+    limit,
+    filter,
+    sort
+  );
+
+  const rows = await db.query(query, queryParams);
+  const data = helper.emptyOrRows(rows).map((row) => ({
+    ...row,
+    valid_until: formatDate(row["valid_until"]),
+    create_time: formatDate(row["create_time"]),
+  }));
+
+  if (data.length === 0) {
+    const error = new Err("No announcements found");
+    error.statusCode = 404;
+    throw error;
+  }
+
+  const pages = await helper.getPages("Announcements", limit);
+
+  const meta = {
+    page,
+    pages,
+  };
+
+  return {
+    data,
+    meta,
+    message: "Successfully fetched data",
+  };
+}
 async function get(
   page = 1,
   limit = config.listPerPage,
@@ -73,6 +119,7 @@ async function get(
   const data = helper.emptyOrRows(rows).map((row) => ({
     ...row,
     valid_until: formatDate(row["valid_until"]),
+    create_time: formatDate(row["create_time"]),
   }));
 
   if (data.length === 0) {
@@ -112,7 +159,7 @@ async function getById(id: number) {
 
 async function create(announcement: Announcements) {
   validateAnnouncement(announcement);
-
+  
   let announcementExists = await db.query(
     "SELECT '' FROM Announcements WHERE id=?",
     [announcement.id]
@@ -125,13 +172,13 @@ async function create(announcement: Announcements) {
     throw error;
   }
 
+  
   let result = await db.query(
-    "INSERT INTO Announcements (title, content, valid_until, Employee_id) VALUES (?, ?, ?, ?)",
+    "INSERT INTO Announcements (title, content, valid_until,Employee_id) VALUES (?, ?, ?, ?)",
     [
       announcement.title,
       announcement.content,
       announcement.valid_until,
-      announcement.create_time,
       announcement.Employee_id,
     ]
   );
@@ -148,7 +195,7 @@ async function create(announcement: Announcements) {
 }
 
 async function update(id: number, announcement: Announcements) {
-  validateAnnouncement(announcement);
+  //validateAnnouncement(announcement);
 
   let announcementExists = await db.query(
     "SELECT '' FROM Announcements WHERE id=?",
@@ -168,11 +215,12 @@ async function update(id: number, announcement: Announcements) {
     throw error;
   }
 
-  let result = await db.query("UPDATE Announcements SET ? WHERE id=?", [
-    {
-      ...announcement,
-      id: announcement.id || id,
-    },
+  let result =await db.query("UPDATE Announcements SET title=?, content=?, valid_until=?,Employee_id=? WHERE id=?", 
+  [
+    announcement.title,
+    announcement.content,
+    announcement.valid_until,
+    announcement.Employee_id,
     id,
   ]);
   result = result as ResultSetHeader;
@@ -212,6 +260,7 @@ async function remove(id: number) {
 
 export default {
   get,
+  getk,
   getById,
   create,
   update,

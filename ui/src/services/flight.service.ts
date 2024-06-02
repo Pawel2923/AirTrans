@@ -9,6 +9,14 @@ interface FlightServiceGetAllParams {
   isarrdep?: boolean;
 }
 
+interface FlightServiceGetByTermParams {
+  searchTerm: string;
+  page: number;
+  limit?: number;
+  filter?: Filter[];
+  sort?: Sort;
+}
+
 class FlightService {
   getAll = ({
     page = 1,
@@ -49,6 +57,42 @@ class FlightService {
 
     return http.get(url);
   };
+
+  getByTerm = ({
+    searchTerm,
+    page = 1,
+    limit,
+    filter,
+    sort,
+  }: FlightServiceGetByTermParams) => {
+    let url = `/flights/${searchTerm}?page=${page}`;
+
+    if (limit) {
+      url += `&limit=${limit}`;
+    }
+
+    if (filter) {
+      // Check if filter is valid
+      filter.forEach((f) => {
+        if (!f.by || !f.value) {
+          throw new Error("Invalid filter");
+        }
+      });
+
+      url += `&filter=${JSON.stringify(filter)}`;
+    }
+
+    if (sort) {
+      // Check if sort is valid
+      if (!sort.by) {
+        throw new Error("Invalid sort");
+      }
+
+      url += `&sort=${JSON.stringify(sort)}`;
+    }
+
+    return http.get(url);
+  }
 
   getById = (id: string) => {
     return http.get(`/flights?filter=[{"by":"id","value":"${id}"}]`);

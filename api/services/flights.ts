@@ -328,7 +328,7 @@ async function search(
   page = 1,
   limit = config.listPerPage,
   filter?: string,
-  sort?: string
+  sort?: string,
 ) {
   // Check if search term is provided
   if (!term) {
@@ -350,18 +350,18 @@ async function search(
   const search = { query: "", queryParams: [] as unknown[] };
   // Search query
   search.query =
-    " WHERE (id LIKE ? OR status LIKE ? OR airline_name LIKE ? OR destination LIKE ? OR arrival LIKE ? OR departure LIKE ? OR airplane_serial_no LIKE ?)";
+    " WHERE (id LIKE ? OR status LIKE ? OR airline_name LIKE ? OR destination LIKE ? OR origin LIKE ? OR arrival LIKE ? OR departure LIKE ? OR airplane_serial_no LIKE ?)";
   // Add search term to the query parameters
-  search.queryParams = Array(7).fill(`%${term}%`);
+  search.queryParams = Array(8).fill(`%${term}%`);
 
   // Build SQL query with filter, sort, offset and limit parameters
   const { query: query, queryParams } = helper.buildQuery(
-    "Flights",
+    "Departures",
     offset,
     limit,
     filter,
     sort,
-    search
+    search,
   );
 
   // Execute the search query

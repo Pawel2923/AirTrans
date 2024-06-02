@@ -14,7 +14,6 @@ import FlightsSort from "../components/FlightsSort";
 
 const FlightSchedule = () => {
   const [searchParams] = useSearchParams();
-  const searchInput = useRef<HTMLInputElement>(null);
   const { isLoading, departureData, getDepartures } = useGetFlight();
   const [pageData, setPageData] = useState<PageData>({
     page: parseInt(searchParams.get("page") || "1"),
@@ -24,6 +23,8 @@ const FlightSchedule = () => {
   const [isSortModalOpen, setIsSortModalOpen] = useState<boolean>(false);
   const [filterData, setFilterData] = useState<Filter[]>([]);
   const [sortData, setSortData] = useState<Sort>();
+  const searchInput = useRef<HTMLInputElement>(null);
+  const [searchValue, setSearchValue] = useState<string>("");
 
   useEffect(() => {
     if (sessionStorage.getItem("filterData")) {
@@ -38,8 +39,9 @@ const FlightSchedule = () => {
       setPageData,
       filter: filterData.length ? filterData : undefined,
       sort: sortData,
+      searchTerm: searchValue,
     });
-  }, [filterData, sortData, getDepartures, pageData.page]);
+  }, [filterData, sortData, searchValue, getDepartures, pageData.page]);
 
   return (
     <>
@@ -65,6 +67,8 @@ const FlightSchedule = () => {
             type="search"
             name="flight-search"
             placeholder="Wyszukiwanie"
+            value={searchValue}
+            onInput={(e) => setSearchValue(e.currentTarget.value)}
           />
           <FontAwesomeIcon
             icon={faSearch}

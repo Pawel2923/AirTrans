@@ -51,6 +51,7 @@ import LuggagePage from "./pages/Manager/LuggagePage";
 import ParkingReservationsPage from "./pages/Manager/ParkingReservationsPage";
 import RentalsPage from "./pages/Manager/RentalsPage";
 import FlightSchedule from "./pages/FlightSchedule";
+import FlightDataEdit from "./pages/Manager/FlightDataEdit";
 
 const router = createBrowserRouter([
   { path: "*", Component: Root, errorElement: <ErrorBoundary /> },
@@ -93,6 +94,7 @@ function Root() {
           <Route index element={<Schedule />} />
           <Route path=":id" element={<ScheduleDetails />} />
           <Route path=":id/edytuj" element={<ScheduleEdit />} />
+          <Route path=":id/edytuj-parametry" element={<FlightDataEdit />} />
         </Route>
         <Route path="samoloty">
           <Route index element={<AirplanesPage />} />

@@ -7,6 +7,7 @@ import swaggerUI from "swagger-ui-express";
 import swaggerSpec from "./swagger";
 
 import flightsRouter from "./routes/flights";
+import flightDataRouter from "./routes/flight_data";
 import contactInfoRouter from "./routes/contact-info";
 import announcementsRouter from "./routes/announcements";
 import offerRouter from "./routes/offer";
@@ -56,6 +57,7 @@ app.get("/", (_req: Request, res: Response) => {
 });
 
 app.use("/flights", flightsRouter);
+app.use("/flight_data", flightDataRouter);
 app.use("/contact-info", contactInfoRouter);
 app.use("/announcements", announcementsRouter);
 app.use("/offer", offerRouter);

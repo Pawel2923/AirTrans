@@ -30,7 +30,6 @@ async function get(
   );
 
   // Execute the query
-  console.log(query, queryParams);
   const rows = await db.query(query, queryParams);
   const data = helper.emptyOrRows(rows) as Flight_data[];
 

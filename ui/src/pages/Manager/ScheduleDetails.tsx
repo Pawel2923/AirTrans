@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Link, useNavigate, useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import flightService from "../../services/flight.service";
 import { FlightData, Flights } from "../../assets/Data";
 import { flightsDataParser } from "../../utils/data-parser";
@@ -10,7 +10,6 @@ import flightDataService from "../../services/flightData.service";
 
 const ScheduleDetails = () => {
   const { id } = useParams<{ id: string }>();
-  const navigate = useNavigate();
   const [flightData, setFlightData] = useState<Flights[]>([]);
   const [flightParams, setFlightParams] = useState<FlightData>();
   const [openConfirm, setOpenConfirm] = useState<boolean>(false);
@@ -97,13 +96,15 @@ const ScheduleDetails = () => {
             <h3>Parametry lotu</h3>
             <ul>
               <li>
-                <span className="fw-bold">Wysokość (n.p.m.):</span> {flightParams.altitude}ft
+                <span className="fw-bold">Wysokość (n.p.m.):</span>{" "}
+                {flightParams.altitude}ft
               </li>
               <li>
                 <span className="fw-bold">Kurs:</span> {flightParams.track}&deg;
               </li>
               <li>
-                <span className="fw-bold">Prędkość:</span> {flightParams.ground_speed}
+                <span className="fw-bold">Prędkość:</span>{" "}
+                {flightParams.ground_speed}
                 kt
               </li>
               <li>
@@ -119,13 +120,23 @@ const ScheduleDetails = () => {
                 {flightParams.longitude}
               </li>
             </ul>
-            <button className="btn btn-primary" onClick={() => navigate(`/zarzadzanie/harmonogram/${id}/edytuj-parametry`)}>Aktualizuj parametry</button>
+            <Link
+              to={`/zarzadzanie/harmonogram/${id}/edytuj-parametry`}
+              className="btn btn-primary"
+            >
+              Aktualizuj parametry
+            </Link>
           </div>
         ) : (
           <div style={{ width: "100%" }}>
             <h3>Parametry lotu</h3>
             <p>Brak danych</p>
-            <button className="btn btn-primary">Dodaj parametry</button>
+            <Link
+              to={`/zarzadzanie/harmonogram/${id}/dodaj-parametry`}
+              className="btn btn-primary"
+            >
+              Dodaj parametry
+            </Link>
           </div>
         )}
       </div>

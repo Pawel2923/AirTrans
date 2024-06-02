@@ -4,11 +4,10 @@ import { useNavigate, useParams } from "react-router-dom";
 import Breadcrumb, { BreadcrumbItem } from "../../components/Breadcrumb";
 import flightDataService from "../../services/flightData.service";
 import ToastModalContext from "../../store/toast-modal-context";
-import { faCheckCircle } from "@fortawesome/free-solid-svg-icons";
-import { faTriangleExclamation } from "@fortawesome/free-solid-svg-icons/faTriangleExclamation";
 import useErrorHandler from "../../hooks/useErrorHandler";
+import { faCheckCircle } from "@fortawesome/free-solid-svg-icons";
 
-const FlightDataEdit: React.FC = () => {
+const FlightDataAdd: React.FC = () => {
   const navigate = useNavigate();
   const { id } = useParams();
   const [flightData, setFlightData] = useState<FlightData>({
@@ -21,26 +20,8 @@ const FlightDataEdit: React.FC = () => {
     longitude: 0,
     Flight_id: "",
   });
-  const [oldFlightData, setOldFlightData] = useState<FlightData>();
-  const [refreshData, setRefreshData] = useState<boolean>(false);
   const { createToast } = useContext(ToastModalContext);
   const { handleError } = useErrorHandler();
-
-  useEffect(() => {
-    if (id === undefined) return;
-
-    flightDataService.getByFlightId(id).then((response) => {
-      if (response.status === 200) {
-        setOldFlightData(response.data.data[0]);
-      }
-    });
-  }, [id, refreshData]);
-
-  useEffect(() => {
-    if (oldFlightData === undefined) return;
-
-    setFlightData(oldFlightData);
-  }, [oldFlightData]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -50,36 +31,42 @@ const FlightDataEdit: React.FC = () => {
     }));
   };
 
+  useEffect(() => {
+    if (id === undefined) return;
+
+    flightDataService.getByFlightId(id).then((response) => {
+      if (response.status === 200) {
+        if (response.data.data.length > 0) {
+          navigate(`/zarzadzanie/harmonogram/${id}`);
+        }
+      }
+    });
+  }, [id, navigate]);
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
 
     if (id === undefined) return;
 
-    if (
-      flightData.altitude === oldFlightData?.altitude &&
-      flightData.track === oldFlightData?.track &&
-      flightData.ground_speed === oldFlightData?.ground_speed &&
-      flightData.vertical_speed === oldFlightData?.vertical_speed &&
-      flightData.latitude === oldFlightData?.latitude &&
-      flightData.longitude === oldFlightData?.longitude
-    ) {
+    if (flightData.latitude === 0 || flightData.longitude === 0) {
       createToast({
-        message: "Nie wprowadzono żadnych zmian",
-        type: "warning",
-        icon: faTriangleExclamation,
+        icon: faCheckCircle,
+        type: "danger",
+        message: "Współrzędne geograficzne nie mogą być puste",
       });
       return;
     }
 
+    flightData.Flight_id = id;
+
     flightDataService
-      .update(flightData.id as number, flightData)
+      .create(flightData)
       .then((response) => {
-        if (response.status === 200) {
-          setRefreshData((prev) => !prev);
+        if (response.status === 201) {
           createToast({
-            message: "Parametry lotu zostały zaktualizowane",
-            type: "primary",
             icon: faCheckCircle,
+            type: "primary",
+            message: "Parametry lotu zostały dodane pomyślnie",
             action: {
               label: "Zobacz",
               onClick: () => {
@@ -87,6 +74,10 @@ const FlightDataEdit: React.FC = () => {
               },
             },
           });
+
+          setTimeout(() => {
+            navigate(`/zarzadzanie/harmonogram/${id}`);
+          }, 5000);
         }
       })
       .catch((error) => {
@@ -98,8 +89,8 @@ const FlightDataEdit: React.FC = () => {
     { path: "/zarzadzanie/harmonogram", title: "Harmonogram" },
     { path: `/zarzadzanie/harmonogram/${id}`, title: "Szczegóły lotu" },
     {
-      path: `/zarzadzanie/harmonogram/${id}/edytuj-parametry`,
-      title: "Edytuj parametry",
+      path: `/zarzadzanie/harmonogram/${id}/dodaj-parametry`,
+      title: "Dodaj parametry",
     },
   ];
 
@@ -164,6 +155,8 @@ const FlightDataEdit: React.FC = () => {
               onChange={handleChange}
               className="form-control"
               min={0}
+              required={true}
+              aria-required={true}
             />
           </div>
           <div className="form-group">
@@ -176,10 +169,12 @@ const FlightDataEdit: React.FC = () => {
               onChange={handleChange}
               className="form-control"
               min={0}
+              required={true}
+              aria-required={true}
             />
           </div>
           <button type="submit" className="btn btn-primary mt-3">
-            Zapisz
+            Dodaj
           </button>
         </form>
       </div>
@@ -187,4 +182,4 @@ const FlightDataEdit: React.FC = () => {
   );
 };
 
-export default FlightDataEdit;
+export default FlightDataAdd;

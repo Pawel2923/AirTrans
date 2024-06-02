@@ -26,6 +26,28 @@ router.get("/", async function (req, res, next) {
     next(error);
   }
 });
+router.get("/", async function (req, res, next) {
+  try {
+    const{page,limit} = req.query;
+
+    const parsedPage = page ? parseInt(page as string) : undefined;
+    const parsedLimit = limit ? parseInt(limit as string) : undefined;
+
+    const { data, meta, message } = await carService.getAllCar(
+      parsedPage,
+      parsedLimit,
+    
+    );
+    res.status(200).json({
+      data,
+      meta,
+      message,
+    });
+  } catch (error) {
+    
+    next(error);
+  }
+});
 
 router.get("/:id", async function (req, res, next) {
   try {

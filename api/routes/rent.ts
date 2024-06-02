@@ -9,15 +9,16 @@ router.get("/", async function (req, res, next) {
     const parsedPage = page ? parseInt(page as string) : undefined;
     const parsedLimit = limit ? parseInt(limit as string) : undefined;
 
-    const { data, meta, response } = await rentalService.getAllRentals(
+    const { data, meta,  message } = await rentalService.getAllRentals(
       parsedPage,
       parsedLimit,
       userEmail as string
     );
 
-    res.status(response.statusCode).json({
+    res.status(200).json({
       data,
       meta,
+      message,
     });
   } catch (error) {
     next(error);

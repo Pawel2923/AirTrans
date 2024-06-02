@@ -1,14 +1,17 @@
 import React, { useState, useEffect, useContext } from "react";
 import carService from "../../services/car.service";
 import rentService from "../../services/rental.service";
+import userService from "../../services/users.service";
 import CarsTable from "../../components/tableCars";
 import TableRent from "../../components/CarRentalTable";
-import { Cars, Rentals, PageData } from "../../assets/Data";
+import { Cars, Rentals, Users, PageData } from "../../assets/Data";
 import tableStyle from "../../components/tableCars.module.css";
 import { useNavigate } from "react-router-dom";
 import Pagination from "../../components/Pagination";
 import { useSearchParams } from "react-router-dom";
 import ToastModalContext from "../../store/toast-modal-context";
+import { faCircleCheck } from "@fortawesome/free-solid-svg-icons";
+
 
 const ZarzadzanieP = () => {
   const [searchParams] = useSearchParams();
@@ -16,8 +19,13 @@ const ZarzadzanieP = () => {
     page: parseInt(searchParams.get("page") || "1"),
     pages: 1,
   });
+  const [pageData2, setPageData2] = useState<PageData>({
+    page: parseInt(searchParams.get("page") || "1"),
+    pages: 1,
+  });
   const [cars, setCars] = useState<Cars[]>([]);
   const [rentals, setRentals] = useState<Rentals[]>([]);
+  const [users, setUsers] = useState<Users[]>([]);
   const [newCarData, setNewCarData] = useState<Cars>({
     brand: "",
     model: "",
@@ -37,13 +45,13 @@ const ZarzadzanieP = () => {
   });
 
   const navigate = useNavigate();
-  const { createConfirmModal, createAlertModal } = useContext(ToastModalContext);
+  const { createConfirmModal, createToast } = useContext(ToastModalContext);
 
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.target;
     setNewCarData((prevData) => ({
       ...prevData,
-      [name]: value,
+      [name]: name === 'price_per_day' || name === 'production_year' ? parseInt(value) : value,
     }));
   };
 
@@ -58,7 +66,7 @@ const ZarzadzanieP = () => {
     const { name, value } = event.target;
     setNewRentalData((prevData) => ({
       ...prevData,
-      [name]: value,
+      [name]: name === 'Users_id' || name === 'Cars_id' ? parseInt(value) : value,
     }));
   };
 
@@ -72,6 +80,12 @@ const ZarzadzanieP = () => {
   const submitNewCar = async () => {
     try {
       const response = await carService.create({ ...newCarData, id: 0 });
+      createToast({
+        message: "Auto zostało dodane!",
+        type: "primary",
+        icon: faCircleCheck,
+        timeout: 10000,
+      });
       setCars([...cars, response.data]);
       setNewCarData({
         brand: "",
@@ -82,25 +96,28 @@ const ZarzadzanieP = () => {
         fuel_type: "",
         transmission_type: undefined,
       });
-      createAlertModal({ message: "Auto zostało dodane!" });
-      navigate(0);
     } catch (error) {
       console.error("Error while adding car:", error);
-      createAlertModal({ message: "Bład dodawania auta! Spróbuj ponowanie" });
+      createToast({
+        message: "Błąd dodawania auta",
+        type: "danger",
+        icon: faCircleCheck,
+        timeout: 10000,
+      });
     }
   };
 
   const submitNewRental = async () => {
     const sinceDate = new Date(newRentalData.since);
     const untilDate = new Date(newRentalData.until);
-    const formatedSince = sinceDate.toISOString().slice(0, 19).replace("T", " ");
-    const formatedUntil = untilDate.toISOString().slice(0, 19).replace("T", " ");
+    const formattedSince = sinceDate.toISOString().slice(0, 19).replace("T", " ");
+    const formattedUntil = untilDate.toISOString().slice(0, 19).replace("T", " ");
 
     try {
       const response = await rentService.createRental({
         ...newRentalData,
-        since: formatedSince,
-        until: formatedUntil,
+        since: formattedSince,
+        until: formattedUntil,
       });
       setRentals([...rentals, response.data]);
       setNewRentalData({
@@ -111,10 +128,20 @@ const ZarzadzanieP = () => {
         Users_id: 0,
         Cars_id: 0,
       });
-      createAlertModal({ message: "Wypożyczenie zostało dodane!" });
-      navigate(0);
+      createToast({
+        message: "Wypożyczenie zostało dodane!",
+        type: "primary",
+        icon: faCircleCheck,
+        timeout: 10000,
+      });
     } catch (error) {
-      createAlertModal({ message: "Bład dodawania wypozyczenia" });
+      console.error("Error while adding rental:", error);
+      createToast({
+        message: "Błąd dodawania wypożyczenia",
+        type: "danger",
+        icon: faCircleCheck,
+        timeout: 10000,
+      });
     }
   };
 
@@ -124,11 +151,21 @@ const ZarzadzanieP = () => {
       onConfirm: async () => {
         try {
           await carService.delete(id);
-          setCars(cars.filter((car) => car.id !== id));
-          createAlertModal({ message: "Auto usunięte!" });
-          navigate(0);
+          setCars((prevCars) => prevCars.filter((car) => car.id !== id));
+          createToast({
+            message: "Auto usunięte!",
+            type: "primary",
+            icon: faCircleCheck,
+            timeout: 10000,
+          });
         } catch (error) {
           console.error(error);
+          createToast({
+            message: "Błąd usuwania auta",
+            type: "danger",
+            icon: faCircleCheck,
+            timeout: 10000,
+          });
         }
       },
     });
@@ -140,11 +177,21 @@ const ZarzadzanieP = () => {
       onConfirm: async () => {
         try {
           await rentService.removeRent(id);
-          setRentals(rentals.filter((rental) => rental.id !== id));
-          createAlertModal({ message: "Wypożyczenie usunięte!" });
-          navigate(0);
+          setRentals((prevRentals) => prevRentals.filter((rental) => rental.id !== id));
+          createToast({
+            message: "Wypożyczenie usunięte!",
+            type: "primary",
+            icon: faCircleCheck,
+            timeout: 10000,
+          });
         } catch (error) {
           console.error(error);
+          createToast({
+            message: "Błąd usuwania wypożyczenia",
+            type: "danger",
+            icon: faCircleCheck,
+            timeout: 10000,
+          });
         }
       },
     });
@@ -165,19 +212,26 @@ const ZarzadzanieP = () => {
         setPageData(response.data.meta);
       }
     });
+    
   }, [pageData.page]);
 
   useEffect(() => {
-    async function fetchData() {
-      try {
-        const rentalsResponse = await rentService.getAll();
-        setRentals(rentalsResponse.data);
-      } catch (error) {
-        console.error("Error while fetching rental data:", error);
+    rentService.getAll(pageData2.page, 2).then((response) => {
+      if (response.status === 200) {
+        setRentals(response.data.data);
+        setPageData2(response.data.meta);
       }
-    }
-    fetchData();
+    });
+  }, [pageData2.page]);   
+
+  useEffect(() => {
+    userService.getAll().then((response) => {
+      if (response.status === 200) {
+        setUsers(response.data.data);
+      }
+    });
   }, []);
+    
 
   return (
     <div className="container">
@@ -185,6 +239,11 @@ const ZarzadzanieP = () => {
       <div className={tableStyle.tableContainer}>
         <h2>Lista Wypożyczeń</h2>
         <TableRent rents={rentals} onEdit={editRent} onDelete={deleteRental} />
+        <Pagination
+          pageData={pageData2}
+          setPageData={setPageData2}
+          className="mt-3"
+        />
       </div>
       <div className="row">
         <div className="col-12">
@@ -230,23 +289,35 @@ const ZarzadzanieP = () => {
               </div>
               <div className="form-group">
                 <label htmlFor="Users_id">ID klienta</label>
-                <input
-                  type="number"
+                <select
                   name="Users_id"
                   className="form-control"
                   value={newRentalData.Users_id}
-                  onChange={handleRentalInputChange}
-                />
+                  onChange={createSelectChangeHandler}
+                >
+                  <option value="">Wybierz klienta</option>
+                  {Array.isArray(users) && users.map((user) => (
+                    <option key={user.id} value={user.id}>
+                      {user.first_name}
+                    </option>
+                  ))}
+                </select>
               </div>
               <div className="form-group">
                 <label htmlFor="Cars_id">ID samochodu</label>
-                <input
-                  type="number"
+                <select
                   name="Cars_id"
                   className="form-control"
                   value={newRentalData.Cars_id}
-                  onChange={handleRentalInputChange}
-                />
+                  onChange={createSelectChangeHandler}
+                >
+                  <option value="">Wybierz auto</option>
+                  {Array.isArray(cars) && cars.map((car) => (
+                    <option key={car.id} value={car.id}>
+                      {car.brand}
+                    </option>
+                  ))}
+                </select>
               </div>
               <button className="btn btn-primary" onClick={submitNewRental}>
                 Dodaj

@@ -1,8 +1,10 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect ,useContext} from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import carService from "../../services/car.service";
 import { Cars } from "../../assets/Data";
 import { Container, Row, Col, Form, Button } from "react-bootstrap";
+import ToastModalContext from "../../store/toast-modal-context";
+import { faCircleCheck } from "@fortawesome/free-solid-svg-icons";
 
 const emptyCar: Cars = {
   id: 0,
@@ -16,6 +18,7 @@ const emptyCar: Cars = {
 };
 
 const EditCarPage = () => {
+  const {createConfirmModal,createToast} = useContext(ToastModalContext);
   const navigate = useNavigate();
   const { id } = useParams<{ id: string }>();
   const [carData, setCarData] = useState<Cars>(emptyCar);
@@ -34,17 +37,33 @@ const EditCarPage = () => {
 
   const formSubmitHandler = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-
+    createConfirmModal({
+      message:"Czy na pewno chcesz zaktualizować ten samochód?",
+      confirmBtnText:"Aktualizuj",
+      confirmBtnClass:"btn-primary",
+      onConfirm: async () => {
     try {
       const response = await carService.update(carData);
       if (response.status === 200) {
-        alert("Car updated successfully!");
+        createToast({
+          message: "Dane samochodu zostały zaktualizowane",
+          type: "primary",
+          icon: faCircleCheck,
+          timeout: 10000,
+        });
         navigate("/zarzadzanie/pojazd");
       }
     } catch (error) {
       console.error("Error while updating car:", error);
-      alert("An error occurred while updating the car. Please try again");
+      createToast({
+        message: "Wystąpił błąd podczas aktualizacji samochodu",
+        type: "danger",
+        icon: faCircleCheck,
+        timeout: 10000,
+      });
     }
+  }
+});
   };
 
   const inputChangeHandler = (e: React.ChangeEvent<HTMLInputElement>) => {

@@ -5,12 +5,13 @@ import { ResultSetHeader } from "mysql2";
 import { Err } from "../Types";
 import { Parking_reservations } from "../Types";
 
+
 async function getAllParking(
   page = 1,
   limit = config.listPerPage,
   userEmail?: string
 ) {
-  const offset = helper.getOffset(page, config.listPerPage);
+  const offset = helper.getOffset(page, limit);
 
   let query = "SELECT p.* FROM Parking_reservations p JOIN Users u ON p.Users_id = u.id";
   const queryParams = [];
@@ -42,9 +43,31 @@ async function getAllParking(
   return {
     data,
     meta,
-    response: { message: `Successfully fetched data`, statusCode: 200 },
+    message: "Successfully featched data" 
   };
 }
+function validacjaParking(parking: Parking_reservations) {
+  
+  const currentDate = new Date();
+  const sinceDate = new Date(parking.since);
+  const untilDate = new Date(parking.until);
+
+  if (sinceDate < currentDate) {
+    const error = new Err("Since date should be greater than current date");
+    error.statusCode = 400;
+    throw error;
+  }
+  if (untilDate < currentDate) {
+    const error = new Err("Until date should be greater than current date");
+    error.statusCode = 400;
+    throw error;
+  }
+
+  if (untilDate < sinceDate) {
+    const error = new Err("Until date should be greater than since date");
+    error.statusCode = 400;
+    throw error;
+  }}
 
 function formatDate(dateString: string) {
   const date = new Date(dateString);
@@ -59,6 +82,7 @@ function formatDate(dateString: string) {
 }
 
 async function createParking(parkingData: Parking_reservations) {
+  validacjaParking(parkingData);
   const parkingAvailability = await db.query(
     "SELECT * FROM Parking_reservations WHERE parking_level = ? AND space_id = ? AND ((since <= ? AND until >= ?) OR (since <= ? AND until >= ?) OR (since >= ? AND until <= ?))",
     [
@@ -132,61 +156,65 @@ async function getById(parkingId: number, tableName = "Parking_reservations") {
     tableName,
     parkingId,
   ]);
-  const data = helper.emptyOrRows(rows);
+  const data = helper.emptyOrRows(rows).map((row) => ({
+    ...row,
+    since: formatDate(row["since"]),
+    until: formatDate(row["until"]),
+  }));
+
   if (!data) {
-    return {
-      data: null,
-      response: {
-        message: `Parking with ID ${parkingId} not found`,
-        statusCode: 404,
-      },
-    };
+    const error = new Err("Parking not found");
+    error.statusCode = 404;
+    throw error;
   }
+
   return {
     data,
     response: {
-      message: `Successfully fetched data for parking with ID ${parkingId}`,
-      statusCode: 200,
-    },
+    message: "Parking found",
+    statusCode: 200,
+    }
   };
 }
 
 async function updateParking(parkingId: number, parking: Parking_reservations) {
+  validacjaParking(parking);
   parking.id = parkingId;
 
-  const parkingExist = await db.query(
-    "SELECT * FROM Parking_reservations WHERE Id = ?",
-    [parking.id]
-  );
 
+  const parkingExist = await db.query(
+    "SELECT * FROM Parking_reservations WHERE pid = ?",
+    [parkingId]
+  );
   if (helper.emptyOrRows(parkingExist).length === 0) {
     const error = new Err("Parking not found");
     error.statusCode = 404;
     throw error;
   }
 
+
   let result = await db.query(
-    "UPDATE Parking_reservations SET Users_id=?, since=?, until=?, parking_level=?, space_id=?, license_plate=?,  status=?WHERE Id=?",
+    "UPDATE Parking_reservations SET since = ?, until = ?, parking_level = ?, space_id = ?, license_plate = ?, status = ? WHERE pid = ?",
     [
-      parking.Users_id,
       parking.since,
       parking.until,
       parking.parking_level,
       parking.space_id,
       parking.license_plate,
       parking.status,
-      parking.id,
+      parkingId,
     ]
   );
   result = result as ResultSetHeader;
 
-  if (result.affectedRows) {
+  if(result.affectedRows) {
     return {
       data: parking,
       message: "Parking updated successfully",
       statusCode: 200,
     };
-  } else {
+  }
+  else {
     throw new Err("Failed to update parking");
   }
 }

@@ -1,7 +1,9 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect,useContext } from "react";
 import { Equipment } from "../../assets/Data";
 import { useParams, useNavigate } from "react-router-dom";
 import equipmentService from "../../services/equipment.service";
+import { faCircleCheck } from "@fortawesome/free-solid-svg-icons";
+import ToastModalContext from "../../store/toast-modal-context";
 
 const emptyEquipment: Equipment = {
   serial_no: "",
@@ -12,6 +14,7 @@ const emptyEquipment: Equipment = {
 };
 
 const EditEquipmentPage = () => {
+  const { createToast,createConfirmModal } = useContext(ToastModalContext);
   const navigate = useNavigate();
   const { serial_no } = useParams<{ serial_no: string }>();
   const [equipment, setEquipment] = useState<Equipment>(emptyEquipment);
@@ -36,17 +39,33 @@ const EditEquipmentPage = () => {
 
   const formSubmitHandler = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    try {
-      const response = await equipmentService.updateEquipment(equipment);
-      if (response.status === 200) {
-        alert("Edycja zakończona sukcesem!");
-        navigate("/zarzadzanie/sprzet");
-      }
-    } catch (error) {
-      console.error("Error while updating equipment:", error);
-      alert("Wystąpił błąd podczas aktualizacji urządzenia. Spróbuj ponownie.");
-    }
-  };
+   createConfirmModal({
+      message: "Czy na pewno chcesz zaktualizować to urządzenie?",
+      confirmBtnText: "Aktualizuj",
+      confirmBtnClass: "btn-primary",
+      onConfirm: async () => {
+        try{
+          const response = await equipmentService.updateEquipment(equipment);
+          if (response.status === 200) {
+            createToast({
+              message: "Dane urządzenia zostały zaktualizowane",
+              type: "primary",
+              icon: faCircleCheck,
+              timeout: 10000,
+            });
+            navigate("/zarzadzanie/sprzet");
+          }
+        } catch (error) {
+          console.error("Error while updating equipment:", error);
+          createToast({
+            message: "Wystąpił błąd podczas aktualizacji urządzenia",
+            type: "danger",
+            timeout: 10000,
+          });
+        }
+      },
+    });
+  }
 
   const inputChangeHandler = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>

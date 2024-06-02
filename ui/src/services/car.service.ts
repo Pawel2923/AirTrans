@@ -2,32 +2,26 @@ import { Cars } from "../assets/Data";
 import http from "../http-common";
 
 class CarService {
-  getAll(page = 1, limit = 10) {
-    return http.get(`/cars?page=${page}&limit=${limit}`).then((response) => {
-      return response.data;
-    });
-  }
+  getAll =(page: number = 1,limit?: number) => {
+    return http.get(`/cars?page=${page}&limit=${limit}`);
+  };
+  getAllC =(page: number = 1,) => {
+    return http.get(`/cars?page=${page}`);
+  };
 
-  getOne(id: number) {
-    return http
-      .get(`/cars/${id}`)
-      .then((response) => {
-        return response.data;
-      })
-      .catch((error) => {
-        throw error;
-      });
-  }
-
-  getById(id: number) {
+  getOne=(id: number) =>{
     return http.get(`/cars/${id}`);
   }
 
-  create(carData: Cars) {
+  getById=(id: number)=> {
+    return http.get(`/cars/${id}`);
+  }
+
+  create=(carData: Cars)=> {
     return http.post("/cars", carData, { withCredentials: true });
   }
 
-  update(carData: Cars) {
+  update=(carData: Cars)=> {
     return http.put(`/cars/${carData.id}`, carData, {
       withCredentials: true,
     });

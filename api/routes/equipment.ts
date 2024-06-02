@@ -5,20 +5,16 @@ import { verifyUser, requireRole } from "../middlewares/verifyUser";
 
 router.get("/", async (req, res, next) => {
   try {
-    const { page, limit, filter, sort } = req.query;
+    const { page, limit } = req.query;
+
     const parsedPage = page ? parseInt(page as string) : undefined;
     const parsedLimit = limit ? parseInt(limit as string) : undefined;
+
     const { data, meta, message } = await equipment.getAll(
       parsedPage,
-      parsedLimit,
-      filter as string | undefined,
-      sort as string | undefined
+      parsedLimit
     );
-    res.status(200).json({
-      data,
-      meta,
-      message,
-    });
+    res.status(200).json({ data, meta, message });
   } catch (err) {
     next(err);
   }
@@ -39,37 +35,38 @@ router.post("/", verifyUser, async (req, res, next) => {
 router.get("/:serial_no", async (req, res, next) => {
   try {
     const { serial_no } = req.params;
-    const { data, message } = await equipment.getById(serial_no);
+    const parsedString = serial_no as string;
+    const { data, message } = await equipment.getById(parsedString);
     res.status(200).json({ data, message });
   } catch (err) {
     next(err);
   }
 });
 
-router.put("/:serial_no", async (req, res, next) => {
+router.put("/:serial_no",verifyUser, async (req, res, next) => {
   try {
     const { serial_no } = req.params;
+    const parsedString = serial_no as string;
 
     const userRole = (req.user as { role: string }).role;
-
     requireRole(userRole, ["admin", "ground_crew"]);
 
-    const message = await equipment.update(serial_no, req.body);
+    const message = await equipment.update(parsedString, req.body);
     res.status(200).json({ message });
   } catch (err) {
     next(err);
   }
 });
 
-router.delete("/:serial_no", async (req, res, next) => {
+router.delete("/:serial_no",verifyUser, async function (req, res, next){
   try {
     const { serial_no } = req.params;
+    const parsedString = serial_no as string;
 
     const userRole = (req.user as { role: string }).role;
-
     requireRole(userRole, ["admin", "ground_crew"]);
 
-    const message = await equipment.remove(serial_no);
+    const message = await equipment.remove(parsedString);
     res.status(200).json({ message });
   } catch (err) {
     next(err);

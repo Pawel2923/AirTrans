@@ -2,23 +2,21 @@ import { ParkingReservations } from "../assets/Data";
 import http from "../http-common";
 
 class ParkingService {
-  getAllParking(page = 1, limit = -1) {
-    return http.get(`/parking?page=${page}&limit=${limit}`).then((response) => {
-      return response.data;
-    });
-  }
+  getAllParking=(page:number = 1, limit?: number) =>{
+    return http.get(`/parking?page=${page}&limit=${limit}`);
+  };
   createParking(parkingData: ParkingReservations) {
     return http.post("/parking", parkingData, { withCredentials: true });
   }
 
-  delete = (id: number) => {
-    return http.delete(`/parking/${id}`, { withCredentials: true });
+  delete = (pid: number) => {
+    return http.delete(`/parking/${pid}`, { withCredentials: true });
   };
-  getById = (pid: number) => {
-    return http.get(`/parking/${pid}`);
+  getById = (id: number) => {
+    return http.get(`/parking/${id}`);
   };
   updateParking = (parking: ParkingReservations) => {
-    return http.put(`/parking/${parking.id}`, parking, {
+    return http.put(`/parking/${parking.pid}`, parking, {
       withCredentials: true,
     });
   };

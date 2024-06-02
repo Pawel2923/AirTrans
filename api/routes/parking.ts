@@ -9,15 +9,16 @@ router.get("/", async function (req, res, next) {
     const parsedPage = page ? parseInt(page as string) : undefined;
     const parsedLimit = limit ? parseInt(limit as string) : undefined;
 
-    const { data, meta, response } = await parkingService.getAllParking(
+    const { data, meta, message } = await parkingService.getAllParking(
       parsedPage,
       parsedLimit,
       userEmail as string
     );
 
-    res.status(response.statusCode).json({
+    res.status(200).json({
       data,
       meta,
+      message,
     });
   } catch (error) {
     next(error);
@@ -48,14 +49,15 @@ router.get("/:id", async function (req, res, next) {
   try {
     const { id } = req.params;
     const parkingId = parseInt(id as string);
+    
 
     const { data } = await parkingService.getById(parkingId);
 
     res.status(200).json({
       data,
     });
-  } catch (error) {
-    next(error);
+  } catch (err) {
+    next(err);
   }
 });
 
@@ -63,14 +65,15 @@ router.put("/:id", verifyUser, async function (req, res, next) {
   try {
     const { id } = req.params;
     const parkingId = parseInt(id as string);
+    
 
     const { data, message } = await parkingService.updateParking(
       parkingId,
       req.body
     );
     res.status(200).json({ data, message });
-  } catch (error) {
-    next(error);
+  } catch (err) {
+    next(err);
   }
 });
 

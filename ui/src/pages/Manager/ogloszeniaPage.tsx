@@ -1,26 +1,27 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import { Announcements, PageData } from "../../assets/Data";
 import announcementService from "../../services/announcement.service";
 import styles from "../../components/tableCars.module.css";
 import AnnouncementTable from "../../components/tableOgloszenia";
 import Pagination from "../../components/Pagination";
+import ToastModalContext from "../../store/toast-modal-context";
+import { faCircleCheck } from "@fortawesome/free-solid-svg-icons";
 
 const OgloszeniaPage = () => {
+  const { createConfirmModal, createToast } = useContext(ToastModalContext);
   const [pagedata, setPageData] = useState<PageData>({
     page: 1,
     pages: 1,
   });
   const [announcements, setAnnouncements] = useState<Announcements[]>([]);
-  const [newAnnouncementData, setNewAnnouncementData] = useState<Announcements>(
-    {
-      id: 0,
-      title: "",
-      content: "",
-      valid_until: "",
-      Employee_id: 0,
-    }
-  );
+  const [newAnnouncementData, setNewAnnouncementData] = useState<Announcements>({
+    id: 0,
+    title: "",
+    content: "",
+    valid_until: "",
+    Employee_id: 0,
+  });
 
   const navigate = useNavigate();
 
@@ -61,34 +62,58 @@ const OgloszeniaPage = () => {
         Employee_id: 0,
       });
 
-      alert("Dodano nowe ogłoszenie");
+      createToast({
+        message: "Dodano nowe ogłoszenie",
+        type: "primary",
+        icon: faCircleCheck,
+        timeout: 10000,
+      });
       fetchAnnouncements();
     } catch (error) {
       console.error("Error while creating announcement:", error);
-      alert("Wystąpił błąd podczas dodawania ogłoszenia. Spróbuj ponownie.");
+      createToast({
+        message: "Wystąpił błąd podczas dodawania ogłoszenia",
+        type: "danger",
+        timeout: 10000,
+        icon: faCircleCheck,
+      });
     }
   };
 
   const deleteAnnouncement = async (id: number) => {
-    try {
+    createConfirmModal({
+      message: "Czy na pewno chcesz usunąć to ogłoszenie?",
+      onConfirm: async ()=>{
+      try {
       await announcementService.delete(id);
       setAnnouncements((prevAnnouncements) =>
         prevAnnouncements.filter((announcement) => announcement.id !== id)
       );
-      alert("Usunięto ogłoszenie");
+      createToast({
+        message: "Usunięto ogłoszenie",
+        type: "primary",
+        icon: faCircleCheck,
+        timeout: 10000,
+      });
     } catch (error) {
       console.error("Error while deleting announcement:", error);
-      alert("Wystąpił błąd podczas usuwania ogłoszenia. Spróbuj ponownie.");
+      createToast({
+        message: "Wystąpił błąd podczas usuwania ogłoszenia. Spróbuj ponownie.",
+        type: "danger",
+        icon: faCircleCheck,
+        timeout: 10000,
+      });
     }
-  };
-
+  },
+  });
+  }
   const editAnnouncement = (announcement: Announcements) => {
     navigate(`edit-ogloszenia/${announcement.id}`);
   };
 
   const fetchAnnouncements = useCallback(async () => {
     try {
-      const response = await announcementService.get(pagedata.page);
+      const response = await announcementService.get(pagedata.page ,4);
       setAnnouncements(response.data.data);
       setPageData(response.data.meta);
     } catch (error) {

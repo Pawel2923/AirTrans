@@ -45,6 +45,46 @@ async function getAllCars(
     message: "Successfully fetched data",
   };
 }
+async function getAllCar(
+  page = 1,
+  limit = config.listPerPage,
+  
+) {
+  if (page < 1 || limit < 1) {
+    const error = new Err("Invalid page or limit number");
+    error.statusCode = 400;
+    throw error;
+  }
+  const offset = helper.getOffset(page, limit);
+
+  const { query, queryParams } = helper.buildQuery(
+    "Cars",
+    offset,
+    limit,
+  
+  );
+  const rows = await db.query(query, queryParams);
+  const data = helper.emptyOrRows(rows) as Cars[];
+
+  if (data.length === 0) {
+    const error = new Err("No cars found");
+    error.statusCode = 404;
+    throw error;
+  }
+
+  const pages = await helper.getPages("Cars", limit);
+
+  const meta = {
+    page,
+    pages,
+  };
+
+  return {
+    data,
+    meta,
+    message: "Successfully fetched data",
+  };
+}
 async function getOneCar(carId: number, tableName = "Cars") {
   const row = await db.query("SELECT * FROM ?? WHERE Id = ?", [
     tableName,
@@ -182,6 +222,7 @@ async function remove(id: number) {
 
 export default {
   getAllCars,
+  getAllCar,
   getOneCar,
   create,
   update,

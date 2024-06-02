@@ -5,6 +5,9 @@ class CarService {
   getAll =(page: number = 1,limit?: number) => {
     return http.get(`/cars?page=${page}&limit=${limit}`);
   };
+  getAllC =(page: number = 1,) => {
+    return http.get(`/cars?page=${page}`);
+  };
 
   getOne=(id: number) =>{
     return http.get(`/cars/${id}`);

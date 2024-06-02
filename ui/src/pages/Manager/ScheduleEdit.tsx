@@ -130,95 +130,97 @@ const ScheduleEdit = () => {
   return (
     <>
       <Breadcrumb items={breadcrumbItems} />
-      <h2>Edytuj harmonogram</h2>
-      <form onSubmit={formSubmitHandler}>
-        <div className="form-group">
-          <label htmlFor="arrival">Przylot</label>
-          <input
-            type="datetime-local"
-            className="form-control"
-            id="arrival"
-            name="arrival"
-            onChange={inputChangeHandler}
-            value={newFlightData.arrival}
-          />
-        </div>
-        <div className="form-group">
-          <label htmlFor="departure">Odlot</label>
-          <input
-            type="datetime-local"
-            className="form-control"
-            id="departure"
-            name="departure"
-            onChange={inputChangeHandler}
-            value={newFlightData.departure}
-          />
-        </div>
-        <div className="form-group">
-          <label htmlFor="destination">Kierunek</label>
-          <input
-            type="text"
-            className="form-control"
-            id="destination"
-            name="destination"
-            onChange={inputChangeHandler}
-            value={newFlightData.destination}
-          />
-        </div>
-        <div className="form-group">
-          <label htmlFor="id">Numer lotu</label>
-          <input
-            type="text"
-            className="form-control"
-            id="id"
-            name="id"
-            readOnly={true}
-            aria-readonly={true}
-            value={newFlightData.id}
-          />
-        </div>
-        <div className="form-group">
-          <label htmlFor="status">Status</label>
-          <input
-            type="text"
-            className="form-control"
-            id="status"
-            name="status"
-            onChange={inputChangeHandler}
-            value={newFlightData.status}
-          />
-        </div>
-        <div className="form-group">
-          <label htmlFor="airline_name">Linia lotnicza</label>
-          <input
-            type="text"
-            className="form-control"
-            id="airline_name"
-            name="airline_name"
-            onChange={inputChangeHandler}
-            value={newFlightData.airline_name}
-          />
-        </div>
-        <div className="form-group">
-          <label htmlFor="airplane_serial_no">Numer seryjny samolotu</label>
-          <select
-            className="form-control"
-            id="airplane_serial_no"
-            name="airplane_serial_no"
-            onChange={selectChangeHandler}
-            value={newFlightData.airplane_serial_no}
-          >
-            {serialNumbers.map((serial_no: string) => (
-              <option key={serial_no} value={serial_no}>
-                {serial_no}
-              </option>
-            ))}
-          </select>
-        </div>
-        <button type="submit" className="btn btn-primary mt-3">
-          Zapisz
-        </button>
-      </form>
+      <div className="manager-block">
+        <h3>Edytuj harmonogram</h3>
+        <form onSubmit={formSubmitHandler}>
+          <div className="form-group">
+            <label htmlFor="arrival">Przylot</label>
+            <input
+              type="datetime-local"
+              className="form-control"
+              id="arrival"
+              name="arrival"
+              onChange={inputChangeHandler}
+              value={newFlightData.arrival}
+            />
+          </div>
+          <div className="form-group">
+            <label htmlFor="departure">Odlot</label>
+            <input
+              type="datetime-local"
+              className="form-control"
+              id="departure"
+              name="departure"
+              onChange={inputChangeHandler}
+              value={newFlightData.departure}
+            />
+          </div>
+          <div className="form-group">
+            <label htmlFor="destination">Kierunek</label>
+            <input
+              type="text"
+              className="form-control"
+              id="destination"
+              name="destination"
+              onChange={inputChangeHandler}
+              value={newFlightData.destination}
+            />
+          </div>
+          <div className="form-group">
+            <label htmlFor="id">Numer lotu</label>
+            <input
+              type="text"
+              className="form-control"
+              id="id"
+              name="id"
+              readOnly={true}
+              aria-readonly={true}
+              value={newFlightData.id}
+            />
+          </div>
+          <div className="form-group">
+            <label htmlFor="status">Status</label>
+            <input
+              type="text"
+              className="form-control"
+              id="status"
+              name="status"
+              onChange={inputChangeHandler}
+              value={newFlightData.status}
+            />
+          </div>
+          <div className="form-group">
+            <label htmlFor="airline_name">Linia lotnicza</label>
+            <input
+              type="text"
+              className="form-control"
+              id="airline_name"
+              name="airline_name"
+              onChange={inputChangeHandler}
+              value={newFlightData.airline_name}
+            />
+          </div>
+          <div className="form-group">
+            <label htmlFor="airplane_serial_no">Numer seryjny samolotu</label>
+            <select
+              className="form-control"
+              id="airplane_serial_no"
+              name="airplane_serial_no"
+              onChange={selectChangeHandler}
+              value={newFlightData.airplane_serial_no}
+            >
+              {serialNumbers.map((serial_no: string) => (
+                <option key={serial_no} value={serial_no}>
+                  {serial_no}
+                </option>
+              ))}
+            </select>
+          </div>
+          <button type="submit" className="btn btn-primary mt-3">
+            Zapisz
+          </button>
+        </form>
+      </div>
     </>
   );
 };

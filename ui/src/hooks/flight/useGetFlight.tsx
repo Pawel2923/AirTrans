@@ -11,6 +11,7 @@ interface getDeparturesParams {
   filter?: Filter[];
   sort?: Sort;
   setPageData?: React.Dispatch<React.SetStateAction<PageData>>;
+  searchTerm?: string;
 }
 
 const useGetFlight = () => {
@@ -26,30 +27,69 @@ const useGetFlight = () => {
       page = 1,
       limit = 5,
       setPageData,
+      searchTerm,
     }: getDeparturesParams) => {
-      flightService
-        .getAll({ page, limit, filter: filter, sort: sort, isarrdep: true })
-        .then((response) => {
-          if (response.status === 200) {
-            const departures = response.data.data;
+      if (searchTerm && searchTerm.length > 0) {
+        flightService
+          .getByTerm({
+            page,
+            limit,
+            filter: filter,
+            sort: sort,
+            searchTerm: searchTerm,
+          })
+          .then((response) => {
+            if (response.status === 200) {
+              const departures = response.data.data;
 
-            if (departures.length > 0) {
-              const parsedData = arrDepDataParser(departures);
-              setDepartureData(parsedData);
-              if (setPageData) {
-                setPageData(response.data.meta);
+              if (departures.length > 0) {
+                const parsedData = arrDepDataParser(departures);
+                setDepartureData(parsedData);
+                if (setPageData) {
+                  setPageData(response.data.meta);
+                }
+              } else {
+                setDepartureData([]);
               }
-            } else {
+            }
+          })
+          .catch((error) => {
+            if (error.response.status === 404) {
               setDepartureData([]);
             }
-          }
-        })
-        .catch((error) => {
-          handleError({ error });
-        })
-        .finally(() => {
-          setIsLoading(false);
-        });
+            handleError({ error });
+          })
+          .finally(() => {
+            setIsLoading(false);
+          });
+      } else {
+        flightService
+          .getAll({ page, limit, filter: filter, sort: sort, isarrdep: true })
+          .then((response) => {
+            if (response.status === 200) {
+              const departures = response.data.data;
+
+              if (departures.length > 0) {
+                const parsedData = arrDepDataParser(departures);
+                setDepartureData(parsedData);
+                if (setPageData) {
+                  setPageData(response.data.meta);
+                }
+              } else {
+                setDepartureData([]);
+              }
+            }
+          })
+          .catch((error) => {
+            if (error.response.status === 404) {
+              setDepartureData([]);
+            }
+            handleError({ error });
+          })
+          .finally(() => {
+            setIsLoading(false);
+          });
+      }
     },
     [handleError]
   );

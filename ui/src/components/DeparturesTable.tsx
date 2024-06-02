@@ -198,15 +198,17 @@ const DeparturesTable: React.FC<TableProps> = ({
           ) : isLoading ? (
             Array.from({ length: 5 }).map((_, index) => (
               <tr key={index} className="placeholder-wave">
-                <td
-                  colSpan={noDataColSpan}
-                  style={{
-                    width: "200%",
-                    backgroundColor: "#ccc",
-                  }}
-                  className="placeholder text-center"
-                >
-                  <span style={{ visibility: "hidden" }}>D</span>
+                <td colSpan={noDataColSpan} className="p-0 text-center">
+                  <div
+                    style={{
+                      width: "100%",
+                      backgroundColor: "#ccc",
+                      padding: "0.75rem"
+                    }}
+                    className="placeholder"
+                  >
+                    <span style={{ visibility: "hidden" }}>D</span>
+                  </div>
                 </td>
               </tr>
             ))

@@ -34,9 +34,9 @@ function checkObject(obj: object, objectProperties: string[]) {
   });
 }
 
-function buildFilterQuery(filter: string) {
+function buildFilterQuery(filter: string, excludeWhere = false) {
   try {
-    let query = " WHERE";
+    let query = excludeWhere ? " AND" : " WHERE";
     const queryParams: unknown[] = [];
 
     const parsedFilter = JSON.parse(filter) as {
@@ -73,8 +73,8 @@ function buildSortQuery(sort: string) {
   try {
     const parsedSort = JSON.parse(sort) as { by: string; order?: string };
 
-    let query = " ORDER BY ??";
-    const queryParams: unknown[] = [parsedSort.by];
+    let query = "";
+    const queryParams: unknown[] = [];
 
     if (Array.isArray(parsedSort.by)) {
       parsedSort.by.forEach((sortBy, index) => {
@@ -110,7 +110,7 @@ function buildQuery(
   limit: number,
   filter?: string,
   sort?: string,
-  search?: { query: string; queryParams: unknown[] }
+  search?: { query: string; queryParams: unknown[] },
 ) {
   let query = "SELECT * FROM ??" + (search ? search.query : "");
   const queryParams: unknown[] = [tableName];
@@ -122,7 +122,7 @@ function buildQuery(
   }
 
   if (filter) {
-    const filterQuery = buildFilterQuery(filter);
+    const filterQuery = buildFilterQuery(filter, search ? true : false);
     query += filterQuery.query;
     filterQuery.queryParams.forEach((param) => {
       queryParams.push(param);

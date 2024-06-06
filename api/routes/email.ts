@@ -4,13 +4,22 @@ import hbs from "nodemailer-express-handlebars";
 import nodemailer from "nodemailer";
 import path from "path";
 
+const transportConfig = {
+  host: "smtp.gmail.com",
+  port: 587,
+  auth: {
+    user: "airtransmail@gmail.com",
+    pass: process.env["GMAIL_PASSWORD"],
+  },
+};
+
 /**
  * @openapi
  *  /email:
  *   post:
  *    tags:
  *     - Email
- *    description: Send email
+ *    summary: Send email
  *    requestBody:
  *     required: true
  *     content:
@@ -45,14 +54,7 @@ router.post("/", async function (req, res, next) {
   try {
     const { to, subject, title, content, text } = req.body;
 
-    const transporter = nodemailer.createTransport({
-      host: "sandbox.smtp.mailtrap.io",
-      port: 2525,
-      auth: {
-        user: "ebad96f630fc81",
-        pass: process.env["MAILTRAP_PASSWORD"],
-      },
-    });
+    const transporter = nodemailer.createTransport(transportConfig);
 
     const handlebarOptions = {
       viewEngine: {
@@ -93,7 +95,7 @@ router.post("/", async function (req, res, next) {
  *   post:
  *    tags:
  *     - Email
- *    description: Send email with reset password link
+ *    summary: Send email with reset password link
  *    requestBody:
  *     required: true
  *     content:
@@ -124,45 +126,50 @@ router.post("/", async function (req, res, next) {
  *     500:
  *      description: Internal Server Error
  */
+
+export async function sendResetPasswdEmail(
+  to: string,
+  subject: string,
+  url: string,
+  token: string,
+  text: string
+) {
+  const transporter = nodemailer.createTransport(transportConfig);
+
+  const handlebarOptions = {
+    viewEngine: {
+      extName: ".handlebars",
+      partialsDir: path.resolve("/api/", "views"),
+      layoutsDir: path.resolve("/api/", "views"),
+      defaultLayout: "",
+    },
+    viewPath: path.resolve("/api/", "views"),
+    extName: ".handlebars",
+  };
+
+  transporter.use("compile", hbs(handlebarOptions));
+
+  const mailOptions = {
+    from: '"AirTrans" <airtrans@op.pl>',
+    template: "reset",
+    to: to,
+    subject: subject,
+    context: {
+      url,
+      token,
+    },
+    text: text || "",
+  };
+
+  const info = await transporter.sendMail(mailOptions);
+  return info;
+}
+
 router.post("/reset-passwd", async function (req, res, next) {
   try {
     const { to, subject, url, token, text } = req.body;
 
-    const transporter = nodemailer.createTransport({
-      host: "sandbox.smtp.mailtrap.io",
-      port: 2525,
-      auth: {
-        user: "ebad96f630fc81",
-        pass: process.env["MAILTRAP_PASSWORD"],
-      },
-    });
-
-    const handlebarOptions = {
-      viewEngine: {
-        extName: ".handlebars",
-        partialsDir: path.resolve("/api/", "views"),
-        layoutsDir: path.resolve("/api/", "views"),
-        defaultLayout: "",
-      },
-      viewPath: path.resolve("/api/", "views"),
-      extName: ".handlebars",
-    };
-
-    transporter.use("compile", hbs(handlebarOptions));
-
-    const mailOptions = {
-      from: '"AirTrans" <airtrans@op.pl>',
-      template: "reset",
-      to: to,
-      subject: subject,
-      context: {
-        url,
-        token,
-      },
-      text: text || "",
-    };
-
-    const info = await transporter.sendMail(mailOptions);
+    const info = await sendResetPasswdEmail(to, subject, url, token, text);
 
     res.status(200).json({ message: "Reset email sent", info });
   } catch (error) {

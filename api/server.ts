@@ -29,8 +29,9 @@ import luggageRouter from "./routes/luggage";
 import logsRouter from "./routes/logs";
 import login_logRouter from "./routes/login_log";
 import filesRouter from "./routes/files";
-import stripeRouter from './routes/stripe';
-import emailRouter from './routes/email';
+import stripeRouter from "./routes/stripe";
+import emailRouter from "./routes/email";
+import resetPasswdRouter from "./routes/reset-passwd";
 import { Err } from "./Types";
 
 const app = express();
@@ -80,15 +81,16 @@ app.use("/luggage", luggageRouter);
 app.use("/logi", logsRouter);
 app.use("/login_log", login_logRouter);
 app.use("/files", filesRouter);
-app.use('/stripe', stripeRouter);
-app.use('/email', emailRouter);
+app.use("/stripe", stripeRouter);
+app.use("/email", emailRouter);
+app.use("/reset-passwd", resetPasswdRouter);
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 app.use((err: Err, _req: Request, res: Response, _next: NextFunction): any => {
-	const statusCode = err.statusCode || 500;
-	const message = err.message || "Internal Server Error";
-	res.status(statusCode).json({ message });
-	return;
+  const statusCode = err.statusCode || 500;
+  const message = err.message || "Internal Server Error";
+  res.status(statusCode).json({ message });
+  return;
 });
 
 // set port, listen for requests

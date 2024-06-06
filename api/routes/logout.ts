@@ -7,6 +7,7 @@ const router = express.Router();
  *  get:
  *   tags:
  *    - Authentication
+ *   summary: Log out the user
  *   description: Logs out the user by clearing the JWT cookie
  *   responses:
  *    200:

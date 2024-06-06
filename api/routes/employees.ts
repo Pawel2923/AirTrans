@@ -10,7 +10,7 @@ import { verifyUser, requireRole } from "../middlewares/verifyUser";
  *  get:
  *   tags:
  *    - Employees
- *   description: Get all employees or a specific employee by id
+ *   summary: Get all employees or a specific employee by id
  *   parameters:
  *    - name: id
  *      in: query

@@ -9,7 +9,7 @@ import { verifyUser, requireRole } from "../middlewares/verifyUser";
  *  get:
  *   tags:
  *    - Users
- *   description: Get all users or filtered users
+ *   summary: Get all users or filtered users
  *   parameters:
  *    - name: page
  *      in: query
@@ -107,7 +107,7 @@ router.get("/", verifyUser, async function (req, res, next) {
  *  get:
  *   tags:
  *    - Users
- *   description: Get all roles
+ *   summary: Get all roles
  *   responses:
  *    200:
  *     description: Successfully fetched roles
@@ -145,7 +145,7 @@ router.get("/roles", verifyUser, async function (req, res, next) {
  *  put:
  *   tags:
  *    - Users
- *   description: Update user by id
+ *   summary: Update user by id
  *   requestBody:
  *    required: true
  *    content:
@@ -202,7 +202,7 @@ router.put("/:id", verifyUser, async function (req, res, next) {
  *  patch:
  *   tags:
  *    - Users
- *   description: Update user role by id
+ *   summary: Update user role by id
  *   requestBody:
  *    required: true
  *    content:
@@ -274,7 +274,7 @@ router.patch("/:id/img", verifyUser, async function (req, res, next) {
  *  delete:
  *   tags:
  *    - Users
- *   description: Delete user by id
+ *   summary: Delete user by id
  *   parameters:
  *    - name: id
  *      in: path

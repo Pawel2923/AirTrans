@@ -30,6 +30,7 @@ import logsRouter from "./routes/logs";
 import login_logRouter from "./routes/login_log";
 import filesRouter from "./routes/files";
 import stripeRouter from './routes/stripe';
+import emailRouter from './routes/email';
 import { Err } from "./Types";
 
 const app = express();
@@ -80,7 +81,7 @@ app.use("/logi", logsRouter);
 app.use("/login_log", login_logRouter);
 app.use("/files", filesRouter);
 app.use('/stripe', stripeRouter);
-
+app.use('/email', emailRouter);
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 app.use((err: Err, _req: Request, res: Response, _next: NextFunction): any => {

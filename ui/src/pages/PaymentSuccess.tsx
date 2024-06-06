@@ -15,7 +15,7 @@ const PaymentSuccess = () => {
     return () => clearTimeout(timer);
   }, [navigate]);
  
-  const contactInfo = JSON.parse(sessionStorage.getItem('contactInfo')) || {
+  const contactInfo = JSON.parse(sessionStorage.getItem('contactInfo') ?? '') || {
     firstName: 'Nieznane',
     lastName: 'Nieznane',
     email: 'Nieznany',

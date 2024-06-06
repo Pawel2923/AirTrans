@@ -12,8 +12,8 @@ const RentCar = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    carService.getAll().then((response) => {
-      setCars(response.data);
+    carService.getAllC().then((response) => {
+      setCars(response.data.data);
     });
   }, []);
 

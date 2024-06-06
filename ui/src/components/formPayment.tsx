@@ -2,7 +2,8 @@ import React, { useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { CardElement, useStripe, useElements, P24BankElement } from '@stripe/react-stripe-js';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import './formPayment.module.css'; // Custom CSS for additional styling
+import './formPayment.module.css'; 
+import parkingService from '../services/parking.service';
 
 const CheckoutForm: React.FC = () => {
   const stripe = useStripe();
@@ -16,80 +17,115 @@ const CheckoutForm: React.FC = () => {
   const location = useLocation();
   const { totalPrice } = location.state as { totalPrice: number };
 
-  const handleSubmit = async (event: React.FormEvent) => {
+  const handleSubmit = (event: React.FormEvent) => {
     event.preventDefault();
 
     if (!stripe || !elements) {
       return;
     }
 
+    const saveReservation = () => {
+      const reservationDates = JSON.parse(sessionStorage.getItem('reservationDates') || '{}') || {};
+      const sinceDate = new Date(reservationDates.startDate);
+      const untilDate = new Date(reservationDates.endDate);
+      const licensePlate = sessionStorage.getItem('licensePlate') || '';
+      const parkingLevel = sessionStorage.getItem('parkingLevel') || '';
+      const spaceId = sessionStorage.getItem('spaceId') || '';
+
+      const parkingReservation = {
+        pid: 0,
+        parking_level: parkingLevel,
+        space_id: spaceId, 
+        Users_id: 7, 
+        status: 'Reserved',
+        license_plate: licensePlate,
+        since: sinceDate.toISOString().slice(0, 19).replace('T', ' '), 
+        until: untilDate.toISOString().slice(0, 19).replace('T', ' '),
+      };
+
+      if (parkingReservation.parking_level && parkingReservation.license_plate && parkingReservation.since && parkingReservation.until) {
+        parkingService.createParking({...parkingReservation, status: 'RESERVED'})
+          .then((response) => {
+            console.log('Reservation created:', response);
+          })
+          .catch((error) => {
+            console.error('Error creating reservation:', error);
+          });
+      } else {
+        console.error('Missing required fields:', parkingReservation);
+      }
+    };
+
     if (paymentMethodType === 'card') {
       const cardElement = elements.getElement(CardElement);
 
       if (cardElement) {
-        const { error, paymentMethod } = await stripe.createPaymentMethod({
+        stripe.createPaymentMethod({
           type: 'card',
           card: cardElement,
           billing_details: {
             name,
             email,
           },
-        });
+        })
+        .then(({ error, paymentMethod }) => {
+          if (error) {
+            throw new Error(error.message || 'Payment failed');
+          }
 
-        if (error) {
-          setError(error.message || 'Payment failed');
-          navigate('/payment/error');
-          setSuccess(false);
-          return;
-        }
-
-        try {
-          const response = await fetch('http://localhost:6868/stripe/create-payment-intent', {
+          return fetch('http://localhost:6868/stripe/create-payment-intent', {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',
             },
             body: JSON.stringify({ amount: totalPrice * 100 }),
           });
+        })
+        .then(response => response.json())
+        .then(({ clientSecret }) => {
+          const cardElement = elements.getElement(CardElement);
+          if (!cardElement) throw new Error('Card element not found');
 
-          const { clientSecret } = await response.json();
-
-          const { error: confirmError } = await stripe.confirmCardPayment(clientSecret, {
-            payment_method: paymentMethod.id,
+          return stripe.confirmCardPayment(clientSecret, {
+            payment_method: {
+              card: cardElement,
+              billing_details: {
+                name,
+                email,
+              },
+            },
           });
-
+        })
+        .then(({ error: confirmError }) => {
           if (confirmError) {
-            setError(confirmError.message || 'Payment confirmation failed');
-            setSuccess(false);
-            navigate('/payment/error');
-          } else {
-            setError(null);
-            setSuccess(true);
-            console.log('Payment successful');
-            navigate('/payment/success');
+            throw new Error(confirmError.message || 'Payment confirmation failed');
           }
-        } catch (error) {
-          setError('An error occurred while processing your payment');
+
+          setError(null);
+          setSuccess(true);
+          saveReservation();
+          navigate('/payment/success');
+        })
+        .catch(error => {
+          setError(error.message || 'An error occurred while processing your payment');
           setSuccess(false);
           navigate('/payment/error');
-        }
+        });
       }
     } else if (paymentMethodType === 'p24') {
       const p24Element = elements.getElement(P24BankElement);
 
       if (p24Element) {
-        try {
-          const response = await fetch('http://localhost:6868/stripe/create-payment-intent', {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ amount: totalPrice * 100 }),
-          });
-
-          const { clientSecret } = await response.json();
-
-          const { error: confirmError } = await stripe.confirmP24Payment(clientSecret, {
+        fetch('http://localhost:6868/stripe/create-payment-intent', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ amount: totalPrice * 100 }),
+        })
+        .then(response => response.json())
+        .then(({ clientSecret }) => {
+          return stripe.confirmP24Payment(clientSecret, {
             payment_method: {
               p24: p24Element,
               billing_details: {
@@ -99,21 +135,22 @@ const CheckoutForm: React.FC = () => {
             },
             return_url: `${window.location.origin}/payment/success`,
           });
-
+        })
+        .then(({ error: confirmError }) => {
           if (confirmError) {
-            setError(confirmError.message || 'Payment confirmation failed');
-            setSuccess(false);
-            navigate('/payment/error');
-          } else {
-            setError(null);
-            setSuccess(true);
-            navigate('/payment/success');
+            throw new Error(confirmError.message || 'Payment confirmation failed');
           }
-        } catch (error) {
-          setError('An error occurred while processing your payment');
+
+          setError(null);
+          setSuccess(true);
+          saveReservation();
+          navigate('/payment/success');
+        })
+        .catch(error => {
+          setError(error.message || 'An error occurred while processing your payment');
           setSuccess(false);
           navigate('/payment/error');
-        }
+        });
       }
     }
   };
@@ -121,7 +158,7 @@ const CheckoutForm: React.FC = () => {
   return (
     <div className="container">
       <div className="card mx-auto my-5 p-4" style={{ maxWidth: '500px' }}>
-      <h2 className="mb-4">Zapłać teraz </h2>
+      <h2 className="mb-4">Zapłać teraz</h2>
         <form onSubmit={handleSubmit} className="checkout-form">
           <div className="form-group">
             <label htmlFor="name">Imie</label>

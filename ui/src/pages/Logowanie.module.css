@@ -10,12 +10,13 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background-color: #ffffff;
-  padding: 25px;
+  background-color: #f8f9fb;
+  padding: 5rem 2rem;
   margin: 20px;
-  border-radius: 20px;
+  border-radius: 25px;
   box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.2);
   transform: scale(1.25);
+  gap: 2rem;
 }
 
 .left {
@@ -28,8 +29,8 @@
 
 .form-container {
   display: flex;
-  justify-content: space-between;
-  align-items: center;
+  flex-direction: column;
+  gap: 1rem;
   margin-bottom: 20px;
 }
 

@@ -8,7 +8,7 @@ import offer from "../services/offer";
  *  get:
  *   tags:
  *    - Offer
- *   description: Get all offers
+ *   summary: Get all offers
  *   parameters:
  *    - name: page
  *      in: query

@@ -53,6 +53,8 @@ import RentalsPage from "./pages/Manager/RentalsPage";
 import FlightSchedule from "./pages/FlightSchedule";
 import FlightDataEdit from "./pages/Manager/FlightDataEdit";
 import FlightDataAdd from "./pages/Manager/FlightDataAdd";
+import SendResetPasswd from "./pages/ResetPassword/SendResetPasswd";
+import VerifyResetPasswd from "./pages/ResetPassword/VerifyResetPasswd";
 
 const router = createBrowserRouter([
   { path: "*", Component: Root, errorElement: <ErrorBoundary /> },
@@ -141,6 +143,10 @@ function Root() {
         />
         <Route path="wypozyczenia" element={<RentalsPage />} />
         <Route path="*" element={<Navigate to="/zarzadzanie/harmonogram" />} />
+      </Route>
+      <Route path="resetowanie">
+        <Route index element={<SendResetPasswd />} />
+        <Route path=":token" element={<VerifyResetPasswd />} />
       </Route>
       <Route path="zabronione" element={<Forbidden />} />
       <Route path="blad" element={<InternalServerError />} />

@@ -2,7 +2,9 @@ import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import Input from "../components/input";
 import rejestracjaService from "../services/rejestracja.service";
-import styles from "./rejestracja.module.css";
+import styles from "./Logowanie.module.css";
+import { faArrowLeft } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 const emailRegex = /^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$/i;
 const isEmpty = (value: string | number) =>
@@ -93,19 +95,20 @@ const Rejestracja = () => {
   };
   return (
     <>
-      <main>
+      <main style={{ backgroundColor: "#f0f0f0" }}>
         <section className="section">
           <div className={`container-fluid ${styles.container}`}>
-            <div
-              className={`rounded p-5 bg-white ${styles["login-container"]}`}
-            >
+            <div className={`p-5 ${styles["login-container"]}`}>
               <div className={styles.left}>
-                <h1 className="text-center mb-4">REJESTRACJA DO SYSTEMU</h1>
+                <h1 className="display-6 text-center">
+                  REJESTRACJA DO SYSTEMU
+                </h1>
                 <p className="text-center">
                   Masz już konto? <Link to="/logowanie">Zaloguj się</Link>
                 </p>
               </div>
               <div className={styles.right}>
+                <h5>Formularz rejestracyjny</h5>
                 <form onSubmit={submitHandler}>
                   <label
                     style={{
@@ -206,6 +209,13 @@ const Rejestracja = () => {
                   </button>
                 </form>
               </div>
+              <Link
+                to="/"
+                className="text-black text-decoration-none"
+                style={{ position: "absolute", bottom: "1rem", left: "1.5rem" }}
+              >
+                <FontAwesomeIcon icon={faArrowLeft} /> Wróć
+              </Link>
             </div>
           </div>
         </section>

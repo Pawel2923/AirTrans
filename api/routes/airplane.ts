@@ -9,7 +9,7 @@ import { requireRole, verifyUser } from "../middlewares/verifyUser";
  *  get:
  *   tags:
  *    - Airplane
- *   description: Get all airplanes or a specific airplane by serial number
+ *   summary: Get all airplanes or a specific airplane by serial number
  *   parameters:
  *    - name: page
  *      in: query
@@ -107,7 +107,7 @@ router.get("/", async function (req, res, next) {
  *  get:
  *   tags:
  *    - Airplane
- *   description: Get all airplane serial numbers
+ *   summary: Get all airplane serial numbers
  *   responses:
  *    200:
  *     description: Successfully fetched airplane serial numbers
@@ -146,7 +146,7 @@ router.get("/serial_numbers", async function (_req, res, next) {
  *  post:
  *   tags:
  *    - Airplane
- *   description: Create a new airplane
+ *   summary: Create a new airplane
  *   requestBody:
  *    required: true
  *    content:
@@ -185,7 +185,7 @@ router.post("/", verifyUser, async function (req, res, next) {
  *  put:
  *   tags:
  *    - Airplane
- *   description: Update an airplane
+ *   summary: Update an airplane
  *   parameters:
  *    - name: serial_no
  *      in: path
@@ -231,7 +231,7 @@ router.put("/:serial_no", verifyUser, async function (req, res, next) {
  *  delete:
  *   tags:
  *    - Airplane
- *   description: Delete an airplane
+ *   summary: Delete an airplane
  *   parameters:
  *    - name: serial_no
  *      in: path

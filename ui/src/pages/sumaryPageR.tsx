@@ -1,9 +1,8 @@
-import React from 'react';
-import { useLocation } from 'react-router-dom';
+import React ,{useEffect}from 'react';
+import { useLocation, useNavigate} from 'react-router-dom';
 import styles from './sumaryPage.module.css';
-import { useNavigate } from 'react-router-dom';
 
-const SummaryPageR=() => {
+const SummaryPageR = () => {
     const location = useLocation();
     const contactInfo = location.state;
     const navigate = useNavigate();
@@ -14,6 +13,13 @@ const SummaryPageR=() => {
 
     const daysCount = Math.round((new Date(reservationDates.endDate).getTime() - new Date(reservationDates.startDate).getTime()) / (1000 * 3600 * 24)) + 1;
     const totalPrice = daysCount * 50;
+
+    // Save user id to sessionStorage
+    useEffect(() => {
+        if (contactInfo && contactInfo.id) {
+            sessionStorage.setItem('userId', contactInfo.id);
+        }
+    }, [contactInfo]);
 
     const handlePayment = () => {
         sessionStorage.setItem('contactInfo', JSON.stringify(contactInfo));
@@ -40,9 +46,7 @@ const SummaryPageR=() => {
                 <p>Całkowita cena: {totalPrice} PLN</p>
             </div>
             <div className={styles.nextButtonContainer}>
-                <button className="btn btn-primary"
-                onClick={handlePayment}
-                >
+                <button className="btn btn-primary" onClick={handlePayment}>
                     Potwierdź i zapłać <span>&#10132;</span>
                 </button>
             </div>

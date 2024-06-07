@@ -89,12 +89,13 @@ const CheckoutForm: React.FC = () => {
     const licensePlate = sessionStorage.getItem('licensePlate') || '';
     const parkingLevel = sessionStorage.getItem('parkingLevel') || '';
     const spaceId = sessionStorage.getItem('spaceId') || '';
+    const id= sessionStorage.getItem('userId') || '';
 
     const parkingReservation = {
       pid: 0,
       parking_level: parkingLevel,
       space_id: spaceId, 
-      Users_id: 7, 
+      Users_id: id, 
       status: 'Reserved',
       license_plate: licensePlate,
       since: sinceDate.toISOString().slice(0, 19).replace('T', ' '), 

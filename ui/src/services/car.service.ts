@@ -26,7 +26,9 @@ class CarService {
       withCredentials: true,
     });
   }
-
+  updateImg=(id: number, img: string)=> {
+    return http.patch(`/cars/${id}/img`,{img}, { withCredentials: true });
+  };
   delete = (id: number) => {
     return http.delete(`/cars/${id}`, { withCredentials: true });
   };

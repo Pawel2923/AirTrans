@@ -126,6 +126,25 @@ async function getById(carId: number) {
     message: "Samochód znaleziony pomyślnie",
   };
 }
+async function addImg(carId: number, path: string) {
+  let carExists = await db.query("SELECT * FROM Cars WHERE Id=?", [carId]);
+  carExists = helper.emptyOrRows(carExists);
+  if (carExists.length === 0) {
+    const error = new Err("Samochód o podanym Id nie istnieje");
+    error.statusCode = 404;
+    throw error;
+  }
+  let result = await db.query("UPDATE Cars SET img=? WHERE Id=?", [path, carId]);
+  result = result as ResultSetHeader;
+
+  if (result.affectedRows === 0) {
+    throw new Err("Zdjęcie nie mogło zostać dodane");
+  }
+
+  return {
+    message: "Zdjęcie dodane pomyślnie",
+  };
+}
 
 async function create(car: Cars) {
    validateCar(car);
@@ -180,7 +199,7 @@ async function update(carId: number, car: Cars) {
     error.statusCode = 404;
     throw error;
   }
-  let result = await db.query("UPDATE Cars SET brand=?, model=?, price_per_day=?, production_year=?, license_plate=?, fuel_type=?, transmission_type=? WHERE Id=?", [
+  let result = await db.query("UPDATE Cars SET brand=?, model=?, price_per_day=?, production_year=?, license_plate=?, fuel_type=?, transmission_type=?,img=? WHERE Id=?", [
     car.brand,
     car.model,
     car.price_per_day,
@@ -188,6 +207,7 @@ async function update(carId: number, car: Cars) {
     car.license_plate,
     car.fuel_type,
     car.transmission_type,
+    car.img,
     carId,
   ]);
   result = result as ResultSetHeader;
@@ -221,6 +241,7 @@ async function remove(id: number) {
 }
 
 export default {
+  addImg,
   getAllCars,
   getAllCar,
   getOneCar,

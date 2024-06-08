@@ -2,13 +2,17 @@
   display: flex;
   flex-wrap: wrap;
   gap: 16px;
+  justify-content: space-between; /* Ensures even spacing between cards */
 }
 
 .carCard {
   border: 1px solid #ddd;
   border-radius: 8px;
   padding: 16px;
-  width: 300px;
+  width: 300px; /* Standard width for all cards */
+  display: flex;
+  flex-direction: column; /* Ensures the content stacks vertically */
+  justify-content: space-between; /* Distributes space evenly between elements */
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   transition: background-color 0.3s ease;
 }
@@ -17,7 +21,7 @@
   background-color: rgba(0, 0, 0, 0.1);
 }
 
-.carImage {
+.carImage img {
   width: 100%;
   height: auto;
   border-bottom: 1px solid #ddd;
@@ -25,6 +29,7 @@
 }
 
 .carDetails {
+  flex-grow: 1; /* Allows details to grow and take up available space */
   margin-bottom: 16px;
 }
 

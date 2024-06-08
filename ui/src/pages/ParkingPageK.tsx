@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect} from 'react';
 import styles from './parkingPagek.module.css';
 import { Link } from 'react-router-dom';
 import { DateRangePicker } from 'react-date-range';
@@ -7,6 +7,8 @@ import 'react-date-range/dist/theme/default.css';
 import Nav from '../components/Nav';
 import { ParkingReservations } from '../assets/Data';
 import parkingService from '../services/parking.service';
+import { useNavigate } from 'react-router-dom';
+
 
 interface RangeType {
     selection: {
@@ -17,6 +19,8 @@ interface RangeType {
 }
 
 const ParkingReservation = () => {
+
+    const navigate = useNavigate();
     const [occupiedSpaces, setOccupiedSpaces] = useState<{ [key: string]: boolean }>({});
     const [spaceOptions, setSpaceOptions] = useState<number[]>([]);
     const [selectionRange, setSelectionRange] = useState({
@@ -87,7 +91,9 @@ const ParkingReservation = () => {
     }, [selectionRange, licensePlate, parkingLevel, spaceId]);
 
     const daysCount = Math.round((selectionRange.endDate.getTime() - selectionRange.startDate.getTime()) / (1000 * 3600 * 24)) + 1;
-
+    const handleBack = () => {
+    navigate(-1);   
+}
     return (
         <div>
             <Nav />
@@ -98,6 +104,7 @@ const ParkingReservation = () => {
                 <div className={styles.row}>
                     <div className={styles.datePickerContainer}>
                         <DateRangePicker
+                            minDate={new Date()}
                             ranges={[selectionRange]}
                             onChange={handleSelect}
                         />
@@ -154,6 +161,10 @@ const ParkingReservation = () => {
                     </div>
                 </div>
                 <div className={styles.nextButtonContainer}>
+
+                <button className="btn btn-secondary" onClick={handleBack}>
+                    <span>&#10229;</span> Wróć
+                </button>
                     <Link to="formR" className="btn btn-primary py-2 px-5">
                         Przejdź dalej
                         <span>&#10132;</span>

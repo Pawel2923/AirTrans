@@ -95,7 +95,7 @@ const CheckoutForm: React.FC = () => {
       pid: 0,
       parking_level: parkingLevel,
       space_id: spaceId, 
-      Users_id: id, 
+      Users_id: parseInt(id), 
       status: 'Reserved',
       license_plate: licensePlate,
       since: sinceDate.toISOString().slice(0, 19).replace('T', ' '), 

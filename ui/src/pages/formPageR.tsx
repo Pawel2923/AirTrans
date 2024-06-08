@@ -9,7 +9,7 @@ const FormPageR = () => {
   const { user } = useContext(AuthContext);
   const { usersData: userInfo, getUserByEmail } = useGetUsers();
   const [contactInfo, setContactInfo] = useState({
-    id: "",
+    id:"",
     firstName: "",
     lastName: "",
     email: "",
@@ -27,10 +27,10 @@ const FormPageR = () => {
     if (userInfo && userInfo.length > 0) {
       setContactInfo({
         id: userInfo[0].id,
-        firstName: userInfo[0].first_name,
-        lastName: userInfo[0].last_name,
+        firstName: userInfo[0].first_name as string,
+        lastName: userInfo[0].last_name as string,
         email: userInfo[0].email,
-        phone: userInfo[0].phone_number,
+        phone: userInfo[0].phone_number as string,
       });
     }
   }, [userInfo]);
@@ -47,7 +47,9 @@ const FormPageR = () => {
     e.preventDefault();
     navigate("/WynajemP/summary", { state: contactInfo });
   };
-
+  const handleBack = () => {
+    navigate(-1); 
+};
   return (
     <>
       <Nav />
@@ -112,6 +114,9 @@ const FormPageR = () => {
                     disabled={!!user}
                   />
                 </div>
+                <button className="btn btn-secondary" onClick={handleBack} style={{ fontWeight: 'bold' }}>
+                <span>&#10229;</span> Wróć
+                </button>
                 <button type="submit" className="btn btn-primary">
                   Przejdź do podsumowania
                 </button>

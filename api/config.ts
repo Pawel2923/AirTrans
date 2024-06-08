@@ -30,22 +30,29 @@ const config: Config = {
 export default config;
 
 function getDbUser(role: string) {
-  if (role === "admin") {
-    config.db.password = process.env["DB_ADMIN_PASSWORD"] as string;
-  } else if (role === "atc") {
-    config.db.password = process.env["DB_ATC_PASSWORD"] as string;
-  } else if (role === "ground_crew") {
-    config.db.password = process.env["DB_GROUND_CREW_PASSWORD"] as string;
-  } else if (role === "aiport_staff") {
-    config.db.password = process.env["DB_AIRPORT_STAFF_PASSWORD"] as string;
-  } else if (role === "parking_staff") {
-    config.db.password = process.env["DB_PARKING_STAFF_PASSWORD"] as string;
-  } else if (role === "rental_staff") {
-    config.db.password = process.env["DB_RENTAL_STAFF_PASSWORD"] as string;
-  } else {
-    config.db.password = process.env["DB_CLIENT_PASSWORD"] as string;
-    config.db.user = "client";
-    return;
+  switch (role) {
+    case "admin":
+      config.db.password = process.env["DB_ADMIN_PASSWORD"] as string;
+      break;
+    case "atc":
+      config.db.password = process.env["DB_ATC_PASSWORD"] as string;
+      break;
+    case "ground_crew":
+      config.db.password = process.env["DB_GROUND_CREW_PASSWORD"] as string;
+      break;
+    case "airport_staff":
+      config.db.password = process.env["DB_AIRPORT_STAFF_PASSWORD"] as string;
+      break;
+    case "parking_staff":
+      config.db.password = process.env["DB_PARKING_STAFF_PASSWORD"] as string;
+      break;
+    case "rental_staff":
+      config.db.password = process.env["DB_RENTAL_STAFF_PASSWORD"] as string;
+      break;
+    default:
+      config.db.password = process.env["DB_CLIENT_PASSWORD"] as string;
+      config.db.user = "client";
+      return;
   }
 
   config.db.user = role;

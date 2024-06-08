@@ -1,18 +1,10 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import styles from './parkingPagek.module.css';
 import { Link } from 'react-router-dom';
-import { DateRangePicker } from 'react-date-range';
+import { DateRangePicker, RangeKeyDict } from 'react-date-range';
 import 'react-date-range/dist/styles.css';
 import 'react-date-range/dist/theme/default.css';
 import Nav from '../components/Nav';
-
-interface RangeType {
-    selection: {
-        startDate: Date;
-        endDate: Date;
-        key: string;
-    };
-}
 
 const ParkingReservation = () => {
     const [selectionRange, setSelectionRange] = useState({
@@ -24,9 +16,13 @@ const ParkingReservation = () => {
     const [licensePlate, setLicensePlate] = useState('');
     const [parkingLevel, setParkingLevel] = useState('-1');
 
-    const handleSelect = (ranges: RangeType) => {
-        setSelectionRange(ranges.selection);
-    };
+    const handleSelect = (ranges: RangeKeyDict) => {
+        setSelectionRange((prevRange) => ({
+          ...prevRange,
+          startDate: ranges.selection.startDate || prevRange.startDate,
+          endDate: ranges.selection.endDate || prevRange.endDate,
+        }));
+      };
 
     useEffect(() => {
         sessionStorage.setItem('reservationDates', JSON.stringify(selectionRange));

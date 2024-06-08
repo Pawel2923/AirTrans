@@ -21,7 +21,7 @@ const Parking = () => {
   const [occupiedSpaces, setOccupiedSpaces] = useState<{ [key: string]: boolean }>({}); 
   const [spaceOptions, setSpaceOptions] = useState<number[]>([]); 
   const [newParking, setNewParking] = useState<ParkingReservations>({
-    pid: 0,
+    id: 0,
     Users_id: 0,
     since: "",
     until: "",
@@ -31,7 +31,7 @@ const Parking = () => {
     status: undefined,
   });
 
-  const retrieveParkings = async() => {
+  const retrieveParkings = useCallback(async() => {
     try {
       const response = await parkingService.getAllParking(pageData.page, 2);
       setParkings(response.data.data);
@@ -46,12 +46,12 @@ const Parking = () => {
     } catch (error) {
       console.error("Error fetching parkings data:", error);
     }
-  }
+  }, [pageData.page]);
 
   useEffect(() => {
     retrieveParkings();
   }
-  , [pageData.page]);
+  , [retrieveParkings]);
 
   const retrieveUsers = useCallback(() => {
     userService
@@ -70,7 +70,7 @@ const Parking = () => {
   useEffect(() => {
     
     retrieveUsers();
-  }, []);
+  }, [retrieveUsers]);
 
   const handleInputChange = (
     event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
@@ -105,7 +105,7 @@ const Parking = () => {
       const response = await parkingService.createParking(newParking);
       setParkings([...parkings, response.data]);
       setNewParking({
-        pid: 0,
+        id: 0,
         Users_id: 0,
         since: "",
         until: "",
@@ -138,7 +138,7 @@ const Parking = () => {
       onConfirm: async () => {
         try {
           await parkingService.delete(id);
-          setParkings(parkings.filter((park) => park.pid !== id));
+          setParkings(parkings.filter((park) => park.id !== id));
           createToast({
             message: "Usunięto parking",
             type: "primary",
@@ -160,7 +160,7 @@ const Parking = () => {
   };
 
   const editParking = async (parking: ParkingReservations) => {
-    navigate(`edit-parking/${parking.pid}`);
+    navigate(`edit-parking/${parking.id}`);
   };
 
   return (

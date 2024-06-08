@@ -58,7 +58,7 @@ services:
       - $REACT_LOCAL_PORT:$REACT_DOCKER_PORT
     networks:
       - frontend
-    command: npm run dev
+    # command: npm run dev
 
 volumes:
   db:

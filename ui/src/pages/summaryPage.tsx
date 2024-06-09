@@ -1,7 +1,8 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
-import styles from './sumaryPage.module.css';
+import styles from './sumaryPage.module.css';   
 import { useNavigate } from 'react-router-dom';
+
 
 const SummaryPage: React.FC = () => {
     const location = useLocation();
@@ -14,6 +15,13 @@ const SummaryPage: React.FC = () => {
     const totalPrice = daysCount * carInfo.price_per_day;
 
     const navigate = useNavigate();
+
+    useEffect(() => {
+       if(carInfo && carInfo.id) {
+           sessionStorage.setItem('carId', carInfo.id);
+       }
+
+    }, [carInfo]);
 
     const handlePayment = () => {
         sessionStorage.setItem('contactInfo', JSON.stringify(contactInfo));
@@ -32,14 +40,18 @@ const SummaryPage: React.FC = () => {
                 <p>E-mail: {contactInfo.email}</p>
                 <p>Nr Telefonu: {contactInfo.phone}</p>
 
-                <h2>Dane samochodu</h2>
-                <p>Marka: {carInfo.brand}</p>
-                <p>Model: {carInfo.model}</p>
-                <p>Rok produkcji: {carInfo.production_year}</p>
-                <p>Typ skrzyni biegów: {carInfo.transmission_type}</p>
-                <p>Rodzaj paliwa: {carInfo.fuel_type}</p>
-                <p>Numer rejestracyjny: {carInfo.license_plate}</p>
-                <p>Cena za dzień: {carInfo.price_per_day} PLN</p>
+                <div className={styles.carInfoContainer}>
+                    <div className={styles.carDetails}>
+                        <h2>Dane samochodu</h2>
+                        <p>Marka: {carInfo.brand}</p>
+                        <p>Model: {carInfo.model}</p>
+                        <p>Rok produkcji: {carInfo.production_year}</p>
+                        <p>Typ skrzyni biegów: {carInfo.transmission_type}</p>
+                        <p>Rodzaj paliwa: {carInfo.fuel_type}</p>
+                        <p>Numer rejestracyjny: {carInfo.license_plate}</p>
+                        <p>Cena za dzień: {carInfo.price_per_day} PLN</p>
+                    </div>
+                </div>
 
                 <h2>Szczegóły wynajmu</h2>
                 <p>Daty wynajmu: {new Date(rentalDates.startDate).toLocaleDateString()} - {new Date(rentalDates.endDate).toLocaleDateString()}</p>

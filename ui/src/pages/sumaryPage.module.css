@@ -1,4 +1,3 @@
-/* summaryPage.module.css */
 .summaryContainer {
   max-width: 800px;
   margin: 0 auto;
@@ -30,6 +29,25 @@
   margin: 5px 0;
   color: #555;
   line-height: 1.6;
+}
+
+.carInfoContainer {
+  display: flex;
+  align-items: flex-start;
+}
+
+.carDetails {
+  flex: 1;
+}
+
+.carImage {
+  flex-shrink: 0;
+  
+  width: 260px;
+  height: auto;
+  margin-left: 20px;
+  border-radius: 8px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
 }
 
 .nextButtonContainer {

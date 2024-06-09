@@ -1,10 +1,11 @@
-import React, { useState, useEffect ,useContext} from "react";
+import React, { useState, useEffect, useContext, useRef } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import carService from "../../services/car.service";
 import { Cars } from "../../assets/Data";
 import { Container, Row, Col, Form, Button } from "react-bootstrap";
 import ToastModalContext from "../../store/toast-modal-context";
 import { faCircleCheck } from "@fortawesome/free-solid-svg-icons";
+import filesService from "../../services/files.service";
 
 const emptyCar: Cars = {
   id: 0,
@@ -15,55 +16,76 @@ const emptyCar: Cars = {
   license_plate: "",
   fuel_type: "",
   transmission_type: undefined,
+  img: "",
 };
 
 const EditCarPage = () => {
-  const {createConfirmModal,createToast} = useContext(ToastModalContext);
+  const { createConfirmModal, createToast } = useContext(ToastModalContext);
   const navigate = useNavigate();
   const { id } = useParams<{ id: string }>();
   const [carData, setCarData] = useState<Cars>(emptyCar);
+  const [img, setImg] = useState<File | null>(null);
+  const imgRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
-    if (id === undefined) return;
+    if (!id) return;
 
     const carId = parseInt(id);
 
     carService.getById(carId).then((response) => {
       if (response.status === 200) {
-        setCarData(response.data.data[0]);
+        const car = response.data.data[0];
+        setCarData(car);
+        if (car.img) {
+          setImg(new File([], car.img));
+        }
       }
     });
   }, [id]);
 
   const formSubmitHandler = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+
     createConfirmModal({
-      message:"Czy na pewno chcesz zaktualizować ten samochód?",
-      confirmBtnText:"Aktualizuj",
-      confirmBtnClass:"btn-primary",
+      message: "Czy na pewno chcesz zaktualizować ten samochód?",
+      confirmBtnText: "Aktualizuj",
+      confirmBtnClass: "btn-primary",
       onConfirm: async () => {
-    try {
-      const response = await carService.update(carData);
-      if (response.status === 200) {
-        createToast({
-          message: "Dane samochodu zostały zaktualizowane",
-          type: "primary",
-          icon: faCircleCheck,
-          timeout: 10000,
-        });
-        navigate("/zarzadzanie/pojazd");
-      }
-    } catch (error) {
-      console.error("Error while updating car:", error);
-      createToast({
-        message: "Wystąpił błąd podczas aktualizacji samochodu",
-        type: "danger",
-        icon: faCircleCheck,
-        timeout: 10000,
-      });
-    }
-  }
-});
+        try {
+          if (img instanceof File) {
+            const response = await filesService.upload(img);
+            if (response.status === 200) {
+              carData.img = response.data.file.filename;
+            }
+          }
+
+          const response = await carService.update(carData);
+          if (response.status === 200) {
+            createToast({
+              message: "Dane samochodu zostały zaktualizowane",
+              type: "primary",
+              icon: faCircleCheck,
+              timeout: 10000,
+            });
+            navigate("/zarzadzanie/pojazd");
+          }
+        } catch (error) {
+          console.error("Error while updating car:", error);
+          createToast({
+            message: "Wystąpił błąd podczas aktualizacji samochodu",
+            type: "danger",
+            icon: faCircleCheck,
+            timeout: 10000,
+          });
+        }
+      },
+    });
+  };
+
+  const imgChangeHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (!e.target.files) return;
+    const file = e.target.files[0];
+    setImg(file);
   };
 
   const inputChangeHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -174,6 +196,18 @@ const EditCarPage = () => {
                 <option value="MANUAL">Manualna</option>
                 <option value="AUTOMATIC">Automatyczna</option>
               </Form.Select>
+            </Form.Group>
+          </Col>
+        </Row>
+        <Row>
+          <Col md={6}>
+            <Form.Group className="mb-3">
+              <Form.Label>Zdjęcie</Form.Label>
+              <Form.Control
+                type="file"
+                ref={imgRef}
+                onChange={imgChangeHandler}
+              />
             </Form.Group>
           </Col>
         </Row>

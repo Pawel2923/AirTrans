@@ -6,6 +6,9 @@ import AuthContext from "../store/auth-context";
 import styles from "./Logowanie.module.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowLeft } from "@fortawesome/free-solid-svg-icons";
+import ToastModalContext from "../store/toast-modal-context";
+import { faCircleCheck } from "@fortawesome/free-solid-svg-icons";
+
 
 const emailRegex = /^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$/i;
 const isEmpty = (value: string | number) =>
@@ -20,6 +23,7 @@ const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isFormInvalid, setIsFormInvalid] = useState(true);
+const { createToast } = useContext(ToastModalContext);
 
   const emailInputHandler = (ev: React.ChangeEvent<HTMLInputElement>) => {
     setEmail(ev.target.value);
@@ -45,6 +49,12 @@ const Login = () => {
 
       const response = await loginService.create({ email, password });
       if (response.status === 200) {
+        createToast({
+          message: "Zalogowano pomyślnie",
+          icon: faCircleCheck,
+          type: "primary",
+          timeout: 10000,
+        });
         const { auth, user } = response.data;
 
         setAuth(auth);
@@ -52,20 +62,25 @@ const Login = () => {
 
         if (auth) {
           resetForm();
-          alert("Zalogowano");
           if (user.role === "client") {
             navigate("/");
           } else {
             navigate("/zarzadzanie");
           }
         } else {
-          alert("Błędne dane logowania");
+          alert("Błąd logowania");
         }
       } else {
         alert("Błąd logowania");
       }
     } catch (error) {
-      alert("Błąd logowania - sprawdź konsolę");
+      
+      createToast({
+        message: "Błąd logowania",
+        type: "danger",
+        icon: faCircleCheck,
+        timeout: 10000,
+      });
     }
   };
   const loginForm = (

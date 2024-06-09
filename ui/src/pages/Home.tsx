@@ -168,7 +168,7 @@ const Home = () => {
               <h2 className="display-6 text-uppercase">Harmonogram</h2>
               <p>Sprawdź dostępne loty</p>
               <Link
-                to="/"
+                to="/harmonogram"
                 className="btn btn-primary py-2 px-5 align-self-end mx-auto mx-lg-0"
                 style={{
                   width: "fit-content",

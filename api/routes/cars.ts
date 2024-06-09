@@ -4,6 +4,20 @@ import carService from "../services/cars";
 import { Err } from "../Types";
 import { verifyUser, requireRole } from "../middlewares/verifyUser";
 
+router.patch("/:id/img", verifyUser, async function (req, res, next) {
+  try {
+    const { id } = req.params;
+    const parsedId = parseInt(id as string);
+    const { img: imgPath } = req.body;
+
+    const { message } = await carService.addImg(parsedId, imgPath as string);
+    res.status(200).json({ message });
+  } catch (err) {
+    next(err);
+  }
+});
+
+
 router.get("/", async function (req, res, next) {
   try {
     const{page,limit} = req.query;

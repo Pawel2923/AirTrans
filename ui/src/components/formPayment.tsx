@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { CardElement, useStripe, useElements, P24BankElement } from '@stripe/react-stripe-js';
+import { CardElement, useStripe, useElements } from '@stripe/react-stripe-js';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import './formPayment.module.css'; // Custom CSS for additional styling
+import './formPayment.module.css'; 
+import parkingService from '../services/parking.service';
+import rentalService from '../services/rental.service';
 
 const CheckoutForm: React.FC = () => {
   const stripe = useStripe();
@@ -10,7 +12,6 @@ const CheckoutForm: React.FC = () => {
   const navigate = useNavigate();
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<boolean>(false);
-  const [paymentMethodType, setPaymentMethodType] = useState<'card' | 'p24'>('card');
   const [name, setName] = useState<string>('');
   const [email, setEmail] = useState<string>('');
   const location = useLocation();
@@ -23,108 +24,136 @@ const CheckoutForm: React.FC = () => {
       return;
     }
 
-    if (paymentMethodType === 'card') {
-      const cardElement = elements.getElement(CardElement);
+    const cardElement = elements.getElement(CardElement);
 
-      if (cardElement) {
-        const { error, paymentMethod } = await stripe.createPaymentMethod({
-          type: 'card',
+    if (!cardElement) {
+      return;
+    }
+
+    try {
+      const paymentMethod = await stripe.createPaymentMethod({
+        type: 'card',
+        card: cardElement,
+        billing_details: {
+          name,
+          email,
+        },
+      });
+
+      if (paymentMethod.error) {
+        throw new Error(paymentMethod.error.message || 'Payment failed');
+      }
+
+      const response = await fetch('http://localhost:6868/stripe/create-payment-intent', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ amount: totalPrice * 100 }),
+      });
+
+      const { clientSecret } = await response.json();
+
+      const { error: confirmError, paymentIntent } = await stripe.confirmCardPayment(clientSecret, {
+        payment_method: {
           card: cardElement,
           billing_details: {
             name,
             email,
           },
-        });
+        },
+      });
 
-        if (error) {
-          setError(error.message || 'Payment failed');
-          navigate('/payment/error');
-          setSuccess(false);
-          return;
-        }
-
-        try {
-          const response = await fetch('http://localhost:6868/stripe/create-payment-intent', {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ amount: totalPrice * 100 }),
-          });
-
-          const { clientSecret } = await response.json();
-
-          const { error: confirmError } = await stripe.confirmCardPayment(clientSecret, {
-            payment_method: paymentMethod.id,
-          });
-
-          if (confirmError) {
-            setError(confirmError.message || 'Payment confirmation failed');
-            setSuccess(false);
-            navigate('/payment/error');
-          } else {
-            setError(null);
-            setSuccess(true);
-            console.log('Payment successful');
-            navigate('/payment/success');
-          }
-        } catch (error) {
-          setError('An error occurred while processing your payment');
-          setSuccess(false);
-          navigate('/payment/error');
-        }
+      if (confirmError) {
+        throw new Error(confirmError.message || 'Payment confirmation failed');
       }
-    } else if (paymentMethodType === 'p24') {
-      const p24Element = elements.getElement(P24BankElement);
 
-      if (p24Element) {
-        try {
-          const response = await fetch('http://localhost:6868/stripe/create-payment-intent', {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ amount: totalPrice * 100 }),
-          });
+      if (paymentIntent && paymentIntent.status === 'succeeded') {
+        setError(null);
+        setSuccess(true);
 
-          const { clientSecret } = await response.json();
-
-          const { error: confirmError } = await stripe.confirmP24Payment(clientSecret, {
-            payment_method: {
-              p24: p24Element,
-              billing_details: {
-                name,
-                email,
-              },
-            },
-            return_url: `${window.location.origin}/payment/success`,
-          });
-
-          if (confirmError) {
-            setError(confirmError.message || 'Payment confirmation failed');
-            setSuccess(false);
-            navigate('/payment/error');
-          } else {
-            setError(null);
-            setSuccess(true);
-            navigate('/payment/success');
-          }
-        } catch (error) {
-          setError('An error occurred while processing your payment');
-          setSuccess(false);
-          navigate('/payment/error');
-        }
+        saveRentalCar();
+        saveReservation();
+      
+        navigate('/payment/success');
+      } else {
+        throw new Error('Payment failed');
       }
+    } catch (error) {
+      setError('An error occurred while processing your payment');
+      setSuccess(false);
+      console.error(error); // Log the error for debugging
+      navigate('/payment/error');
+    }
+  };
+
+  const saveRentalCar = async () => {
+    const rentalDates = JSON.parse(sessionStorage.getItem('rentalDates') || '{}') || {};
+    const since = new Date(rentalDates.startDate);
+    const until = new Date(rentalDates.endDate);
+    const carId = sessionStorage.getItem('carId') || '';
+    const id = sessionStorage.getItem('userId') || '';
+
+    const carRental = {
+      id: 0,
+      Cars_id: parseInt(carId),
+      Users_id: parseInt(id),
+      status: 'Rented',
+      since: since.toISOString().slice(0, 19).replace('T', ' '),
+      until: until.toISOString().slice(0, 19).replace('T', ' '),
+    };
+
+    try {
+      if (carRental.Cars_id && carRental.since && carRental.until) {
+        const response = await rentalService.createRental({ ...carRental, status: 'Rented' });
+        console.log('Rental created:', response);
+      } else {
+        console.error('Missing required fields:', carRental);
+      }
+    } catch (error) {
+      console.error('Error creating rental:', error);
+    }
+  }
+
+  const saveReservation = async () => {
+    const reservationDates = JSON.parse(sessionStorage.getItem('reservationDates') || '{}') || {};
+    const sinceDate = new Date(reservationDates.startDate);
+    const untilDate = new Date(reservationDates.endDate);
+    const licensePlate = sessionStorage.getItem('licensePlate') || '';
+    const parkingLevel = sessionStorage.getItem('parkingLevel') || '';
+    const spaceId = sessionStorage.getItem('spaceId') || '';
+    const id = sessionStorage.getItem('userId') || '';
+
+    const parkingReservation = {
+      pid: 0,
+      parking_level: parkingLevel,
+      space_id: spaceId,
+      Users_id: parseInt(id),
+      status: 'Reserved',
+      license_plate: licensePlate,
+      since: sinceDate.toISOString().slice(0, 19).replace('T', ' '),
+      until: untilDate.toISOString().slice(0, 19).replace('T', ' '),
+    };
+
+    try {
+      if (parkingReservation.parking_level && parkingReservation.license_plate && parkingReservation.since && parkingReservation.until) {
+        const response = await parkingService.createParking({ ...parkingReservation, status: 'RESERVED' });
+        console.log('Reservation created:', response);
+      } else {
+        console.error('Missing required fields:', parkingReservation);
+      }
+    } catch (error) {
+      console.error('Error creating reservation:', error);
     }
   };
 
   return (
     <div className="container">
       <div className="card mx-auto my-5 p-4" style={{ maxWidth: '500px' }}>
-      <h2 className="mb-4">Zapłać teraz </h2>
+        <h2 className="mb-4">Zapłać teraz</h2>
         <form onSubmit={handleSubmit} className="checkout-form">
           <div className="form-group">
-            <label htmlFor="name">Imie</label>
+            <label htmlFor="name">Imię</label>
             <input
               id="name"
               type="text"
@@ -146,34 +175,26 @@ const CheckoutForm: React.FC = () => {
             />
           </div>
           <div className="form-group">
-            <label htmlFor="payment-method-type">Wybierz metode płatności</label>
+            <label htmlFor="payment-method-type">Wybierz metodę płatności</label>
             <select
               id="payment-method-type"
               className="form-control"
-              value={paymentMethodType}
-              onChange={(e) => setPaymentMethodType(e.target.value as 'card' | 'p24')}
+              value="card"
+              onChange={() => {}}
+              disabled
             >
               <option value="card">Karta</option>
-              <option value="p24">Przelewy24</option>
             </select>
           </div>
-          {paymentMethodType === 'card' && (
-            <div className="form-group">
-              <label htmlFor="card-element">Szczegóły Karty</label>
-              <CardElement id="card-element" className="form-control" />
-            </div>
-          )}
-          {paymentMethodType === 'p24' && (
-            <div className="form-group">
-              <label htmlFor="p24-element">Przelewy24</label>
-              <P24BankElement id="p24-element" className="form-control" />
-            </div>
-          )}
+          <div className="form-group">
+            <label htmlFor="card-element">Szczegóły Karty</label>
+            <CardElement id="card-element" className="form-control" />
+          </div>
           <button type="submit" className="btn btn-primary btn-block mt-4" disabled={!stripe}>
-            Pay {totalPrice} PLN
+            Zapłać {totalPrice} PLN
           </button>
           {error && <div className="alert alert-danger mt-3">{error}</div>}
-          {success && <div className="alert alert-success mt-3">Payment Successful!</div>}
+          {success && <div className="alert alert-success mt-3">Płatność zakończona sukcesem!</div>}
         </form>
       </div>
     </div>

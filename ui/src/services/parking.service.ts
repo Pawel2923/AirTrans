@@ -16,7 +16,7 @@ class ParkingService {
     return http.get(`/parking/${id}`);
   };
   updateParking = (parking: ParkingReservations) => {
-    return http.put(`/parking/${parking.pid}`, parking, {
+    return http.put(`/parking/${parking.id}`, parking, {
       withCredentials: true,
     });
   };

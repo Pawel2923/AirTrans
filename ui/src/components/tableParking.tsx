@@ -33,8 +33,8 @@ const TableParking: React.FC<TableParkingProps> = ({
       </thead>
       <tbody>
         {parkings.map((park) => (
-          <tr key={park.pid}>
-            <td>{park.pid}</td>
+          <tr key={park.id}>
+            <td>{park.id}</td>
             <td>{park.Users_id}</td>
             <td>{park.license_plate}</td>
             <td>{park.parking_level}</td>
@@ -51,7 +51,7 @@ const TableParking: React.FC<TableParkingProps> = ({
               </button>
               <button
                 className="btn btn-danger"
-                onClick={() => onDelete(park.pid ?? 0)}
+                onClick={() => onDelete(park.id ?? 0)}
               >
                 USUŃ
               </button>

@@ -227,7 +227,7 @@ interface Ticket {
 }
 
 interface ParkingReservations {
-  pid?: number;
+  id?: number;
   parking_level: string;
   space_id: string;
   since: string;

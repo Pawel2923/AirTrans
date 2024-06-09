@@ -8,7 +8,7 @@ import { faCircleCheck } from "@fortawesome/free-solid-svg-icons";
 
 
 const emptyParking: ParkingReservations = {
-  pid: 0,
+  id: 0,
   Users_id: 0,
   since: "",
   until: "",
@@ -99,7 +99,7 @@ const handleSelectChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
 return (
   <div className="container">
     <h1>Edytuj rezerwację parkingu</h1>
-    <h2> Numer rezerwacji: #{parking.pid}</h2>
+    <h2> Numer rezerwacji: #{parking.id}</h2>
     <form onSubmit={formSubmitHandler}>
       <div className="form-group">
         <label htmlFor="Users_id">Klient</label>

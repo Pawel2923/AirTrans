@@ -7,7 +7,7 @@ import { verifyUser } from "../middlewares/verifyUser";
  * @openapi
  * /luggage:
  *  get:
- *   description: Get all luggage
+ *   summary: Get all luggage
  *   tags:
  *    - Luggage
  *   parameters:

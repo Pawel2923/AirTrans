@@ -9,7 +9,7 @@ import { verifyUser, requireRole } from "../middlewares/verifyUser";
  *  get:
  *   tags:
  *    - Contact-info
- *   description: Get contact info from the database
+ *   summary: Get contact info from the database
  *   parameters:
  *    - name: filter
  *      in: query
@@ -86,7 +86,7 @@ router.get("/", async function (req, res, next) {
  *  put:
  *   tags:
  *    - Contact-info
- *   description: Update contact info
+ *   summary: Update contact info
  *   parameters:
  *    - name: name
  *      in: path

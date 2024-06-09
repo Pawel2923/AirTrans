@@ -9,7 +9,7 @@ import ticketService from "../services/tickets";
  *  get:
  *   tags:
  *    - Tickets
- *   description: Get ticket and related infomation
+ *   summary: Get ticket and related infomation
  *   parameters:
  *    - in: query
  *      name: page
@@ -93,7 +93,7 @@ router.get("/", verifyUser, async function (req, res, next) {
  *  get:
  *   tags:
  *    - Tickets
- *   description: Get all ticket ids
+ *   summary: Get all ticket ids
  *   responses:
  *    200:
  *     description: Successfully fetched ids
@@ -128,7 +128,7 @@ router.get("/ids", verifyUser, async function (_req, res, next) {
  *  patch:
  *   tags:
  *    - Tickets
- *   description: Update ticket status
+ *   summary: Update ticket status
  *   parameters:
  *    - in: path
  *      name: id

@@ -1,6 +1,7 @@
 import React, { useState } from "react";
-import { Cars } from "../assets/Data";
+import { Cars } from "../assets/Data"; 
 import styles from "./tabelkaCarsk.module.css";
+import FilesService from "../services/files.service";
 
 type CarsTableProps = {
   cars: Cars[];
@@ -22,13 +23,10 @@ const TabelkaCarsk: React.FC<CarsTableProps> = ({ cars, onSelect }) => {
           key={car.id}
           className={`${styles.carCard} ${selectedCarId === car.id ? styles.selected : ""}`}
         >
-          {car.img && (
-            <img
-              src={car.img}
-              alt={`${car.brand} ${car.model}`}
-              className={styles.carImage}
-            />
-          )}
+          <div className={styles.carImage}>
+            <img src={FilesService.getImgUrl(car.img ?? "")} alt={`${car.brand} ${car.model}`} />
+          </div>
+
           <div className={styles.carDetails}>
             <div className={styles.carName}>
               {car.brand} {car.model}
@@ -46,7 +44,7 @@ const TabelkaCarsk: React.FC<CarsTableProps> = ({ cars, onSelect }) => {
           </div>
           <hr className={styles.separator} />
           <button
-            className="btn btn-primary"
+            className={`${styles.btn} ${styles.btnPrimary}`}
             onClick={() => handleSelectClick(car)}
           >
             Wybierz

@@ -33,7 +33,7 @@ const Parking = () => {
 
   const retrieveParkings = useCallback(async() => {
     try {
-      const response = await parkingService.getAllParking(pageData.page, 2);
+      const response = await parkingService.getAllParking(pageData.page, 5);
       setParkings(response.data.data);
       setPageData(response.data.meta);
       const occupied = response.data.data.reduce((acc: { [key: string]: boolean }, parking: ParkingReservations) => {

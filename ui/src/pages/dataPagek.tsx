@@ -7,6 +7,7 @@ import "react-date-range/dist/theme/default.css";
 import { Cars } from "../assets/Data";
 import carService from "../services/car.service";
 import Nav from "../components/Nav";
+import FilesService from "../services/files.service";
 
 const emptyCar: Cars = {
   id: 0,
@@ -72,9 +73,10 @@ const DatePagek = () => {
         <header className={styles.header}>
           <h1>WYBIERZ DATY WYPOŻYCZENIA</h1>
         </header>
-        <div className="row">
-          <div className="col-md-6">
+        <div className={styles.row}>
+          <div className={styles.col}>
             <DateRangePicker
+              minDate={new Date()}
               ranges={[selectionRange]}
               onChange={handleSelect}
             />
@@ -85,12 +87,12 @@ const DatePagek = () => {
               Cena wypożyczenia za {daysCount} dni: {totalPrice} PLN
             </div>
           </div>
-          <div className="col-md-6">
+          <div className={styles.col}>
             <div className={styles.carDetails}>
               <img
-                src={selectedCar.img}
-                alt={`${selectedCar.brand} ${selectedCar.model}`}
                 className={styles.carImage}
+                src={FilesService.getImgUrl(selectedCar.img ?? "")}
+                alt={`${selectedCar.brand} ${selectedCar.model}`}
               />
               <div>
                 <h2>

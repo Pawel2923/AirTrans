@@ -36,7 +36,7 @@ Aplikacja ma na celu umożliwić personelowi zarządzaniem portem lotniczym oraz
 
 - Node.js - środowisko uruchomieniowe do tworzenia aplikacji serwerowych
 
-- Express - framework do tworzenia aplikacji serwerowych
+- Express.js - framework do tworzenia aplikacji serwerowych
 
 - MySQL - system zarządzania relacyjnymi bazami danych
 

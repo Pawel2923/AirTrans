@@ -105,7 +105,7 @@ const CheckoutForm: React.FC = () => {
 
     try {
       if (carRental.Cars_id && carRental.since && carRental.until) {
-        const response = await rentalService.createRental({ ...carRental, status: 'Rented' });
+        const response = await rentalService.createRental({ ...carRental, status: 'RENTED' });
         console.log('Rental created:', response);
       } else {
         console.error('Missing required fields:', carRental);

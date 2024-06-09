@@ -72,8 +72,12 @@ const CheckoutForm: React.FC = () => {
         setError(null);
         setSuccess(true);
 
-        saveRentalCar();
-        saveReservation();
+       if (sessionStorage.getItem('rentalDates')) {
+          saveRentalCar();
+        } else(sessionStorage.getItem('reservationDates')) 
+        {
+          saveReservation();
+        }
       
         navigate('/payment/success');
       } else {

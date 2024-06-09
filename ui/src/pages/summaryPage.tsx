@@ -15,6 +15,11 @@ const SummaryPage: React.FC = () => {
     const totalPrice = daysCount * carInfo.price_per_day;
 
     const navigate = useNavigate();
+    useEffect(() => {
+        if (contactInfo && contactInfo.id) {
+            sessionStorage.setItem('userId', contactInfo.id);
+        }
+    }, [contactInfo]);
 
     useEffect(() => {
        if(carInfo && carInfo.id) {

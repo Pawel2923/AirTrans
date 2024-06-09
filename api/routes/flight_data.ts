@@ -9,7 +9,7 @@ import { requireRole, verifyUser } from "../middlewares/verifyUser";
  *  get:
  *   tags:
  *    - Flights
- *   description: Get flight data
+ *   summary: Get flight data
  *   parameters:
  *    - name: page
  *      in: query
@@ -107,7 +107,7 @@ router.get("/", async function (req, res, next) {
  *  post:
  *   tags:
  *    - Flights
- *   description: Create a new Flight_data entry
+ *   summary: Create a new Flight_data entry
  *   requestBody:
  *    required: true
  *    content:
@@ -146,7 +146,7 @@ router.post("/", verifyUser, async function (req, res, next) {
  *  put:
  *   tags:
  *    - Flights
- *   description: Update a Flight_data entry
+ *   summary: Update a Flight_data entry
  *   parameters:
  *    - name: id
  *      in: path

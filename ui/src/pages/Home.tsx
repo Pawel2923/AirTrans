@@ -92,23 +92,38 @@ const Home = () => {
   useEffect(() => {
     getDepartures({ page: 1 });
 
-    contactInfoService.getContactInfo().then((response) => {
-      if (response.status === 200) {
-        setContactInfo(response.data.data[0]);
-      }
-    });
+    contactInfoService
+      .getContactInfo()
+      .then((response) => {
+        if (response.status === 200) {
+          setContactInfo(response.data.data[0]);
+        }
+      })
+      .catch(() => {
+        setContactInfo(defaultContactInfo);
+      });
 
-    announcementService.getk().then((response) => {
-      if (response.status === 200) {
-        setAnnouncementsData(announcementsDataParser(response.data.data));
-      }
-    });
+    announcementService
+      .getk()
+      .then((response) => {
+        if (response.status === 200) {
+          setAnnouncementsData(announcementsDataParser(response.data.data));
+        }
+      })
+      .catch(() => {
+        setAnnouncementsData([]);
+      });
 
-    offerService.getData().then((response) => {
-      if (response.status === 200) {
-        setOfferData(offerDataParser(response.data.data));
-      }
-    });
+    offerService
+      .getData()
+      .then((response) => {
+        if (response.status === 200) {
+          setOfferData(offerDataParser(response.data.data));
+        }
+      })
+      .catch(() => {
+        setOfferData([]);
+      });
   }, [getDepartures]);
 
   return (
@@ -177,14 +192,18 @@ const Home = () => {
           <div
             className={`container-fluid row justify-content-between gap-5 ms-0 ${homeStyles["announcements-wrapper"]}`}
           >
-            {announcementsData
+            {announcementsData.length > 0 ? (
+              announcementsData
               .slice(0, 3)
               .map((announcement: Announcements, index: number) => (
                 <div key={index} className="col-md-3">
                   <h3>{announcement.title}</h3>
                   <p>{announcement.content}</p>
                 </div>
-              ))}
+              ))
+            ) : (
+              <p>Brak ogłoszeń</p>
+            )}
           </div>
         </div>
         <div className={`container-fluid ${homeStyles["content-wrapper"]}`}>
@@ -194,35 +213,39 @@ const Home = () => {
             </h2>
           </div>
           <div className="d-flex justify-content-center row gap-5">
-            {offerData.map((offer: Offer) => (
-              <div
-                key={offer.id}
-                className={`col-lg col-md-4 card ${homeStyles["offer-card"]}`}
-              >
-                <img
-                  src={
-                    offer.path_to_img &&
-                    filesService.getImgUrl(offer.path_to_img)
-                  }
-                  alt={offer.title}
-                  className="card-img-top"
-                />
-                <div className="card-body d-grid">
-                  <h5 className="card-title text-center">{offer.title}</h5>
-                  {offer.offer_params.map((param: string, index: number) => (
-                    <span key={index} className="card-text">
-                      {param}
-                    </span>
-                  ))}
-                  <Link
-                    to={"/"}
-                    className="btn btn-primary align-self-end mt-4"
-                  >
-                    {offer.btn_text}
-                  </Link>
+            {offerData.length > 0 ? (
+              offerData.map((offer: Offer) => (
+                <div
+                  key={offer.id}
+                  className={`col-lg col-md-4 card ${homeStyles["offer-card"]}`}
+                >
+                  <img
+                    src={
+                      offer.path_to_img &&
+                      filesService.getImgUrl(offer.path_to_img)
+                    }
+                    alt={offer.title}
+                    className="card-img-top"
+                  />
+                  <div className="card-body d-grid">
+                    <h5 className="card-title text-center">{offer.title}</h5>
+                    {offer.offer_params.map((param: string, index: number) => (
+                      <span key={index} className="card-text">
+                        {param}
+                      </span>
+                    ))}
+                    <Link
+                      to={"/"}
+                      className="btn btn-primary align-self-end mt-4"
+                    >
+                      {offer.btn_text}
+                    </Link>
+                  </div>
                 </div>
-              </div>
-            ))}
+              ))
+            ) : (
+              <p>Brak dostępnych ofert</p>
+            )}
           </div>
         </div>
         <div className={`container-fluid ${homeStyles["content-wrapper"]}`}>

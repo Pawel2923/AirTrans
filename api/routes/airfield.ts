@@ -10,7 +10,7 @@ import { requireRole, verifyUser } from "../middlewares/verifyUser";
  *  get:
  *   tags:
  *    - Airfield
- *   description: Get all airfields
+ *   summary: Get all airfields
  *   parameters:
  *    - name: table_name
  *      in: query
@@ -104,7 +104,7 @@ router.get("/", async (req: Request, res: Response, next: NextFunction) => {
  *  put:
  *   tags:
  *    - Airfield
- *   description: Update airfield info
+ *   summary: Update airfield info
  *   parameters:
  *    - name: id
  *      in: path

@@ -1,4 +1,3 @@
-import React from 'react';
 import { Elements } from '@stripe/react-stripe-js';
 import { stripePromise } from './stipeContainer';
 import CheckoutForm from '../components/formPayment';

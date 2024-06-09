@@ -10,7 +10,7 @@ import config from "../config";
  *  get:
  *   tags:
  *    - Announcements
- *   description: Get all announcements
+ *   summary: Get all announcements
  *   parameters:
  *    - name: page
  *      in: query
@@ -143,7 +143,7 @@ router.get("/:id", async function (req, res, next) {
  *  post:
  *   tags:
  *    - Announcements
- *   description: Create a new announcement
+ *   summary: Create a new announcement
  *   requestBody:
  *    required: true
  *    content:
@@ -177,7 +177,7 @@ router.post("/", verifyUser, async function (req, res, next) {
  *  put:
  *   tags:
  *    - Announcements
- *   description: Update an announcement
+ *   summary: Update an announcement
  *   parameters:
  *    - name: id
  *      in: path
@@ -222,7 +222,7 @@ router.put("/:id", verifyUser, async function (req, res, next) {
  *  delete:
  *   tags:
  *    - Announcements
- *   description: Delete an announcement
+ *   summary: Delete an announcement
  *   parameters:
  *    - name: id
  *      in: path

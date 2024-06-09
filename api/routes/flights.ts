@@ -9,7 +9,7 @@ import { requireRole, verifyUser } from "../middlewares/verifyUser";
  *  get:
  *   tags:
  *    - Flights
- *   description: Get all flights
+ *   summary: Get all flights
  *   parameters:
  *    - name: page
  *      in: query
@@ -110,7 +110,7 @@ router.get("/", async function (req, res, next) {
  *  get:
  *   tags:
  *    - Flights
- *   description: Get unique data from a column
+ *   summary: Get unique data from a column
  *   parameters:
  *    - name: column
  *      in: query
@@ -150,7 +150,7 @@ router.get("/data", async function (req, res, next) {
  *  get:
  *   tags:
  *    - Flights
- *   description: Get flights by search term
+ *   summary: Get flights by search term
  *   parameters:
  *    - name: term
  *      in: path
@@ -250,7 +250,7 @@ router.get("/:term", async function (req, res, next) {
  *  post:
  *   tags:
  *    - Flights
- *   description: Create a new flight
+ *   summary: Create a new flight
  *   requestBody:
  *    required: true
  *    content:
@@ -287,7 +287,7 @@ router.post("/", verifyUser, async function (req, res, next) {
  *  put:
  *   tags:
  *    - Flights
- *   description: Update a flight
+ *   summary: Update a flight
  *   parameters:
  *    - name: id
  *      in: path
@@ -331,7 +331,7 @@ router.put("/:id", verifyUser, async function (req, res, next) {
  *  delete:
  *   tags:
  *    - Flights
- *   description: Delete a flight
+ *   summary: Delete a flight
  *   parameters:
  *    - name: id
  *      in: path

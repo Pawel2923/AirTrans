@@ -387,7 +387,7 @@ const UserProfile = () => {
           </div>
         </div>
       </div>
-      <button className="btn btn-alt mt-3 me-3">Zmień hasło</button>
+      <Link to="/resetowanie" className="btn btn-alt mt-3 me-3">Zmień hasło</Link>
       <button className="btn btn-danger mt-3" onClick={deleteBtnHandler}>
         Usuń konto
       </button>

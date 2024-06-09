@@ -1,4 +1,4 @@
-import React,{useEffect} from 'react';
+import {useEffect} from 'react';
 import styles from './PaymentSuccess.module.css';
 import Footer from '../components/footer';
 import { useNavigate } from 'react-router-dom';
@@ -16,7 +16,7 @@ const PaymentError = () => {
     return () => clearTimeout(timer);
   }, [navigate]);
   // Retrieve contact information from sessionStorage
-  const contactInfo = JSON.parse(sessionStorage.getItem('contactInfo')) || {
+  const contactInfo = JSON.parse(sessionStorage.getItem('contactInfo') as string) || {
     firstName: 'Nieznane',
     lastName: 'Nieznane',
     email: 'Nieznany',

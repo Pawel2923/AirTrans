@@ -11,7 +11,7 @@ const router = express.Router();
  *  get:
  *   tags:
  *    - Authentication
- *   description: Check if user is authenticated
+ *   summary: Check if user is authenticated
  *   parameters:
  *    - name: requiredRole
  *      in: query
@@ -65,37 +65,37 @@ router.get("/", verifyUser, (req, res, next) => {
  *  post:
  *   tags:
  *    - Authentication
- *   description: Refresh access token using refresh token
- *  responses:
- *   200:
- *    description: Successfully refreshed access token
- *    content:
- *     application/json:
- *      schema:
- *       type: object
- *       properties:
- *        auth:
- *         type: boolean
- *         description: Authentication status
- *        user:
- *         type: object
- *         description: User data
- *         properties:
- *          email:
- *           type: string
- *           description: User email
- *          role:
- *           type: string
- *           description: User role
- *        message:
- *         type: string
- *         description: Success message
- *   401:
- *    description: Unauthorized
- *   403:
- *    description: Forbidden
- *   500:
- *    description: Internal server error
+ *   summary: Refresh access token using refresh token
+ *   responses:
+ *    200:
+ *     description: Successfully refreshed access token
+ *     content:
+ *      application/json:
+ *       schema:
+ *        type: object
+ *        properties:
+ *         auth:
+ *          type: boolean
+ *          description: Authentication status
+ *         user:
+ *          type: object
+ *          description: User data
+ *          properties:
+ *           email:
+ *            type: string
+ *            description: User email
+ *           role:
+ *            type: string
+ *            description: User role
+ *         message:
+ *          type: string
+ *          description: Success message
+ *    401:
+ *     description: Unauthorized
+ *    403:
+ *     description: Forbidden
+ *    500:
+ *     description: Internal server error
  */
 router.post("/refresh", refreshToken, (req, res, next) => {
   try {

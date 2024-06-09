@@ -40,3 +40,13 @@
   padding: 10px 20px;
   font-size: 18px;
 }
+
+.row {
+  display: flex;
+  justify-content: space-between;
+}
+
+.col-md-6 {
+  flex: 1;
+  margin: 10px;
+}

@@ -1,4 +1,4 @@
-interface ErrInterface {
+  interface ErrInterface {
   message: string;
   statusCode?: number | undefined;
   stack?: string;

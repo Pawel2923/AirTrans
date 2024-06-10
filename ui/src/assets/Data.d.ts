@@ -350,3 +350,10 @@ interface ToastProps {
   timeout?: number;
   onClose?: () => void;
 }
+interface Email {
+  to: string;
+  subject: string;
+  title: string;
+  content: string;
+  text?: string;
+}

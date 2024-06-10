@@ -36,7 +36,7 @@ const offerDataParser = (offerData: RawOffer) => {
   offerData.cars.map((car: Cars, index: number) => {
     offers.push({
       id: index,
-      path_to_img: "offerImg.png",
+      path_to_img: car.img ?? filesService.getImgUrl(car.img ??""),
       title: "Samochód",
       offer_params: [
         "Marka: " + car.brand,

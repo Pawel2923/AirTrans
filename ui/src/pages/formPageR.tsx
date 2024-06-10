@@ -9,7 +9,7 @@ const FormPageR = () => {
   const { user } = useContext(AuthContext);
   const { usersData: userInfo, getUserByEmail } = useGetUsers();
   const [contactInfo, setContactInfo] = useState({
-    id:"",
+    id:0,
     firstName: "",
     lastName: "",
     email: "",
@@ -26,7 +26,7 @@ const FormPageR = () => {
   useEffect(() => {
     if (userInfo && userInfo.length > 0) {
       setContactInfo({
-        id: userInfo[0].id,
+        id: userInfo[0].id as number,
         firstName: userInfo[0].first_name as string,
         lastName: userInfo[0].last_name as string,
         email: userInfo[0].email,

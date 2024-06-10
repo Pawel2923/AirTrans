@@ -5,6 +5,8 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import './formPayment.module.css'; 
 import parkingService from '../services/parking.service';
 import rentalService from '../services/rental.service';
+import emailService from '../services/email.service';
+import { Email } from '../assets/Data.d';
 
 const CheckoutForm: React.FC = () => {
   const stripe = useStripe();
@@ -21,12 +23,14 @@ const CheckoutForm: React.FC = () => {
     event.preventDefault();
 
     if (!stripe || !elements) {
+      setError("Stripe has not loaded correctly.");
       return;
     }
 
     const cardElement = elements.getElement(CardElement);
 
     if (!cardElement) {
+      setError("Card element is not available.");
       return;
     }
 
@@ -34,34 +38,27 @@ const CheckoutForm: React.FC = () => {
       const paymentMethod = await stripe.createPaymentMethod({
         type: 'card',
         card: cardElement,
-        billing_details: {
-          name,
-          email,
-        },
+        billing_details: { name, email },
       });
 
       if (paymentMethod.error) {
-        throw new Error(paymentMethod.error.message || 'Payment failed');
+        throw new Error(paymentMethod.error.message || 'Payment method creation failed');
       }
 
       const response = await fetch('http://localhost:6868/stripe/create-payment-intent', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ amount: totalPrice * 100 }),
       });
+
+      if (!response.ok) {
+        throw new Error('Failed to create payment intent');
+      }
 
       const { clientSecret } = await response.json();
 
       const { error: confirmError, paymentIntent } = await stripe.confirmCardPayment(clientSecret, {
-        payment_method: {
-          card: cardElement,
-          billing_details: {
-            name,
-            email,
-          },
-        },
+        payment_method: paymentMethod.paymentMethod.id,
       });
 
       if (confirmError) {
@@ -72,21 +69,19 @@ const CheckoutForm: React.FC = () => {
         setError(null);
         setSuccess(true);
 
-       if (sessionStorage.getItem('rentalDates')) {
-          saveRentalCar();
-        } else(sessionStorage.getItem('reservationDates')) 
-        {
-          saveReservation();
+        if (sessionStorage.getItem('rentalDates')) {
+          await saveRentalCar();
+        } else if (sessionStorage.getItem('reservationDates')) {
+          await saveReservation();
         }
-      
+
         navigate('/payment/success');
       } else {
         throw new Error('Payment failed');
       }
     } catch (error) {
-      setError('An error occurred while processing your payment');
+      console.error('Payment error:', error);
       setSuccess(false);
-      console.error(error); // Log the error for debugging
       navigate('/payment/error');
     }
   };
@@ -109,7 +104,8 @@ const CheckoutForm: React.FC = () => {
 
     try {
       if (carRental.Cars_id && carRental.since && carRental.until) {
-        const response = await rentalService.createRental({ ...carRental, status: 'Rented' });
+        const response = await rentalService.createRental({ ...carRental, status: 'RENTED' });
+        sendConfirmationEmailC();
         console.log('Rental created:', response);
       } else {
         console.error('Missing required fields:', carRental);
@@ -117,7 +113,7 @@ const CheckoutForm: React.FC = () => {
     } catch (error) {
       console.error('Error creating rental:', error);
     }
-  }
+  };
 
   const saveReservation = async () => {
     const reservationDates = JSON.parse(sessionStorage.getItem('reservationDates') || '{}') || {};
@@ -142,12 +138,60 @@ const CheckoutForm: React.FC = () => {
     try {
       if (parkingReservation.parking_level && parkingReservation.license_plate && parkingReservation.since && parkingReservation.until) {
         const response = await parkingService.createParking({ ...parkingReservation, status: 'RESERVED' });
+        sendConfirmationEmail();
         console.log('Reservation created:', response);
       } else {
         console.error('Missing required fields:', parkingReservation);
       }
     } catch (error) {
       console.error('Error creating reservation:', error);
+    }
+  };
+
+  const sendConfirmationEmail = async () => {
+    try {
+      const emailContent: Email = {
+        to: email,
+        title: 'Potwierdzenie rezerwacji',
+        subject: 'Potwierdzenie rezerwacji',
+        text: `Twoja rezerwacja została potwierdzona. Dziękujemy za skorzystanie z naszych usług.`,
+        content: `Twoja rezerwacja została potwierdzona. Dziękujemy za skorzystanie z naszych usług. Pamiętaj, że rezerwacja jest ważna od momentu rozpoczęcia do zakończenia okresu rezerwacji.
+        Aby uzyskać więcej szczegółów dotyczących Twojej rezerwacji, zapraszamy do odwiedzenia panelu użytkownika .
+        `,
+      };
+
+      const response = await emailService.sendEmail(emailContent);
+
+      if (response.status === 200) {
+        console.log("E-mail potwierdzający został wysłany na podany adres e-mail.");
+      } else {
+        throw new Error('Failed to send confirmation email');
+      }
+    } catch (error) {
+      console.error('Error sending confirmation email:', error);
+    }
+  };
+  const sendConfirmationEmailC = async () => {
+    try {
+      const emailContent: Email = {
+        to: email,
+        title: 'Potwierdzenie wynajmu samochodu',
+        subject: 'Potwierdzenie wynajmu samochodu',
+        text: `Twoja rezerwacja samochodu została potwierdzona. Dziękujemy za skorzystanie z naszych usług.`,
+        content: `Twoja rezerwacja samochodu została potwierdzona. Dziękujemy za skorzystanie z naszych usług. Pamiętaj, że rezerwacja jest ważna od momentu rozpoczęcia do zakończenia okresu rezerwacji.
+        Aby uzyskać więcej szczegółów dotyczących Twojej rezerwacji, zapraszamy do odwiedzenia panelu użytkownika .
+        `,
+      };
+
+      const response = await emailService.sendEmail(emailContent);
+
+      if (response.status === 200) {
+        console.log("E-mail potwierdzający został wysłany na podany adres e-mail.");
+      } else {
+        throw new Error('Failed to send confirmation email');
+      }
+    } catch (error) {
+      console.error('Error sending confirmation email:', error);
     }
   };
 

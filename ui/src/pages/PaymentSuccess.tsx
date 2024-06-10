@@ -38,6 +38,8 @@ const PaymentSuccess = () => {
         <p>Nazwisko: {contactInfo.lastName}</p>
         <p>E-mail: {contactInfo.email}</p>
         <p>Nr Telefonu: {contactInfo.phone}</p>
+
+        <p>Wkrótce otrzymasz e-mail z potwierdzeniem zamówienia.</p>
       </div>
       
       <Loader/>

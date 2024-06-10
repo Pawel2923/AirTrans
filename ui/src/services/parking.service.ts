@@ -9,8 +9,8 @@ class ParkingService {
     return http.post("/parking", parkingData, { withCredentials: true });
   }
 
-  delete = (pid: number) => {
-    return http.delete(`/parking/${pid}`, { withCredentials: true });
+  delete = (id: number) => {
+    return http.delete(`/parking/${id}`, { withCredentials: true });
   };
   getById = (id: number) => {
     return http.get(`/parking/${id}`);

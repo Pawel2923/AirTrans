@@ -108,9 +108,10 @@ function formatDate(dateString: string) {
 async function createRental(rentalData: Rentals) {
   validateRental(rentalData);
   const carAvailability = await db.query(
-    "SELECT '' FROM Rentals WHERE Cars_id = ? AND until > NOW()",
-    [rentalData.Cars_id, rentalData.until]
+    "SELECT * FROM Rentals WHERE Cars_id = ? AND (since <= ? AND until >= ?)",
+    [rentalData.Cars_id, rentalData.until, rentalData.since]
   );
+  
 
   if (helper.emptyOrRows(carAvailability).length > 0) {
     const error = new Err(

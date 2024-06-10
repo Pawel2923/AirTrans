@@ -6,7 +6,8 @@ import './formPayment.module.css';
 import parkingService from '../services/parking.service';
 import rentalService from '../services/rental.service';
 import emailService from '../services/email.service';
-import { Email,ParkingReservations } from '../assets/Data.d';
+import { Email, ParkingReservations } from '../assets/Data.d';
+
 
 const CheckoutForm: React.FC = () => {
   const stripe = useStripe();
@@ -19,6 +20,15 @@ const CheckoutForm: React.FC = () => {
   const [email, setEmail] = useState<string>('');
   const location = useLocation();
   const { totalPrice } = location.state as { totalPrice: number };
+  const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
+  
+  useEffect(() => {
+    const userId = sessionStorage.getItem('userId');
+    if (userId) {
+      setIsLoggedIn(true);
+      console.log('User is logged in',isLoggedIn);
+    }
+  }, []);
 
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
@@ -78,7 +88,7 @@ const CheckoutForm: React.FC = () => {
         } else if (carId) {
           saveRentalCar();
         } else {
-          console.error('Neither rental car nor parking reservation information found in session storage.');
+          console.error('Missing reservation or rental details');
           navigate('/payment/error');
         }
         setPaymentSuccess(true);
@@ -97,7 +107,6 @@ const CheckoutForm: React.FC = () => {
       sessionStorage.removeItem('userId');
     }
   };
-  
   
   useEffect(() => {
     if (success && paymentSuccess) {
@@ -125,8 +134,8 @@ const CheckoutForm: React.FC = () => {
     const carId = sessionStorage.getItem('carId');
     const userId = sessionStorage.getItem('userId');
 
-    if (!carId || !userId) {
-      console.error('Car ID or User ID is missing');
+    if (!carId) {
+      console.error('Car ID is missing');
       navigate('/payment/error');
       return;
     }
@@ -134,7 +143,7 @@ const CheckoutForm: React.FC = () => {
     const carRental = {
       id: 0,
       Cars_id: parseInt(carId),
-      Users_id: parseInt(userId),
+      Users_id: userId ? parseInt(userId) : null!,
       status: 'RENTED',
       since: since.toISOString().slice(0, 19).replace('T', ' '),
       until: until.toISOString().slice(0, 19).replace('T', ' '),
@@ -165,7 +174,7 @@ const CheckoutForm: React.FC = () => {
     const spaceId = sessionStorage.getItem('spaceId');
     const userId = sessionStorage.getItem('userId');
   
-    if (!licensePlate || !parkingLevel || !spaceId || !userId) {
+    if (!licensePlate || !parkingLevel || !spaceId) {
       console.error('Missing reservation details');
       navigate('/payment/error');
       return;
@@ -175,8 +184,8 @@ const CheckoutForm: React.FC = () => {
       id: 0,
       parking_level: parkingLevel,
       space_id: spaceId,
-      Users_id: parseInt(userId),
-      status: undefined,
+      Users_id: userId ? parseInt(userId) : null!,
+      status: 'RESERVED',
       license_plate: licensePlate,
       since: sinceDate.toISOString().slice(0, 19).replace('T', ' '),
       until: untilDate.toISOString().slice(0, 19).replace('T', ' '),
@@ -189,6 +198,7 @@ const CheckoutForm: React.FC = () => {
     } catch (error) {
       console.error('Error creating reservation:', error);
       navigate('/payment/error');
+      
     }
   };
   

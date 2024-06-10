@@ -83,7 +83,7 @@ router.get("/", async function (req, res, next) {
  *         description: Internal server error
  */
 
-router.post("/", verifyUser, async function (req, res, next) {
+router.post("/",  async function (req, res, next) {
   try {
     const { data, message } = await parkingService.createParking(req.body);
     res.status(201).json({ data, message });

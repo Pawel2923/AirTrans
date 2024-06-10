@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { CardElement, useStripe, useElements } from '@stripe/react-stripe-js';
 import 'bootstrap/dist/css/bootstrap.min.css';
@@ -14,6 +14,7 @@ const CheckoutForm: React.FC = () => {
   const navigate = useNavigate();
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<boolean>(false);
+  const [paymentSuccess, setPaymentSuccess] = useState<boolean>(false);
   const [name, setName] = useState<string>('');
   const [email, setEmail] = useState<string>('');
   const location = useLocation();
@@ -64,7 +65,7 @@ const CheckoutForm: React.FC = () => {
       if (confirmError) {
         throw new Error(confirmError.message || 'Payment confirmation failed');
       }
-
+    
       if (paymentIntent && paymentIntent.status === 'succeeded') {
         setError(null);
         setSuccess(true);
@@ -74,17 +75,21 @@ const CheckoutForm: React.FC = () => {
         } else if (sessionStorage.getItem('reservationDates')) {
           await saveReservation();
         }
-
-        navigate('/payment/success');
+        setPaymentSuccess(true);
       } else {
         throw new Error('Payment failed');
       }
     } catch (error) {
       console.error('Payment error:', error);
-      setSuccess(false);
       navigate('/payment/error');
     }
   };
+
+  useEffect(() => {
+    if (success && paymentSuccess) {
+      navigate('/payment/success');
+    }
+  }, [success, paymentSuccess, navigate]);
 
   const saveRentalCar = async () => {
     const rentalDates = JSON.parse(sessionStorage.getItem('rentalDates') || '{}') || {};
@@ -109,6 +114,7 @@ const CheckoutForm: React.FC = () => {
         console.log('Rental created:', response);
       } else {
         console.error('Missing required fields:', carRental);
+        navigate('/payment/error'); return;
       }
     } catch (error) {
       console.error('Error creating rental:', error);
@@ -142,6 +148,7 @@ const CheckoutForm: React.FC = () => {
         console.log('Reservation created:', response);
       } else {
         console.error('Missing required fields:', parkingReservation);
+        navigate('/payment/error'); return;
       }
     } catch (error) {
       console.error('Error creating reservation:', error);

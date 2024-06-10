@@ -60,6 +60,8 @@ Do uruchomienia aplikacji wymagane są następujące składniki:
 
 - Pliki zmiennych środowiskowych `.env` z odpowiednimi zniennymi
 
+- Baza danych z kontami i uprawnieniami
+
 ## Instalacja
 
 ### Docker
@@ -68,7 +70,7 @@ Do działania aplikacji wymagany jest Docker. Więcej informacji o tym jak zains
 
 ### Zmienne środowiskowe
 
-Zmienne środowiskowe znajdują się w plikach `.env`. Należy utworzyć plik w folderze głównym oraz w folderze `ui` i wprowadzić wymagane zmienne środowiskowe.
+Zmienne środowiskowe znajdują się w plikach `.env`. Należy utworzyć plik w folderze głównym oraz w folderze [`ui`](/ui/) i wprowadzić wymagane zmienne środowiskowe.
 
 Zmienne środowiskowe dla całej aplikacji:
 
@@ -104,12 +106,17 @@ STRIPE_SECRET_KEY - prywatny klucz do stripe
 GMAIL_PASSWORD - hasło aplikacji konta Google
 ```
 
-Zmienne środowiskowe dla `ui`:
+Zmienne środowiskowe w folderze [`ui`](/ui/):
+
 ```
 VITE_CLIENT_API_URL - adres url do api
 ```
 
 Pamiętaj, aby nie przesyłać pliku `.env` do repozytorium.
+
+### Baza danych
+
+Aby aplikacja działała poprawnie, należy utworzyć bazę danych z kontami i uprawnieniami. W katalogu [`db-dump`](/db-dump/) znajdują się plki `.sql` z eksportami bazy danych. Należy zaimportować najnowszy plik do swojej bazy danych.
 
 ## Uruchamianie
 

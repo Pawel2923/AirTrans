@@ -50,7 +50,7 @@ Aplikacja ma na celu umożliwić personelowi zarządzaniem portem lotniczym oraz
 
 ## Status projektu
 
-Projekt jest w fazie dokumentacji i testów.
+Główne funkcjonalności aplikacji zostały zaimplementowane. Aplikacja będzie rozwijana w przyszłości.
 
 ## Wymagania
 
@@ -120,7 +120,7 @@ Aby aplikacja działała poprawnie, należy utworzyć bazę danych z kontami i u
 
 ## Uruchamianie
 
-Aby uruchomić pobraną aplikację należy wykonać nastepujące kroki:
+Aby uruchomić aplikację należy wykonać nastepujące kroki:
 
 1. Upewnij się, że masz uruchomiony Docker Engine oraz istnieje plik `.env` w folderze głównym projektu
 2. Uruchom terminal i przejdź do folderu głównego projektu
@@ -129,4 +129,4 @@ Aby uruchomić pobraną aplikację należy wykonać nastepujące kroki:
 ![Uruchomione kontenery](https://i.postimg.cc/3Rvm56hK/image.png)
 5. Uruchom przeglądarkę i wpisz adres, który podałeś w pliku `.env` w zmiennej `CLIENT_ORIGIN`
 
-Aby przejść do dokumentacji API wejdź na stronę dostępną pod adsresem `CLIENT_API_URL/api-docs` (domyślnie http://localhost:6868/api-docs).
+Aby przejść do dokumentacji API wejdź na stronę dostępną pod adresem `CLIENT_API_URL/api-docs` (domyślnie http://localhost:6868/api-docs).

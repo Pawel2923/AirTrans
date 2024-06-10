@@ -35,8 +35,8 @@ const offerDataParser = (offerData: RawOffer) => {
   const offers: Offer[] = [];
   offerData.cars.map((car: Cars, index: number) => {
     offers.push({
-      id: index,
-      path_to_img: car.img ?? filesService.getImgUrl(car.img ??""),
+      id: index + 1, 
+      path_to_img: car.img ?? filesService.getImgUrl(car.img ?? ""),
       title: "Samochód",
       offer_params: [
         "Marka: " + car.brand,
@@ -49,8 +49,8 @@ const offerDataParser = (offerData: RawOffer) => {
     });
   });
   offers.push({
-    id: 3,
-    path_to_img: "offerImg.png",
+    id: offerData.cars.length + 1, 
+    path_to_img: "1718045862789238271643.jpg",
     title: "Parking",
     offer_params: [
       "Cena: " + offerData.parkingInfo[0].price_per_day + " zł/doba",
@@ -194,13 +194,13 @@ const Home = () => {
           >
             {announcementsData.length > 0 ? (
               announcementsData
-              .slice(0, 3)
-              .map((announcement: Announcements, index: number) => (
-                <div key={index} className="col-md-3">
-                  <h3>{announcement.title}</h3>
-                  <p>{announcement.content}</p>
-                </div>
-              ))
+                .slice(0, 3)
+                .map((announcement: Announcements, index: number) => (
+                  <div key={index} className="col-md-3">
+                    <h3>{announcement.title}</h3>
+                    <p>{announcement.content}</p>
+                  </div>
+                ))
             ) : (
               <p>Brak ogłoszeń</p>
             )}
@@ -235,7 +235,11 @@ const Home = () => {
                       </span>
                     ))}
                     <Link
-                      to={"/"}
+                      to={
+                        offer.title === "Samochód"
+                          ? `/wynajemC/data/${offer.id}`
+                          : "/WynajemP"
+                      }
                       className="btn btn-primary align-self-end mt-4"
                     >
                       {offer.btn_text}

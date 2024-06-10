@@ -114,6 +114,14 @@ const ClientTickets = () => {
               <p>Brak biletów</p>
             )}
           </div>
+          <h3>Dodaj bilet</h3>
+          <div className={`${classes["tickets-wrapper"]} mb-3`}>
+            <div className={classes["other-tickets"]}>
+              <div className={`${classes.ticket} p-3`}>
+                <p>Aby dodać bilet, skontaktuj się z naszym biurem obsługi</p>
+              </div>
+            </div>
+          </div>
           <h3>Inne bilety</h3>
           <div className={classes["tickets-wrapper"]}>
             <div className={classes["other-tickets"]}>

@@ -3,6 +3,9 @@ import useGetTickets from "../../hooks/tickets/useGetTickets";
 import DataTable from "../../components/Manager/DataTable";
 import useUpdateTickets from "../../hooks/tickets/useUpdateTickets";
 import ToastModalContext from "../../store/toast-modal-context";
+import ticketsService, { Ticket } from "../../services/tickets.service";
+import useErrorHandler from "../../hooks/useErrorHandler";
+import { Err } from "../../assets/Data";
 
 const ticketsColumnNames = [
   "Klasa",
@@ -21,6 +24,7 @@ const TicketsPage = () => {
   const { isError, createConfirmModal } = useContext(ToastModalContext);
   const [ticketIds, setTicketIds] = useState<string[]>([""]);
   const { updateStatus } = useUpdateTickets();
+  const { handleError } = useErrorHandler();
 
   useEffect(() => {
     if (sessionStorage.getItem("ticketId")) {
@@ -70,6 +74,62 @@ const TicketsPage = () => {
     });
   };
 
+  const addTicketFormhandler = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    const classInput = document.getElementById("class") as HTMLInputElement;
+    const seatNumberInput = document.getElementById(
+      "seat_number"
+    ) as HTMLInputElement;
+    const priceInput = document.getElementById("price") as HTMLInputElement;
+    const statusInput = document.getElementById("status") as HTMLSelectElement;
+    const userIdInput = document.getElementById("Users_id") as HTMLInputElement;
+    const flightIdInput = document.getElementById(
+      "Flight_id"
+    ) as HTMLInputElement;
+    const gateIdInput = document.getElementById("Gates_id") as HTMLInputElement;
+
+    if (
+      statusInput.value !== "PURCHASED" &&
+      statusInput.value !== "EXPIRED" &&
+      statusInput.value !== "USED" &&
+      statusInput.value !== "REFUNDED" &&
+      statusInput.value !== "CANCELLED"
+    ) {
+      const error: Err = {
+        response: {
+          data: {
+            message: "Nieprawidłowy status biletu",
+          },
+          status: 400,
+        },
+        name: "",
+        message: ""
+      };
+
+      handleError({ error });
+      return;
+    }
+
+    const newTicket: Ticket = {
+      class: classInput.value,
+      seat_number: seatNumberInput.value,
+      price: parseFloat(priceInput.value),
+      status: statusInput.value,
+      Users_id: parseInt(userIdInput.value),
+      Flight_id: flightIdInput.value,
+      Gates_id: parseInt(gateIdInput.value),
+    };
+
+    ticketsService
+      .create(newTicket)
+      .then(() => {
+        getTicketById(ticketId as number);
+      })
+      .catch((error) => {
+        handleError({ error });
+      });
+  };
+
   return (
     <>
       <div className="manager-block-wrapper">
@@ -110,6 +170,50 @@ const TicketsPage = () => {
               <div>Adres: {ticket.address || "Brak"}</div>
             </div>
           ))}
+        {!ticketsData && (
+          <div className="manager-block">
+            <h3>Dodaj bilet</h3>
+            <form>
+              <div className="form-group">
+                <label htmlFor="class">Klasa:</label>
+                <input type="text" id="class" className="form-control" />
+              </div>
+              <div className="form-group">
+                <label htmlFor="seat_number">Numer miejsca:</label>
+                <input type="text" id="seat_number" className="form-control" />
+              </div>
+              <div className="form-group">
+                <label htmlFor="price">Cena:</label>
+                <input type="number" id="price" className="form-control" />
+              </div>
+              <div className="form-group">
+                <label htmlFor="status">Status:</label>
+                <select id="status" className="form-control">
+                  <option value="PURCHASED">Kupiony</option>
+                  <option value="EXPIRED">Wygasł</option>
+                  <option value="USED">Użyty</option>
+                  <option value="REFUNDED">Zwrócony</option>
+                  <option value="CANCELLED">Anulowany</option>
+                </select>
+              </div>
+              <div className="form-group">
+                <label htmlFor="Users_id">ID użytkownika:</label>
+                <input type="number" id="Users_id" className="form-control" />
+              </div>
+              <div className="form-group">
+                <label htmlFor="Flight_id">ID lotu:</label>
+                <input type="text" id="Flight_id" className="form-control" />
+              </div>
+              <div className="form-group">
+                <label htmlFor="Gates_id">ID bramki:</label>
+                <input type="number" id="Gates_id" className="form-control" />
+              </div>
+              <button className="btn btn-primary mt-3" type="submit">
+                DODAJ
+              </button>
+            </form>
+          </div>
+        )}
       </div>
       {ticketsData && (
         <DataTable
@@ -137,26 +241,76 @@ const TicketsPage = () => {
         />
       )}
       {ticketsData && (
-        <div className="d-flex mt-5 gap-3">
-          <button
-            className="btn btn-primary px-3"
-            style={{ maxWidth: "180px", fontSize: ".95rem" }}
-            onClick={() => {
-              createConfirm(confirmTicketValidity);
-            }}
-          >
-            POTWIERDŹ WAŻNOŚĆ BILETU
-          </button>
-          <button
-            className="btn btn-danger px-3"
-            style={{ maxWidth: "180px", fontSize: ".95rem" }}
-            onClick={() => {
-              createConfirm(cancelTicket);
-            }}
-          >
-            UNIEWAŻNIJ BILET
-          </button>
-        </div>
+        <>
+          <div className="d-flex mt-3 gap-3">
+            <button
+              className="btn btn-primary px-3"
+              style={{ maxWidth: "180px", fontSize: ".95rem" }}
+              onClick={() => {
+                createConfirm(confirmTicketValidity);
+              }}
+            >
+              POTWIERDŹ WAŻNOŚĆ BILETU
+            </button>
+            <button
+              className="btn btn-danger px-3"
+              style={{ maxWidth: "180px", fontSize: ".95rem" }}
+              onClick={() => {
+                createConfirm(cancelTicket);
+              }}
+            >
+              UNIEWAŻNIJ BILET
+            </button>
+          </div>
+          <div className="manger-block-wrapper mt-4">
+            <div className="manager-block">
+              <h3>Dodaj bilet</h3>
+              <form onSubmit={addTicketFormhandler}>
+                <div className="form-group">
+                  <label htmlFor="class">Klasa:</label>
+                  <input type="text" id="class" className="form-control" />
+                </div>
+                <div className="form-group">
+                  <label htmlFor="seat_number">Numer miejsca:</label>
+                  <input
+                    type="text"
+                    id="seat_number"
+                    className="form-control"
+                  />
+                </div>
+                <div className="form-group">
+                  <label htmlFor="price">Cena:</label>
+                  <input type="number" id="price" className="form-control" />
+                </div>
+                <div className="form-group">
+                  <label htmlFor="status">Status:</label>
+                  <select id="status" className="form-control">
+                    <option value="PURCHASED">Kupiony</option>
+                    <option value="EXPIRED">Wygasł</option>
+                    <option value="USED">Użyty</option>
+                    <option value="REFUNDED">Zwrócony</option>
+                    <option value="CANCELLED">Anulowany</option>
+                  </select>
+                </div>
+                <div className="form-group">
+                  <label htmlFor="Users_id">ID użytkownika:</label>
+                  <input type="number" id="Users_id" className="form-control" />
+                </div>
+                <div className="form-group">
+                  <label htmlFor="Flight_id">ID lotu:</label>
+                  <input type="text" id="Flight_id" className="form-control" />
+                </div>
+                <div className="form-group">
+                  <label htmlFor="Gates_id">ID bramki:</label>
+                  <input type="number" id="Gates_id" className="form-control" />
+                </div>
+                <button className="btn btn-primary mt-3" type="submit">
+                  DODAJ
+                </button>
+              </form>
+            </div>
+          </div>
+        </>
       )}
     </>
   );

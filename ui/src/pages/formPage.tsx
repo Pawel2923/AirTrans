@@ -10,7 +10,7 @@ const FormPage= () => {
   const { usersData: userInfo, getUserByEmail } = useGetUsers();
   const [contactInfo, setContactInfo] = useState({
 
-    id:0;
+    id:0,
     firstName: "",
     lastName: "",
     email: "",

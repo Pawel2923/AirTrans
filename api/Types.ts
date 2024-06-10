@@ -188,6 +188,7 @@ interface Luggage {
   size: string;
   weight: number;
   Users_id: number;
+  Flights_id: string;
 }
 
 interface Tickets {
@@ -205,6 +206,18 @@ interface Tickets {
   status?: "PURCHASED" | "EXPIRED" | "USED" | "REFUNDED" | "CANCELLED";
   Flight_id: string;
   gate_name: string;
+  Gates_id?: number;
+  Users_id: number;
+}
+
+interface Ticket {
+  class: string;
+  seat_number: string;
+  price: number;
+  status?: "PURCHASED" | "EXPIRED" | "USED" | "REFUNDED" | "CANCELLED";
+  Users_id: number;
+  Flight_id: string;
+  Gates_id: number;
 }
 
 interface Parking_reservations {
@@ -294,6 +307,7 @@ export type {
   Equipment,
   Luggage,
   Tickets,
+  Ticket,
   Parking_reservations,
   Parking_info,
   Cars,

@@ -1,8 +1,17 @@
 import db from "./db";
 import helper from "../helper";
 import config from "../config";
-import { Err, Tickets } from "../Types";
+import { Err, Ticket, Tickets } from "../Types";
 import { ResultSetHeader } from "mysql2";
+
+const ticketProperties = [
+  "class",
+  "seat_number",
+  "price",
+  "Users_id",
+  "Flight_id",
+  "Gates_id",
+];
 
 async function get(
   page = 1,
@@ -72,6 +81,74 @@ async function getIds() {
   };
 }
 
+async function create(ticket: Ticket) {
+  // Check if ticket object has all required properties
+  helper.checkObject(ticket, ticketProperties);
+
+  // Check if user with given id exists
+  let userExists = await db.query("SELECT '' FROM Users WHERE id=?", [ticket.Users_id]);
+  userExists = helper.emptyOrRows(userExists);
+
+  if (userExists.length === 0) {
+    throw new Err("User with this id does not exist", 404);
+  }
+
+  // Check if flight with given id exists
+  let flightExists = await db.query("SELECT '' FROM Flights WHERE id=?", [
+    ticket.Flight_id,
+  ]);
+  flightExists = helper.emptyOrRows(flightExists);
+
+  if (flightExists.length === 0) {
+    throw new Err("Flight with this id does not exist", 404);
+  }
+
+  // Check if gate with given id exists
+  let gateExists = await db.query("SELECT '' FROM Gates WHERE id=?", [
+    ticket.Gates_id,
+  ]);
+  gateExists = helper.emptyOrRows(gateExists);
+
+  if (gateExists.length === 0) {
+    throw new Err("Gate with this id does not exist", 404);
+  }
+
+  // Check if ticket with given seat number exists
+  let seatExists = await db.query(
+    "SELECT '' FROM Tickets WHERE seat_number=? AND Flight_id=?",
+    [ticket.seat_number, ticket.Flight_id]
+  );
+  seatExists = helper.emptyOrRows(seatExists);
+
+  if (seatExists.length !== 0) {
+    throw new Err("Ticket with this seat number already exists", 409);
+  }
+
+  // Check if ticket is expired
+  let flight = await db.query("SELECT departure FROM Flights WHERE id=?", [
+    ticket.Flight_id,
+  ]);
+  flight = helper.emptyOrRows(flight);
+
+  if (new Date() > new Date(flight[0]?.["departure"] as string)) {
+    throw new Err("Flight has already departed", 400);
+  }
+
+  // Insert new ticket into the database
+  let result = await db.query("INSERT INTO Tickets SET ?", [ticket]);
+  result = result as ResultSetHeader;
+
+  // If insertion isn't successful throw an error
+  if (result?.affectedRows === 0) {
+    throw new Err("Ticket could not be created");
+  }
+
+  return {
+    data: ticket,
+    message: "Ticket created successfully",
+  };
+}
+
 async function updateStatus(id: number, status: string) {
   if (
     status !== "PURCHASED" &&
@@ -133,4 +210,4 @@ async function updateStatus(id: number, status: string) {
   return { data: newData, message: "Ticket status updated" };
 }
 
-export default { get, getIds, updateStatus };
+export default { get, getIds, create, updateStatus };

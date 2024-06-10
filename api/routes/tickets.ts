@@ -124,6 +124,46 @@ router.get("/ids", verifyUser, async function (_req, res, next) {
 
 /**
  * @openapi
+ * /tickets:
+ *  post:
+ *   tags:
+ *    - Tickets
+ *   summary: Create a new ticket
+ *   requestBody:
+ *    required: true
+ *    content:
+ *     application/json:
+ *      schema:
+ *       $ref: '#/components/schemas/Ticket'
+ *   responses:
+ *    201:
+ *     description: Successfully created ticket
+ *    400:
+ *     description: Bad request
+ *    401:
+ *     description: Unauthorized
+ *    403:
+ *     description: Forbidden
+ *    404:
+ *     description: Not found
+ *    409:
+ *     description: Conflict
+ *    500:
+ *     description: Internal server error
+ */
+router.post("/", verifyUser, async function (req, rest, next) {
+  try {
+    const ticket = req.body;
+
+    const { data, message } = await ticketService.create(ticket);
+    rest.status(201).json({ data, message });
+  } catch (err) {
+    next(err);
+  }
+});
+
+/**
+ * @openapi
  * /tickets/{id}:
  *  patch:
  *   tags:
@@ -250,4 +290,26 @@ export default router;
  *     gate_name:
  *      type: string
  *      description: The gate name for the flight
+ *   Ticket:
+ *    type: object
+ *    properties:
+ *     class:
+ *      type: string
+ *     seat_number:
+ *      type: string
+ *     price:
+ *      type: number
+ *      format: float
+ *     status:
+ *      type: string
+ *      enum: [PURCHASED, EXPIRED, USED, REFUNDED, CANCELLED]
+ *      nullable: true
+ *     Users_id:
+ *      type: integer
+ *      format: int64
+ *     Flight_id:
+ *      type: string
+ *     Gates_id:
+ *      type: integer
+ *      format: int64
  */

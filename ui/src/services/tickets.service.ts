@@ -1,6 +1,16 @@
 import http from "../http-common";
 import { Filter, Sort } from "../assets/Data";
 
+export interface Ticket {
+  class: string;
+  seat_number: string;
+  price: number;
+  status?: "PURCHASED" | "EXPIRED" | "USED" | "REFUNDED" | "CANCELLED";
+  Users_id: number;
+  Flight_id: string;
+  Gates_id: number;
+}
+
 class TicketsService {
   getAll = (
     page: number = 1,
@@ -51,6 +61,10 @@ class TicketsService {
 
   getIds() {
     return http.get("/tickets/ids", { withCredentials: true });
+  }
+
+  create(ticket: Ticket) {
+    return http.post("/tickets", ticket, { withCredentials: true });
   }
 
   updateStatus(id: number, status: string) {

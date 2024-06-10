@@ -52,6 +52,9 @@ services:
       - ./ui/index.html:/ui/index.html
     build:
       context: ./ui
+    environment:
+      - TZ=Europe/Warsaw
+      - REACT_DOCKER_PORT=$REACT_DOCKER_PORT
     ports:
       - $REACT_LOCAL_PORT:$REACT_DOCKER_PORT
     networks:

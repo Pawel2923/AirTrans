@@ -187,6 +187,7 @@ interface Luggage {
   size: string;
   weight: number;
   Users_id: number;
+  Flights_id: string;
 }
 
 interface Tickets {

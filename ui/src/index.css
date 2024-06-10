@@ -98,6 +98,10 @@ body {
   --bs-pagination-active-border-color: var(--primary-color) !important;
 }
 
+.form-group {
+  margin-bottom: 1rem;
+}
+
 .form-control,
 .form-select {
   border-radius: 25px;
@@ -119,6 +123,7 @@ a.active {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 3rem;
+  align-items: baseline;
 }
 
 .manager-block {

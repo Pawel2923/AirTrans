@@ -4,6 +4,37 @@ import carService from "../services/cars";
 import { Err } from "../Types";
 import { verifyUser, requireRole } from "../middlewares/verifyUser";
 
+/**
+ * @openapi
+ * /cars/{id}/img:
+ *   patch:
+ *     tags:
+ *       - Cars
+ *     summary: Add image to car by id
+ *     parameters:
+ *       - name: id
+ *         in: path
+ *         required: true
+ *         description: Car id
+ *         type: integer
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               img:
+ *                 type: string
+ *     responses:
+ *       200:
+ *         description: Successfully added image to car
+ *       400:
+ *         description: Invalid input
+ *       500:
+ *         description: Internal server error
+ */
+
 router.patch("/:id/img", verifyUser, async function (req, res, next) {
   try {
     const { id } = req.params;
@@ -16,6 +47,57 @@ router.patch("/:id/img", verifyUser, async function (req, res, next) {
     next(err);
   }
 });
+
+/**
+ * @openapi
+ * /cars:
+ *   get:
+ *     tags:
+ *       - Cars
+ *     summary: Get all cars
+ *     parameters:
+ *       - name: page
+ *         in: query
+ *         required: false
+ *         description: Page number
+ *         type: integer
+ *       - name: limit
+ *         in: query
+ *         required: false
+ *         description: Limit number of cars
+ *         type: integer
+ *     responses:
+ *       200:
+ *         description: Successfully fetched data
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 data:
+ *                   type: array
+ *                   items:
+ *                     $ref: '#/components/schemas/Car'
+ *                 meta:
+ *                   type: object
+ *                   properties:
+ *                     total:
+ *                       type: integer
+ *                       description: Total number of cars
+ *                     page:
+ *                       type: integer
+ *                       description: Current page number
+ *                     limit:
+ *                       type: integer
+ *                       description: Number of cars per page
+ *                     message:
+ *                       type: string
+ *       400:
+ *         description: Bad request
+ *       500:
+ *         description: Internal server error
+ */
+
 
 
 router.get("/", async function (req, res, next) {
@@ -62,7 +144,34 @@ router.get("/", async function (req, res, next) {
     next(error);
   }
 });
-
+/**
+ * @openapi
+ * /cars/{id}:
+ * get:
+ *   tags:
+ *     - Cars
+ *   summary: Get car by id
+ *   parameters:
+ *     - name: id
+ *       in: path
+ *       required: true
+ *       description: Car id
+ *       type: integer
+ *   responses:
+ *     200:
+ *       description: Successfully fetched car
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               data:
+ *                 $ref: '#/components/schemas/Car'
+ *     400:
+ *       description: Bad request
+ *     500:
+ *       description: Internal server error
+ */
 router.get("/:id", async function (req, res, next) {
   try {
     const carId = req.params.id;
@@ -82,6 +191,29 @@ router.get("/:id", async function (req, res, next) {
   }
 });
 
+/**
+ * @openapi
+ * /cars:
+ *   post:
+ *     tags:
+ *       - Cars
+ *     summary: Create a new car
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/Car'
+ *     responses:
+ *       201:
+ *         description: Successfully created car
+ *       400:
+ *         description: Invalid input
+ *       500:
+ *         description: Internal server error
+  */ 
+
+
 router.post("/", verifyUser, async function (req, res, next) {
   try {
     const { data, message } = await carService.create(req.body);
@@ -95,6 +227,34 @@ router.post("/", verifyUser, async function (req, res, next) {
     next(err);
   }
 });
+
+/**
+ * @openapi
+ * /cars/{id}:
+ *   put:
+ *     tags:
+ *       - Cars
+ *     summary: Update car by id
+ *     parameters:
+ *       - name: id
+ *         in: path
+ *         required: true
+ *         description: Car id
+ *         type: integer
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/Car'
+ *     responses:
+ *       200:
+ *         description: Successfully updated car
+ *       400:
+ *         description: Invalid input
+ *       500:
+ *         description: Internal server error
+ */
 
 router.put("/:id", verifyUser, async function (req, res, next) {
   try {
@@ -115,6 +275,29 @@ router.put("/:id", verifyUser, async function (req, res, next) {
     next(err);
   }
 });
+
+/**
+ * @openapi
+ * /cars/{id}:
+ *   delete:
+ *     tags:
+ *       - Cars
+ *     summary: Delete car by id
+ *     parameters:
+ *       - name: id
+ *         in: path
+ *         required: true
+ *         description: Car id
+ *         type: integer
+ *     responses:
+ *       204:
+ *         description: Successfully deleted car
+ *       400:
+ *         description: Invalid input
+ *       500:
+ *         description: Internal server error
+ */
+
 
 router.delete("/:id", verifyUser, async function (req, res, next) {
   try {
@@ -137,3 +320,30 @@ router.delete("/:id", verifyUser, async function (req, res, next) {
 });
 
 export default router;
+
+/**
+ * @openapi
+ * components:
+ *   schemas:
+ *     Car:
+ *       type: object
+ *       properties:
+ *         id:
+ *           type: number
+ *         brand:
+ *           type: string
+ *         model:
+ *           type: string
+ *         price_per_day:
+ *           type: number
+ *         production_year:
+ *           type: number
+ *         fuel_type:
+ *           type: string
+ *         transmission_type:
+ *           type: string
+ *         img:
+ *           type: string
+ *         license_plate:
+ *           type: string
+ */ 

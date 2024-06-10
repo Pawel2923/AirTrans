@@ -187,7 +187,7 @@ return (
           onChange={handleSelectChange}
         >
           <option value="">Wybierz status</option>
-          <option value="PENDING">Zarezerwowane</option>
+          <option value="PENDING">W toku </option>
           <option value="RESERVED">Zarezerwowane</option>
           <option value="CANCELLED">Anulowane</option>
         </select>

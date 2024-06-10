@@ -128,18 +128,18 @@ async function createParking(parkingData: Parking_reservations) {
     throw new Err("Failed to reserve parking");
   }
 }
-async function removeParking(pid: number) {
+async function removeParking(id: number) {
   const parkingExist = await db.query(
-    "SELECT * FROM Parking_reservations WHERE pid = ?",
-    [pid]
+    "SELECT * FROM Parking_reservations WHERE id = ?",
+    [id]
   );
   if (helper.emptyOrRows(parkingExist).length === 0) {
     const error = new Err("Parking nie istnieje");
     error.statusCode = 404;
     throw error;
   }
-  let rows = await db.query("DELETE FROM Parking_reservations WHERE pid = ?", [
-    pid,
+  let rows = await db.query("DELETE FROM Parking_reservations WHERE id = ?", [
+    id,
   ]);
   rows = rows as ResultSetHeader;
 
@@ -152,7 +152,7 @@ async function removeParking(pid: number) {
   };
 }
 async function getById(parkingId: number, tableName = "Parking_reservations") {
-  const rows = await db.query("SELECT * FROM ?? WHERE pid = ?", [
+  const rows = await db.query("SELECT * FROM ?? WHERE id = ?", [
     tableName,
     parkingId,
   ]);
@@ -183,7 +183,7 @@ async function updateParking(parkingId: number, parking: Parking_reservations) {
 
 
   const parkingExist = await db.query(
-    "SELECT * FROM Parking_reservations WHERE pid = ?",
+    "SELECT * FROM Parking_reservations WHERE id = ?",
     [parkingId]
   );
   if (helper.emptyOrRows(parkingExist).length === 0) {
@@ -194,7 +194,7 @@ async function updateParking(parkingId: number, parking: Parking_reservations) {
 
 
   let result = await db.query(
-    "UPDATE Parking_reservations SET since = ?, until = ?, parking_level = ?, space_id = ?, license_plate = ?, status = ? WHERE pid = ?",
+    "UPDATE Parking_reservations SET since = ?, until = ?, parking_level = ?, space_id = ?, license_plate = ?, status = ? WHERE id = ?",
     [
       parking.since,
       parking.until,

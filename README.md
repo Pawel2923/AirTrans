@@ -6,6 +6,10 @@ Aplikacja ma na celu umożliwić personelowi zarządzaniem portem lotniczym oraz
 
 [Dokumentacja projektowa](https://drive.google.com/file/d/1yTJbPoBC-0tY5WbNETv8-7BlDOxRRcVz/view?usp=sharing)
 
+[Dokumentacja API](https://airtrans.ddns.net:8443/api-docs/)
+
+[Demo](https://airtrans.ddns.net)
+
 ## Funkcjonalności
 
 ### Dla klientów

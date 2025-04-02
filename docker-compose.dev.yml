@@ -1,0 +1,13 @@
+services:
+  mysqldb:
+    env_file: ./.env.dev
+  api:
+    env_file: ./.env.dev
+  ui:
+    build: 
+      context: ./ui
+      target: development
+    volumes:
+      - ./ui/src:/ui/src
+      - /ui/node_modules
+    env_file: ./.env.dev

@@ -65,6 +65,8 @@ export default function App() {
 }
 
 function Root() {
+  console.log(import.meta.env.VITE_CLIENT_API_URL);
+
   return (
     <Routes>
       <Route index element={<Home />} />

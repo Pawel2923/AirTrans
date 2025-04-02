@@ -49,15 +49,18 @@ const RentalsPage = () => {
                   {rental.until.slice(0, 10).split("-").reverse().join(".")}
                 </p>
                 <p>
-                    Dane samochodu: {rental.brand} {rental.model}
+                  Dane samochodu: {rental.brand} {rental.model}
                 </p>
-                <p>
-                    {rental.price_per_day} zł/dzień
-                </p>
+                <p>{rental.price_per_day} zł/dzień</p>
                 {rental.return_time && (
-                    <p>
-                        Zwrócono {rental.return_time.slice(0, 10).split("-").reverse().join(".")}
-                    </p>
+                  <p>
+                    Zwrócono{" "}
+                    {rental.return_time
+                      .slice(0, 10)
+                      .split("-")
+                      .reverse()
+                      .join(".")}
+                  </p>
                 )}
               </div>
             </div>

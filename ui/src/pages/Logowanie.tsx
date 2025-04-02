@@ -9,7 +9,6 @@ import { faArrowLeft } from "@fortawesome/free-solid-svg-icons";
 import ToastModalContext from "../store/toast-modal-context";
 import { faCircleCheck } from "@fortawesome/free-solid-svg-icons";
 
-
 const emailRegex = /^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$/i;
 const isEmpty = (value: string | number) =>
   (value as string).trim() !== "" && (value as string).trim().length >= 3;
@@ -23,7 +22,7 @@ const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isFormInvalid, setIsFormInvalid] = useState(true);
-const { createToast } = useContext(ToastModalContext);
+  const { createToast } = useContext(ToastModalContext);
 
   const emailInputHandler = (ev: React.ChangeEvent<HTMLInputElement>) => {
     setEmail(ev.target.value);
@@ -74,7 +73,6 @@ const { createToast } = useContext(ToastModalContext);
         alert("Błąd logowania");
       }
     } catch (error) {
-      
       createToast({
         message: "Błąd logowania",
         type: "danger",
@@ -144,7 +142,11 @@ const { createToast } = useContext(ToastModalContext);
                 {loginForm}
               </div>
             </div>
-            <Link to="/" className="text-black text-decoration-none" style={{position: "absolute", bottom: "1rem", left: "1.5rem"}}>
+            <Link
+              to="/"
+              className="text-black text-decoration-none"
+              style={{ position: "absolute", bottom: "1rem", left: "1.5rem" }}
+            >
               <FontAwesomeIcon icon={faArrowLeft} /> Wróć
             </Link>
           </div>

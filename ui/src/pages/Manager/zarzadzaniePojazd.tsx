@@ -12,7 +12,6 @@ import { useSearchParams } from "react-router-dom";
 import ToastModalContext from "../../store/toast-modal-context";
 import { faCircleCheck } from "@fortawesome/free-solid-svg-icons";
 
-
 const ZarzadzanieP = () => {
   const [searchParams] = useSearchParams();
   const [pageData, setPageData] = useState<PageData>({
@@ -51,26 +50,36 @@ const ZarzadzanieP = () => {
     const { name, value } = event.target;
     setNewCarData((prevData) => ({
       ...prevData,
-      [name]: name === 'price_per_day' || name === 'production_year' ? parseInt(value) : value,
+      [name]:
+        name === "price_per_day" || name === "production_year"
+          ? parseInt(value)
+          : value,
     }));
   };
 
-  const createCarSelectChangeHandler = (e: React.ChangeEvent<HTMLSelectElement>) => {
+  const createCarSelectChangeHandler = (
+    e: React.ChangeEvent<HTMLSelectElement>
+  ) => {
     setNewCarData((prevState) => ({
       ...prevState,
       [e.target.name]: e.target.value,
     }));
   };
 
-  const handleRentalInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleRentalInputChange = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
     const { name, value } = event.target;
     setNewRentalData((prevData) => ({
       ...prevData,
-      [name]: name === 'Users_id' || name === 'Cars_id' ? parseInt(value) : value,
+      [name]:
+        name === "Users_id" || name === "Cars_id" ? parseInt(value) : value,
     }));
   };
 
-  const createSelectChangeHandler = (e: React.ChangeEvent<HTMLSelectElement>) => {
+  const createSelectChangeHandler = (
+    e: React.ChangeEvent<HTMLSelectElement>
+  ) => {
     setNewRentalData((prevState) => ({
       ...prevState,
       [e.target.name]: e.target.value,
@@ -110,8 +119,14 @@ const ZarzadzanieP = () => {
   const submitNewRental = async () => {
     const sinceDate = new Date(newRentalData.since);
     const untilDate = new Date(newRentalData.until);
-    const formattedSince = sinceDate.toISOString().slice(0, 19).replace("T", " ");
-    const formattedUntil = untilDate.toISOString().slice(0, 19).replace("T", " ");
+    const formattedSince = sinceDate
+      .toISOString()
+      .slice(0, 19)
+      .replace("T", " ");
+    const formattedUntil = untilDate
+      .toISOString()
+      .slice(0, 19)
+      .replace("T", " ");
 
     try {
       const response = await rentService.createRental({
@@ -177,7 +192,9 @@ const ZarzadzanieP = () => {
       onConfirm: async () => {
         try {
           await rentService.removeRent(id);
-          setRentals((prevRentals) => prevRentals.filter((rental) => rental.id !== id));
+          setRentals((prevRentals) =>
+            prevRentals.filter((rental) => rental.id !== id)
+          );
           createToast({
             message: "Wypożyczenie usunięte!",
             type: "primary",
@@ -212,7 +229,6 @@ const ZarzadzanieP = () => {
         setPageData(response.data.meta);
       }
     });
-    
   }, [pageData.page]);
 
   useEffect(() => {
@@ -222,7 +238,7 @@ const ZarzadzanieP = () => {
         setPageData2(response.data.meta);
       }
     });
-  }, [pageData2.page]);   
+  }, [pageData2.page]);
 
   useEffect(() => {
     userService.getAll().then((response) => {
@@ -231,7 +247,6 @@ const ZarzadzanieP = () => {
       }
     });
   }, []);
-    
 
   return (
     <div className="container">
@@ -296,11 +311,12 @@ const ZarzadzanieP = () => {
                   onChange={createSelectChangeHandler}
                 >
                   <option value="">Wybierz klienta</option>
-                  {Array.isArray(users) && users.map((user) => (
-                    <option key={user.id} value={user.id}>
-                      {user.first_name}
-                    </option>
-                  ))}
+                  {Array.isArray(users) &&
+                    users.map((user) => (
+                      <option key={user.id} value={user.id}>
+                        {user.first_name}
+                      </option>
+                    ))}
                 </select>
               </div>
               <div className="form-group">
@@ -312,11 +328,12 @@ const ZarzadzanieP = () => {
                   onChange={createSelectChangeHandler}
                 >
                   <option value="">Wybierz auto</option>
-                  {Array.isArray(cars) && cars.map((car) => (
-                    <option key={car.id} value={car.id}>
-                      {car.brand}
-                    </option>
-                  ))}
+                  {Array.isArray(cars) &&
+                    cars.map((car) => (
+                      <option key={car.id} value={car.id}>
+                        {car.brand}
+                      </option>
+                    ))}
                 </select>
               </div>
               <button className="btn btn-primary" onClick={submitNewRental}>

@@ -9,7 +9,11 @@ interface ModalProps {
   modalContentStyle?: CSSProperties;
 }
 
-const Modal: React.FC<ModalProps> = ({ onClose, children, modalContentStyle }: ModalProps) => {
+const Modal: React.FC<ModalProps> = ({
+  onClose,
+  children,
+  modalContentStyle,
+}: ModalProps) => {
   return (
     <div className={classes["modal"]}>
       <div className={classes["modal-content"]} style={modalContentStyle}>

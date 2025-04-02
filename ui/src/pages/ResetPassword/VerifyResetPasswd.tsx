@@ -153,7 +153,10 @@ const VerifyResetPasswd = () => {
                   isTokenValid && (
                     <>
                       <h2 className="title is-2">Utwórz nowe hasło</h2>
-                      <form onSubmit={submitHandler} className="d-flex flex-column gap-2">
+                      <form
+                        onSubmit={submitHandler}
+                        className="d-flex flex-column gap-2"
+                      >
                         <div className={`${styles["form-group"]} m-0`}>
                           <Input
                             type="password"

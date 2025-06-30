@@ -2,6 +2,7 @@ services:
   mysqldb:
     image: mysql:latest
     restart: unless-stopped
+    env_file: ./.env
     environment:
       - MYSQL_ROOT_PASSWORD=$MYSQLDB_ROOT_PASSWORD
       - MYSQL_DATABASE=$MYSQLDB_DATABASE
@@ -22,6 +23,7 @@ services:
       - mysqldb
     build: ./api
     restart: unless-stopped
+    env_file: ./.env
     ports:
       - $NODE_LOCAL_PORT:$NODE_DOCKER_PORT
     environment:
@@ -44,6 +46,12 @@ services:
   ui:
     depends_on:
       - api
+    volumes:
+      - ./ui/src:/ui/src
+      - ./ui/public:/ui/public
+      - ./ui/index.html:/ui/index.html
+    build:
+      context: ./ui
     environment:
       - TZ=Europe/Warsaw
       - REACT_DOCKER_PORT=$REACT_DOCKER_PORT
@@ -51,6 +59,7 @@ services:
       - $REACT_LOCAL_PORT:$REACT_DOCKER_PORT
     networks:
       - frontend
+    # command: npm run dev
 
 volumes:
   db:

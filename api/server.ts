@@ -5,6 +5,8 @@ import cors from "cors";
 import cookieParser from "cookie-parser";
 import swaggerUI from "swagger-ui-express";
 import swaggerSpec from "./swagger";
+import https from "https";
+import fs from "fs";
 
 import flightsRouter from "./routes/flights";
 import flightDataRouter from "./routes/flight_data";
@@ -38,7 +40,7 @@ const app = express();
 
 const corsOptions = {
   credentials: true,
-  origin: process.env["CLIENT_ORIGIN"] || "http://localhost:8081",
+  origin: process.env["CLIENT_ORIGIN"] || "https://localhost",
 };
 
 app.use(cors(corsOptions));
@@ -93,8 +95,14 @@ app.use((err: Err, _req: Request, res: Response, _next: NextFunction): any => {
   return;
 });
 
+const privateKey = fs.readFileSync("ssl/privkey.pem");
+const certificate = fs.readFileSync("ssl/fullchain.pem");
+const credentials = { key: privateKey, cert: certificate };
+
+const httpsServer = https.createServer(credentials, app);
+
 // set port, listen for requests
-const PORT = process.env["NODE_DOCKER_PORT"] || 8080;
-app.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}.`);
+const SSLPORT = process.env["NODE_DOCKER_SSL_PORT"] || 8443;
+httpsServer.listen(SSLPORT, () => {
+  console.log(`Https Server is running on port ${SSLPORT}.`);
 });

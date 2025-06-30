@@ -5,11 +5,12 @@ import Nav from "../components/Nav";
 import AuthContext from "../store/auth-context";
 import useGetUsers from "../hooks/users/useGetUsers";
 
-const FormPage = () => {
+const FormPage= () => {
   const { user } = useContext(AuthContext);
   const { usersData: userInfo, getUserByEmail } = useGetUsers();
   const [contactInfo, setContactInfo] = useState({
-    id: 0,
+
+    id:0,
     firstName: "",
     lastName: "",
     email: "",
@@ -48,8 +49,8 @@ const FormPage = () => {
     navigate("/WynajemC/summary", { state: contactInfo });
   };
   const handleBack = () => {
-    navigate(-1);
-  };
+    navigate(-1); 
+};
   return (
     <>
       <Nav />
@@ -114,12 +115,8 @@ const FormPage = () => {
                     disabled={!!user}
                   />
                 </div>
-                <button
-                  className="btn btn-secondary"
-                  onClick={handleBack}
-                  style={{ fontWeight: "bold" }}
-                >
-                  <span>&#10229;</span> Wróć
+                <button className="btn btn-secondary" onClick={handleBack} style={{ fontWeight: 'bold' }}>
+                <span>&#10229;</span> Wróć
                 </button>
                 <button type="submit" className="btn btn-primary">
                   Przejdź do podsumowania

@@ -14,8 +14,7 @@ const EquipmentPage = () => {
     page: parseInt(searchParams.get("page") || "1"),
     pages: 1,
   });
-  const { createAlertModal, createConfirmModal, createToast } =
-    useContext(ToastModalContext);
+  const {createAlertModal,createConfirmModal,createToast} = useContext(ToastModalContext);
   const [equipment, setEquipment] = useState<Equipment[]>([]);
   const [newEquipment, setNewEquipment] = useState<Equipment>({
     serial_no: "",
@@ -52,37 +51,34 @@ const EquipmentPage = () => {
         fetchEquipment();
       }
     });
-  };
+  }
   const deleteEquipment = async (serial_no: string) => {
     createConfirmModal({
       message: "Czy na pewno chcesz usunąć to urządzenie?",
       onConfirm: async () => {
         try {
           await equipmentService.deleteEquipment(serial_no);
-          setEquipment((prevEquipment) =>
-            prevEquipment.filter(
-              (equipment) => equipment.serial_no !== serial_no
-            )
-          );
+          setEquipment((prevEquipment) =>prevEquipment.filter((equipment) => equipment.serial_no !== serial_no));
           createToast({
             message: "Usunięto urządzenie",
             type: "primary",
             icon: faCircleCheck,
             timeout: 10000,
           });
-        } catch (error) {
+
+        }catch (error) {
           console.error("Error while deleting equipment:", error);
           createToast({
-            message:
-              "Wystąpił błąd podczas usuwania urządzenia. Spróbuj ponownie.",
+            message: "Wystąpił błąd podczas usuwania urządzenia. Spróbuj ponownie.",
             type: "danger",
             icon: faCircleCheck,
             timeout: 10000,
           });
+
         }
       },
     });
-  };
+  }
   const editEquipment = async (equipment: Equipment) => {
     navigate(`edit-sprzet/${equipment.serial_no}`);
   };
@@ -92,12 +88,12 @@ const EquipmentPage = () => {
       setEquipment(response.data.data);
       setPageData(response.data.meta);
     } catch (error) {
-      console.error("Error while fetching equipment:", error);
+      console.error("Error while fetching equipment:", error)
       createAlertModal({
         message: "Wystąpił błąd podczas pobierania sprzętu. Spróbuj ponownie.",
       });
     }
-  };
+  }
   useEffect(() => {
     fetchEquipment();
   }, [pageData.page]);

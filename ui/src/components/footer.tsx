@@ -1,13 +1,7 @@
 import { CSSProperties } from "react";
 import { Link } from "react-router-dom";
 
-const Footer = ({
-  style,
-  className,
-}: {
-  style?: CSSProperties;
-  className?: string;
-}) => {
+const Footer = ({ style, className }: { style?: CSSProperties, className?: string }) => {
   return (
     <footer
       className={`d-grid justify-content-center px-4 py-3 ${className}`}

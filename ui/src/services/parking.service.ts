@@ -2,7 +2,7 @@ import { ParkingReservations } from "../assets/Data";
 import http from "../http-common";
 
 class ParkingService {
-  getAllParking = (page: number = 1, limit?: number) => {
+  getAllParking=(page:number = 1, limit?: number) =>{
     return http.get(`/parking?page=${page}&limit=${limit}`);
   };
   createParking(parkingData: ParkingReservations) {
@@ -22,12 +22,9 @@ class ParkingService {
   };
 
   getByUserEmail = ({ page = 1, limit = 10, userEmail = "" }) => {
-    return http.get(
-      `/parking/?page=${page}&limit=${limit}&userEmail=${userEmail}`,
-      {
-        withCredentials: true,
-      }
-    );
+    return http.get(`/parking/?page=${page}&limit=${limit}&userEmail=${userEmail}`, {
+      withCredentials: true,
+    });
   };
 }
 

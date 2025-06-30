@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from "react";
+import React, { useState, useEffect,useContext } from "react";
 import { Equipment } from "../../assets/Data";
 import { useParams, useNavigate } from "react-router-dom";
 import equipmentService from "../../services/equipment.service";
@@ -14,7 +14,7 @@ const emptyEquipment: Equipment = {
 };
 
 const EditEquipmentPage = () => {
-  const { createToast, createConfirmModal } = useContext(ToastModalContext);
+  const { createToast,createConfirmModal } = useContext(ToastModalContext);
   const navigate = useNavigate();
   const { serial_no } = useParams<{ serial_no: string }>();
   const [equipment, setEquipment] = useState<Equipment>(emptyEquipment);
@@ -39,12 +39,12 @@ const EditEquipmentPage = () => {
 
   const formSubmitHandler = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    createConfirmModal({
+   createConfirmModal({
       message: "Czy na pewno chcesz zaktualizować to urządzenie?",
       confirmBtnText: "Aktualizuj",
       confirmBtnClass: "btn-primary",
       onConfirm: async () => {
-        try {
+        try{
           const response = await equipmentService.updateEquipment(equipment);
           if (response.status === 200) {
             createToast({
@@ -65,7 +65,7 @@ const EditEquipmentPage = () => {
         }
       },
     });
-  };
+  }
 
   const inputChangeHandler = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>

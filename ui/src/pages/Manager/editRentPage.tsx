@@ -30,38 +30,29 @@ const EditRentPage = () => {
 
     const rentId = parseInt(id);
 
-    rentalService
-      .getById(rentId)
-      .then((response) => {
-        if (response.status === 200) {
-          setCarRent(response.data.data[0]);
-        }
-      })
-      .catch((error) => {
-        console.error("Error fetching rental data:", error);
-      });
+    rentalService.getById(rentId).then((response) => {
+      if (response.status === 200) {
+        setCarRent(response.data.data[0]);
+      }
+    }).catch((error) => {
+      console.error("Error fetching rental data:", error);
+    });
 
-    userService
-      .getAll()
-      .then((response) => {
-        if (response.status === 200) {
-          setUsers(response.data.data);
-        }
-      })
-      .catch((error) => {
-        console.error("Error fetching users data:", error);
-      });
+    userService.getAll().then((response) => {
+      if (response.status === 200) {
+        setUsers(response.data.data);
+      }
+    }).catch((error) => {
+      console.error("Error fetching users data:", error);
+    });
 
-    carService
-      .getAllC()
-      .then((response) => {
-        if (response.status === 200) {
-          setCars(response.data.data);
-        }
-      })
-      .catch((error) => {
-        console.error("Error fetching cars data:", error);
-      });
+    carService.getAllC().then((response) => {
+      if (response.status === 200) {
+        setCars(response.data.data);
+      }
+    }).catch((error) => {
+      console.error("Error fetching cars data:", error);
+    });
   }, [id]);
 
   const formSubmitHandler = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -183,13 +174,12 @@ const EditRentPage = () => {
                 value={carRental.Cars_id}
                 onChange={selectChangeHandler}
               >
-                <option value="">Wybierz auto</option>
-                {Array.isArray(cars) &&
-                  cars.map((car) => (
+                 <option value="">Wybierz auto</option>
+                  {Array.isArray(cars) && cars.map((car) => (
                     <option key={car.id} value={car.id}>
                       {car.brand}
                     </option>
-                  ))}
+                ))}
               </Form.Select>
             </Form.Group>
           </Col>

@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Cars } from "../assets/Data";
+import { Cars } from "../assets/Data"; 
 import styles from "./tabelkaCarsk.module.css";
 import FilesService from "../services/files.service";
 
@@ -24,10 +24,7 @@ const TabelkaCarsk: React.FC<CarsTableProps> = ({ cars, onSelect }) => {
           className={`${styles.carCard} ${selectedCarId === car.id ? styles.selected : ""}`}
         >
           <div className={styles.carImage}>
-            <img
-              src={FilesService.getImgUrl(car.img ?? "")}
-              alt={`${car.brand} ${car.model}`}
-            />
+            <img src={FilesService.getImgUrl(car.img ?? "")} alt={`${car.brand} ${car.model}`} />
           </div>
 
           <div className={styles.carDetails}>

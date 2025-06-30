@@ -121,7 +121,7 @@ const Luggage = ({ data, usersData, flightIds, getLuggage }: LuggageProps) => {
       title: "Potwierdzenie aktualizacji",
       onConfirm: handleUpdate,
       confirmBtnText: "Tak, zaktualizuj",
-      confirmBtnClass: "btn-primary",
+      confirmBtnClass: "btn-primary"
     });
   };
 

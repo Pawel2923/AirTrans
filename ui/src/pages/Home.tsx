@@ -35,7 +35,7 @@ const offerDataParser = (offerData: RawOffer) => {
   const offers: Offer[] = [];
   offerData.cars.map((car: Cars, index: number) => {
     offers.push({
-      id: index + 1,
+      id: index + 1, 
       path_to_img: car.img ?? filesService.getImgUrl(car.img ?? ""),
       title: "Samochód",
       offer_params: [
@@ -49,7 +49,7 @@ const offerDataParser = (offerData: RawOffer) => {
     });
   });
   offers.push({
-    id: offerData.cars.length + 1,
+    id: offerData.cars.length + 1, 
     path_to_img: "1718045862789238271643.jpg",
     title: "Parking",
     offer_params: [

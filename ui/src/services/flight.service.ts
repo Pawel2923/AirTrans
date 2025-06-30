@@ -92,7 +92,7 @@ class FlightService {
     }
 
     return http.get(url);
-  };
+  }
 
   getById = (id: string) => {
     return http.get(`/flights?filter=[{"by":"id","value":"${id}"}]`);

@@ -51,8 +51,8 @@ const ParkingReservationsPage = () => {
                   {reservation.status === "RESERVED"
                     ? "Zarezerwowano"
                     : reservation.status === "CANCELLED"
-                      ? "Anulowano"
-                      : "W czasie trwania"}
+                    ? "Anulowano"
+                    : "W czasie trwania"}
                 </p>
                 <p>
                   {reservation.since

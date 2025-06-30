@@ -2,7 +2,7 @@ import http from "../http-common";
 import { Announcements } from "../assets/Data";
 
 class AnnouncementService {
-  get = (page: number = 1, limit?: number) => {
+  get = (page: number = 1,limit?:number) => {
     return http.get(`/announcements?page=${page}&limit=${limit}`);
   };
   getk = (page: number = 1) => {
@@ -14,9 +14,7 @@ class AnnouncementService {
   };
 
   update = (data: Announcements) => {
-    return http.put(`/announcements/${data.id}`, data, {
-      withCredentials: true,
-    });
+    return http.put(`/announcements/${data.id}`, data, { withCredentials: true});
   };
   getById(id: number) {
     return http.get(`/announcements/${id}`);

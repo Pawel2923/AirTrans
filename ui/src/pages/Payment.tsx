@@ -1,8 +1,8 @@
-import { Elements } from "@stripe/react-stripe-js";
-import { stripePromise } from "./stipeContainer";
-import CheckoutForm from "../components/formPayment";
+import { Elements } from '@stripe/react-stripe-js';
+import { stripePromise } from './stipeContainer';
+import CheckoutForm from '../components/formPayment';
 
-const Payment = () => {
+const Payment=() => {
   return (
     <Elements stripe={stripePromise}>
       <CheckoutForm />

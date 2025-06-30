@@ -20,8 +20,7 @@ const GatesPage = () => {
     status: undefined,
   });
   const navigate = useNavigate();
-  const { createAlertModal, createConfirmModal, createToast } =
-    useContext(ToastModalContext);
+  const { createAlertModal, createConfirmModal,createToast } = useContext(ToastModalContext);
 
   const handleInputChange = (
     event:
@@ -43,23 +42,23 @@ const GatesPage = () => {
     }));
   };
   const submitNewGates = async () => {
-    gatesService.create(newGatesData).then((response) => {
-      if (response.status === 201) {
-        createToast({
-          message: "Dodano nową bramkę",
-          type: "primary",
-          icon: faCircleCheck,
-          timeout: 10000,
+        gatesService.create(newGatesData).then((response) => {
+          if (response.status === 201) {
+            createToast({
+              message: "Dodano nową bramkę",
+              type: "primary",
+              icon: faCircleCheck,
+              timeout: 10000,
+            });
+            setNewGatesData({
+              id: 0,
+              name: "",
+              status: undefined,
+            });
+            fetchGates();
+          }
         });
-        setNewGatesData({
-          id: 0,
-          name: "",
-          status: undefined,
-        });
-        fetchGates();
-      }
-    });
-  };
+      };
   const deleteGates = async (id: number) => {
     createConfirmModal({
       message: "Czy na pewno chcesz usunąć tę bramkę?",
@@ -90,7 +89,7 @@ const GatesPage = () => {
   };
   const fetchGates = async () => {
     try {
-      const response = await gatesService.get(pagedata.page, 4);
+      const response = await gatesService.get(pagedata.page , 4);
       setGates(response.data.data);
       setPageData(response.data.meta);
     } catch (error) {

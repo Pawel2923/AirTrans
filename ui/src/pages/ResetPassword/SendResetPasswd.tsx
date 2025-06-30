@@ -50,8 +50,7 @@ const SendResetPasswd = () => {
         if (response.status === 200)
           createAlertModal({
             title: "Sukces",
-            message:
-              "Link resetujący został wysłany na podany adres e-mail. Link wygaśnie po 24 godzinach.",
+            message: "Link resetujący został wysłany na podany adres e-mail. Link wygaśnie po 24 godzinach.",
             onClose: () => {
               resetForm();
               navigate("/logowanie");

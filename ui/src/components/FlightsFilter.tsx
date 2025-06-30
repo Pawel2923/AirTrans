@@ -174,7 +174,7 @@ const FlightsFilter = ({
     sessionStorage.removeItem("filterData");
     setFilterData([]);
     setIsFilterModalOpen(false);
-  };
+  }
 
   return (
     <ConfirmModal
@@ -305,9 +305,7 @@ const FlightsFilter = ({
               </option>
             ))}
           </select>
-          <button className="btn btn-alt mt-3" onClick={clearFilterHandler}>
-            Resetuj
-          </button>
+          <button className="btn btn-alt mt-3" onClick={clearFilterHandler}>Resetuj</button>
         </div>
       }
       confirmBtnText="Filtruj"

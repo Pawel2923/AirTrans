@@ -44,7 +44,8 @@ services:
       - backend
       - frontend
   ui:
-    image: pawel2923/airtrans-ui:latest
+    build:
+      context: ./ui
     depends_on:
       - api
     volumes:

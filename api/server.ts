@@ -95,14 +95,27 @@ app.use((err: Err, _req: Request, res: Response, _next: NextFunction): any => {
   return;
 });
 
-const privateKey = fs.readFileSync("ssl/privkey.pem");
-const certificate = fs.readFileSync("ssl/fullchain.pem");
-const credentials = { key: privateKey, cert: certificate };
+// Check if SSL certificates exist
+const sslKeyPath = "./ssl/privkey.pem";
+const sslCertPath = "./ssl/fullchain.pem";
 
-const httpsServer = https.createServer(credentials, app);
+if (fs.existsSync(sslKeyPath) && fs.existsSync(sslCertPath)) {
+  // SSL certificates available - run HTTPS server
+  const privateKey = fs.readFileSync(sslKeyPath);
+  const certificate = fs.readFileSync(sslCertPath);
+  const credentials = { key: privateKey, cert: certificate };
 
-// set port, listen for requests
-const SSLPORT = process.env["NODE_DOCKER_SSL_PORT"] || 8443;
-httpsServer.listen(SSLPORT, () => {
-  console.log(`Https Server is running on port ${SSLPORT}.`);
-});
+  const httpsServer = https.createServer(credentials, app);
+
+  const SSLPORT = process.env["NODE_DOCKER_SSL_PORT"] || 8443;
+  httpsServer.listen(SSLPORT, () => {
+    console.log(`HTTPS Server is running on port ${SSLPORT}.`);
+  });
+} else {
+  // No SSL certificates - run HTTP server for development
+  const PORT = process.env["NODE_DOCKER_PORT"] || 8080;
+  app.listen(PORT, () => {
+    console.log(`HTTP Server is running on port ${PORT}.`);
+    console.log("Warning: Running in HTTP mode - SSL certificates not found");
+  });
+}

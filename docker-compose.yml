@@ -55,6 +55,7 @@ services:
     environment:
       - TZ=Europe/Warsaw
       - REACT_DOCKER_PORT=$REACT_DOCKER_PORT
+      - USE_SSL=false
     ports:
       - $REACT_LOCAL_PORT:$REACT_DOCKER_PORT
     networks:

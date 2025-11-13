@@ -14,8 +14,7 @@ services:
       - ./db-dump:/db-dump
     networks:
       - backend
-    command:
-      --secure-file-priv="/db-dump/"
+    command: --secure-file-priv="/db-dump/"
       --default-time-zone=+02:00
     hostname: mysqldb
   api:
@@ -40,8 +39,6 @@ services:
       - CLIENT_ORIGIN=$CLIENT_ORIGIN
     volumes:
       - ./api/files:/api/files
-      - /etc/letsencrypt/live/airtrans.ddns.net/fullchain.pem:/api/ssl/fullchain.pem:ro
-      - /etc/letsencrypt/live/airtrans.ddns.net/privkey.pem:/api/ssl/privkey.pem:ro
     networks:
       - backend
       - frontend
@@ -53,8 +50,6 @@ services:
       - ./ui/src:/ui/src
       - ./ui/public:/ui/public
       - ./ui/index.html:/ui/index.html
-      - /etc/letsencrypt/live/airtrans.ddns.net/fullchain.pem:/etc/nginx/ssl/fullchain.pem:ro
-      - /etc/letsencrypt/live/airtrans.ddns.net/privkey.pem:/etc/nginx/ssl/privkey.pem:ro
     environment:
       - TZ=Europe/Warsaw
       - REACT_DOCKER_PORT=$REACT_DOCKER_PORT

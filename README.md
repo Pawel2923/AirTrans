@@ -1,14 +1,14 @@
 # AirTrans
 
-*System zarządzania portem lotniczym* - projekt na systemy baz danych
+_System zarządzania portem lotniczym_ - projekt na systemy baz danych
 
 Aplikacja ma na celu umożliwić personelowi zarządzaniem portem lotniczym oraz informowanie i obsługiwanie klientów portu przy pomocy strony internetowej.
 
 [Dokumentacja projektowa](https://drive.google.com/file/d/1yTJbPoBC-0tY5WbNETv8-7BlDOxRRcVz/view?usp=sharing)
 
-[Dokumentacja API](https://airtrans.ddns.net:8443/api-docs/)
+[Dokumentacja API](https://airtrans.nis-lab.com:8443/api-docs/)
 
-[Demo](https://airtrans.ddns.net)
+[Demo](https://airtrans.nis-lab.com)
 
 ## Funkcjonalności
 
@@ -132,7 +132,7 @@ Aby uruchomić aplikację należy wykonać nastepujące kroki:
 2. Uruchom terminal i przejdź do folderu głównego projektu
 3. Uruchom polecenie `docker compose up --build`
 4. Poczekaj aż kontenery zostaną uruchomione  
-![Uruchomione kontenery](https://i.postimg.cc/3Rvm56hK/image.png)
+   ![Uruchomione kontenery](https://i.postimg.cc/3Rvm56hK/image.png)
 5. Uruchom przeglądarkę i wpisz adres, który podałeś w pliku `.env` w zmiennej `CLIENT_ORIGIN`
 
 Aby przejść do dokumentacji API wejdź na stronę dostępną pod adresem `CLIENT_API_URL/api-docs` (domyślnie http://localhost:6868/api-docs).

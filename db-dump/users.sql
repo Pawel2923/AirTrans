@@ -1,5 +1,17 @@
-CREATE USER admin@'172.%' IDENTIFIED WITH caching_sha2_password BY '';
+CREATE USER admin@'172.%' IDENTIFIED WITH caching_sha2_password BY '_password_';
 GRANT ALL ON AirTrans.* TO admin@'172.%';
+
+-- default users
+CREATE USER client@'172.%' IDENTIFIED WITH caching_sha2_password BY '_password_';
+
+-- employee users
+CREATE USER atc@'172.%' IDENTIFIED WITH caching_sha2_password BY '_password_';
+CREATE USER ground_crew@'172.%' IDENTIFIED WITH caching_sha2_password BY '_password_';
+CREATE USER airport_staff@'172.%' IDENTIFIED WITH caching_sha2_password BY '_password_';
+CREATE USER parking_staff@'172.%' IDENTIFIED WITH caching_sha2_password BY '_password_';
+CREATE USER rental_staff@'172.%' IDENTIFIED WITH caching_sha2_password BY '_password_';
+
+-- Users roles and permissions
 
 CREATE ROLE 'user';
 GRANT SELECT ON `AirTrans`.`Airplanes` TO 'user';
@@ -22,30 +34,26 @@ GRANT SELECT, INSERT, UPDATE, DELETE ON `AirTrans`.`Users` TO 'user';
 GRANT SELECT ON `AirTrans`.`Employees` TO 'user';
 GRANT SELECT, INSERT, UPDATE ON `AirTrans`.`Reset_password` TO 'user';
 
-CREATE USER client@'172.%' IDENTIFIED WITH caching_sha2_password BY '';
+GRANT EXECUTE ON PROCEDURE AirTrans.Logowanie TO 'user';
+
+
 GRANT 'user' TO client@'172.%';
-SET DEFAULT ROLE 'user' TO client@'172.%';
-
-CREATE USER atc@'172.%' IDENTIFIED WITH caching_sha2_password BY '';
-CREATE USER ground_crew@'172.%' IDENTIFIED WITH caching_sha2_password BY '';
-CREATE USER airport_staff@'172.%' IDENTIFIED WITH caching_sha2_password BY '';
-CREATE USER parking_staff@'172.%' IDENTIFIED WITH caching_sha2_password BY '';
-CREATE USER rental_staff@'172.%' IDENTIFIED WITH caching_sha2_password BY '';
-
 GRANT 'user' TO atc@'172.%';
 GRANT 'user' TO ground_crew@'172.%';
 GRANT 'user' TO airport_staff@'172.%';
 GRANT 'user' TO parking_staff@'172.%';
 GRANT 'user' TO rental_staff@'172.%';
 
+-- Employee roles and permissions
+
 CREATE ROLE 'employee';
 GRANT INSERT, UPDATE, DELETE ON AirTrans.Announcements TO 'employee';
 
-GRANT SELECT, INSERT, UPDATE, DELETE ON `AirTrans`.`Flight_data` TO `atc`@`172.%`
-GRANT SELECT, INSERT, UPDATE, DELETE ON `AirTrans`.`Flights` TO `atc`@`172.%`
-GRANT SELECT, INSERT, UPDATE, DELETE ON `AirTrans`.`Runways` TO `atc`@`172.%`
-GRANT SELECT, INSERT, UPDATE, DELETE ON `AirTrans`.`Taxiways` TO `atc`@`172.%`
-GRANT SELECT, INSERT, UPDATE, DELETE ON `AirTrans`.`Terminals` TO `atc`@`172.%`
+GRANT SELECT, INSERT, UPDATE, DELETE ON `AirTrans`.`Flight_data` TO `atc`@`172.%`;
+GRANT SELECT, INSERT, UPDATE, DELETE ON `AirTrans`.`Flights` TO `atc`@`172.%`;
+GRANT SELECT, INSERT, UPDATE, DELETE ON `AirTrans`.`Runways` TO `atc`@`172.%`;
+GRANT SELECT, INSERT, UPDATE, DELETE ON `AirTrans`.`Taxiways` TO `atc`@`172.%`;
+GRANT SELECT, INSERT, UPDATE, DELETE ON `AirTrans`.`Terminals` TO `atc`@`172.%`;
 GRANT 'employee' TO atc@'172.%';
 
 GRANT SELECT, INSERT, UPDATE, DELETE ON AirTrans.Equipment TO ground_crew@'172.%';
@@ -69,3 +77,5 @@ SET DEFAULT ROLE 'user', 'employee' TO ground_crew@'172.%';
 SET DEFAULT ROLE 'user', 'employee' TO airport_staff@'172.%';
 SET DEFAULT ROLE 'user', 'employee' TO parking_staff@'172.%';
 SET DEFAULT ROLE 'user', 'employee' TO rental_staff@'172.%';
+
+FLUSH PRIVILEGES;

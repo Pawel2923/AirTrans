@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import DeparturesTable from "../components/DeparturesTable";
-import Nav from "../components/Nav";
+import Nav from "../components/Nav/Nav";
 import useGetFlight from "../hooks/flight/useGetFlight";
 import { useSearchParams } from "react-router-dom";
 import { Filter, PageData, Sort } from "../assets/Data";

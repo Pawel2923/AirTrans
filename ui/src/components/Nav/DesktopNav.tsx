@@ -1,20 +1,14 @@
 import Logo from "/Logo.png";
-import { useContext, useEffect } from "react";
-import AuthContext from "../store/auth-context";
 import { NavigationMenu } from "radix-ui";
-import styles from "./Nav.module.css";
-import { NavLink, useLocation } from "react-router-dom";
+import styles from "./DesktopNav.module.css";
+import { NavLink } from "react-router-dom";
 
-const Nav = () => {
-  const { auth, checkAuth } = useContext(AuthContext);
-  const location = useLocation();
+interface DesktopNavProps {
+  auth: boolean;
+  isActive: (path: string) => boolean;
+}
 
-  useEffect(() => {
-    checkAuth();
-  }, [checkAuth]);
-
-  const isActive = (path: string) => location.pathname === path;
-
+const DesktopNav = ({ auth, isActive }: DesktopNavProps) => {
   return (
     <NavigationMenu.Root>
       <NavigationMenu.List className={styles["nav-list"]}>
@@ -81,4 +75,4 @@ const Nav = () => {
   );
 };
 
-export default Nav;
+export default DesktopNav;

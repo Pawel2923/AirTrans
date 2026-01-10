@@ -3,7 +3,7 @@ import { useContext, useEffect } from "react";
 import AuthContext from "../store/auth-context";
 import { NavigationMenu } from "radix-ui";
 import styles from "./Nav.module.css";
-import { useLocation } from "react-router-dom";
+import { NavLink, useLocation } from "react-router-dom";
 
 const Nav = () => {
   const { auth, checkAuth, logout } = useContext(AuthContext);
@@ -19,43 +19,48 @@ const Nav = () => {
     <NavigationMenu.Root>
       <NavigationMenu.List className={styles["nav-list"]}>
         <NavigationMenu.Item className={styles["nav-brand"]}>
-          <NavigationMenu.Link
-            href="/"
-            className="d-flex align-items-center gap-3 fw-bold fs-3"
-          >
-            <img src={Logo} width={64} alt="AirTrans Logo" />
-            <span>AirTrans</span>
+          <NavigationMenu.Link asChild>
+            <NavLink
+              to="/"
+              className="d-flex align-items-center gap-3 fw-bold fs-3"
+            >
+              <img src={Logo} width={64} alt="AirTrans Logo" />
+              <span>AirTrans</span>
+            </NavLink>
           </NavigationMenu.Link>
         </NavigationMenu.Item>
         <NavigationMenu.Item className={styles["nav-item"]}>
-          <NavigationMenu.Link
-            href="/"
-            aria-current={isActive("/") ? "page" : undefined}
-          >
-            Strona główna
+          <NavigationMenu.Link asChild>
+            <NavLink to="/" aria-current={isActive("/") ? "page" : undefined}>
+              Strona główna
+            </NavLink>
           </NavigationMenu.Link>
         </NavigationMenu.Item>
         <NavigationMenu.Item className={styles["nav-item"]}>
-          <NavigationMenu.Link
-            href="/harmonogram"
-            aria-current={isActive("/harmonogram") ? "page" : undefined}
-          >
-            Harmonogram
+          <NavigationMenu.Link asChild>
+            <NavLink
+              to="/harmonogram"
+              aria-current={isActive("/harmonogram") ? "page" : undefined}
+            >
+              Harmonogram
+            </NavLink>
           </NavigationMenu.Link>
         </NavigationMenu.Item>
         <NavigationMenu.Item className={styles["nav-item"]}>
-          <NavigationMenu.Link
-            href="/ogloszenia"
-            aria-current={isActive("/ogloszenia") ? "page" : undefined}
-          >
-            Ogłoszenia
+          <NavigationMenu.Link asChild>
+            <NavLink
+              to="/ogloszenia"
+              aria-current={isActive("/ogloszenia") ? "page" : undefined}
+            >
+              Ogłoszenia
+            </NavLink>
           </NavigationMenu.Link>
         </NavigationMenu.Item>
         {auth ? (
           <>
             <NavigationMenu.Item className={styles["nav-item"]}>
-              <NavigationMenu.Link href="/zarzadzanie">
-                Panel
+              <NavigationMenu.Link asChild>
+                <NavLink to="/zarzadzanie">Panel</NavLink>
               </NavigationMenu.Link>
             </NavigationMenu.Item>
             <NavigationMenu.Item className={styles["nav-item"]}>
@@ -66,8 +71,8 @@ const Nav = () => {
           </>
         ) : (
           <NavigationMenu.Item className={styles["nav-item"]}>
-            <NavigationMenu.Link href="/logowanie">
-              Zaloguj się
+            <NavigationMenu.Link asChild>
+              <NavLink to="/logowanie">Zaloguj się</NavLink>
             </NavigationMenu.Link>
           </NavigationMenu.Item>
         )}

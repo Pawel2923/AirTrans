@@ -1,86 +1,78 @@
-import { Link, NavLink } from "react-router-dom";
 import Logo from "/Logo.png";
 import { useContext, useEffect } from "react";
 import AuthContext from "../store/auth-context";
+import { NavigationMenu } from "radix-ui";
+import styles from "./Nav.module.css";
+import { useLocation } from "react-router-dom";
 
 const Nav = () => {
   const { auth, checkAuth, logout } = useContext(AuthContext);
+  const location = useLocation();
 
   useEffect(() => {
     checkAuth();
   }, [checkAuth]);
 
-  const logoutItem = (
-    <li className="nav-item">
-      <button onClick={logout} className="nav-link">
-        WYLOGUJ SIĘ
-      </button>
-    </li>
-  );
-
-  const loginItem = auth ? (
-    <>
-      <li className="nav-item">
-        <NavLink to="/zarzadzanie" className="nav-link">
-          PANEL
-        </NavLink>
-      </li>
-      {logoutItem}
-    </>
-  ) : (
-    <li className="nav-item">
-      <NavLink to="/logowanie" className="nav-link">
-        ZALOGUJ SIĘ
-      </NavLink>
-    </li>
-  );
+  const isActive = (path: string) => location.pathname === path;
 
   return (
-    <nav
-      className="navbar navbar-expand-lg"
-      style={{ backgroundColor: "var(--background-white)" }}
-    >
-      <div className="container-fluid px-4">
-        <Link
-          to="/"
-          className="d-flex align-items-center gap-3 navbar-brand fw-bold fs-3"
-        >
-          <img src={Logo} width={64} alt="AirTrans Logo" />
-          AirTrans
-        </Link>
-        <div className="collapse navbar-collapse" id="navbarSupportedContent">
-          <ul className="d-flex navbar-nav text-uppercase fw-medium ms-auto">
-            <li className="nav-item">
-              <NavLink to="/" className="nav-link">
-                GŁÓWNA
-              </NavLink>
-            </li>
-            <li className="nav-item">
-              <NavLink to="/harmonogram" className="nav-link">
-                HARMONOGRAM
-              </NavLink>
-            </li>
-            <li className="nav-item">
-              <NavLink to="/ogloszenia" className="nav-link">
-                OGŁOSZENIA
-              </NavLink>
-            </li>
-            {loginItem}
-          </ul>
-        </div>
-        <button
-          className="navbar-toggler"
-          type="button"
-          data-bs-toggle="collapse"
-          data-bs-target="#navbarSupportedContent"
-          aria-controls="navbarSupportedContent"
-          aria-expanded="false"
-          aria-label="Przełącz nawigację"
-        >
-          <span className="navbar-toggler-icon"></span>
-        </button>
-      </div>
-    </nav>
+    <NavigationMenu.Root>
+      <NavigationMenu.List className={styles["nav-list"]}>
+        <NavigationMenu.Item className={styles["nav-brand"]}>
+          <NavigationMenu.Link
+            href="/"
+            className="d-flex align-items-center gap-3 fw-bold fs-3"
+          >
+            <img src={Logo} width={64} alt="AirTrans Logo" />
+            <span>AirTrans</span>
+          </NavigationMenu.Link>
+        </NavigationMenu.Item>
+        <NavigationMenu.Item className={styles["nav-item"]}>
+          <NavigationMenu.Link
+            href="/"
+            aria-current={isActive("/") ? "page" : undefined}
+          >
+            Strona główna
+          </NavigationMenu.Link>
+        </NavigationMenu.Item>
+        <NavigationMenu.Item className={styles["nav-item"]}>
+          <NavigationMenu.Link
+            href="/harmonogram"
+            aria-current={isActive("/harmonogram") ? "page" : undefined}
+          >
+            Harmonogram
+          </NavigationMenu.Link>
+        </NavigationMenu.Item>
+        <NavigationMenu.Item className={styles["nav-item"]}>
+          <NavigationMenu.Link
+            href="/ogloszenia"
+            aria-current={isActive("/ogloszenia") ? "page" : undefined}
+          >
+            Ogłoszenia
+          </NavigationMenu.Link>
+        </NavigationMenu.Item>
+        {auth ? (
+          <>
+            <NavigationMenu.Item className={styles["nav-item"]}>
+              <NavigationMenu.Link href="/zarzadzanie">
+                Panel
+              </NavigationMenu.Link>
+            </NavigationMenu.Item>
+            <NavigationMenu.Item className={styles["nav-item"]}>
+              <NavigationMenu.Content onClick={logout}>
+                Wyloguj się
+              </NavigationMenu.Content>
+            </NavigationMenu.Item>
+          </>
+        ) : (
+          <NavigationMenu.Item className={styles["nav-item"]}>
+            <NavigationMenu.Link href="/logowanie">
+              Zaloguj się
+            </NavigationMenu.Link>
+          </NavigationMenu.Item>
+        )}
+      </NavigationMenu.List>
+    </NavigationMenu.Root>
   );
 };
 

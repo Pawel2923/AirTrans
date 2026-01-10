@@ -14,6 +14,7 @@ CREATE USER rental_staff@'172.%' IDENTIFIED WITH caching_sha2_password BY '_pass
 -- Users roles and permissions
 
 CREATE ROLE 'user';
+GRANT USAGE ON AirTrans.* TO 'user';
 GRANT SELECT ON `AirTrans`.`Airplanes` TO 'user';
 GRANT SELECT ON `AirTrans`.`Announcements` TO 'user';
 GRANT SELECT ON `AirTrans`.`Cars` TO 'user';
@@ -35,7 +36,14 @@ GRANT SELECT ON `AirTrans`.`Employees` TO 'user';
 GRANT SELECT, INSERT, UPDATE ON `AirTrans`.`Reset_password` TO 'user';
 
 GRANT EXECUTE ON PROCEDURE AirTrans.Logowanie TO 'user';
-
+GRANT EXECUTE ON PROCEDURE AirTrans.Rejestracja TO 'user';
+GRANT EXECUTE ON PROCEDURE AirTrans.validate_user_data TO 'user';
+GRANT EXECUTE ON FUNCTION AirTrans.validate_airplane_fuel TO 'user';
+GRANT EXECUTE ON FUNCTION AirTrans.validate_arrival_departure TO 'user';
+GRANT EXECUTE ON FUNCTION AirTrans.validate_birth_date TO 'user';
+GRANT EXECUTE ON FUNCTION AirTrans.validate_email TO 'user';
+GRANT EXECUTE ON FUNCTION AirTrans.validate_password TO 'user';
+GRANT EXECUTE ON FUNCTION AirTrans.validate_phone_number TO 'user';
 
 GRANT 'user' TO client@'172.%';
 GRANT 'user' TO atc@'172.%';
@@ -44,9 +52,12 @@ GRANT 'user' TO airport_staff@'172.%';
 GRANT 'user' TO parking_staff@'172.%';
 GRANT 'user' TO rental_staff@'172.%';
 
+SET DEFAULT ROLE 'user' TO client@'172.%';
+
 -- Employee roles and permissions
 
 CREATE ROLE 'employee';
+GRANT USAGE ON AirTrans.* TO 'employee';
 GRANT INSERT, UPDATE, DELETE ON AirTrans.Announcements TO 'employee';
 
 GRANT SELECT, INSERT, UPDATE, DELETE ON `AirTrans`.`Flight_data` TO `atc`@`172.%`;

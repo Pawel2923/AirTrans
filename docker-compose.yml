@@ -47,11 +47,10 @@ services:
     depends_on:
       - api
     volumes:
-      - ./ui/src:/ui/src
-      - ./ui/public:/ui/public
-      - ./ui/index.html:/ui/index.html
+      - ./ui/:/ui/
     build:
       context: ./ui
+      dockerfile: Dockerfile.dev
     environment:
       - TZ=Europe/Warsaw
       - REACT_DOCKER_PORT=$REACT_DOCKER_PORT
@@ -60,7 +59,6 @@ services:
       - $REACT_LOCAL_PORT:$REACT_DOCKER_PORT
     networks:
       - frontend
-    # command: npm run dev
 
 volumes:
   db:

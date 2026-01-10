@@ -55,6 +55,7 @@ import FlightDataEdit from "./pages/Manager/FlightDataEdit";
 import FlightDataAdd from "./pages/Manager/FlightDataAdd";
 import SendResetPasswd from "./pages/ResetPassword/SendResetPasswd";
 import VerifyResetPasswd from "./pages/ResetPassword/VerifyResetPasswd";
+import Logout from "./pages/Logout";
 
 const router = createBrowserRouter([
   { path: "*", Component: Root, errorElement: <ErrorBoundary /> },
@@ -150,6 +151,7 @@ function Root() {
       </Route>
       <Route path="zabronione" element={<Forbidden />} />
       <Route path="blad" element={<InternalServerError />} />
+      <Route path="wyloguj" element={<Logout />} />
       <Route path="*" element={<NotFound />} />
     </Routes>
   );

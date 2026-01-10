@@ -6,7 +6,7 @@ import styles from "./Nav.module.css";
 import { NavLink, useLocation } from "react-router-dom";
 
 const Nav = () => {
-  const { auth, checkAuth, logout } = useContext(AuthContext);
+  const { auth, checkAuth } = useContext(AuthContext);
   const location = useLocation();
 
   useEffect(() => {
@@ -64,9 +64,9 @@ const Nav = () => {
               </NavigationMenu.Link>
             </NavigationMenu.Item>
             <NavigationMenu.Item className={styles["nav-item"]}>
-              <NavigationMenu.Content onClick={logout}>
-                Wyloguj się
-              </NavigationMenu.Content>
+              <NavigationMenu.Link asChild>
+                <NavLink to="/wyloguj">Wyloguj się</NavLink>
+              </NavigationMenu.Link>
             </NavigationMenu.Item>
           </>
         ) : (

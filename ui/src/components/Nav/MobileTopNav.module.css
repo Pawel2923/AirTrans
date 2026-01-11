@@ -1,0 +1,64 @@
+.nav-list {
+  composes: nav-list from "./Nav.module.css";
+  padding: 0 0.5rem;
+  height: 40px;
+}
+
+.nav-brand {
+  composes: nav-brand from "./Nav.module.css";
+}
+
+.nav-brand img {
+  width: 2rem;
+  height: 2rem;
+}
+
+.nav-brand span {
+  font-size: 1.1rem;
+}
+
+.nav-account {
+  width: 1.5rem;
+  height: 1.5rem;
+}
+
+.nav-account-trigger {
+  all: unset;
+  width: 1.5rem;
+  height: 1.5rem;
+}
+
+.nav-account-trigger svg {
+  width: 100%;
+  height: 100%;
+}
+
+.nav-viewport {
+  width: 100svh;
+  height: fit-content;
+  bottom: 0;
+  left: 0;
+  position: fixed;
+  z-index: 10000;
+}
+
+.nav-backdrop {
+    position: fixed;
+    inset: 0;
+    background-color: rgba(0, 0, 0, 0.45);
+    z-index: 9999;
+}
+
+.account-sheet {
+  background-color: #f8f9fb;
+  box-shadow: var(--default-box-shadow);
+  padding: 0.5rem 1.5rem 1.5rem 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  width: 100%;
+  position: relative;
+  z-index: 1;
+}
+
+/* TODO: apply styles for account sheet items, add animation and mobile events */

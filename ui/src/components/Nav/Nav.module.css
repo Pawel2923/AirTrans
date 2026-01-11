@@ -1,0 +1,39 @@
+.nav-list {
+  list-style: none;
+  margin: 0;
+  display: flex;
+  align-items: center;
+}
+
+.nav-brand {
+  margin-right: auto;
+}
+
+.nav-brand a[aria-current="page"] {
+  background-color: inherit;
+  box-shadow: none;
+  color: inherit;
+}
+
+.nav-list a {
+  text-decoration: none;
+  color: inherit;
+}
+
+.nav-item a {
+  height: 100%;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: 0.1s ease-out;
+  transition-property: color, background-color, box-shadow;
+  border-radius: 50px;
+}
+
+.nav-item a:active,
+.nav-item a[aria-current="page"] {
+  background-color: #4c98ca;
+  color: white;
+  box-shadow: var(--default-box-shadow);
+}

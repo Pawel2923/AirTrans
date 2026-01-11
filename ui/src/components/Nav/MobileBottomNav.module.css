@@ -1,0 +1,37 @@
+.nav-list {
+  composes: nav-list from "./Nav.module.css";
+  padding: 0.25rem 0.125rem;
+  background-color: white;
+  justify-content: space-between;
+}
+
+.nav-item {
+  composes: nav-item from "./Nav.module.css";
+}
+
+.nav-item a {
+  flex-direction: column;
+  padding: 0.5rem 0.625rem;
+}
+
+.nav-item span {
+  font-size: 0.75rem;
+}
+
+.nav-item svg {
+  width: 1.5rem;
+  height: 1.5rem;
+}
+
+.bottom-nav {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  height: 4rem;
+  width: 100svw;
+  z-index: 1000;
+}
+
+footer {
+  margin-bottom: 4rem;
+}

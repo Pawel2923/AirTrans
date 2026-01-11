@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import DeparturesTable from "../components/DeparturesTable";
-import Nav from "../components/Nav";
+import Nav from "../components/Nav/Nav";
 import Footer from "../components/footer";
 import homeStyles from "./Home.module.css";
 import {

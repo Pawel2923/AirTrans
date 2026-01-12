@@ -61,4 +61,14 @@
   z-index: 1;
 }
 
+.top-nav {
+  display: block;
+}
+
+@media (min-width: 48em) {
+  .top-nav {
+    display: none;
+  }
+}
+
 /* TODO: apply styles for account sheet items, add animation and mobile events */

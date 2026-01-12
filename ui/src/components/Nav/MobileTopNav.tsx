@@ -22,7 +22,7 @@ const MobileTopNav = ({ auth }: MobileTopNavProps) => {
           onClick={() => setIsOpen(false)}  
         ></div>
       )}
-      <NavigationMenu.Root onValueChange={(value) => setIsOpen(!!value)}>
+      <NavigationMenu.Root onValueChange={(value) => setIsOpen(!!value)} className={styles["top-nav"]}>
         <NavigationMenu.List className={styles["nav-list"]}>
           <NavigationMenu.Item className={styles["nav-brand"]}>
             <NavigationMenu.Link asChild>

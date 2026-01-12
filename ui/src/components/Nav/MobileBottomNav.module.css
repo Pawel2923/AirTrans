@@ -7,6 +7,7 @@
 
 .nav-item {
   composes: nav-item from "./Nav.module.css";
+  width: 100%;
 }
 
 .nav-item a {
@@ -23,13 +24,35 @@
   height: 1.5rem;
 }
 
+@media (max-width: 24.6em) {
+  .nav-item span {
+    font-size: 0.65rem;
+  }
+
+  .nav-item svg {
+    width: 1.25rem;
+    height: 1.25rem;
+  }
+
+  .nav-item a {
+    padding: 0.5rem 0.25rem;
+  }
+}
+
 .bottom-nav {
   position: fixed;
   bottom: 0;
   left: 0;
-  height: 4rem;
+  max-height: 4rem;
   width: 100svw;
   z-index: 1000;
+  display: block;
+}
+
+@media (min-width: 48em) {
+  .bottom-nav {
+    display: none;
+  }
 }
 
 footer {

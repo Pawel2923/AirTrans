@@ -1,23 +1,68 @@
 .nav-list {
   composes: nav-list from "./Nav.module.css";
-  padding: 2rem;
+  padding: 0 1.5rem;
   gap: 1rem;
   height: 90px;
+}
+
+@media (min-width: 64em) {
+  .nav-list {
+    padding: 0 2rem;
+  }
+}
+
+.nav-brand {
+  composes: nav-brand from "./Nav.module.css";
+  font-size: 1.25rem;
+}
+
+.nav-brand img {
+  width: 3rem;
+  height: 3rem;
+}
+
+@media (min-width: 56.25em) {
+  .nav-brand {
+    font-size: 1.625rem;
+  }
+
+  .nav-brand img {
+    width: 4rem;
+    height: 4rem;
+  }
 }
 
 .nav-item {
   composes: nav-item from "./Nav.module.css";
 }
 
-.nav-brand {
-  composes: nav-brand from "./Nav.module.css";
+.nav-item a {
+  padding: 0.5rem 0.5rem;
 }
 
-.nav-item a {
-  padding: 0.5rem 1rem;
+@media (min-width: 64em) {
+  .nav-item a {
+    padding: 0.5rem 1rem !important;
+  }
+}
+
+@media (min-width: 56.25em) {
+  .nav-item a {
+    padding: 0.5rem 0.5rem;
+  }
 }
 
 .nav-item a:hover:not([aria-current="page"]):not(:active) {
   background-color: #f4f4f4;
   box-shadow: var(--default-box-shadow);
+}
+
+.desktop-nav {
+  display: none;
+}
+
+@media (min-width: 48em) {
+  .desktop-nav {
+    display: block;
+  }
 }

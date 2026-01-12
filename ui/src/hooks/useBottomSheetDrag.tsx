@@ -13,6 +13,7 @@ const useBottomSheetDrag = ({
   const isDraggingRef = useRef(false);
   const lastYRef = useRef(0);
   const lastTimeRef = useRef(0);
+  const lastVelocityRef = useRef(0);
 
   const onPointerMove = useCallback(
     (event: React.PointerEvent<HTMLElement>) => {
@@ -25,13 +26,13 @@ const useBottomSheetDrag = ({
       const resistanceFactor = 0.5;
 
       let delta = Math.max(0, event.clientY - startYRef.current);
-      deltaYRef.current = delta;
 
       if (delta > resistanceStart) {
         const excess = delta - resistanceStart;
         delta = resistanceStart + excess * resistanceFactor;
       }
 
+      deltaYRef.current = delta;
       sheetRef.current.style.setProperty(
         "transform",
         `translateY(${delta}px)`,
@@ -39,13 +40,17 @@ const useBottomSheetDrag = ({
       );
 
       const now = performance.now();
+      const timeDelta = now - lastTimeRef.current;
+      if (timeDelta > 0) {
+        lastVelocityRef.current =
+          (event.clientY - lastYRef.current) / timeDelta;
+      }
       lastYRef.current = event.clientY;
       lastTimeRef.current = now;
     },
     [disabled]
   );
 
-  //TODO: fix jumping and flickering when releasing the drag
   const onPointerUp = useCallback(
     (event: React.PointerEvent<HTMLElement>) => {
       if (disabled || !isDraggingRef.current) {
@@ -60,24 +65,36 @@ const useBottomSheetDrag = ({
 
       const sheetHeight = sheet.offsetHeight;
       const closeByDistance = deltaYRef.current > sheetHeight * 0.35;
+      const closeByVelocity = lastVelocityRef.current > 0.6;
 
-      const timeDelta = performance.now() - lastTimeRef.current;
-      const velocity = timeDelta > 0 ? deltaYRef.current / timeDelta : 0;
-
-      const closeByVelocity = velocity > 0.6;
+      sheet.classList.remove("dragging");
 
       if (closeByDistance || closeByVelocity) {
-        sheet.classList.remove("dragging");
-        sheet.style.removeProperty("transform");
-
+        sheet.style.transition = "transform 160ms ease-in";
+        sheet.style.animation = "none";
         requestAnimationFrame(() => {
-          requestAnimationFrame(() => {
-            onClose();
-          });
+          sheet.style.transform = `translateY(${sheetHeight}px)`;
         });
+        sheet.addEventListener(
+          "transitionend",
+          () => {
+            onClose();
+          },
+          { once: true }
+        );
       } else {
-        sheet.style.removeProperty("transform");
-        sheet.classList.remove("dragging");
+        sheet.style.transition = "transform 180ms ease-out";
+        requestAnimationFrame(() => {
+          sheet.style.transform = "translateY(0px)";
+        });
+        sheet.addEventListener(
+          "transitionend",
+          () => {
+            sheet.style.removeProperty("transform");
+            sheet.style.removeProperty("transition");
+          },
+          { once: true }
+        );
       }
 
       isDraggingRef.current = false;
@@ -96,6 +113,10 @@ const useBottomSheetDrag = ({
       }
 
       startYRef.current = event.clientY;
+      lastYRef.current = event.clientY;
+      lastTimeRef.current = performance.now();
+      lastVelocityRef.current = 0;
+      deltaYRef.current = 0;
       sheetRef.current?.setPointerCapture(event.pointerId);
       sheetRef.current?.classList.add("dragging");
 

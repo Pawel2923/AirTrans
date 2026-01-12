@@ -1,9 +1,18 @@
 import Logo from "/Logo.png";
 import { NavigationMenu } from "radix-ui";
+import { Dialog } from "radix-ui";
 import { NavLink } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faUserCircle as faUserCircleRegular } from "@fortawesome/free-regular-svg-icons";
-import { faUserCircle as faUserCircleSolid } from "@fortawesome/free-solid-svg-icons";
+import {
+  faList,
+  faRightFromBracket,
+  faRightToBracket,
+  faUserCircle as faUserCircleSolid,
+  faUserPen,
+  faUserPlus,
+  faX,
+} from "@fortawesome/free-solid-svg-icons";
 import styles from "./MobileTopNav.module.css";
 import { useState } from "react";
 
@@ -16,13 +25,7 @@ const MobileTopNav = ({ auth }: MobileTopNavProps) => {
 
   return (
     <>
-      {isOpen && (
-        <div
-          className={styles["nav-backdrop"]}
-          onClick={() => setIsOpen(false)}  
-        ></div>
-      )}
-      <NavigationMenu.Root onValueChange={(value) => setIsOpen(!!value)} className={styles["top-nav"]}>
+      <NavigationMenu.Root className={styles["top-nav"]}>
         <NavigationMenu.List className={styles["nav-list"]}>
           <NavigationMenu.Item className={styles["nav-brand"]}>
             <NavigationMenu.Link asChild>
@@ -36,46 +39,92 @@ const MobileTopNav = ({ auth }: MobileTopNavProps) => {
             </NavigationMenu.Link>
           </NavigationMenu.Item>
 
-          <NavigationMenu.Item className={styles["nav-account"]}>
-            <NavigationMenu.Trigger
-              className={styles["nav-account-trigger"]}
-              aria-label={
-                auth ? "Menu konta użytkownika" : "Zaloguj się lub zarejestruj"
-              }
-            >
-              <FontAwesomeIcon
-                icon={auth ? faUserCircleSolid : faUserCircleRegular}
-                aria-hidden
-              />
-            </NavigationMenu.Trigger>
-            <NavigationMenu.Content className={styles["account-sheet"]}>
-              {auth ? (
-                <>
-                  <NavigationMenu.Link asChild>
-                    <NavLink to="/zarzadzanie/profil">Profil</NavLink>
-                  </NavigationMenu.Link>
-                  <NavigationMenu.Link asChild>
-                    <NavLink to="/logi">Logi</NavLink>
-                  </NavigationMenu.Link>
-                  <NavigationMenu.Link asChild>
-                    <NavLink to="/wyloguj">Wyloguj się</NavLink>
-                  </NavigationMenu.Link>
-                </>
-              ) : (
-                <>
-                  <NavigationMenu.Link asChild>
-                    <NavLink to="/logowanie">Zaloguj się</NavLink>
-                  </NavigationMenu.Link>
-                  <NavigationMenu.Link asChild>
-                    <NavLink to="/rejestracja">Zarejestruj się</NavLink>
-                  </NavigationMenu.Link>
-                </>
-              )}
-            </NavigationMenu.Content>
-          </NavigationMenu.Item>
+          <Dialog.Root open={isOpen} onOpenChange={setIsOpen}>
+            <NavigationMenu.Item className={styles["nav-account"]}>
+              <Dialog.Trigger asChild>
+                <button
+                  className={styles["nav-account-trigger"]}
+                  aria-label={
+                    auth
+                      ? "Menu konta użytkownika"
+                      : "Zaloguj się lub zarejestruj"
+                  }
+                >
+                  <FontAwesomeIcon
+                    icon={auth ? faUserCircleSolid : faUserCircleRegular}
+                    aria-hidden
+                  />
+                </button>
+              </Dialog.Trigger>
+            </NavigationMenu.Item>
+            <Dialog.Portal>
+              <Dialog.Overlay className={styles["nav-backdrop"]} />
+              <Dialog.Content className={styles["account-sheet"]}>
+                <div className={styles["account-sheet-handle"]}></div>
+                <Dialog.Close asChild>
+                  <button
+                    className={styles["account-sheet-close"]}
+                    aria-label="Zamknij menu"
+                  >
+                    <FontAwesomeIcon icon={faX} aria-hidden />
+                  </button>
+                </Dialog.Close>
+                {auth ? (
+                  <div className={styles["account-sheet-wrapper"]}>
+                    <div className={styles["account-sheet-group"]}>
+                      <NavLink
+                        to="/zarzadzanie/profil"
+                        className={styles["account-sheet-item"]}
+                      >
+                        <FontAwesomeIcon icon={faUserPen} aria-hidden />
+                        <span>Profil</span>
+                      </NavLink>
+                      <NavLink
+                        to="/logi"
+                        className={styles["account-sheet-item"]}
+                      >
+                        <FontAwesomeIcon icon={faList} aria-hidden />
+                        <span>Logi</span>
+                      </NavLink>
+                    </div>
+                    <div
+                      className={styles["account-sheet-group-divider"]}
+                    ></div>
+                    <div className={styles["account-sheet-group"]}>
+                      <NavLink
+                        to="/wyloguj"
+                        className={`${styles["account-sheet-item"]} ${styles["account-sheet-item-destructive"]}`}
+                      >
+                        <FontAwesomeIcon
+                          icon={faRightFromBracket}
+                          aria-hidden
+                        />
+                        <span>Wyloguj się</span>
+                      </NavLink>
+                    </div>
+                  </div>
+                ) : (
+                  <div className={styles["account-sheet-group"]}>
+                    <NavLink
+                      to="/logowanie"
+                      className={`${styles["account-sheet-item"]} ${styles["account-sheet-item-primary"]}`}
+                    >
+                      <FontAwesomeIcon icon={faRightToBracket} aria-hidden />
+                      <span>Zaloguj się</span>
+                    </NavLink>
+                    <NavLink
+                      to="/rejestracja"
+                      className={styles["account-sheet-item"]}
+                    >
+                      <FontAwesomeIcon icon={faUserPlus} aria-hidden />
+                      <span>Zarejestruj się</span>
+                    </NavLink>
+                  </div>
+                )}
+              </Dialog.Content>
+            </Dialog.Portal>
+          </Dialog.Root>
         </NavigationMenu.List>
-
-        <NavigationMenu.Viewport className={styles["nav-viewport"]} />
       </NavigationMenu.Root>
     </>
   );

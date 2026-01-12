@@ -53,6 +53,32 @@
   z-index: 9999;
 }
 
+.nav-backdrop[data-state="open"] {
+  animation: fadeIn 150ms ease-out forwards;
+}
+
+.nav-backdrop[data-state="closed"] {
+  animation: fadeOut 120ms ease-in forwards;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes fadeOut {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+
 .account-sheet {
   background-color: #f8f9fb;
   box-shadow: var(--default-box-shadow);
@@ -68,6 +94,33 @@
   margin: 0.5rem;
   border-radius: 10px;
   align-items: center;
+  transform: translateY(100%);
+}
+
+.account-sheet[data-state="open"] {
+  animation: sheetUp 200ms ease-out forwards;
+}
+
+.account-sheet[data-state="closed"] {
+  animation: sheetDown 160ms ease-in forwards;
+}
+
+@keyframes sheetUp {
+  from {
+    transform: translateY(100%);
+  }
+  to {
+    transform: translateY(0);
+  }
+}
+
+@keyframes sheetDown {
+  from {
+    transform: translateY(0);
+  }
+  to {
+    transform: translateY(100%);
+  }
 }
 
 .top-nav {

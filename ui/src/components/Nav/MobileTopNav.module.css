@@ -94,7 +94,6 @@
   margin: 0.5rem;
   border-radius: 10px;
   align-items: center;
-  transform: translateY(100%);
 }
 
 .account-sheet[data-state="open"] {
@@ -103,6 +102,11 @@
 
 .account-sheet[data-state="closed"] {
   animation: sheetDown 160ms ease-in forwards;
+}
+
+.account-sheet.dragging {
+  transition: none !important;
+  animation: none !important;
 }
 
 @keyframes sheetUp {

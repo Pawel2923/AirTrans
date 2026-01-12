@@ -15,6 +15,7 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import styles from "./MobileTopNav.module.css";
 import { useState } from "react";
+import useBottomSheetDrag from "../../hooks/useBottomSheetDrag";
 
 interface MobileTopNavProps {
   auth: boolean;
@@ -22,6 +23,13 @@ interface MobileTopNavProps {
 
 const MobileTopNav = ({ auth }: MobileTopNavProps) => {
   const [isOpen, setIsOpen] = useState(false);
+  const {
+    sheetRef,
+    onPointerDown,
+    onPointerMove,
+    onPointerUp,
+    onPointerCancel,
+  } = useBottomSheetDrag({ onClose: () => setIsOpen(false) });
 
   return (
     <>
@@ -59,7 +67,14 @@ const MobileTopNav = ({ auth }: MobileTopNavProps) => {
             </NavigationMenu.Item>
             <Dialog.Portal>
               <Dialog.Overlay className={styles["nav-backdrop"]} />
-              <Dialog.Content className={styles["account-sheet"]}>
+              <Dialog.Content
+                ref={sheetRef}
+                onPointerDown={onPointerDown}
+                onPointerMove={onPointerMove}
+                onPointerUp={onPointerUp}
+                onPointerCancel={onPointerCancel}
+                className={styles["account-sheet"]}
+              >
                 <div className={styles["account-sheet-handle"]}></div>
                 <Dialog.Close asChild>
                   <button

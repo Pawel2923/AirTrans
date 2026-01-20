@@ -31,9 +31,10 @@
   border-radius: 50px;
 }
 
-.nav-item a:active,
 .nav-item a[aria-current="page"] {
   background-color: #4c98ca;
   color: white;
-  box-shadow: var(--default-box-shadow);
+  box-shadow: 1px 1px 5px rgba(0, 0, 0, 0.15);
+  -webkit-tap-highlight-color: transparent;
+  -webkit-text-fill-color: white;
 }

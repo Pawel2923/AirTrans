@@ -15,7 +15,7 @@ const MobileScheduleFilterSort = ({
     <div className={styles["mobile-filter-sort"]}>
       <div className="dropdown">
         <button
-          className={`btn btn-primary dropdown-toggle ${styles["dropdown-toggle"]}`}
+          className={`dropdown-toggle ${styles["dropdown-toggle"]}`}
           type="button"
           data-bs-toggle="dropdown"
           aria-expanded="false"

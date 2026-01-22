@@ -1,9 +1,15 @@
 .schedule-options {
     background-color: #B3D3E8;
-    padding: 0.5rem 1rem;
+    padding: 0.5rem;
     display: flex;
     justify-content: space-between;
     align-items: stretch;
+}
+
+@media (min-width: 48em) {
+    .schedule-options {
+        padding: 1rem 2rem;
+    }
 }
 
 .search-wrapper {

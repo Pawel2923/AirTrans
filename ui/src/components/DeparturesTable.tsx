@@ -69,7 +69,7 @@ const DeparturesTable: React.FC<TableProps> = ({
   };
 
   return (
-    <>
+    <div className={tableStyles["table-container"]}>
       <table className={tableStyles.table}>
         <thead>
           <tr className={tableStyles["thead-btn-wrapper"]}>
@@ -232,7 +232,7 @@ const DeparturesTable: React.FC<TableProps> = ({
           message="Czy na pewno chcesz usunąć lot?"
         />
       )}
-    </>
+    </div>
   );
 };
 

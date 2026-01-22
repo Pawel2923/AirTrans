@@ -55,6 +55,8 @@
   }
 }
 
-footer {
-  margin-bottom: 4rem;
+@media (max-width: 47.99em) {
+  footer {
+    margin-bottom: 4rem;
+  }
 }

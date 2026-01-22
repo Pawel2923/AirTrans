@@ -181,7 +181,6 @@ const FlightsFilter = ({
       onClose={() => setIsFilterModalOpen(false)}
       onConfirm={confirmHandler}
       title="Filtruj loty"
-      modalContentStyle={{ margin: "10% auto" }}
       children={
         <div>
           <label htmlFor="status">Status lotu</label>
@@ -222,17 +221,15 @@ const FlightsFilter = ({
             <input
               type="date"
               name="dateFrom"
-              className="form-control me-3"
-              style={{ display: "inline-block", width: "100%" }}
+              className="form-control"
               value={filterInputs.departure?.dateFrom}
               onChange={departureChangeHandler}
             />
-            <FontAwesomeIcon icon={faMinus} className="me-3" />
+            <FontAwesomeIcon icon={faMinus} className="mx-1 mx-sm-3" />
             <input
               type="date"
               name="dateTo"
               className="form-control"
-              style={{ display: "inline-block", width: "100%" }}
               value={filterInputs.departure?.dateTo}
               onChange={departureChangeHandler}
             />
@@ -242,17 +239,15 @@ const FlightsFilter = ({
             <input
               type="date"
               name="dateFrom"
-              className="form-control me-3"
-              style={{ display: "inline-block", width: "100%" }}
+              className="form-control"
               value={filterInputs.arrival?.dateFrom}
               onChange={arrivalChangeHandler}
             />
-            <FontAwesomeIcon icon={faMinus} className="me-3" />
+            <FontAwesomeIcon icon={faMinus} className="mx-1 mx-sm-3" />
             <input
               type="date"
               name="dateTo"
               className="form-control"
-              style={{ display: "inline-block", width: "100%" }}
               value={filterInputs.arrival?.dateTo}
               onChange={arrivalChangeHandler}
             />

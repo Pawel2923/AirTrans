@@ -6,38 +6,39 @@
     align-items: stretch;
 }
 
-.left {
-    display: flex;
-    align-items: center;
-    gap: 2rem;
-}
-
-.left button {
-    padding-left: 2rem;
-    padding-right: 2rem;
-}
-
-.right {
+.search-wrapper {
     position: relative;
 }
 
-.right input {
+.search-wrapper input {
     height: 100%;
-    padding-right: 1rem;
+    padding-right: 0.5rem;
     padding-left: 2.75rem;
     border: 0;
     border-radius: 25px;
 }
 
-.right input:focus-visible {
+@media (min-width: 48em) {
+    .search-wrapper input {
+        padding-right: 1rem;
+    }
+}
+
+.search-wrapper input:focus-visible {
     outline: 2px solid var(--table-border-color);
 }
 
-.right svg {
+.search-wrapper svg {
     color: var(--table-border-color);
     position: absolute;
     top: 0;
     left: 0;
-    transform: translateY(calc(50% + 0.25rem)) translateX(1rem);
+    transform: translateY(calc(50%)) translateX(1rem);
     cursor: text;
+}
+
+@media (min-width: 48em) {
+    .search-wrapper svg {
+        transform: translateY(calc(50% + 0.25rem)) translateX(1rem);
+    }
 }

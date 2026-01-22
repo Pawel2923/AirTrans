@@ -49,8 +49,8 @@ const FlightSchedule = () => {
         setIsSortModalOpen={setIsSortModalOpen}
         setSearchValue={setSearchValue}
       />
-      <main className="container">
-        <div className="row text-center my-5">
+      <main className="container mb-5">
+        <div className="row text-center my-3 my-md-5">
           <h1 className="display-5">HARMONOGRAM LOTÓW</h1>
         </div>
         <div className="row">

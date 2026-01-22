@@ -1,7 +1,9 @@
-import classes from "./ScheduleOptions.module.css";
+import styles from "./ScheduleOptions.module.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSearch } from "@fortawesome/free-solid-svg-icons";
 import { useRef } from "react";
+import DesktopScheduleFilterSort from "./DesktopScheduleFilterSort";
+import MobileScheduleFilterSort from "./MobileSchedulFilterSort";
 
 interface ScheduleOptionsProps {
   searchValue: string;
@@ -19,22 +21,16 @@ const ScheduleOptions = ({
   const searchInput = useRef<HTMLInputElement>(null);
 
   return (
-    <div className={classes["schedule-options"]}>
-      <div className={classes.left}>
-        <button
-          className="btn btn-primary"
-          onClick={() => setIsFilterModalOpen(true)}
-        >
-          Filtruj
-        </button>
-        <button
-          className="btn btn-primary"
-          onClick={() => setIsSortModalOpen(true)}
-        >
-          Sortuj
-        </button>
-      </div>
-      <div className={classes.right}>
+    <div className={styles["schedule-options"]}>
+      <DesktopScheduleFilterSort
+        setIsFilterModalOpen={setIsFilterModalOpen}
+        setIsSortModalOpen={setIsSortModalOpen}
+      />
+      <MobileScheduleFilterSort
+        setIsFilterModalOpen={setIsFilterModalOpen}
+        setIsSortModalOpen={setIsSortModalOpen}
+      />
+      <div className={styles["search-wrapper"]}>
         <input
           ref={searchInput}
           type="search"

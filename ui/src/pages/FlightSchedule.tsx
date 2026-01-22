@@ -76,20 +76,24 @@ const FlightSchedule = () => {
           />
         </div>
       </div>
-      <main className="px-5 mb-5">
-        <h1 className="display-5 text-center my-5">HARMONOGRAM LOTÓW</h1>
-        <DeparturesTable
-          isExtended={true}
-          data={departureData}
-          isLoading={isLoading}
-        />
-        {pageData.pages > 1 && (
-          <Pagination
-            pageData={pageData}
-            setPageData={setPageData}
-            className="mt-3"
+      <main className="container">
+        <div className="row text-center my-5">
+          <h1 className="display-5">HARMONOGRAM LOTÓW</h1>
+        </div>
+        <div className="row">
+          <DeparturesTable
+            isExtended={true}
+            data={departureData}
+            isLoading={isLoading}
           />
-        )}
+          {pageData.pages > 1 && (
+            <Pagination
+              pageData={pageData}
+              setPageData={setPageData}
+              className="mt-3"
+            />
+          )}
+        </div>
       </main>
       {isFilterModalOpen && (
         <FlightsFilter

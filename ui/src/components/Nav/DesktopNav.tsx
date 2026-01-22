@@ -10,13 +10,13 @@ interface DesktopNavProps {
 
 const DesktopNav = ({ auth, isActive }: DesktopNavProps) => {
   return (
-    <NavigationMenu.Root>
+    <NavigationMenu.Root className={styles["desktop-nav"]}>
       <NavigationMenu.List className={styles["nav-list"]}>
         <NavigationMenu.Item className={styles["nav-brand"]}>
           <NavigationMenu.Link asChild>
             <NavLink
               to="/"
-              className="d-flex align-items-center gap-3 fw-bold fs-3"
+              className="d-flex align-items-center gap-3 fw-bold"
             >
               <img src={Logo} width={64} alt="AirTrans Logo" />
               <span>AirTrans</span>

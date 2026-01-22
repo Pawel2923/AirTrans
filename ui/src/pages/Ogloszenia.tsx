@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from "react";
-import Nav from "../components/Nav";
+import Nav from "../components/Nav/Nav";
 import Footer from "../components/footer";
 import TabelaOgloszeniaK from "../components/tabelaOgloszeniaK";
 import { Announcements, PageData } from "../assets/Data";

@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 import { DateRangePicker, RangeKeyDict } from 'react-date-range';
 import 'react-date-range/dist/styles.css';
 import 'react-date-range/dist/theme/default.css';
-import Nav from '../components/Nav';
+import Nav from '../components/Nav/Nav';
 import { ParkingReservations } from '../assets/Data';
 import parkingService from '../services/parking.service';
 import { useNavigate } from 'react-router-dom';

@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import Input from "../components/input";
 import rejestracjaService from "../services/rejestracja.service";
 import styles from "./Logowanie.module.css";
-import { faArrowLeft } from "@fortawesome/free-solid-svg-icons";
+import { faArrowLeft, faArrowRight, faEnvelope, faLock, faUser, faEarthEurope, faPlane } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 const emailRegex = /^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$/i;
@@ -93,129 +93,116 @@ const Rejestracja = () => {
       alert("Błąd rejestracji - sprawdź konsolę");
     }
   };
+  
+  const registrationForm = (
+    <form onSubmit={submitHandler} className={styles["login-form"]}>
+      <div className={styles["form-container"]}>
+        <div className={styles["form-group"]}>
+          <FontAwesomeIcon icon={faEnvelope} />
+          <Input
+            type="email"
+            id="email"
+            placeholder="E-mail"
+            value={email}
+            minLength={3}
+            onInput={emailInputHandler}
+            validateInput={isEmail}
+            setIsFormInvalid={setIsFormInvalid}
+            required
+          />
+        </div>
+        <div className={styles["form-group"]}>
+          <FontAwesomeIcon icon={faLock} />
+          <Input
+            type="password"
+            id="password"
+            placeholder="Hasło"
+            value={password}
+            minLength={3}
+            onInput={passwordInputHandler}
+            validateInput={isEmpty}
+            setIsFormInvalid={setIsFormInvalid}
+            required
+          />
+        </div>
+        <div className={styles["form-group"]}>
+          <FontAwesomeIcon icon={faLock} />
+          <Input
+            type="password"
+            id="repeatPassword"
+            placeholder="Powtórz hasło"
+            value={repeatPassword}
+            minLength={3}
+            onInput={repeatPasswordInputHandler}
+            validateInput={isEmpty}
+            setIsFormInvalid={setIsFormInvalid}
+            required
+          />
+        </div>
+        <div className={styles["form-group"]}>
+          <FontAwesomeIcon icon={faUser} />
+          <Input
+            type="text"
+            id="firstName"
+            placeholder="Imię"
+            value={firstName}
+            minLength={2}
+            onInput={firstNameInputHandler}
+            validateInput={isEmpty}
+            setIsFormInvalid={setIsFormInvalid}
+            required
+          />
+        </div>
+        <div className={styles["form-group"]}>
+          <FontAwesomeIcon icon={faUser} />
+          <Input
+            type="text"
+            id="lastName"
+            placeholder="Nazwisko"
+            value={lastName}
+            minLength={2}
+            onInput={lastNameInputHandler}
+            validateInput={isEmpty}
+            setIsFormInvalid={setIsFormInvalid}
+            required
+          />
+        </div>
+      </div>
+      <button
+        type="submit"
+        className={`btn btn-primary ${styles["submit-btn"]}`}
+      >
+        Zarejestruj się
+        <FontAwesomeIcon icon={faArrowRight} />
+      </button>
+    </form>
+  );
+
   return (
     <>
-      <main style={{ backgroundColor: "#f0f0f0" }}>
+      <main>
         <section className="section">
-          <div className={`container-fluid ${styles.container}`}>
-            <div className={`p-5 ${styles["login-container"]}`}>
-              <div className={styles.left}>
-                <h1 className="display-6 text-center">
-                  REJESTRACJA DO SYSTEMU
-                </h1>
-                <p className="text-center">
-                  Masz już konto? <Link to="/logowanie">Zaloguj się</Link>
-                </p>
-              </div>
-              <div className={styles.right}>
-                <h5>Formularz rejestracyjny</h5>
-                <form onSubmit={submitHandler}>
-                  <label
-                    style={{
-                      display: "block",
-                      marginBottom: "1rem",
-                    }}
-                  >
-                    <Input
-                      type="email"
-                      id="email"
-                      placeholder="E-mail"
-                      value={email}
-                      minLength={3}
-                      onInput={emailInputHandler}
-                      validateInput={isEmail}
-                      setIsFormInvalid={setIsFormInvalid}
-                      required
-                    />
-                  </label>
-                  <label
-                    style={{
-                      display: "block",
-                      marginBottom: "1rem",
-                    }}
-                  >
-                    <Input
-                      type="password"
-                      id="password"
-                      placeholder="Hasło"
-                      value={password}
-                      minLength={3}
-                      onInput={passwordInputHandler}
-                      validateInput={isEmpty}
-                      setIsFormInvalid={setIsFormInvalid}
-                      required
-                    />
-                  </label>
-                  <label
-                    style={{
-                      display: "block",
-                      marginBottom: "1rem",
-                    }}
-                  >
-                    <Input
-                      type="password"
-                      id="repeatPassword"
-                      placeholder="Powtórz hasło"
-                      value={repeatPassword}
-                      minLength={3}
-                      onInput={repeatPasswordInputHandler}
-                      validateInput={isEmpty}
-                      setIsFormInvalid={setIsFormInvalid}
-                      required
-                    />
-                  </label>
-                  <label
-                    style={{
-                      display: "block",
-                      marginBottom: "1rem",
-                    }}
-                  >
-                    <Input
-                      type="text"
-                      id="firstName"
-                      placeholder="Imię"
-                      value={firstName}
-                      minLength={2}
-                      onInput={firstNameInputHandler}
-                      validateInput={isEmpty}
-                      setIsFormInvalid={setIsFormInvalid}
-                      required
-                    />
-                  </label>
-                  <label
-                    style={{
-                      display: "block",
-                      marginBottom: "1rem",
-                    }}
-                  >
-                    <Input
-                      type="text"
-                      id="lastName"
-                      placeholder="Nazwisko"
-                      value={lastName}
-                      minLength={2}
-                      onInput={lastNameInputHandler}
-                      validateInput={isEmpty}
-                      setIsFormInvalid={setIsFormInvalid}
-                      required
-                    />
-                  </label>
-                  <button
-                    type="submit"
-                    className="btn btn-primary"
-                    style={{ backgroundColor: "#5DA9DB" }}
-                  >
-                    Zarejestruj się
-                  </button>
-                </form>
-              </div>
-              <Link
-                to="/"
-                className="text-black text-decoration-none"
-                style={{ position: "absolute", bottom: "1rem", left: "1.5rem" }}
-              >
+          <div className={styles.container}>
+            <FontAwesomeIcon icon={faEarthEurope} className={styles["background-icon"]} />
+            <div className={styles["login-container"]}>
+              <FontAwesomeIcon icon={faPlane} className={styles["plane-icon"]} />
+              <Link to="/" className={`text-decoration-none ${styles["back-link"]}`}>
                 <FontAwesomeIcon icon={faArrowLeft} /> Wróć
               </Link>
+              <div className={styles.header}>
+                <h1 className="display-6 text-center">Rejestracja do systemu</h1>
+                <div className={styles["header-divider"]}></div>
+              </div>
+              <div className={styles.form}>
+                <h5 className="text-center">Utwórz nowe konto</h5>
+                {registrationForm}
+              </div>
+              <div className={styles.links}>
+                <p className="text-center">
+                  Masz już konto?{" "}
+                  <Link to="/logowanie">Zaloguj się</Link>
+                </p>
+              </div>
             </div>
           </div>
         </section>

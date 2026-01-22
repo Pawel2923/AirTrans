@@ -1,4 +1,4 @@
-# Logs
+ # Logs
 logs
 *.log
 npm-debug.log*
@@ -139,3 +139,4 @@ dist
 *.njsproj
 *.sln
 *.sw?
+db_full_dump.sql

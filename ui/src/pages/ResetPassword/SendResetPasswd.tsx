@@ -4,7 +4,8 @@ import Input from "../../components/input";
 import styles from "../Logowanie.module.css";
 import ToastModalContext from "../../store/toast-modal-context";
 import resetPasswdService from "../../services/resetPasswd.service";
-import { faTrashCan } from "@fortawesome/free-solid-svg-icons";
+import { faTrashCan, faArrowLeft, faArrowRight, faEnvelope, faEarthEurope, faPlane } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Loader from "../../components/Loader";
 import classes from "./Reset.module.css";
 
@@ -74,46 +75,58 @@ const SendResetPasswd = () => {
       });
   };
 
+  const resetForm_jsx = (
+    <form onSubmit={submitHandler} className={styles["login-form"]}>
+      <div className={styles["form-container"]}>
+        <div className={styles["form-group"]}>
+          <FontAwesomeIcon icon={faEnvelope} />
+          <Input
+            type="email"
+            id="email"
+            placeholder="E-mail"
+            value={email}
+            minLength={3}
+            onInput={emailInputHandler}
+            validateInput={isEmail}
+            setIsFormInvalid={setIsFormInvalid}
+            required
+          />
+        </div>
+      </div>
+      <button
+        type="submit"
+        className={`btn btn-primary ${styles["submit-btn"]}`}
+      >
+        Wyślij link
+        <FontAwesomeIcon icon={faArrowRight} />
+      </button>
+    </form>
+  );
+
   return (
     <>
-      <main style={{ backgroundColor: "#f0f0f0" }}>
+      <main>
         <section className="section">
-          <div className={`container ${styles.container}`}>
+          <div className={styles.container}>
+            <FontAwesomeIcon icon={faEarthEurope} className={styles["background-icon"]} />
             <div className={styles["login-container"]}>
-              <div className={styles.left}>
-                <h1 className="display-6 text-center">RESETOWANIE HASŁA</h1>
-                <p className="text-center m-0">
-                  <Link to="/logowanie">Przejdź do logowania</Link>.
-                </p>
+              <FontAwesomeIcon icon={faPlane} className={styles["plane-icon"]} />
+              <Link to="/" className={`text-decoration-none ${styles["back-link"]}`}>
+                <FontAwesomeIcon icon={faArrowLeft} /> Wróć
+              </Link>
+              <div className={styles.header}>
+                <h1 className="display-6 text-center">Resetowanie hasła</h1>
+                <div className={styles["header-divider"]}></div>
               </div>
-              <div className={styles.right}>
-                <div className="mb-3">
-                  <h5>Wprowadź swój adres e-mail</h5>
-                  <form onSubmit={submitHandler}>
-                    <div className={styles["form-container"]}>
-                      <div className={styles["form-group"]}>
-                        <Input
-                          type="email"
-                          id="email"
-                          placeholder="E-mail"
-                          value={email}
-                          minLength={3}
-                          onInput={emailInputHandler}
-                          validateInput={isEmail}
-                          setIsFormInvalid={setIsFormInvalid}
-                          required
-                        />
-                      </div>
-                    </div>
-                    <button
-                      type="submit"
-                      className="btn btn-primary"
-                      style={{ backgroundColor: "#5DA9DB" }}
-                    >
-                      Wyślij link resetujący
-                    </button>
-                  </form>
-                </div>
+              <div className={styles.form}>
+                <h5 className="text-center">Wprowadź swój adres e-mail</h5>
+                {resetForm_jsx}
+              </div>
+              <div className={styles.links}>
+                <p className="text-center">
+                  Pamiętasz hasło?{" "}
+                  <Link to="/logowanie">Zaloguj się</Link>
+                </p>
               </div>
             </div>
           </div>

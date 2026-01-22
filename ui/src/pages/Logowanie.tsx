@@ -5,7 +5,7 @@ import Input from "../components/input";
 import AuthContext from "../store/auth-context";
 import styles from "./Logowanie.module.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faArrowLeft } from "@fortawesome/free-solid-svg-icons";
+import { faArrowLeft, faArrowRight, faEnvelope, faLock, faEarthEurope, faPlane } from "@fortawesome/free-solid-svg-icons";
 import ToastModalContext from "../store/toast-modal-context";
 import { faCircleCheck } from "@fortawesome/free-solid-svg-icons";
 
@@ -84,9 +84,10 @@ const { createToast } = useContext(ToastModalContext);
     }
   };
   const loginForm = (
-    <form onSubmit={submitHandler}>
+    <form onSubmit={submitHandler} className={styles["login-form"]}>
       <div className={styles["form-container"]}>
         <div className={styles["form-group"]}>
+           <FontAwesomeIcon icon={faEnvelope} />
           <Input
             type="email"
             id="email"
@@ -100,6 +101,7 @@ const { createToast } = useContext(ToastModalContext);
           />
         </div>
         <div className={styles["form-group"]}>
+           <FontAwesomeIcon icon={faLock} />
           <Input
             type="password"
             id="password"
@@ -115,38 +117,42 @@ const { createToast } = useContext(ToastModalContext);
       </div>
       <button
         type="submit"
-        className="btn btn-primary"
-        style={{ backgroundColor: "#5DA9DB" }}
+        className={`btn btn-primary ${styles["submit-btn"]}`}
       >
         Zaloguj się
+         <FontAwesomeIcon icon={faArrowRight} />
       </button>
     </form>
   );
 
   return (
-    <main style={{ backgroundColor: "#f0f0f0" }}>
+    <main>
       <section className="section">
-        <div className={`container ${styles.container}`}>
+        <div className={styles.container}>
+          <FontAwesomeIcon icon={faEarthEurope} className={styles["background-icon"]} />
           <div className={styles["login-container"]}>
-            <div className={styles.left}>
-              <h1 className="display-6 text-center">LOGOWANIE DO SYSTEMU</h1>
-              <p className="text-center m-0">
+            <FontAwesomeIcon icon={faPlane} className={styles["plane-icon"]} />
+            <Link to="/" className={`text-decoration-none ${styles["back-link"]}`}>
+            <FontAwesomeIcon icon={faArrowLeft} /> Wróć
+          </Link>
+            <div className={styles.header}>
+              <h1 className="display-6 text-center">Logowanie do systemu</h1>
+              <div className={styles["header-divider"]}></div>
+            </div>
+            <div className={styles.form}>
+              <h5 className="text-center">Wprowadź swoje dane</h5>
+              {loginForm}
+            </div>
+            <div className={styles.links}>
+              <p className="text-center">
                 Nie masz jeszcze konta?{" "}
                 <Link to="/rejestracja">Zarejestruj się</Link>
               </p>
-              <p className="text-center m-0">
-                Zresetuj hasło <Link to="/resetowanie">tutaj</Link>.
+              <p className="text-center">
+                Nie pamiętasz hasła?{" "}
+                <Link to="/resetowanie">Zresetuj hasło</Link>
               </p>
             </div>
-            <div className={styles.right}>
-              <div className="mb-3">
-                <h5>Formularz logowania</h5>
-                {loginForm}
-              </div>
-            </div>
-            <Link to="/" className="text-black text-decoration-none" style={{position: "absolute", bottom: "1rem", left: "1.5rem"}}>
-              <FontAwesomeIcon icon={faArrowLeft} /> Wróć
-            </Link>
           </div>
         </div>
       </section>

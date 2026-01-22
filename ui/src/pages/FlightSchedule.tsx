@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import DeparturesTable from "../components/DeparturesTable";
 import Nav from "../components/Nav/Nav";
 import useGetFlight from "../hooks/flight/useGetFlight";
@@ -6,11 +6,9 @@ import { useSearchParams } from "react-router-dom";
 import { Filter, PageData, Sort } from "../assets/Data";
 import Pagination from "../components/Pagination";
 import Footer from "../components/footer";
-import classes from "./FlightSchedule.module.css";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faSearch } from "@fortawesome/free-solid-svg-icons";
 import FlightsFilter from "../components/FlightsFilter";
 import FlightsSort from "../components/FlightsSort";
+import ScheduleOptions from "../components/ScheduleOptions";
 
 const FlightSchedule = () => {
   const [searchParams] = useSearchParams();
@@ -23,7 +21,6 @@ const FlightSchedule = () => {
   const [isSortModalOpen, setIsSortModalOpen] = useState<boolean>(false);
   const [filterData, setFilterData] = useState<Filter[]>([]);
   const [sortData, setSortData] = useState<Sort>();
-  const searchInput = useRef<HTMLInputElement>(null);
   const [searchValue, setSearchValue] = useState<string>("");
 
   useEffect(() => {
@@ -46,36 +43,12 @@ const FlightSchedule = () => {
   return (
     <>
       <Nav />
-      <div className={classes["schedule-nav"]}>
-        <div className={classes.left}>
-          <button
-            className="btn btn-primary"
-            onClick={() => setIsFilterModalOpen(true)}
-          >
-            Filtruj
-          </button>
-          <button
-            className="btn btn-primary"
-            onClick={() => setIsSortModalOpen(true)}
-          >
-            Sortuj
-          </button>
-        </div>
-        <div className={classes.right}>
-          <input
-            ref={searchInput}
-            type="search"
-            name="flight-search"
-            placeholder="Wyszukiwanie"
-            value={searchValue}
-            onInput={(e) => setSearchValue(e.currentTarget.value)}
-          />
-          <FontAwesomeIcon
-            icon={faSearch}
-            onClick={() => searchInput.current?.focus()}
-          />
-        </div>
-      </div>
+      <ScheduleOptions
+        searchValue={searchValue}
+        setIsFilterModalOpen={setIsFilterModalOpen}
+        setIsSortModalOpen={setIsSortModalOpen}
+        setSearchValue={setSearchValue}
+      />
       <main className="container">
         <div className="row text-center my-5">
           <h1 className="display-5">HARMONOGRAM LOTÓW</h1>

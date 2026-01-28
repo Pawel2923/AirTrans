@@ -20,7 +20,7 @@ services:
   api:
     depends_on:
       - mysqldb
-    image: pawel2923/airtrans-api:latest
+    image: pawel2923/airtrans-api:staging
     build:
       context: ./api
       dockerfile: Dockerfile
@@ -49,12 +49,12 @@ services:
       - backend
       - frontend
   ui:
-    image: pawel2923/airtrans-ui:latest
+    image: pawel2923/airtrans-ui:staging
     build:
       context: ./ui
       dockerfile: Dockerfile.prod
       args:
-       - VITE_MODE=production
+       - VITE_MODE=staging
     depends_on:
       - api
     volumes:

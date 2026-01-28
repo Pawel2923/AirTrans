@@ -48,7 +48,6 @@ const FlightsSort = ({
       onClose={() => setIsSortModalOpen(false)}
       onConfirm={confirmHandler}
       title="Sortuj loty"
-      modalContentStyle={{ margin: "10% auto" }}
       children={
         <div>
           <label htmlFor="sortBy">Sortuj według</label>

@@ -27,7 +27,7 @@
   padding-right: 4%;
 }
 
-@media screen and (min-width: 1250px) {
+@media (min-width: 78.125em) {
   .content-wrapper:not(.no-padding) {
     padding-left: 8rem;
     padding-right: 8rem;
@@ -48,7 +48,7 @@
   border: none !important;
 }
 
-@media screen and (min-width: 468px) {
+@media (min-width: 29.25em) {
   .offer-card {
     max-width: 60vw !important;
   }

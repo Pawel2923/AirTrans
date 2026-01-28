@@ -96,7 +96,7 @@ app.use((err: Err, _req: Request, res: Response, _next: NextFunction): any => {
 });
 
 // Check if SSL certificates exist
-const sslKeyPath = "./ssl/privkey.pem";
+const sslKeyPath = "./ssl/privkey.key";
 const sslCertPath = "./ssl/fullchain.pem";
 
 if (fs.existsSync(sslKeyPath) && fs.existsSync(sslCertPath)) {
@@ -107,7 +107,7 @@ if (fs.existsSync(sslKeyPath) && fs.existsSync(sslCertPath)) {
 
   const httpsServer = https.createServer(credentials, app);
 
-  const SSLPORT = process.env["NODE_DOCKER_SSL_PORT"] || 8443;
+  const SSLPORT = process.env["NODE_DOCKER_SSL_PORT"] || 8080;
   httpsServer.listen(SSLPORT, () => {
     console.log(`HTTPS Server is running on port ${SSLPORT}.`);
   });

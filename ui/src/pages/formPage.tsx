@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useContext } from "react";
 import styles from "./formPage.module.css";
 import { Link, useNavigate } from "react-router-dom";
-import Nav from "../components/Nav";
+import Nav from "../components/Nav/Nav";
 import AuthContext from "../store/auth-context";
 import useGetUsers from "../hooks/users/useGetUsers";
 

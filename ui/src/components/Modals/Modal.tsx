@@ -1,4 +1,4 @@
-import React, { CSSProperties } from "react";
+import React, { CSSProperties, useEffect } from "react";
 import classes from "./Modal.module.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTimes } from "@fortawesome/free-solid-svg-icons";
@@ -10,6 +10,14 @@ interface ModalProps {
 }
 
 const Modal: React.FC<ModalProps> = ({ onClose, children, modalContentStyle }: ModalProps) => {
+  useEffect(() => {
+    document.body.style.overflow = "hidden";
+    
+    return () => {
+      document.body.style.overflow = "auto";
+    };
+  }, []);
+
   return (
     <div className={classes["modal"]}>
       <div className={classes["modal-content"]} style={modalContentStyle}>

@@ -5,7 +5,7 @@ import TabelkaCarsk from "../components/tabelkaCarK";
 import Footer from "../components/footer";
 import { useNavigate } from "react-router-dom";
 import styles from "./RentCar.module.css";
-import Nav from "../components/Nav";
+import Nav from "../components/Nav/Nav";
 
 const RentCar = () => {
   const [cars, setCars] = useState<Cars[]>([]);

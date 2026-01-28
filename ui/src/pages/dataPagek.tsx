@@ -6,7 +6,7 @@ import "react-date-range/dist/styles.css";
 import "react-date-range/dist/theme/default.css";
 import { Cars } from "../assets/Data";
 import carService from "../services/car.service";
-import Nav from "../components/Nav";
+import Nav from "../components/Nav/Nav";
 import FilesService from "../services/files.service";
 
 const emptyCar: Cars = {

@@ -109,6 +109,10 @@ body {
   border: 0;
 }
 
+.form-control {
+  min-width: 0;
+}
+
 button.active,
 a.active {
   background-color: #5da9db;
@@ -137,4 +141,14 @@ a.active {
   font-size: 1.5rem;
   font-weight: 600;
   margin-bottom: 0.5rem;
+}
+
+.footer-link {
+  color: inherit;
+  text-decoration: none;
+}
+
+.footer-link:hover {
+  text-decoration: underline;
+  color: #0a58ca;
 }

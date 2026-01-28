@@ -25,6 +25,7 @@ services:
     env_file: ./.env
     ports:
       - $NODE_LOCAL_PORT:$NODE_DOCKER_PORT
+      - $NODE_LOCAL_SSL_PORT:$NODE_DOCKER_SSL_PORT
     environment:
       - DB_HOST=mysqldb
       - DB_ADMIN_PASSWORD=$MYSQLDB_ADMIN_PASSWORD
@@ -39,8 +40,8 @@ services:
       - CLIENT_ORIGIN=$CLIENT_ORIGIN
     volumes:
       - ./api/files:/api/files
-      - /etc/letsencrypt/live/airtrans.ddns.net/fullchain.pem:/api/ssl/fullchain.pem:ro
-      - /etc/letsencrypt/live/airtrans.ddns.net/privkey.pem:/api/ssl/privkey.pem:ro
+      - /etc/ssl/certs/cloudflare-origin.pem:/api/ssl/fullchain.pem:ro
+      - /etc/ssl/private/cloudflare-origin.key:/api/ssl/privkey.key:ro
     networks:
       - backend
       - frontend
@@ -52,8 +53,8 @@ services:
       - ./ui/src:/ui/src
       - ./ui/public:/ui/public
       - ./ui/index.html:/ui/index.html
-      - /etc/letsencrypt/live/airtrans.ddns.net/fullchain.pem:/etc/nginx/ssl/fullchain.pem:ro
-      - /etc/letsencrypt/live/airtrans.ddns.net/privkey.pem:/etc/nginx/ssl/privkey.pem:ro
+      - /etc/ssl/certs/cloudflare-origin.pem:/etc/nginx/ssl/fullchain.pem:ro
+      - /etc/ssl/private/cloudflare-origin.key:/etc/nginx/ssl/privkey.key:ro
     environment:
       - TZ=Europe/Warsaw
       - REACT_DOCKER_PORT=$REACT_DOCKER_PORT

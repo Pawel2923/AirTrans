@@ -19,6 +19,4 @@ COPY --from=builder /api/routes ./routes
 COPY --from=builder /api/views ./views
 COPY --from=builder /api/files ./files
 
-USER node
-
 CMD ["npm", "start"]

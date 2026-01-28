@@ -21,6 +21,9 @@ services:
     depends_on:
       - mysqldb
     image: pawel2923/airtrans-api:latest
+    build:
+      context: ./api
+      dockerfile: Dockerfile
     restart: unless-stopped
     env_file: ./.env
     ports:
@@ -47,6 +50,11 @@ services:
       - frontend
   ui:
     image: pawel2923/airtrans-ui:latest
+    build:
+      context: ./ui
+      dockerfile: Dockerfile.prod
+      args:
+       - VITE_MODE=production
     depends_on:
       - api
     volumes:

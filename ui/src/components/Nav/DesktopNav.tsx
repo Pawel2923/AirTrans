@@ -1,14 +1,16 @@
 import Logo from "/Logo.png";
 import { NavigationMenu } from "radix-ui";
 import styles from "./DesktopNav.module.css";
-import { NavLink } from "react-router-dom";
+import { NavLink, useLocation } from "react-router-dom";
+import { useContext } from "react";
+import AuthContext from "../../store/auth-context";
 
-interface DesktopNavProps {
-  auth: boolean;
-  isActive: (path: string) => boolean;
-}
+const DesktopNav = () => {
+  const { auth } = useContext(AuthContext);
 
-const DesktopNav = ({ auth, isActive }: DesktopNavProps) => {
+  const location = useLocation();
+  const isActive = (path: string) => location.pathname === path;
+
   return (
     <NavigationMenu.Root className={styles["desktop-nav"]}>
       <NavigationMenu.List className={styles["nav-list"]}>

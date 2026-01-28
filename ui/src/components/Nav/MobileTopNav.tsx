@@ -14,14 +14,13 @@ import {
   faX,
 } from "@fortawesome/free-solid-svg-icons";
 import styles from "./MobileTopNav.module.css";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import useBottomSheetDrag from "../../hooks/useBottomSheetDrag";
+import AuthContext from "../../store/auth-context";
 
-interface MobileTopNavProps {
-  auth: boolean;
-}
+const MobileTopNav = () => {
+  const { auth, user } = useContext(AuthContext);
 
-const MobileTopNav = ({ auth }: MobileTopNavProps) => {
   const [isOpen, setIsOpen] = useState(false);
   const {
     sheetRef,
@@ -94,13 +93,15 @@ const MobileTopNav = ({ auth }: MobileTopNavProps) => {
                         <FontAwesomeIcon icon={faUserPen} aria-hidden />
                         <span>Profil</span>
                       </NavLink>
-                      <NavLink
-                        to="/logi"
-                        className={styles["account-sheet-item"]}
-                      >
-                        <FontAwesomeIcon icon={faList} aria-hidden />
-                        <span>Logi</span>
-                      </NavLink>
+                      {user?.role === "admin" && (
+                        <NavLink
+                          to="/logi"
+                          className={styles["account-sheet-item"]}
+                        >
+                          <FontAwesomeIcon icon={faList} aria-hidden />
+                          <span>Logi</span>
+                        </NavLink>
+                      )}
                     </div>
                     <div
                       className={styles["account-sheet-group-divider"]}

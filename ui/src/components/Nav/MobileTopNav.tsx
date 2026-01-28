@@ -1,5 +1,5 @@
 import Logo from "/Logo.png";
-import { NavigationMenu } from "radix-ui";
+import { NavigationMenu, VisuallyHidden } from "radix-ui";
 import { Dialog } from "radix-ui";
 import { NavLink } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -14,14 +14,16 @@ import {
   faX,
 } from "@fortawesome/free-solid-svg-icons";
 import styles from "./MobileTopNav.module.css";
-import { useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import useBottomSheetDrag from "../../hooks/useBottomSheetDrag";
+import AuthContext from "../../store/auth-context";
+import useGetUsers from "../../hooks/users/useGetUsers";
+import filesService from "../../services/files.service";
 
-interface MobileTopNavProps {
-  auth: boolean;
-}
+const MobileTopNav = () => {
+  const { auth, user } = useContext(AuthContext);
+  const { usersData, getUserByEmail } = useGetUsers();
 
-const MobileTopNav = ({ auth }: MobileTopNavProps) => {
   const [isOpen, setIsOpen] = useState(false);
   const {
     sheetRef,
@@ -30,6 +32,12 @@ const MobileTopNav = ({ auth }: MobileTopNavProps) => {
     onPointerUp,
     onPointerCancel,
   } = useBottomSheetDrag({ onClose: () => setIsOpen(false) });
+
+  useEffect(() => {
+    if (user?.email) {
+      getUserByEmail(user.email);
+    }
+  }, [getUserByEmail, user]);
 
   return (
     <>
@@ -57,11 +65,20 @@ const MobileTopNav = ({ auth }: MobileTopNavProps) => {
                       ? "Menu konta użytkownika"
                       : "Zaloguj się lub zarejestruj"
                   }
+                  aria-expanded={isOpen}
                 >
-                  <FontAwesomeIcon
-                    icon={auth ? faUserCircleSolid : faUserCircleRegular}
-                    aria-hidden
-                  />
+                  {usersData && usersData[0].img ? (
+                    <img
+                      src={filesService.getImgUrl(usersData[0].img)}
+                      alt=""
+                      role="presentation"
+                    />
+                  ) : (
+                    <FontAwesomeIcon
+                      icon={auth ? faUserCircleSolid : faUserCircleRegular}
+                      aria-hidden
+                    />
+                  )}
                 </button>
               </Dialog.Trigger>
             </NavigationMenu.Item>
@@ -75,6 +92,9 @@ const MobileTopNav = ({ auth }: MobileTopNavProps) => {
                 onPointerCancel={onPointerCancel}
                 className={styles["account-sheet"]}
               >
+                <VisuallyHidden.Root>
+                  <Dialog.Title>Menu konta użytkownika</Dialog.Title>
+                </VisuallyHidden.Root>
                 <div className={styles["account-sheet-handle"]}></div>
                 <Dialog.Close asChild>
                   <button
@@ -94,13 +114,15 @@ const MobileTopNav = ({ auth }: MobileTopNavProps) => {
                         <FontAwesomeIcon icon={faUserPen} aria-hidden />
                         <span>Profil</span>
                       </NavLink>
-                      <NavLink
-                        to="/logi"
-                        className={styles["account-sheet-item"]}
-                      >
-                        <FontAwesomeIcon icon={faList} aria-hidden />
-                        <span>Logi</span>
-                      </NavLink>
+                      {user?.role === "admin" && (
+                        <NavLink
+                          to="/logi"
+                          className={styles["account-sheet-item"]}
+                        >
+                          <FontAwesomeIcon icon={faList} aria-hidden />
+                          <span>Logi</span>
+                        </NavLink>
+                      )}
                     </div>
                     <div
                       className={styles["account-sheet-group-divider"]}

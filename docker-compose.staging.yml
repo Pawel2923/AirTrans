@@ -1,0 +1,72 @@
+services:
+  mysqldb:
+    image: mysql:latest
+    restart: unless-stopped
+    env_file: ./.env
+    environment:
+      - MYSQL_ROOT_PASSWORD=$MYSQLDB_ROOT_PASSWORD
+      - MYSQL_DATABASE=$MYSQLDB_DATABASE
+      - TZ=Europe/Warsaw
+    ports:
+      - $MYSQLDB_LOCAL_PORT:$MYSQLDB_DOCKER_PORT
+    volumes:
+      - db:/var/lib/mysql
+      - ./db-dump:/db-dump
+    networks:
+      - backend
+    command: --secure-file-priv="/db-dump/"
+      --default-time-zone=+02:00
+    hostname: mysqldb
+  api:
+    depends_on:
+      - mysqldb
+    image: pawel2923/airtrans-api:staging
+    restart: unless-stopped
+    env_file: ./.env
+    ports:
+      - $NODE_LOCAL_PORT:$NODE_DOCKER_PORT
+      - $NODE_LOCAL_SSL_PORT:$NODE_DOCKER_SSL_PORT
+    environment:
+      - DB_HOST=mysqldb
+      - DB_ADMIN_PASSWORD=$MYSQLDB_ADMIN_PASSWORD
+      - DB_CLIENT_PASSWORD=$MYSQLDB_CLIENT_PASSWORD
+      - DB_ATC_PASSWORD=$MYSQLDB_ATC_PASSWORD
+      - DB_GROUND_CREW_PASSWORD=$MYSQLDB_GROUND_CREW_PASSWORD
+      - DB_AIRPORT_STAFF_PASSWORD=$MYSQLDB_AIRPORT_STAFF_PASSWORD
+      - DB_PARKING_STAFF_PASSWORD=$MYSQLDB_PARKING_STAFF_PASSWORD
+      - DB_RENTAL_STAFF_PASSWORD=$MYSQLDB_RENTAL_STAFF_PASSWORD
+      - DB_NAME=$MYSQLDB_DATABASE
+      - DB_PORT=$MYSQLDB_DOCKER_PORT
+      - CLIENT_ORIGIN=$CLIENT_ORIGIN
+    volumes:
+      - ./api/files:/api/files
+      - /etc/ssl/certs/cloudflare-origin.pem:/api/ssl/fullchain.pem:ro
+      - /etc/ssl/private/cloudflare-origin.key:/api/ssl/privkey.key:ro
+    networks:
+      - backend
+      - frontend
+  ui:
+    image: pawel2923/airtrans-ui:staging
+    depends_on:
+      - api
+    volumes:
+      - ./ui/src:/ui/src
+      - ./ui/public:/ui/public
+      - ./ui/index.html:/ui/index.html
+      - /etc/ssl/certs/cloudflare-origin.pem:/etc/nginx/ssl/fullchain.pem:ro
+      - /etc/ssl/private/cloudflare-origin.key:/etc/nginx/ssl/privkey.key:ro
+    environment:
+      - TZ=Europe/Warsaw
+      - REACT_DOCKER_PORT=$REACT_DOCKER_PORT
+      - USE_SSL=true
+    ports:
+      - $REACT_LOCAL_PORT:$REACT_DOCKER_PORT
+    networks:
+      - frontend
+
+volumes:
+  db:
+
+networks:
+  backend:
+  frontend:

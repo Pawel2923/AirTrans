@@ -1,5 +1,5 @@
 import { NavigationMenu } from "radix-ui";
-import { NavLink } from "react-router-dom";
+import { NavLink, useLocation } from "react-router-dom";
 import styles from "./MobileBottomNav.module.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -8,13 +8,15 @@ import {
   faHouse,
   faPlaneDeparture,
 } from "@fortawesome/free-solid-svg-icons";
+import { useContext } from "react";
+import AuthContext from "../../store/auth-context";
 
-interface MobileBottomNavProps {
-  auth: boolean;
-  isActive: (path: string) => boolean;
-}
+const MobileBottomNav = () => {
+  const { auth } = useContext(AuthContext);
 
-const MobileBottomNav = ({ auth, isActive }: MobileBottomNavProps) => {
+  const location = useLocation();
+  const isActive = (path: string) => location.pathname === path;
+
   return (
     <NavigationMenu.Root className={styles["bottom-nav"]}>
       <NavigationMenu.List className={styles["nav-list"]}>

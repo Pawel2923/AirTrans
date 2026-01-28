@@ -32,9 +32,15 @@
   outline: -webkit-focus-ring-color auto 1px;
 }
 
-.nav-account-trigger svg {
+.nav-account-trigger svg,
+.nav-account-trigger img {
   width: 100%;
   height: 100%;
+}
+
+.nav-account-trigger img {
+  border-radius: 50px;
+  display: block;
 }
 
 .nav-viewport {

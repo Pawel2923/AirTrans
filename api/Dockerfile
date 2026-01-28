@@ -2,7 +2,7 @@ FROM node:lts-alpine3.19 AS builder
 
 WORKDIR /api
 COPY package*.json ./
-RUN npm ci --ommit=dev && npm cache clean --force
+RUN npm ci --omit=dev && npm cache clean --force
 
 FROM node:lts-alpine3.19
 

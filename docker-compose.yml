@@ -48,6 +48,7 @@ services:
       - api
     volumes:
       - ./ui/:/ui/
+      - /ui/node_modules
     build:
       context: ./ui
       dockerfile: Dockerfile.dev
@@ -55,10 +56,14 @@ services:
       - TZ=Europe/Warsaw
       - REACT_DOCKER_PORT=$REACT_DOCKER_PORT
       - USE_SSL=false
+      - CHOKIDAR_USEPOLLING=true
+      - WATCHPACK_POLLING=true
     ports:
-      - $REACT_LOCAL_PORT:$REACT_DOCKER_PORT
+      - $REACT_LOCAL_PORT:5173
     networks:
       - frontend
+    stdin_open: true
+    tty: true
 
 volumes:
   db:

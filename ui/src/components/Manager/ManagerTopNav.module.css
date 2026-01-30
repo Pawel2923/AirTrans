@@ -5,12 +5,21 @@
   grid-template-columns: 1fr auto;
   justify-items: center;
   align-items: center;
-  padding: 0 2rem;
+  padding: 0 1rem;
 }
 
 .nav-title {
   text-transform: uppercase;
   font-weight: 500;
+}
+
+.nav-title h1 {
+  margin: 0;;
+}
+
+.nav-right {
+  width: 2rem;
+  height: 2rem;
 }
 
 .nav-right button {

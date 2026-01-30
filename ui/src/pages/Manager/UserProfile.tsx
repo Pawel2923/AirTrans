@@ -228,7 +228,7 @@ const UserProfile = () => {
 
   return (
     <>
-      <Link to="-1" className="text-black text-decoration-none">
+      <Link to="-1" className="btn btn-manager">
         <FontAwesomeIcon icon={faArrowLeft} /> Wróć
       </Link>
       <div className="container-flid manager-block mt-3 p-4">

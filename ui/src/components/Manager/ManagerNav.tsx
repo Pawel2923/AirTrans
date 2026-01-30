@@ -54,7 +54,7 @@ const ManagerNav: React.FC<ManagerNavProps> = ({
               >
                 <NavLink to={`/zarzadzanie/${item.id}`} id={item.id} title={item.name}>
                   <FontAwesomeIcon icon={item.icon} />
-                  {expanded && ` ${item.name}`}
+                  {expanded && `${item.name}`}
                 </NavLink>
               </li>
             )
@@ -65,7 +65,7 @@ const ManagerNav: React.FC<ManagerNavProps> = ({
           }`}
         >
           <Link to="/" title="Opuść panel">
-            <FontAwesomeIcon icon={faRightFromBracket} />{" "}
+            <FontAwesomeIcon icon={faRightFromBracket} />
             {expanded && "Opuść panel"}
           </Link>
         </li>

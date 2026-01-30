@@ -69,7 +69,7 @@ export const allNavItems: NavItem[] = [
   },
   {
     id: "pojazd",
-    name: "Pojazdy",
+    name: "Wypożyczenia i pojazdy",
     icon: faCar,
     roles: ["rental_staff", "admin"],
   },
@@ -105,13 +105,13 @@ export const allNavItems: NavItem[] = [
   },
   {
     id: "parking-rezerwacje",
-    name: "Parking",
+    name: "Rezerwacje parkingowe",
     icon: faSquareParking,
     roles: [...employeeRoles, "client"],
   },
   {
     id: "wypozyczenia",
-    name: "Wypożyczalnia",
+    name: "Wypożyczalnia aut",
     icon: faCar,
     roles: [...employeeRoles, "client"],
   },

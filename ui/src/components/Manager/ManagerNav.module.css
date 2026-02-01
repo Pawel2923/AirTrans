@@ -46,7 +46,20 @@
   height: 100%;
   list-style: none;
   padding: 0;
+  gap: 1.25rem;
+}
+
+.nav-group {
+  display: flex;
+  flex-direction: column;
   gap: 0.5rem;
+}
+
+.nav-group p {
+  margin: 0;
+  padding: 0 1rem;
+  color: #565959;
+  font-size: 0.9em;
 }
 
 .nav-item a {

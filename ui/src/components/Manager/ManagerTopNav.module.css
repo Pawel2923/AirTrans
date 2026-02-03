@@ -5,7 +5,7 @@
   grid-template-columns: auto 1fr auto;
   justify-items: center;
   align-items: center;
-  padding: 0 1rem;
+  padding: 0 0.5rem;
 }
 
 .nav-title {
@@ -14,6 +14,7 @@
 }
 
 .nav-title h1 {
+  font-size: 1.25rem;
   margin: 0;
 }
 
@@ -91,9 +92,20 @@
 @media (min-width: 48em) {
   .top-nav {
     grid-template-columns: 1fr auto;
+    padding: 0 1rem;
   }
 
   .navbar-toggler {
     display: none;
+  }
+
+  .nav-title h1 {
+    font-size: 2rem;
+  }
+}
+
+@media (min-width: 64em) {
+  .nav-title h1 {
+    font-size: 2.5rem;
   }
 }

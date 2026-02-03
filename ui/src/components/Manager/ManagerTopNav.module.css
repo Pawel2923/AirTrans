@@ -1,11 +1,15 @@
 .top-nav {
-  width: 100%;
+  width: 100dvw;
   background-color: var(--background-white);
   display: grid;
   grid-template-columns: auto 1fr auto;
   justify-items: center;
   align-items: center;
   padding: 0 0.5rem;
+  position: sticky;
+  position: -webkit-sticky;
+  top: 0;
+  z-index: 10;
 }
 
 .nav-title {
@@ -14,7 +18,7 @@
 }
 
 .nav-title h1 {
-  font-size: 1.25rem;
+  font-size: 1.2rem;
   margin: 0;
 }
 

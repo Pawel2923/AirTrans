@@ -97,14 +97,6 @@ body {
   border-radius: unset !important;
 }
 
-.btn-manager {
-  background-color: #f8f9fb;
-}
-
-.btn-manager:focus-visible {
-  outline: var(--default-focus-outline);
-}
-
 .pagination {
   --bs-pagination-color: var(--primary-color) !important;
   --bs-pagination-active-bg: var(--primary-color) !important;

@@ -14,6 +14,10 @@ import {
   faCalendarCheck,
   faCarSide,
   faUsers,
+  faCompass,
+  faTowerObservation,
+  faBriefcase,
+  faSliders,
 } from "@fortawesome/free-solid-svg-icons";
 
 const employeeRoles = [
@@ -37,23 +41,25 @@ const employeeRoles = [
 //   );
 // };
 
-interface MenuItem {
+export interface MenuItem {
   id: string;
   name: string;
   icon: IconDefinition;
   roles: readonly string[];
 }
 
-interface MenuGroup {
+export interface MenuGroup {
   id: string;
   name: string;
   items: MenuItem[];
+  icon?: IconDefinition;
 }
 
 const navMenuGroups: ReadonlyArray<MenuGroup> = [
   {
     id: "flights",
     name: "Loty",
+    icon: faCompass,
     items: [
       {
         id: "harmonogram",
@@ -84,6 +90,7 @@ const navMenuGroups: ReadonlyArray<MenuGroup> = [
   {
     id: "airport",
     name: "Lotnisko",
+    icon: faTowerObservation,
     items: [
       {
         id: "samoloty",
@@ -114,6 +121,7 @@ const navMenuGroups: ReadonlyArray<MenuGroup> = [
   {
     id: "services",
     name: "Usługi",
+    icon: faBriefcase,
     items: [
       {
         id: "parking-rezerwacje",
@@ -144,6 +152,7 @@ const navMenuGroups: ReadonlyArray<MenuGroup> = [
   {
     id: "administration",
     name: "Administracja",
+    icon: faSliders,
     items: [
       {
         id: "uzytkownicy",
@@ -161,6 +170,8 @@ const navMenuGroups: ReadonlyArray<MenuGroup> = [
   },
 ];
 
+// TODO(refactor) move utility functions to another file
+
 /**
  * Filters menu items based on the user's role.
  * @param userRole - The role of the current user
@@ -175,4 +186,27 @@ export function getMenuItemsForRole(userRole?: string) {
       ),
     }))
     .filter((group) => group.items.length > 0);
+}
+
+/**
+ * Retrieves menu group items with provided group id
+ * @param groupId - Id of the group, which items will be retrieved
+ * @param menuGroups - The groups array
+ * @returns Array of menu group items or undefined
+ */
+export function getMenuItemsByGroupId(
+  groupId: string | null,
+  menuGroups: MenuGroup[]
+) {
+  return menuGroups.find((group) => group.id === groupId)?.items;
+}
+
+/**
+ * Retrieves name of menu group with provided group id
+ * @param groupId - Id of the group
+ * @param menuGroups - The groups array
+ * @returns Name of the group or undefined
+ */
+export function getGroupNameById(groupId: string) {
+  return navMenuGroups.find((group) => group.id === groupId)?.name;
 }

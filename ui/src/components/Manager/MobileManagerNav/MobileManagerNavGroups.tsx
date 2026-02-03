@@ -11,17 +11,18 @@ import sharedClasses from "../ManagerNav.module.css";
 import ManagerNavContext from "../../../store/manager-nav-context";
 import { useContext } from "react";
 
-interface MobileManagerNavGroupsProps {
+interface MobileManagerNavGroupsProps extends React.HTMLAttributes<HTMLDivElement> {
   menuGroups: MenuGroup[];
 }
 
 const MobileManagerNavGroups: React.FC<MobileManagerNavGroupsProps> = ({
   menuGroups,
+  ...rest
 }) => {
   const { setCurrentGroupId } = useContext(ManagerNavContext);
 
   return (
-    <div className={classes["nav-groups"]}>
+    <div className={classes["nav-groups"]} {...rest}>
       {menuGroups.map((group) => (
         <button
           key={group.id}

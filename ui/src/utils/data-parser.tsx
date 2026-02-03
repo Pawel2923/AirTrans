@@ -1,3 +1,5 @@
+// TODO(fix semantics) use .ts instead of .tsx
+
 import { Departures, Flights, Ticket, Tickets } from "../assets/Data";
 
 export const flightsDataParser = (flightsData: Flights[]) => {

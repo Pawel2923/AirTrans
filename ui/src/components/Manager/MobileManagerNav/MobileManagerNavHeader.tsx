@@ -28,14 +28,21 @@ const MobileManagerNavHeader = () => {
 
   return (
     <div className={classes.header}>
-      {currentGroupId ? (
+      <div
+        className={classes["header-content"]}
+        data-state={!currentGroupId ? "open" : "closed"}
+      >
+        {closeButton}
+      </div>
+      <div
+        className={classes["header-content"]}
+        data-state={currentGroupId ? "open" : "closed"}
+      >
         <>
           {backButton}
           {getGroupNameById(currentGroupId)}
         </>
-      ) : (
-        closeButton
-      )}
+      </div>
     </div>
   );
 };

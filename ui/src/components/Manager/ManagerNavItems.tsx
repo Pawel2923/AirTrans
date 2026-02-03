@@ -207,6 +207,6 @@ export function getMenuItemsByGroupId(
  * @param menuGroups - The groups array
  * @returns Name of the group or undefined
  */
-export function getGroupNameById(groupId: string) {
+export function getGroupNameById(groupId: string | null) {
   return navMenuGroups.find((group) => group.id === groupId)?.name;
 }

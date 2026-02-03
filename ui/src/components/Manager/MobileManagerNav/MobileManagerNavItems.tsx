@@ -3,31 +3,32 @@ import { NavigationMenu } from "radix-ui";
 import { NavLink } from "react-router-dom";
 import { getMenuItemsByGroupId, MenuGroup } from "../ManagerNavItems";
 import classes from "./MobileManagerNav.module.css";
-import sharedClasses from "../ManagerNav.module.css";
 import ManagerNavContext from "../../../store/manager-nav-context";
-import { useContext } from "react";
+import React, { useContext } from "react";
 
-interface MobileManagerNavItemsProps {
+interface MobileManagerNavItemsProps extends React.HTMLAttributes<HTMLDivElement> {
   menuGroups: MenuGroup[];
 }
 
 const MobileManagerNavItems: React.FC<MobileManagerNavItemsProps> = ({
   menuGroups,
+  ...rest
 }) => {
-  const { currentGroupId } = useContext(ManagerNavContext);
+  const { currentGroupId, setExpanded } = useContext(ManagerNavContext);
   const menuItems = getMenuItemsByGroupId(currentGroupId, menuGroups);
 
   return (
-    <div className={classes["nav-groups"]}>
+    <div className={classes["nav-items"]} {...rest}>
       {menuItems?.map((item) => (
         <NavigationMenu.Item
           key={item.id}
-          className={sharedClasses["nav-item"]}
+          className={classes["mobile-nav-item"]}
         >
           <NavLink
             to={`/zarzadzanie/${item.id}`}
             id={item.id}
             title={item.name}
+            onClick={() => setExpanded(false)}
           >
             <FontAwesomeIcon icon={item.icon} />
             {item.name}

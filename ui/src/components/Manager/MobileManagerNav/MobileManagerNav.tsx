@@ -7,19 +7,29 @@ import ManagerNavContext from "../../../store/manager-nav-context";
 import MobileManagerNavGroups from "./MobileManagerNavGroups";
 import MobileManagerNavHeader from "./MobileManagerNavHeader";
 import MobileManagerNavItems from "./MobileManagerNavItems";
+import useMobileManagerNavDrag from "../../../hooks/useMobileManagerNavDrag";
 
 interface MobileManagerNavProps {
   menuGroups: MenuGroup[];
 }
 
 const MobileManagerNav: React.FC<MobileManagerNavProps> = ({ menuGroups }) => {
-  const { menuId, expanded, setExpanded } = useContext(ManagerNavContext);
+  const { menuId, expanded, setExpanded, currentGroupId } =
+    useContext(ManagerNavContext);
+
+  const { navRef, onPointerDown, onPointerMove, onPointerUp, onPointerCancel } =
+    useMobileManagerNavDrag({ onClose: () => setExpanded(false) });
 
   return (
     <Dialog.Root open={expanded} onOpenChange={setExpanded}>
       <Dialog.Portal>
         <Dialog.Overlay className={classes.backdrop} />
         <Dialog.Content
+          ref={navRef}
+          onPointerDown={onPointerDown}
+          onPointerMove={onPointerMove}
+          onPointerUp={onPointerUp}
+          onPointerCancel={onPointerCancel}
           className={`${classes.nav} ${expanded ? classes.expanded : ""}`}
         >
           <VisuallyHidden.Root>
@@ -38,8 +48,14 @@ const MobileManagerNav: React.FC<MobileManagerNavProps> = ({ menuGroups }) => {
                   className={`${sharedClasses["nav-items"]} ${classes["mobile-nav-items"]}`}
                   id={menuId}
                 >
-                  <MobileManagerNavGroups menuGroups={menuGroups} />
-                  <MobileManagerNavItems menuGroups={menuGroups} />
+                  <MobileManagerNavItems
+                    menuGroups={menuGroups}
+                    data-state={currentGroupId ? "open" : "closed"}
+                  />
+                  <MobileManagerNavGroups
+                    menuGroups={menuGroups}
+                    data-state={!currentGroupId ? "open" : "closed"}
+                  />
                 </NavigationMenu.List>
               </ScrollArea.Viewport>
               <ScrollArea.Scrollbar

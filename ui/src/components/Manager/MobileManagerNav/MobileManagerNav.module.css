@@ -47,14 +47,19 @@
 }
 
 .nav[data-state="open"] {
-  animation: slideIn 200ms ease-out forwards;
+  animation: slideInFromLeft 200ms ease-out forwards;
 }
 
 .nav[data-state="closed"] {
-  animation: slideOff 160ms ease-in forwards;
+  animation: slideOffToLeft 160ms ease-in forwards;
 }
 
-@keyframes slideIn {
+.nav.dragging {
+  transition: none !important;
+  animation: none !important;
+}
+
+@keyframes slideInFromLeft {
   from {
     transform: translateX(-100%);
   }
@@ -63,7 +68,7 @@
   }
 }
 
-@keyframes slideOff {
+@keyframes slideOffToLeft {
   from {
     transform: translateX(0);
   }
@@ -105,6 +110,12 @@
 
 .nav-group-button {
   all: unset;
+}
+
+.nav-group-button,
+.mobile-nav-item a {
+  color: inherit;
+  text-decoration: none;
   display: flex;
   align-items: center;
   gap: 0.5rem;
@@ -117,4 +128,43 @@
 
 .nav-group-button > *:last-child {
   margin-left: auto;
+}
+
+.mobile-nav-items {
+  position: relative;
+}
+
+.mobile-nav-items > * {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+}
+
+.mobile-nav-items > *[data-state="open"] {
+  animation: slideInFromRight 200ms ease-out forwards;
+  z-index: 1;
+}
+
+.mobile-nav-items > *[data-state="closed"] {
+  animation: slideOffToRight 160ms ease-in forwards;
+  z-index: -1;
+}
+
+@keyframes slideInFromRight {
+  from {
+    transform: translateX(100%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+
+@keyframes slideOffToRight {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(100%);
+  }
 }

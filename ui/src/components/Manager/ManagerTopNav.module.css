@@ -2,7 +2,7 @@
   width: 100%;
   background-color: var(--background-white);
   display: grid;
-  grid-template-columns: 1fr auto;
+  grid-template-columns: auto 1fr auto;
   justify-items: center;
   align-items: center;
   padding: 0 1rem;
@@ -14,7 +14,7 @@
 }
 
 .nav-title h1 {
-  margin: 0;;
+  margin: 0;
 }
 
 .nav-right {
@@ -86,4 +86,14 @@
   width: 2rem;
   height: 2rem;
   border-radius: 50%;
+}
+
+@media (min-width: 48em) {
+  .top-nav {
+    grid-template-columns: 1fr auto;
+  }
+
+  .navbar-toggler {
+    display: none;
+  }
 }

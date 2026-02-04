@@ -1,8 +1,4 @@
-import {
-  faArrowLeft,
-  faPen,
-  faXmarkCircle,
-} from "@fortawesome/free-solid-svg-icons";
+import { faPen, faXmarkCircle } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Link, useNavigate } from "react-router-dom";
 import classes from "./UserProfile.module.css";
@@ -228,9 +224,6 @@ const UserProfile = () => {
 
   return (
     <>
-      <Link to="-1" className="text-black text-decoration-none">
-        <FontAwesomeIcon icon={faArrowLeft} /> Wróć
-      </Link>
       <div className="container-flid manager-block mt-3 p-4">
         <div className="row">
           <div className={`col-lg-6 ${classes["user-info-container"]}`}>
@@ -387,7 +380,9 @@ const UserProfile = () => {
           </div>
         </div>
       </div>
-      <Link to="/resetowanie" className="btn btn-alt mt-3 me-3">Zmień hasło</Link>
+      <Link to="/resetowanie" className="btn btn-alt mt-3 me-3">
+        Zmień hasło
+      </Link>
       <button className="btn btn-danger mt-3" onClick={deleteBtnHandler}>
         Usuń konto
       </button>

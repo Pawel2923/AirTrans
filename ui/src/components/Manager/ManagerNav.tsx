@@ -1,207 +1,32 @@
-import React, { useState, useEffect, useContext } from "react";
-import classes from "./ManagerNav.module.css";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-  faBars,
-  faRightFromBracket,
-  faPlaneDeparture,
-  faPlane,
-  faMapMarkerAlt,
-  faTools,
-  faDoorOpen,
-  faBullhorn,
-  faCar,
-  faSquareParking,
-  faUser,
-  faTicket,
-  IconDefinition,
-  faSuitcase,
-} from "@fortawesome/free-solid-svg-icons";
-import { Link, NavLink, useLocation } from "react-router-dom";
+import { useContext, useEffect } from "react";
+import { useLocation } from "react-router-dom";
 import AuthContext from "../../store/auth-context";
+import { getMenuItemsForRole } from "./ManagerNavItems";
+import DesktopManagerNav from "./DesktopManagerNav";
+import MobileManagerNav from "./MobileManagerNav/MobileManagerNav";
+import ManagerNavContext from "../../store/manager-nav-context";
 
-interface NavItem {
-  id: string;
-  name: string;
-  icon: IconDefinition;
-  roles: string[];
-  hidden?: boolean;
-}
-
-const employeeRoles = [
-  "atc",
-  "ground_crew",
-  "airport_staff",
-  "parking_staff",
-  "rental_staff",
-  "admin",
-];
-
-const allNavItems: NavItem[] = [
-  {
-    id: "harmonogram",
-    name: "HARMONOGRAM LOTÓW",
-    icon: faPlaneDeparture,
-    roles: ["atc", "admin"],
-  },
-  {
-    id: "samoloty",
-    name: "SAMOLOTY",
-    icon: faPlane,
-    roles: ["atc", "admin"],
-  },
-  {
-    id: "lotnisko",
-    name: "LOTNISKO",
-    icon: faMapMarkerAlt,
-    roles: ["atc", "admin"],
-  },
-  {
-    id: "sprzet",
-    name: "SPRZĘT LOTNISKA",
-    icon: faTools,
-    roles: ["ground_crew", "admin"],
-  },
-  {
-    id: "bramki",
-    name: "BRAMKI",
-    icon: faDoorOpen,
-    roles: ["airport_staff", "admin"],
-  },
-  {
-    id: "ogloszenia",
-    name: "OGŁOSZENIA",
-    icon: faBullhorn,
-    roles: employeeRoles,
-  },
-  {
-    id: "pojazd",
-    name: "POJAZDY",
-    icon: faCar,
-    roles: ["rental_staff", "admin"],
-  },
-  {
-    id: "parking",
-    name: "PARKING",
-    icon: faSquareParking,
-    roles: ["parking_staff", "admin"],
-  },
-  {
-    id: "uzytkownicy",
-    name: "UŻYTKOWNICY",
-    icon: faUser,
-    roles: ["admin"],
-  },
-  {
-    id: "bilety",
-    name: "BILETY",
-    icon: faTicket,
-    roles: ["airport_staff", "admin"],
-  },
-  {
-    id: "twoje-bilety",
-    name: "TWOJE BILETY",
-    icon: faTicket,
-    roles: [...employeeRoles, "client"],
-  },
-  {
-    id: "bagaze",
-    name: "BAGAŻE",
-    icon: faSuitcase,
-    roles: [...employeeRoles, "client"],
-  },
-  {
-    id: "parking-rezerwacje",
-    name: "REZERWACJE PARKINGU",
-    icon: faSquareParking,
-    roles: [...employeeRoles, "client"],
-  },
-  {
-    id: "wypozyczenia",
-    name: "WYPOŻYCZENIA",
-    icon: faCar,
-    roles: [...employeeRoles, "client"],
-  },
-  {
-    id: "profil",
-    name: "PROFIL UŻYTKOWNIKA",
-    icon: faUser,
-    roles: [...employeeRoles, "client"],
-    hidden: true,
-  },
-];
-
-interface ManagerNavProps {
-  setTitle: React.Dispatch<React.SetStateAction<string>>;
-}
-
-const ManagerNav: React.FC<ManagerNavProps> = ({
-  setTitle,
-}: ManagerNavProps) => {
+const ManagerNav = () => {
   const location = useLocation();
   const { user } = useContext(AuthContext);
-  const [expanded, setExpanded] = useState<boolean>(true);
-  const [navItems, setNavItems] = useState<NavItem[]>(allNavItems);
+  const menuGroups = getMenuItemsForRole(user?.role);
+  const { setTitle } = useContext(ManagerNavContext);
 
   useEffect(() => {
-    if (user?.role) {
-      setNavItems(allNavItems.filter((item) => item.roles.includes(user.role)));
-    }
-  }, [user?.role]);
+    const routeId = location.pathname.split("/")[2];
 
-  useEffect(() => {
-    setTitle(
-      navItems.find((item) => item.id === location.pathname.split("/")[2])
-        ?.name || ""
-    );
-  }, [location, navItems, setTitle]);
+    const menuItem = menuGroups
+      .flatMap((group) => group.items)
+      .find((item) => item.id === routeId);
 
-  const expandHandler = () => {
-    setExpanded(!expanded);
-  };
+    setTitle(menuItem?.name || "Panel zarządzania");
+  }, [location, menuGroups, setTitle]);
 
   return (
-    <nav className={classes.nav}>
-      <button className={classes["navbar-toggler"]} onClick={expandHandler}>
-        <FontAwesomeIcon className="navbar-toggler-icon" icon={faBars} />
-      </button>
-      <ul className={classes["nav-items"]}>
-        {expanded
-          ? navItems.map(
-              (item) =>
-                !item.hidden && (
-                  <li key={item.id} className={classes["nav-item"]}>
-                    <NavLink to={`/zarzadzanie/${item.id}`} id={item.id}>
-                      {item.name}
-                    </NavLink>
-                  </li>
-                )
-            )
-          : navItems.map(
-              (item) =>
-                !item.hidden && (
-                  <li
-                    key={item.id}
-                    className={`${classes["nav-item"]} ${classes.shrank}`}
-                  >
-                    <NavLink to={`/zarzadzanie/${item.id}`} id={item.id}>
-                      <FontAwesomeIcon icon={item.icon} />
-                    </NavLink>
-                  </li>
-                )
-            )}
-        <li
-          className={`${classes["nav-item"]} ${classes.logout} ${
-            !expanded ? classes.shrank : ""
-          }`}
-        >
-          <Link to="/">
-            {expanded && "Wyjście "}
-            <FontAwesomeIcon icon={faRightFromBracket} />
-          </Link>
-        </li>
-      </ul>
-    </nav>
+    <>
+      <DesktopManagerNav menuGroups={menuGroups} />
+      <MobileManagerNav menuGroups={menuGroups} />
+    </>
   );
 };
 

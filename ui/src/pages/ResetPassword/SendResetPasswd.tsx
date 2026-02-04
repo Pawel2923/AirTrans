@@ -4,7 +4,14 @@ import Input from "../../components/input";
 import styles from "../Logowanie.module.css";
 import ToastModalContext from "../../store/toast-modal-context";
 import resetPasswdService from "../../services/resetPasswd.service";
-import { faTrashCan, faArrowLeft, faArrowRight, faEnvelope, faEarthEurope, faPlane } from "@fortawesome/free-solid-svg-icons";
+import {
+  faTrashCan,
+  faArrowLeft,
+  faArrowRight,
+  faEnvelope,
+  faEarthEurope,
+  faPlane,
+} from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Loader from "../../components/Loader";
 import classes from "./Reset.module.css";
@@ -51,7 +58,8 @@ const SendResetPasswd = () => {
         if (response.status === 200)
           createAlertModal({
             title: "Sukces",
-            message: "Link resetujący został wysłany na podany adres e-mail. Link wygaśnie po 24 godzinach.",
+            message:
+              "Link resetujący został wysłany na podany adres e-mail. Link wygaśnie po 24 godzinach.",
             onClose: () => {
               resetForm();
               navigate("/logowanie");
@@ -108,10 +116,19 @@ const SendResetPasswd = () => {
       <main>
         <section className="section">
           <div className={styles.container}>
-            <FontAwesomeIcon icon={faEarthEurope} className={styles["background-icon"]} />
+            <FontAwesomeIcon
+              icon={faEarthEurope}
+              className={styles["background-icon"]}
+            />
             <div className={styles["login-container"]}>
-              <FontAwesomeIcon icon={faPlane} className={styles["plane-icon"]} />
-              <Link to="/" className={`text-decoration-none ${styles["back-link"]}`}>
+              <FontAwesomeIcon
+                icon={faPlane}
+                className={styles["plane-icon"]}
+              />
+              <Link
+                to="/"
+                className={`text-decoration-none ${styles["back-link"]}`}
+              >
                 <FontAwesomeIcon icon={faArrowLeft} /> Wróć
               </Link>
               <div className={styles.header}>
@@ -124,8 +141,7 @@ const SendResetPasswd = () => {
               </div>
               <div className={styles.links}>
                 <p className="text-center">
-                  Pamiętasz hasło?{" "}
-                  <Link to="/logowanie">Zaloguj się</Link>
+                  Pamiętasz hasło? <Link to="/logowanie">Zaloguj się</Link>
                 </p>
               </div>
             </div>

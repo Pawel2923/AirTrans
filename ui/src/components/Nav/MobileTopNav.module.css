@@ -1,7 +1,7 @@
 .nav-list {
   composes: nav-list from "./Nav.module.css";
-  padding: 0 0.5rem;
-  height: 40px;
+  padding: 0.5rem;
+  min-height: 40px;
 }
 
 .nav-brand {
@@ -9,23 +9,23 @@
 }
 
 .nav-brand img {
+  width: 2.5rem;
+  height: 2.5rem;
+}
+
+.nav-brand span {
+  font-size: 1.25rem;
+}
+
+.nav-account {
   width: 2rem;
   height: 2rem;
 }
 
-.nav-brand span {
-  font-size: 1.1rem;
-}
-
-.nav-account {
-  width: 1.5rem;
-  height: 1.5rem;
-}
-
 .nav-account-trigger {
   all: unset;
-  width: 1.5rem;
-  height: 1.5rem;
+  width: 2rem;
+  height: 2rem;
 }
 
 .nav-account-trigger:focus-visible {
@@ -209,7 +209,6 @@
   border-radius: 50px;
   color: inherit;
   text-decoration: none;
-  font-size: 0.75rem;
 }
 
 .account-sheet-item svg {

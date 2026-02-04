@@ -3,7 +3,15 @@ import { Link } from "react-router-dom";
 import Input from "../components/input";
 import rejestracjaService from "../services/rejestracja.service";
 import styles from "./Logowanie.module.css";
-import { faArrowLeft, faArrowRight, faEnvelope, faLock, faUser, faEarthEurope, faPlane } from "@fortawesome/free-solid-svg-icons";
+import {
+  faArrowLeft,
+  faArrowRight,
+  faEnvelope,
+  faLock,
+  faUser,
+  faEarthEurope,
+  faPlane,
+} from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 const emailRegex = /^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$/i;
@@ -93,7 +101,7 @@ const Rejestracja = () => {
       alert("Błąd rejestracji - sprawdź konsolę");
     }
   };
-  
+
   const registrationForm = (
     <form onSubmit={submitHandler} className={styles["login-form"]}>
       <div className={styles["form-container"]}>
@@ -183,14 +191,25 @@ const Rejestracja = () => {
       <main>
         <section className="section">
           <div className={styles.container}>
-            <FontAwesomeIcon icon={faEarthEurope} className={styles["background-icon"]} />
+            <FontAwesomeIcon
+              icon={faEarthEurope}
+              className={styles["background-icon"]}
+            />
             <div className={styles["login-container"]}>
-              <FontAwesomeIcon icon={faPlane} className={styles["plane-icon"]} />
-              <Link to="/" className={`text-decoration-none ${styles["back-link"]}`}>
+              <FontAwesomeIcon
+                icon={faPlane}
+                className={styles["plane-icon"]}
+              />
+              <Link
+                to="/"
+                className={`text-decoration-none ${styles["back-link"]}`}
+              >
                 <FontAwesomeIcon icon={faArrowLeft} /> Wróć
               </Link>
               <div className={styles.header}>
-                <h1 className="display-6 text-center">Rejestracja do systemu</h1>
+                <h1 className="display-6 text-center">
+                  Rejestracja do systemu
+                </h1>
                 <div className={styles["header-divider"]}></div>
               </div>
               <div className={styles.form}>
@@ -199,8 +218,7 @@ const Rejestracja = () => {
               </div>
               <div className={styles.links}>
                 <p className="text-center">
-                  Masz już konto?{" "}
-                  <Link to="/logowanie">Zaloguj się</Link>
+                  Masz już konto? <Link to="/logowanie">Zaloguj się</Link>
                 </p>
               </div>
             </div>

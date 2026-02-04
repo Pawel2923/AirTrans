@@ -10,12 +10,7 @@ interface FlightServiceGetAllParams {
 }
 
 class FlightDataService {
-  getAll = ({
-    page = 1,
-    limit,
-    filter,
-    sort,
-  }: FlightServiceGetAllParams) => {
+  getAll = ({ page = 1, limit, filter, sort }: FlightServiceGetAllParams) => {
     let url = `/flight_data?page=${page}`;
 
     if (limit) {
@@ -46,7 +41,9 @@ class FlightDataService {
   };
 
   getByFlightId = (flightId: string) => {
-    return http.get(`/flight_data?filter=[{"by":"Flight_id","value":"${flightId}"}]`);
+    return http.get(
+      `/flight_data?filter=[{"by":"Flight_id","value":"${flightId}"}]`
+    );
   };
 
   create = (data: FlightData) => {

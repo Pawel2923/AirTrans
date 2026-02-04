@@ -1,0 +1,170 @@
+.backdrop {
+  background-color: rgba(0, 0, 0, 0.45);
+  position: fixed;
+  inset: 0;
+  z-index: 999;
+}
+
+.backdrop[data-state="open"] {
+  animation: fadeIn 150ms ease-out forwards;
+}
+
+.backdrop[data-state="closed"] {
+  animation: fadeOut 120ms ease-in forwards;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes fadeOut {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+
+.nav,
+.nav nav {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: clamp(280px, 85dvw, 420px);
+  height: 100dvh;
+  position: fixed;
+  top: 0;
+  left: 0;
+  background-color: #f8f9fb;
+  z-index: 1000;
+  font-size: 1.25rem;
+}
+
+.nav[data-state="open"] {
+  animation: slideInFromLeft 200ms ease-out forwards;
+}
+
+.nav[data-state="closed"] {
+  animation: slideOffToLeft 160ms ease-in forwards;
+}
+
+.nav.dragging {
+  transition: none !important;
+  animation: none !important;
+}
+
+@keyframes slideInFromLeft {
+  from {
+    transform: translateX(-100%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+
+@keyframes slideOffToLeft {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-100%);
+  }
+}
+
+@media (min-width: 48em) {
+  .nav,
+  .backdrop {
+    display: none;
+  }
+}
+
+.nav-groups {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 100%;
+  gap: 0.75rem;
+}
+
+.nav svg {
+  font-size: 1.5rem;
+}
+
+.nav button {
+  transition: 0.1s ease-out;
+  transition-property: box-shadow, background-color;
+  &:active {
+    box-shadow: var(--default-box-shadow);
+    background-color: #f4f4f4;
+  }
+  &:focus-visible {
+    outline: -webkit-focus-ring-color auto 1px;
+  }
+}
+
+.nav-group-button {
+  all: unset;
+}
+
+.nav-group-button,
+.mobile-nav-item a {
+  color: inherit;
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  border-radius: 50px;
+  font-weight: 500;
+  padding: 1rem;
+  transition: 0.1s ease-out;
+  transition-property: box-shadow, background-color;
+}
+
+.nav-group-button > *:last-child {
+  margin-left: auto;
+}
+
+.mobile-nav-items {
+  position: relative;
+}
+
+.mobile-nav-items > * {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+}
+
+.mobile-nav-items > *[data-state="open"] {
+  animation: slideInFromRight 200ms ease-out forwards;
+  z-index: 1;
+}
+
+.mobile-nav-items > *[data-state="closed"] {
+  animation: slideOffToRight 160ms ease-in forwards;
+  z-index: -1;
+}
+
+@keyframes slideInFromRight {
+  from {
+    transform: translateX(100%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+
+@keyframes slideOffToRight {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(100%);
+  }
+}

@@ -125,20 +125,20 @@ const DeparturesTable: React.FC<TableProps> = ({
                           {value === "SCHEDULED"
                             ? "Zaplanowany"
                             : value === "WAITING"
-                            ? "Oczekujący"
-                            : value === "AIRBORNE"
-                            ? "W powietrzu"
-                            : value === "TAKE OFF"
-                            ? "Start"
-                            : value === "LANDING"
-                            ? "Lądowanie"
-                            : value === "FINISHED"
-                            ? "Zakończony"
-                            : value === "CANCELED"
-                            ? "Anulowany"
-                            : value === "DELAYED"
-                            ? "Opóźniony"
-                            : value}
+                              ? "Oczekujący"
+                              : value === "AIRBORNE"
+                                ? "W powietrzu"
+                                : value === "TAKE OFF"
+                                  ? "Start"
+                                  : value === "LANDING"
+                                    ? "Lądowanie"
+                                    : value === "FINISHED"
+                                      ? "Zakończony"
+                                      : value === "CANCELED"
+                                        ? "Anulowany"
+                                        : value === "DELAYED"
+                                          ? "Opóźniony"
+                                          : value}
                         </td>
                       );
                     return (
@@ -203,7 +203,7 @@ const DeparturesTable: React.FC<TableProps> = ({
                     style={{
                       width: "100%",
                       backgroundColor: "#ccc",
-                      padding: "0.75rem"
+                      padding: "0.75rem",
                     }}
                     className="placeholder"
                   >

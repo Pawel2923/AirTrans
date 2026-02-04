@@ -2,7 +2,7 @@ import http from "../http-common";
 import { Gates } from "../assets/Data";
 
 class GatesService {
-  get = (page: number = 1,limit?:number) => {
+  get = (page: number = 1, limit?: number) => {
     return http.get(`/bramki?page=${page}&limit=${limit}`);
   };
   create = (data: Gates) => {

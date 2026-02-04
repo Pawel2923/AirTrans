@@ -9,10 +9,14 @@ interface ModalProps {
   modalContentStyle?: CSSProperties;
 }
 
-const Modal: React.FC<ModalProps> = ({ onClose, children, modalContentStyle }: ModalProps) => {
+const Modal: React.FC<ModalProps> = ({
+  onClose,
+  children,
+  modalContentStyle,
+}: ModalProps) => {
   useEffect(() => {
     document.body.style.overflow = "hidden";
-    
+
     return () => {
       document.body.style.overflow = "auto";
     };

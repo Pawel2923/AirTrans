@@ -14,7 +14,7 @@
 .user-info-container > div input,
 .user-info-container > div select {
   background-color: transparent;
-  box-shadow: none; 
+  box-shadow: none;
   padding: 0;
   font-size: inherit;
   border-radius: 0;

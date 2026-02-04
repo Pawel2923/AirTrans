@@ -103,7 +103,7 @@ const TicketsPage = () => {
           status: 400,
         },
         name: "",
-        message: ""
+        message: "",
       };
 
       handleError({ error });

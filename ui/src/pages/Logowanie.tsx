@@ -5,10 +5,16 @@ import Input from "../components/input";
 import AuthContext from "../store/auth-context";
 import styles from "./Logowanie.module.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faArrowLeft, faArrowRight, faEnvelope, faLock, faEarthEurope, faPlane } from "@fortawesome/free-solid-svg-icons";
+import {
+  faArrowLeft,
+  faArrowRight,
+  faEnvelope,
+  faLock,
+  faEarthEurope,
+  faPlane,
+} from "@fortawesome/free-solid-svg-icons";
 import ToastModalContext from "../store/toast-modal-context";
 import { faCircleCheck } from "@fortawesome/free-solid-svg-icons";
-
 
 const emailRegex = /^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$/i;
 const isEmpty = (value: string | number) =>
@@ -23,7 +29,7 @@ const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isFormInvalid, setIsFormInvalid] = useState(true);
-const { createToast } = useContext(ToastModalContext);
+  const { createToast } = useContext(ToastModalContext);
 
   const emailInputHandler = (ev: React.ChangeEvent<HTMLInputElement>) => {
     setEmail(ev.target.value);
@@ -74,7 +80,6 @@ const { createToast } = useContext(ToastModalContext);
         alert("Błąd logowania");
       }
     } catch (error) {
-      
       createToast({
         message: "Błąd logowania",
         type: "danger",
@@ -87,7 +92,7 @@ const { createToast } = useContext(ToastModalContext);
     <form onSubmit={submitHandler} className={styles["login-form"]}>
       <div className={styles["form-container"]}>
         <div className={styles["form-group"]}>
-           <FontAwesomeIcon icon={faEnvelope} />
+          <FontAwesomeIcon icon={faEnvelope} />
           <Input
             type="email"
             id="email"
@@ -101,7 +106,7 @@ const { createToast } = useContext(ToastModalContext);
           />
         </div>
         <div className={styles["form-group"]}>
-           <FontAwesomeIcon icon={faLock} />
+          <FontAwesomeIcon icon={faLock} />
           <Input
             type="password"
             id="password"
@@ -120,7 +125,7 @@ const { createToast } = useContext(ToastModalContext);
         className={`btn btn-primary ${styles["submit-btn"]}`}
       >
         Zaloguj się
-         <FontAwesomeIcon icon={faArrowRight} />
+        <FontAwesomeIcon icon={faArrowRight} />
       </button>
     </form>
   );
@@ -129,12 +134,18 @@ const { createToast } = useContext(ToastModalContext);
     <main>
       <section className="section">
         <div className={styles.container}>
-          <FontAwesomeIcon icon={faEarthEurope} className={styles["background-icon"]} />
+          <FontAwesomeIcon
+            icon={faEarthEurope}
+            className={styles["background-icon"]}
+          />
           <div className={styles["login-container"]}>
             <FontAwesomeIcon icon={faPlane} className={styles["plane-icon"]} />
-            <Link to="/" className={`text-decoration-none ${styles["back-link"]}`}>
-            <FontAwesomeIcon icon={faArrowLeft} /> Wróć
-          </Link>
+            <Link
+              to="/"
+              className={`text-decoration-none ${styles["back-link"]}`}
+            >
+              <FontAwesomeIcon icon={faArrowLeft} /> Wróć
+            </Link>
             <div className={styles.header}>
               <h1 className="display-6 text-center">Logowanie do systemu</h1>
               <div className={styles["header-divider"]}></div>

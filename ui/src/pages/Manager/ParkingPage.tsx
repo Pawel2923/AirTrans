@@ -3,23 +3,24 @@ import parkingService from "../../services/parking.service";
 import userService from "../../services/users.service";
 import TableParking from "../../components/tableParking";
 import { PageData, ParkingReservations, Users } from "../../assets/Data";
-import { useNavigate} from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import Pagination from "../../components/Pagination";
 import ToastModalContext from "../../store/toast-modal-context";
 import { faCircleCheck } from "@fortawesome/free-solid-svg-icons";
 
 const Parking = () => {
-  
   const { createConfirmModal, createToast } = useContext(ToastModalContext);
   const [parkings, setParkings] = useState<ParkingReservations[]>([]);
   const navigate = useNavigate();
   const [pageData, setPageData] = useState<PageData>({
-    page:1,
+    page: 1,
     pages: 1,
   });
   const [users, setUsers] = useState<Users[]>([]);
-  const [occupiedSpaces, setOccupiedSpaces] = useState<{ [key: string]: boolean }>({}); 
-  const [spaceOptions, setSpaceOptions] = useState<number[]>([]); 
+  const [occupiedSpaces, setOccupiedSpaces] = useState<{
+    [key: string]: boolean;
+  }>({});
+  const [spaceOptions, setSpaceOptions] = useState<number[]>([]);
   const [newParking, setNewParking] = useState<ParkingReservations>({
     id: 0,
     Users_id: 0,
@@ -31,17 +32,20 @@ const Parking = () => {
     status: undefined,
   });
 
-  const retrieveParkings = useCallback(async() => {
+  const retrieveParkings = useCallback(async () => {
     try {
       const response = await parkingService.getAllParking(pageData.page, 5);
       setParkings(response.data.data);
       setPageData(response.data.meta);
-      const occupied = response.data.data.reduce((acc: { [key: string]: boolean }, parking: ParkingReservations) => {
-        if (parking.status === "PENDING" || parking.status === "RESERVED") {
-          acc[parking.space_id] = true;
-        }
-        return acc;
-      }, {});
+      const occupied = response.data.data.reduce(
+        (acc: { [key: string]: boolean }, parking: ParkingReservations) => {
+          if (parking.status === "PENDING" || parking.status === "RESERVED") {
+            acc[parking.space_id] = true;
+          }
+          return acc;
+        },
+        {}
+      );
       setOccupiedSpaces(occupied);
     } catch (error) {
       console.error("Error fetching parkings data:", error);
@@ -50,8 +54,7 @@ const Parking = () => {
 
   useEffect(() => {
     retrieveParkings();
-  }
-  , [retrieveParkings]);
+  }, [retrieveParkings]);
 
   const retrieveUsers = useCallback(() => {
     userService
@@ -59,7 +62,6 @@ const Parking = () => {
       .then((response) => {
         if (response.status === 200) {
           setUsers(response.data.data);
-
         }
       })
       .catch((error) => {
@@ -68,7 +70,6 @@ const Parking = () => {
   }, []);
 
   useEffect(() => {
-    
     retrieveUsers();
   }, [retrieveUsers]);
 
@@ -89,7 +90,7 @@ const Parking = () => {
   const updateSpaceOptions = (level: string) => {
     let options: number[] = [];
     if (level === "A") {
-      options = Array.from({ length: 51 }, (_, i) => i); 
+      options = Array.from({ length: 51 }, (_, i) => i);
     } else if (level === "B") {
       options = Array.from({ length: 50 }, (_, i) => i + 51);
     }
@@ -145,11 +146,12 @@ const Parking = () => {
             icon: faCircleCheck,
             timeout: 10000,
           });
-          retrieveParkings(); 
+          retrieveParkings();
         } catch (error) {
           console.error(error);
           createToast({
-            message: "Wystąpił błąd podczas usuwania parkingu. Spróbuj ponownie.",
+            message:
+              "Wystąpił błąd podczas usuwania parkingu. Spróbuj ponownie.",
             type: "danger",
             icon: faCircleCheck,
             timeout: 10000,

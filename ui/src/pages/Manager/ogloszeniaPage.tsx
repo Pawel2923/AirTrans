@@ -15,13 +15,15 @@ const OgloszeniaPage = () => {
     pages: 1,
   });
   const [announcements, setAnnouncements] = useState<Announcements[]>([]);
-  const [newAnnouncementData, setNewAnnouncementData] = useState<Announcements>({
-    id: 0,
-    title: "",
-    content: "",
-    valid_until: "",
-    Employee_id: 0,
-  });
+  const [newAnnouncementData, setNewAnnouncementData] = useState<Announcements>(
+    {
+      id: 0,
+      title: "",
+      content: "",
+      valid_until: "",
+      Employee_id: 0,
+    }
+  );
 
   const navigate = useNavigate();
 
@@ -83,37 +85,38 @@ const OgloszeniaPage = () => {
   const deleteAnnouncement = async (id: number) => {
     createConfirmModal({
       message: "Czy na pewno chcesz usunąć to ogłoszenie?",
-      onConfirm: async ()=>{
-      try {
-      await announcementService.delete(id);
-      setAnnouncements((prevAnnouncements) =>
-        prevAnnouncements.filter((announcement) => announcement.id !== id)
-      );
-      createToast({
-        message: "Usunięto ogłoszenie",
-        type: "primary",
-        icon: faCircleCheck,
-        timeout: 10000,
-      });
-    } catch (error) {
-      console.error("Error while deleting announcement:", error);
-      createToast({
-        message: "Wystąpił błąd podczas usuwania ogłoszenia. Spróbuj ponownie.",
-        type: "danger",
-        icon: faCircleCheck,
-        timeout: 10000,
-      });
-    }
-  },
-  });
-  }
+      onConfirm: async () => {
+        try {
+          await announcementService.delete(id);
+          setAnnouncements((prevAnnouncements) =>
+            prevAnnouncements.filter((announcement) => announcement.id !== id)
+          );
+          createToast({
+            message: "Usunięto ogłoszenie",
+            type: "primary",
+            icon: faCircleCheck,
+            timeout: 10000,
+          });
+        } catch (error) {
+          console.error("Error while deleting announcement:", error);
+          createToast({
+            message:
+              "Wystąpił błąd podczas usuwania ogłoszenia. Spróbuj ponownie.",
+            type: "danger",
+            icon: faCircleCheck,
+            timeout: 10000,
+          });
+        }
+      },
+    });
+  };
   const editAnnouncement = (announcement: Announcements) => {
     navigate(`edit-ogloszenia/${announcement.id}`);
   };
 
   const fetchAnnouncements = useCallback(async () => {
     try {
-      const response = await announcementService.get(pagedata.page ,4);
+      const response = await announcementService.get(pagedata.page, 4);
       setAnnouncements(response.data.data);
       setPageData(response.data.meta);
     } catch (error) {

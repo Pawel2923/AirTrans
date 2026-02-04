@@ -2,10 +2,10 @@ import { Rentals } from "../assets/Data";
 import http from "../http-common";
 
 class RentalService {
-  getAll=(page:number=1, limit?: number)=>{
+  getAll = (page: number = 1, limit?: number) => {
     return http.get(`/rent?page=${page}&limit=${limit}`);
-    };
-  
+  };
+
   createRental(carRental: Rentals) {
     return http.post("/rent", carRental, { withCredentials: true });
   }

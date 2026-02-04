@@ -3,7 +3,13 @@ import { Link } from "react-router-dom";
 
 const currentYear = new Date().getFullYear();
 
-const Footer = ({ style, className }: { style?: CSSProperties, className?: string }) => {
+const Footer = ({
+  style,
+  className,
+}: {
+  style?: CSSProperties;
+  className?: string;
+}) => {
   return (
     <footer
       className={`d-grid justify-content-center px-4 py-3 ${className}`}
@@ -26,7 +32,10 @@ const Footer = ({ style, className }: { style?: CSSProperties, className?: strin
           </Link>
         </li>
       </ul>
-      <p className="m-0 mt-3 text-center" style={{ fontSize: "0.8rem", color: "#6c757d" }}>
+      <p
+        className="m-0 mt-3 text-center"
+        style={{ fontSize: "0.8rem", color: "#6c757d" }}
+      >
         &copy; {currentYear} AirTrans. Wszelkie prawa zastrzeżone.
       </p>
     </footer>

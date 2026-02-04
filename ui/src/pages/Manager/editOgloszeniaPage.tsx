@@ -1,4 +1,4 @@
-import React, { useState, useEffect,useContext } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import announcementService from "../../services/announcement.service";
 import { Announcements } from "../../assets/Data";
@@ -15,7 +15,7 @@ const emptyAnnouncement: Announcements = {
 };
 
 const EditOgloszeniaPage = () => {
-  const {createConfirmModal,createToast} = useContext(ToastModalContext);
+  const { createConfirmModal, createToast } = useContext(ToastModalContext);
   const navigate = useNavigate();
   const { id } = useParams<{ id: string }>();
   const [announcement, setAnnouncement] =
@@ -29,16 +29,15 @@ const EditOgloszeniaPage = () => {
         const response = await announcementService.getById(parseInt(id));
         if (response.status === 200) {
           const data = response.data.data;
-    
+
           const formattedValidUntil = new Date(data.valid_until)
             .toISOString()
             .slice(0, 16);
-    
+
           const formattedCreateTime = new Date(data.create_time)
             .toISOString()
             .slice(0, 16);
-            
-    
+
           setAnnouncement({
             ...data,
             valid_until: formattedValidUntil,
@@ -59,28 +58,29 @@ const EditOgloszeniaPage = () => {
       confirmBtnText: "Aktualizuj",
       confirmBtnClass: "btn-primary",
       onConfirm: async () => {
-    try {
-      const response = await announcementService.update(announcement);
-      if (response.status === 200) {
-        createToast({
-          message: "Dane ogłoszenia zostały zaktualizowane",
-          type: "primary",
-          icon: faCircleCheck,
-          timeout: 10000,
-        });
-        navigate("/zarzadzanie/ogloszenia");
-      }
-    } catch (error) {
-      console.error("Error while updating announcement:", error);
-      createToast({
-        message: "Wystąpił błąd podczas aktualizacji ogłoszenia! Spróbuj ponownie.",
-        type: "danger",
-        timeout: 10000,
-      });
-    }
-  }
-});
-}
+        try {
+          const response = await announcementService.update(announcement);
+          if (response.status === 200) {
+            createToast({
+              message: "Dane ogłoszenia zostały zaktualizowane",
+              type: "primary",
+              icon: faCircleCheck,
+              timeout: 10000,
+            });
+            navigate("/zarzadzanie/ogloszenia");
+          }
+        } catch (error) {
+          console.error("Error while updating announcement:", error);
+          createToast({
+            message:
+              "Wystąpił błąd podczas aktualizacji ogłoszenia! Spróbuj ponownie.",
+            type: "danger",
+            timeout: 10000,
+          });
+        }
+      },
+    });
+  };
 
   const inputChangeHandler = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -94,73 +94,73 @@ const EditOgloszeniaPage = () => {
 
   return (
     <div>
-  <h1>Edycja Ogłoszeń</h1>
-  <form onSubmit={formSubmitHandler}>
-    <div className="form-group">
-      <label htmlFor="id">ID</label>
-      <input
-        type="number"
-        name="id"
-        className="form-control"
-        value={announcement.id}
-        onChange={inputChangeHandler}
-        readOnly
-      />
+      <h1>Edycja Ogłoszeń</h1>
+      <form onSubmit={formSubmitHandler}>
+        <div className="form-group">
+          <label htmlFor="id">ID</label>
+          <input
+            type="number"
+            name="id"
+            className="form-control"
+            value={announcement.id}
+            onChange={inputChangeHandler}
+            readOnly
+          />
+        </div>
+        <div className="form-group">
+          <label htmlFor="title">Tytuł</label>
+          <input
+            type="text"
+            name="title"
+            className="form-control"
+            value={announcement.title}
+            onChange={inputChangeHandler}
+          />
+        </div>
+        <div className="form-group">
+          <label htmlFor="content">Treść</label>
+          <textarea
+            name="content"
+            className="form-control"
+            value={announcement.content}
+            onChange={inputChangeHandler}
+          ></textarea>
+        </div>
+        <div className="form-group">
+          <label htmlFor="valid_until">Ważne do</label>
+          <input
+            type="datetime-local"
+            name="valid_until"
+            className="form-control"
+            value={announcement.valid_until}
+            onChange={inputChangeHandler}
+          />
+        </div>
+        <div className="form-group">
+          <label htmlFor="Employee_id">ID Pracownika</label>
+          <input
+            type="number"
+            name="Employee_id"
+            className="form-control"
+            value={announcement.Employee_id}
+            onChange={inputChangeHandler}
+          />
+        </div>
+        <div className="form-group">
+          <label htmlFor="create_time">Czas utworzenia</label>
+          <input
+            type="datetime-local"
+            name="create_time"
+            className="form-control"
+            value={announcement.create_time}
+            readOnly
+          />
+        </div>
+        <button type="submit" className="btn btn-primary">
+          Zapisz
+        </button>
+      </form>
     </div>
-    <div className="form-group">
-      <label htmlFor="title">Tytuł</label>
-      <input
-        type="text"
-        name="title"
-        className="form-control"
-        value={announcement.title}
-        onChange={inputChangeHandler}
-      />
-    </div>
-    <div className="form-group">
-      <label htmlFor="content">Treść</label>
-      <textarea
-        name="content"
-        className="form-control"
-        value={announcement.content}
-        onChange={inputChangeHandler}
-      ></textarea>
-    </div>
-    <div className="form-group">
-      <label htmlFor="valid_until">Ważne do</label>
-      <input
-        type="datetime-local"
-        name="valid_until"
-        className="form-control"
-        value={announcement.valid_until}
-        onChange={inputChangeHandler}
-      />
-    </div>
-    <div className="form-group">
-      <label htmlFor="Employee_id">ID Pracownika</label>
-      <input
-        type="number"
-        name="Employee_id"
-        className="form-control"
-        value={announcement.Employee_id}
-        onChange={inputChangeHandler}
-      />
-    </div>
-    <div className="form-group">
-      <label htmlFor="create_time">Czas utworzenia</label>
-      <input
-        type="datetime-local"
-        name="create_time"
-        className="form-control"
-        value={announcement.create_time}
-        readOnly
-      />
-    </div>
-    <button type="submit" className="btn btn-primary">
-      Zapisz
-    </button>
-  </form>
-</div>
   );
 };
 

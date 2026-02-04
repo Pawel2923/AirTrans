@@ -16,10 +16,7 @@ const DesktopNav = () => {
       <NavigationMenu.List className={styles["nav-list"]}>
         <NavigationMenu.Item className={styles["nav-brand"]}>
           <NavigationMenu.Link asChild>
-            <NavLink
-              to="/"
-              className="d-flex align-items-center gap-3 fw-bold"
-            >
+            <NavLink to="/" className="d-flex align-items-center gap-3 fw-bold">
               <img src={Logo} width={64} alt="AirTrans Logo" />
               <span>AirTrans</span>
             </NavLink>

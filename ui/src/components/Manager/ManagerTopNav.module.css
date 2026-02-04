@@ -1,5 +1,5 @@
 .top-nav {
-  width: 100dvw;
+  width: 100%;
   background-color: var(--background-white);
   display: grid;
   grid-template-columns: auto 1fr auto;

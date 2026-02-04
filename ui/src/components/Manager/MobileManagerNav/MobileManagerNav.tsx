@@ -51,10 +51,12 @@ const MobileManagerNav: React.FC<MobileManagerNavProps> = ({ menuGroups }) => {
                   <MobileManagerNavItems
                     menuGroups={menuGroups}
                     data-state={currentGroupId ? "open" : "closed"}
+                    {...(!currentGroupId && { inert: "", tabIndex: -1 })}
                   />
                   <MobileManagerNavGroups
                     menuGroups={menuGroups}
                     data-state={!currentGroupId ? "open" : "closed"}
+                    {...(currentGroupId && { inert: "", tabIndex: -1 })}
                   />
                 </NavigationMenu.List>
               </ScrollArea.Viewport>

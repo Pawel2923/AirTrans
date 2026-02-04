@@ -31,12 +31,14 @@ const MobileManagerNavHeader = () => {
       <div
         className={classes["header-content"]}
         data-state={!currentGroupId ? "open" : "closed"}
+        {...(currentGroupId && { inert: "true" })}
       >
         {closeButton}
       </div>
       <div
         className={classes["header-content"]}
         data-state={currentGroupId ? "open" : "closed"}
+        {...(!currentGroupId && { inert: "true" })}
       >
         <>
           {backButton}

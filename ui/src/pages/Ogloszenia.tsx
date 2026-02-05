@@ -15,7 +15,7 @@ const Ogloszenia = () => {
   });
 
   const fetchOgloszenia = useCallback(async () => {
-    const response = await announcementService.get(pagedata.page, 4);
+    const response = await announcementService.get(pagedata.page, 9);
     setPageData(response.data.meta);
     setOgloszenia(response.data.data);
   }, [pagedata.page]);

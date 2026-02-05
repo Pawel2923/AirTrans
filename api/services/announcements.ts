@@ -9,6 +9,7 @@ const announcementProperties = [
   "content",
   "valid_until",
   "Employee_id",
+  "type",
 ];
 
 function validateAnnouncement(announcement: Announcements) {
@@ -174,12 +175,13 @@ async function create(announcement: Announcements) {
 
   
   let result = await db.query(
-    "INSERT INTO Announcements (title, content, valid_until,Employee_id) VALUES (?, ?, ?, ?)",
+    "INSERT INTO Announcements (title, content, valid_until,Employee_id,type) VALUES (?, ?, ?, ?, ?)",
     [
       announcement.title,
       announcement.content,
       announcement.valid_until,
       announcement.Employee_id,
+      announcement.type,
     ]
   );
   result = result as ResultSetHeader;
@@ -215,12 +217,13 @@ async function update(id: number, announcement: Announcements) {
     throw error;
   }
 
-  let result =await db.query("UPDATE Announcements SET title=?, content=?, valid_until=?,Employee_id=? WHERE id=?", 
+  let result =await db.query("UPDATE Announcements SET title=?, content=?, valid_until=?,Employee_id=?, type=? WHERE id=?", 
   [
     announcement.title,
     announcement.content,
     announcement.valid_until,
     announcement.Employee_id,
+    announcement.type,
     id,
   ]);
   result = result as ResultSetHeader;

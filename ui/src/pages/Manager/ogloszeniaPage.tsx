@@ -22,6 +22,7 @@ const OgloszeniaPage = () => {
       content: "",
       valid_until: "",
       Employee_id: 0,
+      type: undefined,
     }
   );
 
@@ -36,6 +37,15 @@ const OgloszeniaPage = () => {
     setNewAnnouncementData((prevData) => ({
       ...prevData,
       [name]: value,
+    }));
+  };
+  const selectHandleChange = (
+    event: React.ChangeEvent<HTMLSelectElement>
+  ) => {
+    const { name, value } = event.target;
+    setNewAnnouncementData((prevData) => ({
+      ...prevData,
+      [name]: value as "wazne" | "zmiana" | "informacja",
     }));
   };
 
@@ -62,6 +72,7 @@ const OgloszeniaPage = () => {
         content: "",
         valid_until: "",
         Employee_id: 0,
+        type: undefined,
       });
 
       createToast({
@@ -130,7 +141,6 @@ const OgloszeniaPage = () => {
 
   return (
     <div className="container">
-      <h1 className="text-center">Ogłoszenia</h1>
       <div className={styles.tableContainer}>
         <h2>Lista ogłoszeń</h2>
         <AnnouncementTable
@@ -193,6 +203,21 @@ const OgloszeniaPage = () => {
                   value={newAnnouncementData.Employee_id}
                   onChange={handleInputChange}
                 />
+              </div>
+              <div className="form-group">
+                <label htmlFor="type">Typ</label>
+                <select
+                  name="type"
+                  id="type"
+                  className="form-control"
+                  value={newAnnouncementData.type || ""}
+                  onChange={selectHandleChange}
+                >
+                  <option value="">Wybierz typ</option>
+                  <option value="wazne">Ważne</option>
+                  <option value="zmiana">Zmiana</option>
+                  <option value="informacja">Informacja</option>
+                </select>
               </div>
               <button
                 className="btn btn-primary"

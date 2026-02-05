@@ -172,6 +172,7 @@ interface Announcements {
   valid_until: string;
   create_time?: string;
   Employee_id: number;
+  type?: "wazne" | "zmiana" | "informacja";
 }
 
 interface Equipment {

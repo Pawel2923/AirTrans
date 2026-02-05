@@ -1,11 +1,3 @@
-.container h1 {
-  text-align: center;
-}
-
-.tabela-container {
-  display: flex;
-  justify-content: space-around;
-}
 .container {
   display: flex;
   flex-direction: column;
@@ -16,7 +8,30 @@
   flex: 1;
   display: flex;
   flex-direction: column;
-  justify-content: center;
   align-items: center;
   padding: 20px;
+  padding-top: 40px;
+}
+
+.content h1 {
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: #24619b;
+  margin-bottom: 30px;
+  text-align: center;
+}
+
+.tabela-container {
+  display: flex;
+  justify-content: space-around;
+}
+
+.footer {
+  display: block;
+}
+
+@media (max-width: 768px) {
+  .footer {
+    display: none;
+  }
 }

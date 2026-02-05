@@ -28,17 +28,22 @@ const Ogloszenia = () => {
     <div className={styles.container}>
       <Nav />
       <div className={styles.content}>
+        <h1>Tablica ogłoszeń</h1>
         <TabelaOgloszeniaK ogloszenia={ogloszenia} />
-        <div>
-          <Pagination
-            className="mt-3"
-            pageData={pagedata}
-            setPageData={setPageData}
-          />
-        </div>
+        {pagedata.pages > 1 && (
+          <div>
+            <Pagination
+              className="mt-3"
+              pageData={pagedata}
+              setPageData={setPageData}
+            />
+          </div>
+        )}
       </div>
 
-      <Footer />
+      <div className={styles.footer}>
+        <Footer />
+      </div>
     </div>
   );
 };

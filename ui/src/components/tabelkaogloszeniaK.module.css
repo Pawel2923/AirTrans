@@ -1,39 +1,98 @@
-/* Container for all announcement cards */
 .container {
-  display: flex;
-  flex-wrap: wrap;
+  display: grid;
   gap: 20px;
-  justify-content: center;
   padding: 20px;
+
+  /* responsywnie: ile wejdzie w rzędzie, bez ręcznych breakpoints */
+  grid-template-columns: repeat(auto-fit, minmax(700px, 1fr));
+
+  /* start pod nav, bez centrowania w pionie */
+  align-content: start;
+  justify-items: center; /* centrowanie kart w kolumnie */
 }
 
-/* Each announcement card */
 .gateCard {
   background-color: #fff;
-  border: 1px solid #ddd;
+  border: 1px solid #4c98ca;
   border-radius: 8px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  padding: 20px;
-  width: 300px;
+  box-shadow: 0 4px 8px rgba(36, 97, 155, 0.486);
+  padding: 0;
+  overflow: hidden;
+  transition: box-shadow 0.3s ease;
+
+  width: 100%;        /* ważne */
+  max-width: 550px;   /* trzyma “kartę” jak na desktopie */
+}
+.gateCard:hover {
+  box-shadow: 0 6px 12px rgba(36, 97, 155, 0.6);
+}
+
+.header {
+  margin: 0;
+}
+
+.trigger {
+  width: 100%;
   display: flex;
-  flex-direction: column;
+  align-items: center;
   justify-content: space-between;
+  gap: 15px;
+
+  padding: 20px;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  text-align: left;
 }
 
-/* Title of the announcement */
+.trigger:focus-visible {
+  outline: 2px solid #24619b;
+  outline-offset: -2px;
+}
+
 .title {
-  font-size: 1.5em;
-  font-weight: bold;
-  margin-bottom: 10px;
+  font-size: 1.2rem;
+  font-weight: 600;
+  flex: 1;
+  
+  display: flex;
+  justify-content: center;
 }
 
-/* Content of the announcement */
+.chevron {
+  transition: transform 0.2s ease;
+  font-size: 1.2rem;
+}
+
+.trigger[data-state="open"] .chevron {
+  transform: rotate(180deg);
+}
+
+.contentWrapper {
+  padding: 0 20px 20px 20px;
+}
+
+.contentWrapper[data-state="open"] {
+  animation: slideDown 200ms ease-out;
+}
+.contentWrapper[data-state="closed"] {
+  animation: slideUp 200ms ease-out;
+}
+
+@keyframes slideDown {
+  from { max-height: 0; opacity: 0; }
+  to { max-height: 500px; opacity: 1; }
+}
+@keyframes slideUp {
+  from { max-height: 500px; opacity: 1; }
+  to { max-height: 0; opacity: 0; }
+}
+
 .content {
   font-size: 1em;
-  margin-bottom: 20px;
+  margin-bottom: 16px;
 }
 
-/* Metadata section */
 .meta {
   display: flex;
   flex-direction: column;
@@ -42,9 +101,8 @@
   color: #555;
 }
 
-/* Individual metadata items */
 .valid_until,
 .create_time,
 .Employee_id {
-  margin-top: 5px;
+  margin-top: 3px;
 }

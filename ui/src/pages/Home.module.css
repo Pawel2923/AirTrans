@@ -38,6 +38,47 @@
   font-weight: 400;
 }
 
+.announcement-card {
+  background: white;
+  border-radius: 12px;
+  padding: 1.5rem;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+  transition: transform 0.25s, box-shadow 0.25s;
+  min-height: 280px;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.announcement-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 18px rgba(0, 0, 0, 0.12);
+}
+
+.announcement-badge {
+  font-size: 0.75rem;
+  font-weight: 600;
+  padding: 4px 10px;
+  border-radius: 999px;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.announcement-title {
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+  color: #1a1a1a;
+}
+
+.announcement-content {
+  font-size: 0.95rem;
+  line-height: 1.6;
+  color: #4a4a4a;
+  flex-grow: 1;
+}
+
 .contact-info > div:nth-child(2n-1) {
   background-color: var(--background-gray);
 }

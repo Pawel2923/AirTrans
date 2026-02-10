@@ -16,6 +16,8 @@ import announcementService from "../services/announcement.service";
 import offerService from "../services/offer.service";
 import useGetFlight from "../hooks/flight/useGetFlight";
 import filesService from "../services/files.service";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faTriangleExclamation, faInfoCircle, faSyncAlt, faCalendar } from "@fortawesome/free-solid-svg-icons";
 
 const announcementsDataParser = (announcementsData: Announcements[]) => {
   const announcements: Announcements[] = [];
@@ -60,6 +62,25 @@ const offerDataParser = (offerData: RawOffer) => {
   });
 
   return offers;
+};
+
+const formatAnnouncementType = (type?: string) => {
+  switch(type) {
+    case "wazne":
+      return { label: "Ważne", color: "#dc3545", icon: faTriangleExclamation };
+    case "zmiana":
+      return { label: "Zmiana", color: "#ffc107", icon: faSyncAlt };
+    case "informacja":
+      return { label: "Informacja", color: "#28a745", icon: faInfoCircle };
+    default:
+      return { label: "Informacja", color: "#4c98ca", icon: faInfoCircle };
+  }
+};
+
+const formatDate = (d?: string) => {
+  if (!d) return "-";
+  const date = new Date(d);
+  return date.toLocaleDateString("pl-PL");
 };
 
 const defaultContactInfo: ContactInfo = {
@@ -189,21 +210,48 @@ const Home = () => {
               Ogłoszenia
             </h2>
           </div>
-          <div
-            className={`container-fluid row justify-content-between gap-5 ms-0 ${homeStyles["announcements-wrapper"]}`}
-          >
+          <div className="row justify-content-center mx-0">
             {announcementsData.length > 0 ? (
               announcementsData
-                .slice(0, 3)
-                .map((announcement: Announcements, index: number) => (
-                  <div key={index} className="col-md-3">
-                    <h3>{announcement.title}</h3>
-                    <p>{announcement.content}</p>
-                  </div>
-                ))
+                .slice(0, 4)
+                .map((announcement: Announcements, index: number) => {
+                  const typeInfo = formatAnnouncementType(announcement.type);
+                  return (
+                    <div key={index} className="col-lg-3 col-md-6 mb-4">
+                      <div className={homeStyles["announcement-card"]}>
+                      <div className="d-flex align-items-center gap-2 mb-3">
+                        <span 
+                          className={homeStyles["announcement-badge"]}
+                          style={{ backgroundColor: typeInfo.color, color: typeInfo.color === "#ffc107" ? "#000" : "#fff" }}
+                        >
+                          <FontAwesomeIcon icon={typeInfo.icon} className="me-1" />
+                          {typeInfo.label}
+                        </span>
+                      </div>
+                      <h4 className={homeStyles["announcement-title"]}>{announcement.title}</h4>
+                      <p className={homeStyles["announcement-content"]}>
+                        {announcement.content.length > 120 
+                          ? announcement.content.substring(0, 120) + "..." 
+                          : announcement.content}
+                      </p>
+                      <div className="d-flex align-items-center gap-2 mt-3" style={{ fontSize: "0.85rem", color: "#666" }}>
+                        <FontAwesomeIcon icon={faCalendar} />
+                        <span>Ważne do: {formatDate(announcement.valid_until)}</span>
+                      </div>
+                      </div>
+                    </div>
+                  );
+                })
             ) : (
-              <p>Brak ogłoszeń</p>
+              <p className="text-center">Brak ogłoszeń</p>
             )}
+          </div>
+          <div className="row mt-4">
+            <div className="col text-center">
+              <Link to="/ogloszenia" className="btn btn-primary px-4 py-2">
+                Zobacz wszystkie ogłoszenia
+              </Link>
+            </div>
           </div>
         </div>
         <div className={`container-fluid ${homeStyles["content-wrapper"]}`}>

@@ -12,7 +12,7 @@ const emptyAnnouncement: Announcements = {
   valid_until: "",
   create_time: "",
   Employee_id: 0,
-  type: "informacja",
+  type: "information",
 };
 
 const EditOgloszeniaPage = () => {
@@ -43,7 +43,7 @@ const EditOgloszeniaPage = () => {
             ...data,
             valid_until: formattedValidUntil,
             create_time: formattedCreateTime,
-            type: data.type || "informacja",
+            type: data.type || "information",
           });
         }
       } catch (error) {
@@ -177,9 +177,9 @@ const EditOgloszeniaPage = () => {
             value={announcement.type}
             onChange={selectChangeHandler}
           >
-            <option value="wazne">Ważne</option>
-            <option value="zmiana">Zmiana</option>
-            <option value="informacja">Informacja</option>
+            <option value="important">Ważne</option>
+            <option value="change">Zmiana</option>
+            <option value="information">Informacja</option>
           </select>
         </div>
         <button type="submit" className="btn btn-primary">

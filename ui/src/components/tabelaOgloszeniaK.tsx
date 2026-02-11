@@ -5,9 +5,10 @@ import styles from "./tabelkaogloszeniaK.module.css";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faChevronDown, faCalendar, faUser, faTriangleExclamation, faInfoCircle, faSyncAlt } from "@fortawesome/free-solid-svg-icons";
+import { IconDefinition } from "@fortawesome/fontawesome-svg-core";
 
-type Props = {
-  ogloszenia: Announcements[];
+type AnnouncementCardsProps = {
+  announcements: Announcements[];
 };
 
 const formatDate = (d?: string) => {
@@ -16,42 +17,47 @@ const formatDate = (d?: string) => {
   return date.toLocaleString("pl-PL");
 };
 
-const formatType = (type?: string) => {
-  switch(type) {
-    case "wazne":
-      return { label: "Ważne", className: styles.badgeWazne, icon: faTriangleExclamation };
-    case "zmiana":
-      return { label: "Zmiana", className: styles.badgeZmiana, icon: faSyncAlt };
-    case "informacja":
-      return { label: "Informacja", className: styles.badgeInformacja, icon: faInfoCircle };
-    default:
-      return { label: "-", className: "", icon: faInfoCircle };
-  }
+type AnnouncementTypeData = {
+  label: string;
+  className: string;
+  icon: IconDefinition;
 };
 
-const TabelaOgloszeniaK: React.FC<Props> = ({ ogloszenia }) => {
+const ANNOUNCEMENT_TYPES: Record<string, AnnouncementTypeData> = {
+  wazne: { label: "Ważne", className: styles.badgeWazne, icon: faTriangleExclamation },
+  zmiana: { label: "Zmiana", className: styles.badgeZmiana, icon: faSyncAlt },
+  informacja: { label: "Informacja", className: styles.badgeInformacja, icon: faInfoCircle },
+};
+
+const DEFAULT_TYPE: AnnouncementTypeData = { label: "-", className: "", icon: faInfoCircle };
+
+const formatType = (type?: string): AnnouncementTypeData => {
+  return ANNOUNCEMENT_TYPES[type || ""] || DEFAULT_TYPE;
+};
+
+const AnnouncementCards: React.FC<AnnouncementCardsProps> = ({ announcements }) => {
   return (
     <Accordion.Root
       className={styles.container}
       type="single"
       collapsible
     >
-      {ogloszenia.map((o) => (
-        <Accordion.Item key={o.id} value={String(o.id)} className={styles.gateCard}>
+     {announcements.map((announcement) => (
+        <Accordion.Item key={announcement.id} value={String(announcement.id)} className={styles.gateCard}>
 
           <Accordion.Header>
             <Accordion.Trigger className={styles.trigger}>
 
               <div className={styles.headerLeft}>
-                <span className={`${styles.badge} ${formatType(o.type).className}`}>
-                  <FontAwesomeIcon icon={formatType(o.type).icon} />
-                  {formatType(o.type).label}
+                <span className={`${styles.badge} ${formatType(announcement.type).className}`}>
+                  <FontAwesomeIcon icon={formatType(announcement.type).icon} />
+                  {formatType(announcement.type).label}
                 </span>
-                <span className={styles.title}>{o.title}</span>
+                <span className={styles.title}>{announcement.title}</span>
               </div>
               <div className={styles.headerRight}>
                 <span className={styles.validMini}>
-                  do {formatDate(o.valid_until)}
+                  do {formatDate(announcement.valid_until)}
                 </span>
                 <FontAwesomeIcon icon={faChevronDown} className={styles.chevron} />
               </div>
@@ -62,18 +68,18 @@ const TabelaOgloszeniaK: React.FC<Props> = ({ ogloszenia }) => {
           <Accordion.Content className={styles.contentWrapper}>
 
             <div className={styles.content}>
-              {o.content}
+              {announcement.content}
             </div>
 
             <div className={styles.metaRow}>
               <div>
                 <FontAwesomeIcon icon={faCalendar} />
-                <span>Utworzono: {formatDate(o.create_time)}</span>
+                <span>Utworzono: {formatDate(announcement.create_time)}</span>
               </div>
 
               <div>
                 <FontAwesomeIcon icon={faUser} />
-                <span>Utworzył: {o.Employee_id}</span>
+                <span>Utworzył: {announcement.Employee_id}</span>
               </div>
             </div>
 
@@ -84,4 +90,4 @@ const TabelaOgloszeniaK: React.FC<Props> = ({ ogloszenia }) => {
   );
 };
 
-export default TabelaOgloszeniaK;
+export default AnnouncementCards;

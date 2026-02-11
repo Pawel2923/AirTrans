@@ -28,8 +28,8 @@ const Ogloszenia = () => {
     <div className={styles.container}>
       <Nav />
       <div className={styles.content}>
-        <h1>Tablica ogłoszeń</h1>
-        <TabelaOgloszeniaK ogloszenia={ogloszenia} />
+        <h1 className="display-5">TABLICA OGŁOSZEŃ</h1>
+        <TabelaOgloszeniaK announcements={ogloszenia} />
         {pagedata.pages > 1 && (
           <div>
             <Pagination

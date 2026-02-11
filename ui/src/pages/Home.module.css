@@ -43,16 +43,10 @@
   border-radius: 12px;
   padding: 1.5rem;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
-  transition: transform 0.25s, box-shadow 0.25s;
   min-height: 280px;
   height: 100%;
   display: flex;
   flex-direction: column;
-}
-
-.announcement-card:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 8px 18px rgba(0, 0, 0, 0.12);
 }
 
 .announcement-badge {

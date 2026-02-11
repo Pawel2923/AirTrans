@@ -231,7 +231,7 @@ const Home = () => {
                       <h4 className={homeStyles["announcement-title"]}>{announcement.title}</h4>
                       <p className={homeStyles["announcement-content"]}>
                         {announcement.content.length > 120 
-                          ? announcement.content.substring(0, 120) + "..." 
+                            ? `${announcement.content.substring(0, 120)}...`
                           : announcement.content}
                       </p>
                       <div className="d-flex align-items-center gap-2 mt-3" style={{ fontSize: "0.85rem", color: "#666" }}>

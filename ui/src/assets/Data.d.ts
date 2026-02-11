@@ -171,7 +171,7 @@ interface Announcements {
   valid_until: string;
   create_time?: string;
   Employee_id: number;
-  type?: "wazne"|"zmiana"|"informacja";
+   type?: "important" | "change" | "information";
 }
 
 interface Equipment {

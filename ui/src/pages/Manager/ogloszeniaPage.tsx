@@ -7,7 +7,6 @@ import AnnouncementTable from "../../components/tableOgloszenia";
 import Pagination from "../../components/Pagination";
 import ToastModalContext from "../../store/toast-modal-context";
 import { faCircleCheck } from "@fortawesome/free-solid-svg-icons";
-
 const OgloszeniaPage = () => {
   const { createConfirmModal, createToast } = useContext(ToastModalContext);
   const [pagedata, setPageData] = useState<PageData>({
@@ -22,7 +21,7 @@ const OgloszeniaPage = () => {
       content: "",
       valid_until: "",
       Employee_id: 0,
-      type: undefined,
+      type: "information",
     }
   );
 
@@ -45,7 +44,7 @@ const OgloszeniaPage = () => {
     const { name, value } = event.target;
     setNewAnnouncementData((prevData) => ({
       ...prevData,
-      [name]: value as "wazne" | "zmiana" | "informacja",
+      [name]: value as "important" | "change" | "information",
     }));
   };
 
@@ -214,9 +213,9 @@ const OgloszeniaPage = () => {
                   onChange={selectHandleChange}
                 >
                   <option value="">Wybierz typ</option>
-                  <option value="wazne">Ważne</option>
-                  <option value="zmiana">Zmiana</option>
-                  <option value="informacja">Informacja</option>
+                  <option value="important">Ważne</option>
+                  <option value="change">Zmiana</option>
+                  <option value="information">Informacja</option>
                 </select>
               </div>
               <button

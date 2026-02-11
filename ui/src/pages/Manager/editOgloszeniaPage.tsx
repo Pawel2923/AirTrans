@@ -12,7 +12,7 @@ const emptyAnnouncement: Announcements = {
   valid_until: "",
   create_time: "",
   Employee_id: 0,
-  type: "informacja",
+  type: "information",
 };
 
 const EditOgloszeniaPage = () => {

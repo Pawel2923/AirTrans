@@ -1,50 +1,175 @@
-/* Container for all announcement cards */
 .container {
-  display: flex;
-  flex-wrap: wrap;
+  display: grid;
   gap: 20px;
-  justify-content: center;
   padding: 20px;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 700px), 1fr));
+  align-content: start;
+  justify-items: center;
 }
 
-/* Each announcement card */
 .gateCard {
-  background-color: #fff;
-  border: 1px solid #ddd;
-  border-radius: 8px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  padding: 20px;
-  width: 300px;
+  width: 100%;
+  max-width: 700px;
+  background: white;
+  border-radius: 12px;
+  border: 1px solid #dbe7f1;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+  overflow: visible;
+  transition: 0.25s;
+  margin: 5px 0;
+}
+
+@media (max-width: 768px) {
+  .container {
+    grid-template-columns: 1fr;
+    margin: 10px 0;
+    gap: 10px;
+    padding-bottom: 80px;
+  }
+  
+  .gateCard {
+    border-radius: 8px;
+    margin: 5px 0;
+    width: 400px;
+  }
+
+  .trigger {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+    padding: 15px;
+  }
+
+  .headerLeft {
+    width: 100%;
+  }
+
+  .title {
+    white-space: normal;
+    overflow: visible;
+    text-overflow: clip;
+  }
+
+  .headerRight {
+    margin-left: 0;
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  .validMini {
+    font-size: 11px;
+  }
+
+  .contentWrapper {
+    padding: 15px;
+  }
+}
+
+.gateCard:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 18px rgba(0,0,0,0.12);
+}
+
+
+.trigger {
+  width: 100%;
+  padding: 18px 20px;
+  background: linear-gradient(170deg,#f8fbff,#eef5fb);
+  border: none;
+  cursor: pointer;
   display: flex;
-  flex-direction: column;
   justify-content: space-between;
+  align-items: center;
+  border-radius: 12px 12px 0 0;
 }
 
-/* Title of the announcement */
-.title {
-  font-size: 1.5em;
-  font-weight: bold;
-  margin-bottom: 10px;
-}
 
-/* Content of the announcement */
-.content {
-  font-size: 1em;
-  margin-bottom: 20px;
-}
-
-/* Metadata section */
-.meta {
+.headerLeft {
   display: flex;
-  flex-direction: column;
-  gap: 5px;
-  font-size: 0.9em;
-  color: #555;
+  gap: 12px;
+  align-items: center;
+  flex: 1;
+  min-width: 0;
 }
 
-/* Individual metadata items */
-.valid_until,
-.create_time,
-.Employee_id {
-  margin-top: 5px;
+.badge {
+  font-size: 11px;
+  font-weight: 700;
+  background: #4c98ca;
+  color: white;
+  padding: 3px 5px;
+  border-radius: 999px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  flex-shrink: 0;
+}
+
+.badgeWazne {
+  background: #dc3545;
+}
+
+.badgeZmiana {
+  background: #ffc107;
+  
+}
+
+.badgeInformacja {
+  background: #28a745;
+}
+
+.title {
+  font-size: 1.1rem;
+  font-weight: 600;
+  text-align: left;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.headerRight {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-left: 20px;
+  flex-shrink: 0;
+}
+
+.validMini {
+  font-size: 12px;
+  color: #5f6f82;
+}
+
+.chevron {
+  transition: 0.2s;
+  transition-property: transform;
+  font-size: 1.2rem;
+}
+
+.trigger[data-state="open"] .chevron {
+  transform: rotate(180deg);
+}
+
+.contentWrapper {
+  padding: 18px 20px 22px;
+}
+
+.content {
+  font-size: 0.95rem;
+  line-height: 1.5;
+  margin-bottom: 14px;
+}
+
+.metaRow {
+  display: flex;
+  gap: 18px;
+  flex-wrap: wrap;
+  font-size: 0.85rem;
+  color: #667;
+}
+
+.metaRow div {
+  display: flex;
+  gap: 6px;
+  align-items: center;
 }

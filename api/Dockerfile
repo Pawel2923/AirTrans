@@ -18,5 +18,7 @@ COPY --from=builder /api/dist ./dist
 COPY --from=builder /api/routes ./routes
 COPY --from=builder /api/views ./views
 COPY --from=builder /api/files ./files
+COPY --from=builder /api/database/migrations ./dist/database/migrations
+COPY --from=builder /api/database/seeds ./dist/database/seeds
 
 CMD ["npm", "start"]

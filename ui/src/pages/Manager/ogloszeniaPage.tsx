@@ -7,7 +7,6 @@ import AnnouncementTable from "../../components/tableOgloszenia";
 import Pagination from "../../components/Pagination";
 import ToastModalContext from "../../store/toast-modal-context";
 import { faCircleCheck } from "@fortawesome/free-solid-svg-icons";
-
 const OgloszeniaPage = () => {
   const { createConfirmModal, createToast } = useContext(ToastModalContext);
   const [pagedata, setPageData] = useState<PageData>({
@@ -22,6 +21,7 @@ const OgloszeniaPage = () => {
       content: "",
       valid_until: "",
       Employee_id: 0,
+      type: "information",
     }
   );
 
@@ -36,6 +36,15 @@ const OgloszeniaPage = () => {
     setNewAnnouncementData((prevData) => ({
       ...prevData,
       [name]: value,
+    }));
+  };
+  const selectHandleChange = (
+    event: React.ChangeEvent<HTMLSelectElement>
+  ) => {
+    const { name, value } = event.target;
+    setNewAnnouncementData((prevData) => ({
+      ...prevData,
+      [name]: value as "important" | "change" | "information",
     }));
   };
 
@@ -62,6 +71,7 @@ const OgloszeniaPage = () => {
         content: "",
         valid_until: "",
         Employee_id: 0,
+        type: undefined,
       });
 
       createToast({
@@ -130,7 +140,6 @@ const OgloszeniaPage = () => {
 
   return (
     <div className="container">
-      <h1 className="text-center">Ogłoszenia</h1>
       <div className={styles.tableContainer}>
         <h2>Lista ogłoszeń</h2>
         <AnnouncementTable
@@ -193,6 +202,21 @@ const OgloszeniaPage = () => {
                   value={newAnnouncementData.Employee_id}
                   onChange={handleInputChange}
                 />
+              </div>
+              <div className="form-group">
+                <label htmlFor="type">Typ</label>
+                <select
+                  name="type"
+                  id="type"
+                  className="form-control"
+                  value={newAnnouncementData.type || ""}
+                  onChange={selectHandleChange}
+                >
+                  <option value="">Wybierz typ</option>
+                  <option value="important">Ważne</option>
+                  <option value="change">Zmiana</option>
+                  <option value="information">Informacja</option>
+                </select>
               </div>
               <button
                 className="btn btn-primary"

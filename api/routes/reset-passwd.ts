@@ -49,9 +49,9 @@ router.post("/", async function (req, res, next) {
     const info = await sendResetPasswdEmail(
       email as string,
       "Resetuj hasło",
-      "http://localhost:3000/resetowanie",
+      `${process.env.UI_ORIGIN}/resetowanie`,
       token,
-      `Kliknij w link, aby zresetować hasło, lub zignoruj tę wiadomość, jeśli nie żądałeś resetowania hasła. Link: http://localhost:3000/reset-passwd/${token}`
+      `Kliknij w link, aby zresetować hasło, lub zignoruj tę wiadomość, jeśli nie żądałeś resetowania hasła. Link: ${process.env.UI_ORIGIN}/reset-passwd/${token}`
     );
 
     // if email sent successfully, save token in db

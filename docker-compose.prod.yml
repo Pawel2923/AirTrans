@@ -7,8 +7,6 @@ services:
       - MYSQL_ROOT_PASSWORD=$MYSQLDB_ROOT_PASSWORD
       - MYSQL_DATABASE=$MYSQLDB_DATABASE
       - TZ=Europe/Warsaw
-    ports:
-      - $MYSQLDB_LOCAL_PORT:$MYSQLDB_DOCKER_PORT
     volumes:
       - db:/var/lib/mysql
       - ./db-dump:/db-dump
@@ -17,6 +15,7 @@ services:
     command: --secure-file-priv="/db-dump/"
       --default-time-zone=+02:00
     hostname: mysqldb
+
   api:
     depends_on:
       - mysqldb
@@ -27,8 +26,7 @@ services:
     restart: unless-stopped
     env_file: ./.env
     ports:
-      - $NODE_LOCAL_PORT:$NODE_DOCKER_PORT
-      - $NODE_LOCAL_SSL_PORT:$NODE_DOCKER_SSL_PORT
+      - $API_PUBLISHED_PORT:$API_INTERNAL_PORT
     environment:
       - DB_HOST=mysqldb
       - DB_ADMIN_PASSWORD=$MYSQLDB_ADMIN_PASSWORD
@@ -39,8 +37,8 @@ services:
       - DB_PARKING_STAFF_PASSWORD=$MYSQLDB_PARKING_STAFF_PASSWORD
       - DB_RENTAL_STAFF_PASSWORD=$MYSQLDB_RENTAL_STAFF_PASSWORD
       - DB_NAME=$MYSQLDB_DATABASE
-      - DB_PORT=$MYSQLDB_DOCKER_PORT
-      - CLIENT_ORIGIN=$CLIENT_ORIGIN
+      - DB_PORT=$MYSQLDB_INTERNAL_PORT
+      - UI_ORIGIN=$UI_ORIGIN
     volumes:
       - ./api/files:/api/files
       - /etc/ssl/certs/cloudflare-origin.pem:/api/ssl/fullchain.pem:ro
@@ -48,13 +46,15 @@ services:
     networks:
       - backend
       - frontend
+
   ui:
     image: pawel2923/airtrans-ui:latest
     build:
       context: ./ui
       dockerfile: Dockerfile.prod
       args:
-       - VITE_MODE=production
+        - VITE_MODE=production
+        - VITE_API_ORIGIN=$API_ORIGIN
     depends_on:
       - api
     volumes:
@@ -65,10 +65,11 @@ services:
       - /etc/ssl/private/cloudflare-origin.key:/etc/nginx/ssl/privkey.key:ro
     environment:
       - TZ=Europe/Warsaw
-      - REACT_DOCKER_PORT=$REACT_DOCKER_PORT
+      - UI_INTERNAL_PORT=$UI_INTERNAL_PORT
       - USE_SSL=true
+      - VITE_API_ORIGIN=$API_ORIGIN
     ports:
-      - $REACT_LOCAL_PORT:$REACT_DOCKER_PORT
+      - $UI_PUBLISHED_PORT:$UI_INTERNAL_PORT
     networks:
       - frontend
 

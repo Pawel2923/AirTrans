@@ -40,7 +40,7 @@ const app = express();
 
 const corsOptions = {
   credentials: true,
-  origin: process.env["CLIENT_ORIGIN"] || "https://localhost",
+  origin: process.env["UI_ORIGIN"] || "https://localhost",
 };
 
 app.use(cors(corsOptions));
@@ -107,13 +107,13 @@ if (fs.existsSync(sslKeyPath) && fs.existsSync(sslCertPath)) {
 
   const httpsServer = https.createServer(credentials, app);
 
-  const SSLPORT = process.env["NODE_DOCKER_SSL_PORT"] || 8080;
+  const SSLPORT = process.env["API_INTERNAL_PORT"] || 8080;
   httpsServer.listen(SSLPORT, () => {
     console.log(`HTTPS Server is running on port ${SSLPORT}.`);
   });
 } else {
   // No SSL certificates - run HTTP server for development
-  const PORT = process.env["NODE_DOCKER_PORT"] || 8080;
+  const PORT = process.env["API_INTERNAL_PORT"] || 8080;
   app.listen(PORT, () => {
     console.log(`HTTP Server is running on port ${PORT}.`);
     console.log("Warning: Running in HTTP mode - SSL certificates not found");

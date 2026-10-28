@@ -65,8 +65,9 @@ services:
       - /etc/ssl/private/cloudflare-origin.key:/etc/nginx/ssl/privkey.key:ro
     environment:
       - TZ=Europe/Warsaw
+      - UI_PROTOCOL=$UI_PROTOCOL
+      - UI_SERVER_HOST=$UI_SERVER_HOST
       - UI_INTERNAL_PORT=$UI_INTERNAL_PORT
-      - USE_SSL=true
       - VITE_API_ORIGIN=$API_ORIGIN
     ports:
       - $UI_PUBLISHED_PORT:$UI_INTERNAL_PORT

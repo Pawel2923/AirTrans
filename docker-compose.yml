@@ -59,7 +59,6 @@ services:
       - TZ=Europe/Warsaw
       - UI_INTERNAL_PORT=$UI_INTERNAL_PORT
       - UI_PUBLISHED_PORT=$UI_PUBLISHED_PORT
-      - USE_SSL=false
       - CHOKIDAR_USEPOLLING=true
       - WATCHPACK_POLLING=true
       - VITE_API_ORIGIN=$API_ORIGIN

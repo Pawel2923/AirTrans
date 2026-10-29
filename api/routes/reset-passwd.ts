@@ -39,41 +39,41 @@ import resetPasswd from "../services/reset-passwd";
  *      description: Internal Server Error
  */
 router.post("/", async function (req, res, next) {
-  try {
-    const { email } = req.body;
+    try {
+        const { email } = req.body;
 
-    const token =
-      Math.random().toString(36).substring(2, 10) +
-      Math.random().toString(36).substring(2, 10);
+        const token =
+            Math.random().toString(36).substring(2, 10) +
+            Math.random().toString(36).substring(2, 10);
 
-    const info = await sendResetPasswdEmail(
-      email as string,
-      "Resetuj hasło",
-      `${process.env.UI_ORIGIN}/resetowanie`,
-      token,
-      `Kliknij w link, aby zresetować hasło, lub zignoruj tę wiadomość, jeśli nie żądałeś resetowania hasła. Link: ${process.env.UI_ORIGIN}/reset-passwd/${token}`
-    );
+        const info = await sendResetPasswdEmail(
+            email as string,
+            "Resetuj hasło",
+            `${process.env["UI_ORIGIN"]}/resetowanie`,
+            token,
+            `Kliknij w link, aby zresetować hasło, lub zignoruj tę wiadomość, jeśli nie żądałeś resetowania hasła. Link: ${process.env["UI_ORIGIN"]}/reset-passwd/${token}`
+        );
 
-    // if email sent successfully, save token in db
-    // if email not sent, return error
-    if (info.accepted.length > 0) {
-      // save token in db
-      const { message, statusCode } = await resetPasswd.saveToken(
-        token,
-        email as string
-      );
+        // if email sent successfully, save token in db
+        // if email not sent, return error
+        if (info.accepted.length > 0) {
+            // save token in db
+            const { message, statusCode } = await resetPasswd.saveToken(
+                token,
+                email as string
+            );
 
-      if (statusCode === 200) {
-        res
-          .status(200)
-          .json({ message: `Reset email sent and ${message}`, info });
-      }
-    } else {
-      throw new Err("Email not sent");
+            if (statusCode === 200) {
+                res
+                    .status(200)
+                    .json({ message: `Reset email sent and ${message}`, info });
+            }
+        } else {
+            throw new Err("Email not sent");
+        }
+    } catch (error) {
+        next(error);
     }
-  } catch (error) {
-    next(error);
-  }
 });
 
 /**
@@ -107,15 +107,15 @@ router.post("/", async function (req, res, next) {
  *      description: Internal Server Error
  */
 router.post("/:token", async function (req, res, next) {
-  try {
-    const { token } = req.params;
+    try {
+        const { token } = req.params;
 
-    const { message, statusCode } = await resetPasswd.verifyToken(token);
+        const { message, statusCode } = await resetPasswd.verifyToken(token);
 
-    res.status(statusCode).json({ message });
-  } catch (error) {
-    next(error);
-  }
+        res.status(statusCode).json({ message });
+    } catch (error) {
+        next(error);
+    }
 });
 
 /**
@@ -155,16 +155,16 @@ router.post("/:token", async function (req, res, next) {
  *      description: Internal Server Error
  */
 router.patch("/:token", async function (req, res, next) {
-  try {
-    const { token } = req.params;
-    const { password } = req.body;
+    try {
+        const { token } = req.params;
+        const { password } = req.body;
 
-    const { message, statusCode } = await resetPasswd.resetPasswd(token, password);
+        const { message, statusCode } = await resetPasswd.resetPasswd(token, password);
 
-    res.status(statusCode).json({ message });
-  } catch (error) {
-    next(error);
-  }
+        res.status(statusCode).json({ message });
+    } catch (error) {
+        next(error);
+    }
 });
 
 export default router;

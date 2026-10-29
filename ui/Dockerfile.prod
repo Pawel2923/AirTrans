@@ -1,6 +1,7 @@
 FROM node:lts-alpine3.19
 
 ARG VITE_MODE=production
+ARG VITE_API_ORIGIN
 
 WORKDIR /ui/
 COPY package*.json ./
@@ -13,5 +14,5 @@ FROM nginx:stable-alpine3.17
 COPY nginx.conf /etc/nginx/conf.d/nginx.conf.template
 COPY nginx-ssl.conf /etc/nginx/conf.d/nginx-ssl.conf.template
 COPY --from=0 /ui/dist /usr/share/nginx/html
-EXPOSE 80 443
-CMD ["/bin/sh", "-c", "if [ \"$USE_SSL\" = \"true\" ]; then envsubst '$REACT_DOCKER_PORT' < /etc/nginx/conf.d/nginx-ssl.conf.template > /etc/nginx/conf.d/default.conf; else envsubst '$REACT_DOCKER_PORT' < /etc/nginx/conf.d/nginx.conf.template > /etc/nginx/conf.d/default.conf; fi && exec nginx -g 'daemon off;'"]
+
+CMD ["/bin/sh", "-c", "if [ \"$UI_PROTOCOL\" = \"https\" ]; then envsubst '$UI_INTERNAL_PORT:$UI_SERVER_HOST' < /etc/nginx/conf.d/nginx-ssl.conf.template > /etc/nginx/conf.d/default.conf; else envsubst '$UI_INTERNAL_PORT' < /etc/nginx/conf.d/nginx.conf.template > /etc/nginx/conf.d/default.conf; fi && exec nginx -g 'daemon off;'"]

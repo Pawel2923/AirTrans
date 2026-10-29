@@ -58,7 +58,7 @@ const CheckoutForm: React.FC = () => {
       }
 
       const response = await fetch(
-        "http://localhost:6868/stripe/create-payment-intent",
+        `${import.meta.env.VITE_API_ORIGIN}/stripe/create-payment-intent`,
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },

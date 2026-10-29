@@ -40,7 +40,7 @@ const app = express();
 
 const corsOptions = {
   credentials: true,
-  origin: process.env["UI_ORIGIN"] || "https://localhost",
+  origin: new URL(process.env["UI_ORIGIN"] || "https://localhost").origin,
 };
 
 app.use(cors(corsOptions));

@@ -51,7 +51,7 @@ const AnnouncementCards: React.FC<AnnouncementCardsProps> = ({ announcements }) 
               <div className={styles.headerLeft}>
                 <span className={`${styles.badge} ${formatType(announcement.type).className}`}>
                   <FontAwesomeIcon icon={formatType(announcement.type).icon} />
-                  {formatType(announcement.type).label}
+                  <span className={styles.badgeLabel}>{formatType(announcement.type).label}</span>
                 </span>
                 <span className={styles.title}>{announcement.title}</span>
               </div>
@@ -59,13 +59,18 @@ const AnnouncementCards: React.FC<AnnouncementCardsProps> = ({ announcements }) 
                 <span className={styles.validMini}>
                   do {formatDate(announcement.valid_until)}
                 </span>
-                <FontAwesomeIcon icon={faChevronDown} className={styles.chevron} />
               </div>
+              <FontAwesomeIcon icon={faChevronDown} className={styles.chevron} />
 
             </Accordion.Trigger>
           </Accordion.Header>
 
           <Accordion.Content className={styles.contentWrapper}>
+
+            <div className={styles.validContent}>
+              <FontAwesomeIcon icon={faCalendar} />
+              <span>Ważne do: {formatDate(announcement.valid_until)}</span>
+            </div>
 
             <div className={styles.content}>
               {announcement.content}

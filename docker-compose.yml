@@ -55,6 +55,7 @@ services:
       args:
         - VITE_MODE=development
         - VITE_API_ORIGIN=$API_ORIGIN
+    restart: unless-stopped
     environment:
       - TZ=Europe/Warsaw
       - UI_INTERNAL_PORT=$UI_INTERNAL_PORT

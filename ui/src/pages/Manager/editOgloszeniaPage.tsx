@@ -12,6 +12,7 @@ const emptyAnnouncement: Announcements = {
   valid_until: "",
   create_time: "",
   Employee_id: 0,
+  type: "information",
 };
 
 const EditOgloszeniaPage = () => {
@@ -42,6 +43,7 @@ const EditOgloszeniaPage = () => {
             ...data,
             valid_until: formattedValidUntil,
             create_time: formattedCreateTime,
+            type: data.type || "information",
           });
         }
       } catch (error) {
@@ -91,6 +93,17 @@ const EditOgloszeniaPage = () => {
       [name]: value,
     }));
   };
+  const selectChangeHandler = (
+    e: React.ChangeEvent<HTMLSelectElement>
+  ) => {
+    const { name, value } = e.target;
+    setAnnouncement((prevAnnouncement) => ({
+      ...prevAnnouncement,
+      [name]: value,
+    }));
+  }
+
+
 
   return (
     <div>
@@ -155,6 +168,19 @@ const EditOgloszeniaPage = () => {
             value={announcement.create_time}
             readOnly
           />
+        </div>
+        <div className="form-group">
+          <label htmlFor="type">Typ</label>
+          <select
+            name="type"
+            className="form-control"
+            value={announcement.type}
+            onChange={selectChangeHandler}
+          >
+            <option value="important">Ważne</option>
+            <option value="change">Zmiana</option>
+            <option value="information">Informacja</option>
+          </select>
         </div>
         <button type="submit" className="btn btn-primary">
           Zapisz

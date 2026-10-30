@@ -15,7 +15,7 @@ const Ogloszenia = () => {
   });
 
   const fetchOgloszenia = useCallback(async () => {
-    const response = await announcementService.get(pagedata.page, 4);
+    const response = await announcementService.get(pagedata.page, 9);
     setPageData(response.data.meta);
     setOgloszenia(response.data.data);
   }, [pagedata.page]);
@@ -28,17 +28,22 @@ const Ogloszenia = () => {
     <div className={styles.container}>
       <Nav />
       <div className={styles.content}>
-        <TabelaOgloszeniaK ogloszenia={ogloszenia} />
-        <div>
-          <Pagination
-            className="mt-3"
-            pageData={pagedata}
-            setPageData={setPageData}
-          />
-        </div>
+        <h1 className="display-5">TABLICA OGŁOSZEŃ</h1>
+        <TabelaOgloszeniaK announcements={ogloszenia} />
+        {pagedata.pages > 1 && (
+          <div>
+            <Pagination
+              className="mt-3"
+              pageData={pagedata}
+              setPageData={setPageData}
+            />
+          </div>
+        )}
       </div>
 
-      <Footer />
+      <div className={styles.footer}>
+        <Footer />
+      </div>
     </div>
   );
 };

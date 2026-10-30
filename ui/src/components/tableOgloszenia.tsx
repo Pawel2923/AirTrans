@@ -26,6 +26,7 @@ const AnnouncementTable: React.FC<AnnouncementTableProps> = ({
           <th>Ważne do</th>
           <th>Czas tworzenia</th>
           <th>Autor</th>
+          <th>Typ</th>
           <th>Akcje</th>
         </tr>
       </thead>
@@ -38,6 +39,7 @@ const AnnouncementTable: React.FC<AnnouncementTableProps> = ({
             <td>{announcement.valid_until}</td>
             <td>{announcement.create_time}</td>
             <td>{announcement.Employee_id}</td>
+            <td>{announcement.type}</td>
             <td>
               <button
                 className="btn btn-primary me-3"
@@ -49,7 +51,7 @@ const AnnouncementTable: React.FC<AnnouncementTableProps> = ({
                 className="btn btn-danger"
                 onClick={() => onDelete(announcement.id ?? 0)}
               >
-                Delete
+                USUŃ
               </button>
             </td>
           </tr>

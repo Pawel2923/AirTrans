@@ -10,7 +10,12 @@ export function getDatabaseConfig(): ConnectionOptions {
 
   return {
     host: process.env["DB_HOST"] ?? "localhost",
-    port: Number(process.env["DB_PORT"] ?? process.env["MYSQLDB_DOCKER_PORT"] ?? 3306),
+    port: Number(
+      process.env["DB_PORT"] ??
+        process.env["MYSQLDB_INTERNAL_PORT"] ??
+        process.env["MYSQLDB_DOCKER_PORT"] ??
+        3306
+    ),
     user: process.env["DB_MIGRATION_USER"] ?? "root",
     password,
     database: process.env["DB_NAME"] ?? process.env["MYSQLDB_DATABASE"] ?? "AirTrans",

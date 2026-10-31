@@ -1,4 +1,10 @@
 import mysql, { ConnectionOptions } from "mysql2/promise";
+import path from "path";
+import dotenv from "dotenv";
+
+dotenv.config();
+dotenv.config({ path: path.resolve(process.cwd(), "../.env") });
+dotenv.config({ path: path.resolve(process.cwd(), ".env") });
 
 export function getDatabaseConfig(): ConnectionOptions {
   const password = process.env["DB_MIGRATION_PASSWORD"] ?? process.env["MYSQLDB_ROOT_PASSWORD"];
@@ -8,14 +14,24 @@ export function getDatabaseConfig(): ConnectionOptions {
     );
   }
 
-  return {
-    host: process.env["DB_HOST"] ?? "localhost",
-    port: Number(
-      process.env["DB_PORT"] ??
+  const host = process.env["DB_HOST"] ?? "localhost";
+  const isLocalhost = host === "localhost" || host === "127.0.0.1";
+  const defaultPort = isLocalhost
+    ? Number(
+        process.env["MYSQLDB_PUBLISHED_PORT"] ??
+          process.env["MYSQLDB_LOCAL_PORT"] ??
+          process.env["MYSQLDB_INTERNAL_PORT"] ??
+          3306
+      )
+    : Number(
         process.env["MYSQLDB_INTERNAL_PORT"] ??
-        process.env["MYSQLDB_DOCKER_PORT"] ??
-        3306
-    ),
+          process.env["MYSQLDB_DOCKER_PORT"] ??
+          3306
+      );
+
+  return {
+    host,
+    port: Number(process.env["DB_PORT"] ?? defaultPort),
     user: process.env["DB_MIGRATION_USER"] ?? "root",
     password,
     database: process.env["DB_NAME"] ?? process.env["MYSQLDB_DATABASE"] ?? "AirTrans",
@@ -49,7 +65,12 @@ export function splitSqlStatements(contents: string): string[] {
     }
   }
 
-  if (statement.trim()) {
+  const remainingExecutable = statement
+    .replace(/--[^\r\n]*/g, "")
+    .replace(/\/\*[\s\S]*?\*\//g, "")
+    .trim();
+
+  if (remainingExecutable) {
     throw new Error("SQL file contains an unterminated SQL statement.");
   }
 

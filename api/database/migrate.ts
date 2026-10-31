@@ -1,11 +1,14 @@
 import crypto from "crypto";
 import fs from "fs/promises";
+import fsSync from "fs";
 import path from "path";
 import { Connection, ResultSetHeader, RowDataPacket } from "mysql2/promise";
 import dotenv from "dotenv";
 import { createDatabaseConnection, splitSqlStatements } from "./client";
 
 dotenv.config();
+dotenv.config({ path: path.resolve(process.cwd(), "../.env") });
+dotenv.config({ path: path.resolve(process.cwd(), ".env") });
 
 interface MigrationFile {
   version: string;
@@ -20,10 +23,58 @@ interface AppliedMigration extends RowDataPacket {
   checksum: string;
 }
 
-const migrationsDirectory = path.join(__dirname, "migrations");
+const DEFAULT_BASELINE_VERSION = "20260206121500";
 const migrationPattern = /^(\d+)_([a-z0-9_-]+)\.sql$/i;
 
+function resolveMigrationsDirectory(): string {
+  const candidateDirs = [
+    path.join(__dirname, "migrations"),
+    path.resolve(__dirname, "../../database/migrations"),
+    path.resolve(__dirname, "../database/migrations"),
+    path.resolve(process.cwd(), "database/migrations"),
+    path.resolve(process.cwd(), "api/database/migrations"),
+  ];
+
+  for (const dir of candidateDirs) {
+    if (fsSync.existsSync(dir)) {
+      return dir;
+    }
+  }
+
+  return path.join(__dirname, "migrations");
+}
+
+function parseBaselineArg(): { isBaseline: boolean; baselineVersion: string } {
+  const args = process.argv.slice(2);
+  let isBaseline = false;
+  let baselineVersion = DEFAULT_BASELINE_VERSION;
+
+  for (let i = 0; i < args.length; i++) {
+    const arg = args[i];
+    if (!arg) {
+      continue;
+    }
+    if (arg === "--baseline" || arg === "-b") {
+      isBaseline = true;
+      const nextArg = args[i + 1];
+      if (nextArg && !nextArg.startsWith("-")) {
+        baselineVersion = nextArg;
+        i++;
+      }
+    } else if (arg.startsWith("--baseline=")) {
+      isBaseline = true;
+      const val = arg.slice("--baseline=".length).trim();
+      if (val) {
+        baselineVersion = val;
+      }
+    }
+  }
+
+  return { isBaseline, baselineVersion };
+}
+
 async function readMigrations(): Promise<MigrationFile[]> {
+  const migrationsDirectory = resolveMigrationsDirectory();
   const filenames = (await fs.readdir(migrationsDirectory))
     .filter((filename) => migrationPattern.test(filename))
     .sort();
@@ -99,9 +150,50 @@ async function applyMigration(connection: Connection, migration: MigrationFile):
   }
 }
 
+async function baseline(connection: Connection, baselineVersion: string): Promise<void> {
+  await ensureMigrationsTable(connection);
+  const [migrations, applied] = await Promise.all([
+    readMigrations(),
+    getAppliedMigrations(connection),
+  ]);
+
+  const baselineMigrations = migrations.filter((m) => m.version <= baselineVersion);
+  let recordedCount = 0;
+
+  for (const m of baselineMigrations) {
+    const existing = applied.get(m.version);
+    if (existing) {
+      if (existing.checksum !== m.checksum) {
+        throw new Error(
+          `Baseline migration ${m.filename} was already recorded with a different checksum.`
+        );
+      }
+      console.log(`Baseline: ${m.filename} is already recorded.`);
+    } else {
+      await connection.query(
+        "INSERT INTO schema_migrations (version, name, checksum) VALUES (?, ?, ?)",
+        [m.version, m.name, m.checksum]
+      );
+      console.log(`Baseline: recorded ${m.filename} as applied.`);
+      recordedCount++;
+    }
+  }
+
+  console.log(
+    `Baseline completed up to version ${baselineVersion}. Recorded ${recordedCount} new migrations (no schema statements executed).`
+  );
+}
+
 async function migrate(): Promise<void> {
+  const { isBaseline, baselineVersion } = parseBaselineArg();
   const connection = await createDatabaseConnection();
+
   try {
+    if (isBaseline) {
+      await baseline(connection, baselineVersion);
+      return;
+    }
+
     await ensureMigrationsTable(connection);
     const [migrations, applied] = await Promise.all([
       readMigrations(),

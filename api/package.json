@@ -8,6 +8,7 @@
     "start:dev": "ts-node server.ts",
     "start:nodemon": "nodemon server.ts",
     "db:migrate": "node dist/database/migrate.js",
+    "db:migrate:baseline": "node dist/database/migrate.js --baseline",
     "db:seed": "node dist/database/seed.js",
     "db:provision-users": "node dist/database/provision-users.js",
     "build": "tsc",

@@ -1,6 +1,6 @@
 SET FOREIGN_KEY_CHECKS = 0;
 
-CREATE TABLE `Airplanes` (
+CREATE TABLE IF NOT EXISTS `Airplanes` (
   `serial_no` varchar(25) NOT NULL,
   `model` varchar(25) NOT NULL,
   `type` varchar(25) NOT NULL,
@@ -13,19 +13,18 @@ CREATE TABLE `Airplanes` (
   `img` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`serial_no`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-CREATE TABLE `Announcements` (
+CREATE TABLE IF NOT EXISTS `Announcements` (
   `id` int NOT NULL AUTO_INCREMENT,
   `title` varchar(45) NOT NULL,
   `content` text NOT NULL,
   `valid_until` datetime NOT NULL,
   `create_time` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
   `Employee_id` int NOT NULL,
-  `type` enum('wazne','zmiana','informacja') NOT NULL DEFAULT 'informacja',
   PRIMARY KEY (`id`),
   KEY `Employee_id` (`Employee_id`),
   CONSTRAINT `Announcements_ibfk_1` FOREIGN KEY (`Employee_id`) REFERENCES `Employees` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-CREATE TABLE `Cars` (
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+CREATE TABLE IF NOT EXISTS `Cars` (
   `id` int NOT NULL AUTO_INCREMENT,
   `brand` varchar(25) NOT NULL,
   `model` varchar(25) NOT NULL,
@@ -38,7 +37,7 @@ CREATE TABLE `Cars` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=15 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
-CREATE TABLE `Client` (
+CREATE TABLE IF NOT EXISTS `Client` (
   `Id` int NOT NULL AUTO_INCREMENT,
   `First_name` varchar(45) NOT NULL,
   `Last_name` varchar(45) NOT NULL,
@@ -54,7 +53,7 @@ CREATE TABLE `Client` (
   `Salt` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`Id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-CREATE TABLE `Contact_info` (
+CREATE TABLE IF NOT EXISTS `Contact_info` (
   `name` varchar(45) NOT NULL,
   `addr_street` varchar(45) NOT NULL,
   `addr_number` int NOT NULL,
@@ -69,7 +68,7 @@ CREATE TABLE `Contact_info` (
   PRIMARY KEY (`name`),
   UNIQUE KEY `name_UNIQUE` (`name`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-CREATE TABLE `Employees` (
+CREATE TABLE IF NOT EXISTS `Employees` (
   `id` int NOT NULL AUTO_INCREMENT,
   `role` varchar(45) NOT NULL,
   `Gates_id` int DEFAULT NULL,
@@ -83,7 +82,7 @@ CREATE TABLE `Employees` (
   CONSTRAINT `fk_Flight_id` FOREIGN KEY (`Flight_id`) REFERENCES `Flights` (`id`),
   CONSTRAINT `fk_gates_id` FOREIGN KEY (`Gates_id`) REFERENCES `Gates` (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=23 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-CREATE TABLE `Equipment` (
+CREATE TABLE IF NOT EXISTS `Equipment` (
   `serial_no` varchar(10) NOT NULL,
   `name` varchar(45) NOT NULL,
   `type` varchar(45) NOT NULL,
@@ -93,7 +92,7 @@ CREATE TABLE `Equipment` (
   KEY `fk_Equipment_Personnel1_idx` (`Employee_id`),
   CONSTRAINT `fk_Equipment_Personnel1` FOREIGN KEY (`Employee_id`) REFERENCES `Employees` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-CREATE TABLE `Event_logs` (
+CREATE TABLE IF NOT EXISTS `Event_logs` (
   `id` int NOT NULL AUTO_INCREMENT,
   `table_name` varchar(255) NOT NULL,
   `by_user` varchar(255) NOT NULL,
@@ -102,7 +101,7 @@ CREATE TABLE `Event_logs` (
   `log_details` text,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=397 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-CREATE TABLE `Flight_data` (
+CREATE TABLE IF NOT EXISTS `Flight_data` (
   `id` int NOT NULL AUTO_INCREMENT,
   `altitude` int NOT NULL,
   `track` int NOT NULL,
@@ -115,7 +114,7 @@ CREATE TABLE `Flight_data` (
   UNIQUE KEY `Flight_id` (`Flight_id`),
   CONSTRAINT `Flight_data_ibfk_1` FOREIGN KEY (`Flight_id`) REFERENCES `Flights` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-CREATE TABLE `Flights` (
+CREATE TABLE IF NOT EXISTS `Flights` (
   `id` varchar(10) NOT NULL,
   `status` enum('SCHEDULED','WAITING','AIRBORNE','TAKE OFF','LANDING','FINISHED','CANCELED','DELAYED') NOT NULL DEFAULT 'SCHEDULED',
   `airline_name` varchar(25) NOT NULL,
@@ -128,13 +127,13 @@ CREATE TABLE `Flights` (
   KEY `fk_airplane_serial_no` (`airplane_serial_no`),
   CONSTRAINT `fk_airplane_serial_no` FOREIGN KEY (`airplane_serial_no`) REFERENCES `Airplanes` (`serial_no`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-CREATE TABLE `Gates` (
+CREATE TABLE IF NOT EXISTS `Gates` (
   `id` int NOT NULL AUTO_INCREMENT,
   `name` varchar(25) NOT NULL,
   `status` enum('CLOSED','BUSY','ON STAND','READY') NOT NULL DEFAULT 'READY',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-CREATE TABLE `Logowanie_log` (
+CREATE TABLE IF NOT EXISTS `Logowanie_log` (
   `id` int NOT NULL AUTO_INCREMENT,
   `first_name` varchar(255) DEFAULT NULL,
   `email` varchar(255) NOT NULL,
@@ -142,7 +141,7 @@ CREATE TABLE `Logowanie_log` (
   `login_details` text,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=162 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-CREATE TABLE `Luggage` (
+CREATE TABLE IF NOT EXISTS `Luggage` (
   `id` int NOT NULL AUTO_INCREMENT,
   `type` varchar(25) NOT NULL,
   `size` varchar(25) NOT NULL,
@@ -155,7 +154,7 @@ CREATE TABLE `Luggage` (
   CONSTRAINT `Luggage_ibfk_1` FOREIGN KEY (`Users_id`) REFERENCES `Users` (`id`) ON DELETE CASCADE,
   CONSTRAINT `Luggage_ibfk_2` FOREIGN KEY (`Flights_id`) REFERENCES `Flights` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-CREATE TABLE `Parking_info` (
+CREATE TABLE IF NOT EXISTS `Parking_info` (
   `pid` int NOT NULL AUTO_INCREMENT,
   `name` varchar(45) NOT NULL,
   `capacity` int NOT NULL,
@@ -166,7 +165,7 @@ CREATE TABLE `Parking_info` (
   `zip_code` varchar(45) NOT NULL,
   PRIMARY KEY (`pid`)
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-CREATE TABLE `Parking_reservations` (
+CREATE TABLE IF NOT EXISTS `Parking_reservations` (
   `id` int NOT NULL AUTO_INCREMENT,
   `parking_level` varchar(5) NOT NULL,
   `space_id` varchar(5) NOT NULL,
@@ -180,7 +179,7 @@ CREATE TABLE `Parking_reservations` (
   KEY `Users_id` (`Users_id`),
   CONSTRAINT `Parking_reservations_ibfk_1` FOREIGN KEY (`Users_id`) REFERENCES `Users` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB AUTO_INCREMENT=60 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-CREATE TABLE `Rentals` (
+CREATE TABLE IF NOT EXISTS `Rentals` (
   `id` int NOT NULL AUTO_INCREMENT,
   `since` date NOT NULL,
   `until` date NOT NULL,
@@ -195,7 +194,7 @@ CREATE TABLE `Rentals` (
   CONSTRAINT `Rentals_ibfk_2` FOREIGN KEY (`Cars_id`) REFERENCES `Cars` (`id`),
   CONSTRAINT `Rentals_ibfk_3` FOREIGN KEY (`Users_id`) REFERENCES `Users` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB AUTO_INCREMENT=27 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-CREATE TABLE `Reset_password` (
+CREATE TABLE IF NOT EXISTS `Reset_password` (
   `id` int NOT NULL AUTO_INCREMENT,
   `token` varchar(255) NOT NULL,
   `Users_id` int NOT NULL,
@@ -205,7 +204,7 @@ CREATE TABLE `Reset_password` (
   KEY `Users_id` (`Users_id`),
   CONSTRAINT `Reset_password_ibfk_1` FOREIGN KEY (`Users_id`) REFERENCES `Users` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-CREATE TABLE `Runways` (
+CREATE TABLE IF NOT EXISTS `Runways` (
   `id` varchar(8) NOT NULL,
   `length` int NOT NULL,
   `is_available` tinyint(1) NOT NULL DEFAULT '1',
@@ -216,7 +215,7 @@ CREATE TABLE `Runways` (
   UNIQUE KEY `flight_id` (`Flight_id`),
   CONSTRAINT `fk_Flight_id_runway` FOREIGN KEY (`Flight_id`) REFERENCES `Flights` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-CREATE TABLE `Taxiways` (
+CREATE TABLE IF NOT EXISTS `Taxiways` (
   `id` varchar(8) NOT NULL,
   `is_available` tinyint(1) NOT NULL DEFAULT '1',
   `status` enum('CLOSED','OCCUPIED','READY') NOT NULL DEFAULT 'READY',
@@ -226,7 +225,7 @@ CREATE TABLE `Taxiways` (
   UNIQUE KEY `flight_id` (`Flight_id`),
   CONSTRAINT `fk_Flight_id_taxiway` FOREIGN KEY (`Flight_id`) REFERENCES `Flights` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-CREATE TABLE `Terminals` (
+CREATE TABLE IF NOT EXISTS `Terminals` (
   `id` int NOT NULL AUTO_INCREMENT,
   `is_available` tinyint(1) NOT NULL DEFAULT '1',
   `num_of_stations` int NOT NULL DEFAULT '1',
@@ -236,7 +235,7 @@ CREATE TABLE `Terminals` (
   UNIQUE KEY `uc_Flight_id` (`Flight_id`),
   UNIQUE KEY `flight_id` (`Flight_id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-CREATE TABLE `Tickets` (
+CREATE TABLE IF NOT EXISTS `Tickets` (
   `id` int NOT NULL AUTO_INCREMENT,
   `purchase_time` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
   `update_time` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
@@ -255,7 +254,7 @@ CREATE TABLE `Tickets` (
   CONSTRAINT `fk_Users_uid_users` FOREIGN KEY (`Users_id`) REFERENCES `Users` (`id`),
   CONSTRAINT `Tickets_ibfk_1` FOREIGN KEY (`Flight_id`) REFERENCES `Flights` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB AUTO_INCREMENT=25 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-CREATE TABLE `Users` (
+CREATE TABLE IF NOT EXISTS `Users` (
   `id` int NOT NULL AUTO_INCREMENT,
   `email` varchar(255) NOT NULL,
   `password` varchar(255) NOT NULL,

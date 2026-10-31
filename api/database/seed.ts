@@ -1,15 +1,35 @@
 import fs from "fs/promises";
+import fsSync from "fs";
 import path from "path";
 import dotenv from "dotenv";
 import { createDatabaseConnection, splitSqlStatements } from "./client";
 
 dotenv.config();
+dotenv.config({ path: path.resolve(process.cwd(), "../.env") });
+dotenv.config({ path: path.resolve(process.cwd(), ".env") });
 
-const seedFile = path.join(__dirname, "seeds", "20260206122000_reference_data.sql");
+function resolveSeedFile(): string {
+  const candidateFiles = [
+    path.join(__dirname, "seeds", "20260206122000_reference_data.sql"),
+    path.resolve(__dirname, "../../database/seeds/20260206122000_reference_data.sql"),
+    path.resolve(__dirname, "../database/seeds/20260206122000_reference_data.sql"),
+    path.resolve(process.cwd(), "database/seeds/20260206122000_reference_data.sql"),
+    path.resolve(process.cwd(), "api/database/seeds/20260206122000_reference_data.sql"),
+  ];
+
+  for (const file of candidateFiles) {
+    if (fsSync.existsSync(file)) {
+      return file;
+    }
+  }
+
+  return path.join(__dirname, "seeds", "20260206122000_reference_data.sql");
+}
 
 async function seed(): Promise<void> {
   const connection = await createDatabaseConnection();
   try {
+    const seedFile = resolveSeedFile();
     const contents = await fs.readFile(seedFile, "utf8");
     const statements = splitSqlStatements(contents);
     await connection.beginTransaction();

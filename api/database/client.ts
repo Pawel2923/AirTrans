@@ -5,12 +5,14 @@ import dotenv from "dotenv";
 
 export function loadEnv(): void {
   dotenv.config();
+  const explicitEnvFile = process.env["ENV_FILE"];
   const candidatePaths = [
+    explicitEnvFile ? path.resolve(process.cwd(), explicitEnvFile) : undefined,
     path.resolve(process.cwd(), ".env"),
     path.resolve(process.cwd(), "../.env"),
     path.resolve(__dirname, "../../.env"),
     path.resolve(__dirname, "../../../.env"),
-  ];
+  ].filter((p): p is string => Boolean(p));
 
   for (const envPath of candidatePaths) {
     if (fs.existsSync(envPath)) {

@@ -2,7 +2,7 @@ services:
   mysqldb:
     image: mysql:latest
     restart: unless-stopped
-    env_file: ./.env
+    env_file: ${ENV_FILE:-./.env}
     environment:
       - MYSQL_ROOT_PASSWORD=$MYSQLDB_ROOT_PASSWORD
       - MYSQL_DATABASE=$MYSQLDB_DATABASE
@@ -15,7 +15,7 @@ services:
     command: --secure-file-priv="/db-dump/"
       --default-time-zone=+02:00
     healthcheck:
-      test: ["CMD-SHELL", "mysqladmin ping -h localhost -uroot -p$$MYSQL_ROOT_PASSWORD --silent"]
+      test: ["CMD-SHELL", "mysqladmin status -h localhost -uroot -p$$MYSQL_ROOT_PASSWORD --silent"]
       interval: 5s
       timeout: 5s
       retries: 20
@@ -30,7 +30,7 @@ services:
       context: ./api
       dockerfile: Dockerfile
     restart: unless-stopped
-    env_file: ./.env
+    env_file: ${ENV_FILE:-./.env}
     ports:
       - $API_PUBLISHED_PORT:$API_INTERNAL_PORT
     environment:
@@ -61,13 +61,13 @@ services:
       context: ./api
       dockerfile: Dockerfile
     restart: "no"
-    env_file: ./.env
+    env_file: ${ENV_FILE:-./.env}
     environment:
       - DB_HOST=mysqldb
-      - DB_MIGRATION_USER=root
-      - DB_MIGRATION_PASSWORD=$MYSQLDB_ROOT_PASSWORD
-      - DB_NAME=$MYSQLDB_DATABASE
-      - DB_PORT=$MYSQLDB_INTERNAL_PORT
+      - DB_MIGRATION_USER=${DB_MIGRATION_USER:-root}
+      - DB_MIGRATION_PASSWORD=${DB_MIGRATION_PASSWORD:-$MYSQLDB_ROOT_PASSWORD}
+      - DB_NAME=${DB_NAME:-$MYSQLDB_DATABASE}
+      - DB_PORT=${DB_PORT:-$MYSQLDB_INTERNAL_PORT}
     command: ["npm", "run", "db:setup"]
     networks:
       - backend

@@ -47,8 +47,8 @@ services:
       - UI_ORIGIN=$UI_ORIGIN
     volumes:
       - ./api/files:/api/files
-      - /etc/ssl/certs/cloudflare-origin.pem:/api/ssl/fullchain.pem:ro
-      - /etc/ssl/private/cloudflare-origin.key:/api/ssl/privkey.key:ro
+      - ${SSL_CERT_PATH:-/etc/ssl/certs/cloudflare-origin.pem}:/api/ssl/fullchain.pem:ro
+      - ${SSL_KEY_PATH:-/etc/ssl/private/cloudflare-origin.key}:/api/ssl/privkey.key:ro
     networks:
       - backend
       - frontend
@@ -86,8 +86,8 @@ services:
       - ./ui/src:/ui/src
       - ./ui/public:/ui/public
       - ./ui/index.html:/ui/index.html
-      - /etc/ssl/certs/cloudflare-origin.pem:/etc/nginx/ssl/fullchain.pem:ro
-      - /etc/ssl/private/cloudflare-origin.key:/etc/nginx/ssl/privkey.key:ro
+      - ${SSL_CERT_PATH:-/etc/ssl/certs/cloudflare-origin.pem}:/etc/nginx/ssl/fullchain.pem:ro
+      - ${SSL_KEY_PATH:-/etc/ssl/private/cloudflare-origin.key}:/etc/nginx/ssl/privkey.key:ro
     environment:
       - TZ=Europe/Warsaw
       - UI_PROTOCOL=$UI_PROTOCOL

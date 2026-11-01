@@ -21,8 +21,9 @@
     schema_migrations does not record the migration, leaving the database in an inconsistent state.
     • Resolution: Updated migrate.ts to track executed statement count, handle implicit DDL commits during rollback gracefully, and emit a clear warning with statement indices and remediation guidance if a multi-statement migration fails midway. Documented best practices in README.md (single-statement migrations, idempotent DDL, and partial DDL remediation procedures).
 
-#### Issue 6: Missing SSL Bind Mounts Crash API in Staging / Prod (Configuration)
+#### [RESOLVED] Issue 6: Missing SSL Bind Mounts Crash API in Staging / Prod (Configuration)
 
     • Problem: docker-compose.staging.yml and docker-compose.prod.yml bind mount /etc/ssl/certs/cloudflare-origin.pem. On systems without
     those certificate files, Docker creates directories on the host, which causes server.ts to fail with EISDIR: illegal operation on a
     directory, read.
+    • Resolution: Updated server.ts to verify that SSL certificate files are regular files (isRegularFile with size > 0) rather than directories, safely falling back to HTTP mode when valid certificates are absent. Configured SSL_CERT_PATH and SSL_KEY_PATH as environment variables in compose files and documented them in .env.example.

@@ -1,11 +1,7 @@
-import path from "path";
 import mysql from "mysql2/promise";
-import dotenv from "dotenv";
-import { createDatabaseConnection } from "./client";
+import { createDatabaseConnection, loadEnv } from "./client";
 
-dotenv.config();
-dotenv.config({ path: path.resolve(process.cwd(), "../.env") });
-dotenv.config({ path: path.resolve(process.cwd(), ".env") });
+loadEnv();
 
 const database = process.env["DB_NAME"] ?? process.env["MYSQLDB_DATABASE"] ?? "AirTrans";
 const host = process.env["DB_USER_HOST"] ?? "172.%";

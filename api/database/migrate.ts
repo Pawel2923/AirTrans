@@ -3,12 +3,9 @@ import fs from "fs/promises";
 import fsSync from "fs";
 import path from "path";
 import { Connection, ResultSetHeader, RowDataPacket } from "mysql2/promise";
-import dotenv from "dotenv";
-import { createDatabaseConnection, splitSqlStatements } from "./client";
+import { createDatabaseConnection, loadEnv, splitSqlStatements } from "./client";
 
-dotenv.config();
-dotenv.config({ path: path.resolve(process.cwd(), "../.env") });
-dotenv.config({ path: path.resolve(process.cwd(), ".env") });
+loadEnv();
 
 interface MigrationFile {
   version: string;

@@ -1,10 +1,25 @@
-import mysql, { ConnectionOptions } from "mysql2/promise";
+import fs from "fs";
 import path from "path";
+import mysql, { ConnectionOptions } from "mysql2/promise";
 import dotenv from "dotenv";
 
-dotenv.config();
-dotenv.config({ path: path.resolve(process.cwd(), "../.env") });
-dotenv.config({ path: path.resolve(process.cwd(), ".env") });
+export function loadEnv(): void {
+  dotenv.config();
+  const candidatePaths = [
+    path.resolve(process.cwd(), ".env"),
+    path.resolve(process.cwd(), "../.env"),
+    path.resolve(__dirname, "../../.env"),
+    path.resolve(__dirname, "../../../.env"),
+  ];
+
+  for (const envPath of candidatePaths) {
+    if (fs.existsSync(envPath)) {
+      dotenv.config({ path: envPath });
+    }
+  }
+}
+
+loadEnv();
 
 export function getDatabaseConfig(): ConnectionOptions {
   const password = process.env["DB_MIGRATION_PASSWORD"] ?? process.env["MYSQLDB_ROOT_PASSWORD"];

@@ -12,7 +12,7 @@
     "db:seed": "node dist/database/seed.js",
     "db:provision-users": "node dist/database/provision-users.js",
     "db:setup": "node dist/database/migrate.js && node dist/database/provision-users.js",
-    "build": "tsc",
+    "build": "tsc && node -e \"fs.cpSync('database/migrations', 'dist/database/migrations', {recursive: true}); fs.cpSync('database/seeds', 'dist/database/seeds', {recursive: true})\"",
     "lint": "eslint --ext .ts,.tsx,.js,.jsx ./ --report-unused-disable-directives --max-warnings 0",
     "fix": "eslint --ext .ts,.tsx,.js,.jsx ./ --report-unused-disable-directives --max-warnings 0 --fix",
     "format": "npx prettier --write ."

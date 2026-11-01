@@ -5,16 +5,13 @@
   • Resolution: Added npm run db:setup (chaining db:migrate && db:provision-users) and updated migrations service command in docker-compose.yml,
   docker-compose.staging.yml, and docker-compose.prod.yml to use npm run db:setup. Updated provision-users.ts with multi-path dotenv loading and FLUSH PRIVILEGES.
 
-#### Issue 3: Local CLI Workflow Fails Out-of-the-Box (Medium)
+#### [RESOLVED] Issue 3: Local CLI Workflow Fails Out-of-the-Box (Medium)
 
     When following README.md locally (npm run build && npm run db:migrate outside Docker):
 
-    1. Missing SQL files in dist: tsc only transpiles .ts to .js; it does not copy .sql files into dist/database/migrations. The runner
-    throws ENOENT: no such file or directory, scandir .../dist/database/migrations.
-    2. Missing environment variables: migrate.ts calls dotenv.config() without specifying a path, looking only for api/.env rather than the
-    root .env.
-    3. Port mismatch on host: client.ts defaults to port 3306 (MYSQLDB_INTERNAL_PORT), but Docker publishes MySQL to port 3307
-    (MYSQLDB_PUBLISHED_PORT), causing connection timeouts when connecting from localhost.
+    1. Missing SQL files in dist: Updated npm run build to transpile TS and copy migrations/seeds SQL assets to dist/database via fs.cpSync, along with runtime fallback to source directories.
+    2. Missing environment variables: Centralized loadEnv() across database scripts to scan parent and root directories for .env.
+    3. Port mismatch on host: Updated client.ts to detect localhost / 127.0.0.1 and default to MYSQLDB_PUBLISHED_PORT (3307) unless DB_PORT is explicitly set.
 
 
 #### Issue 5: MySQL DDL Transactions Cannot Roll Back (Medium)

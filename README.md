@@ -101,6 +101,7 @@ Można również uruchomić poszczególne kroki osobno:
 
 ```bash
 npm run db:migrate           # wykonuje tylko migracje schematu
+npm run db:migrate:baseline  # rejestruje bazowy schemat bez ponownego wykonywania DDL (istniejąca baza)
 npm run db:provision-users   # konfiguruje konta, role i uprawnienia
 npm run db:seed              # (opcjonalnie) ładuje dane referencyjne
 ```

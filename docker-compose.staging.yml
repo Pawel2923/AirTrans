@@ -68,7 +68,7 @@ services:
       - DB_MIGRATION_PASSWORD=$MYSQLDB_ROOT_PASSWORD
       - DB_NAME=$MYSQLDB_DATABASE
       - DB_PORT=$MYSQLDB_INTERNAL_PORT
-    command: ["npm", "run", "db:migrate"]
+    command: ["npm", "run", "db:setup"]
     networks:
       - backend
 

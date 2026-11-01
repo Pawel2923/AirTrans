@@ -1,9 +1,9 @@
-#### Issue 2: api Service Fails on Fresh Boot Until Users Are Manually Provisioned (High)
+#### [RESOLVED] Issue 2: api Service Fails on Fresh Boot Until Users Are Manually Provisioned (High)
 
   • Problem: The migrations container in Docker Compose only executes npm run db:migrate. It does not execute npm run db:provision-users.
   On a clean start, API queries fail with Access denied for user 'client'@'172.x.x.x' until db:provision-users is invoked out-of-band.
-  • Remediation: Chain npm run db:migrate && npm run db:provision-users in the compose command for migrations or within an initialization
-  script.
+  • Resolution: Added npm run db:setup (chaining db:migrate && db:provision-users) and updated migrations service command in docker-compose.yml,
+  docker-compose.staging.yml, and docker-compose.prod.yml to use npm run db:setup. Updated provision-users.ts with multi-path dotenv loading and FLUSH PRIVILEGES.
 
 #### Issue 3: Local CLI Workflow Fails Out-of-the-Box (Medium)
 

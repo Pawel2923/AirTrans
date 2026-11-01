@@ -1,11 +1,14 @@
+import path from "path";
 import mysql from "mysql2/promise";
 import dotenv from "dotenv";
 import { createDatabaseConnection } from "./client";
 
 dotenv.config();
+dotenv.config({ path: path.resolve(process.cwd(), "../.env") });
+dotenv.config({ path: path.resolve(process.cwd(), ".env") });
 
 const database = process.env["DB_NAME"] ?? process.env["MYSQLDB_DATABASE"] ?? "AirTrans";
-const host = "172.%";
+const host = process.env["DB_USER_HOST"] ?? "172.%";
 const databaseIdentifier = mysql.escapeId(database);
 
 const accounts = [
@@ -144,6 +147,7 @@ async function provisionUsers(): Promise<void> {
     await connection.query(
       `GRANT DELETE ON ${databaseIdentifier}.Rentals TO ${mysql.escapeId("rental_staff")}@'${host}'`
     );
+    await connection.query("FLUSH PRIVILEGES");
     console.log("Database users, roles, and grants are up to date.");
   } finally {
     await connection.end();

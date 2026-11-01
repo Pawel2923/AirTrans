@@ -84,7 +84,7 @@ Aplikacja używa wersjonowanych migracji SQL znajdujących się w [`api/database
 Migracje tworzą tabele, widok, funkcje, procedury i wyzwalacze. Każda migracja jest wykonywana tylko raz,
 a jej suma kontrolna jest sprawdzana przy każdym kolejnym uruchomieniu.
 
-Przy uruchamianiu przez Docker Compose usługa `migrations` wykonuje migracje przed uruchomieniem API:
+Przy uruchamianiu przez Docker Compose usługa `migrations` automatycznie wykonuje migracje oraz konfigurację ról i użytkowników (`npm run db:setup`) przed uruchomieniem API:
 
 ```bash
 docker compose up --build
@@ -94,19 +94,15 @@ Polecenia można też uruchomić ręcznie z katalogu [`api`](/api/):
 
 ```bash
 npm run build
-npm run db:migrate
+npm run db:setup
 ```
 
-Konfiguracja kont, ról i uprawnień jest oddzielona od migracji i wymaga jawnego uruchomienia:
+Można również uruchomić poszczególne kroki osobno:
 
 ```bash
-npm run db:provision-users
-```
-
-Eksportowane dane referencyjne są opcjonalne i nie są częścią migracji schematu:
-
-```bash
-npm run db:seed
+npm run db:migrate           # wykonuje tylko migracje schematu
+npm run db:provision-users   # konfiguruje konta, role i uprawnienia
+npm run db:seed              # (opcjonalnie) ładuje dane referencyjne
 ```
 
 ### Modyfikowanie schematu bazy danych

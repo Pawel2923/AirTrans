@@ -11,6 +11,7 @@
     "db:migrate:baseline": "node dist/database/migrate.js --baseline",
     "db:seed": "node dist/database/seed.js",
     "db:provision-users": "node dist/database/provision-users.js",
+    "db:setup": "node dist/database/migrate.js && node dist/database/provision-users.js",
     "build": "tsc",
     "lint": "eslint --ext .ts,.tsx,.js,.jsx ./ --report-unused-disable-directives --max-warnings 0",
     "fix": "eslint --ext .ts,.tsx,.js,.jsx ./ --report-unused-disable-directives --max-warnings 0 --fix",

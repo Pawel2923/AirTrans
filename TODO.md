@@ -14,13 +14,12 @@
     3. Port mismatch on host: Updated client.ts to detect localhost / 127.0.0.1 and default to MYSQLDB_PUBLISHED_PORT (3307) unless DB_PORT is explicitly set.
 
 
-#### Issue 5: MySQL DDL Transactions Cannot Roll Back (Medium)
+#### [RESOLVED] Issue 5: MySQL DDL Transactions Cannot Roll Back (Medium)
 
     • Problem: migrate.ts:86-99 wraps statements in connection.beginTransaction() and connection.rollback(). In MySQL, DDL statements
     (CREATE, ALTER, DROP) trigger an implicit commit. If a migration fails on statement 3 of 5, statements 1 and 2 remain applied, but
     schema_migrations does not record the migration, leaving the database in an inconsistent state.
-    • Remediation: Emphasize single-statement migrations or idempotent DDL, and document that partial DDL migrations require manual
-    remediation.
+    • Resolution: Updated migrate.ts to track executed statement count, handle implicit DDL commits during rollback gracefully, and emit a clear warning with statement indices and remediation guidance if a multi-statement migration fails midway. Documented best practices in README.md (single-statement migrations, idempotent DDL, and partial DDL remediation procedures).
 
 #### Issue 6: Missing SSL Bind Mounts Crash API in Staging / Prod (Configuration)
 

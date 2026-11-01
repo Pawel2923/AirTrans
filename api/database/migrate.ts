@@ -132,9 +132,15 @@ async function applyMigration(connection: Connection, migration: MigrationFile):
   console.log(`Applying ${migration.filename} (${statements.length} statements)...`);
 
   await connection.beginTransaction();
+  let executedCount = 0;
   try {
-    for (const statement of statements) {
+    for (let i = 0; i < statements.length; i++) {
+      const statement = statements[i];
+      if (!statement) {
+        continue;
+      }
       await connection.query(statement);
+      executedCount++;
     }
     await connection.query<ResultSetHeader>(
       "INSERT INTO schema_migrations (version, name, checksum) VALUES (?, ?, ?)",
@@ -142,8 +148,25 @@ async function applyMigration(connection: Connection, migration: MigrationFile):
     );
     await connection.commit();
   } catch (error: unknown) {
-    await connection.rollback();
-    throw new Error(`Migration ${migration.filename} failed.`, { cause: error });
+    try {
+      await connection.rollback();
+    } catch {
+      // In MySQL, DDL statements trigger implicit commits; rollback may fail or be a no-op
+    }
+
+    if (executedCount > 0) {
+      console.warn(
+        `\n[WARNING] Migration ${migration.filename} failed on statement ${executedCount + 1}/${statements.length}.\n` +
+          `In MySQL, DDL statements (CREATE, ALTER, DROP) trigger implicit commits.\n` +
+          `Statements 1..${executedCount} were executed and cannot be rolled back automatically.\n` +
+          `Manual remediation or an idempotent fix may be required before retrying.\n`
+      );
+    }
+
+    throw new Error(
+      `Migration ${migration.filename} failed on statement ${executedCount + 1}/${statements.length}.`,
+      { cause: error }
+    );
   }
 }
 

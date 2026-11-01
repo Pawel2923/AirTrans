@@ -172,6 +172,22 @@ Przed wysłaniem zmiany:
 4. Nie usuwaj ani nie zmieniaj historycznych plików migracji. Błędy w migracji naprawiaj nową
    migracją korygującą.
 
+#### Transakcje DDL w MySQL i obsługa błędów częściowych
+
+W silniku MySQL operacje DDL (`CREATE`, `ALTER`, `DROP`, `RENAME`) wywołują niejawne zatwierdzenie transakcji (*implicit commit*). Z tego powodu MySQL nie pozwala na atomowe wycofanie (`ROLLBACK`) zmian strukturalnych, jeśli błąd wystąpi w trakcie wieloinstrukcyjnej migracji.
+
+Aby uniknąć niespójności:
+
+1. **Stosuj migracje pojedynczych instrukcji (Single-statement migrations)**:
+   Każdą operację DDL (np. dodanie nowej kolumny, utworzenie nowej tabeli) umieszczaj w osobnym, dedykowanym pliku migracji.
+2. **Dbaj o idempotentność DDL**:
+   Tam, gdzie to możliwe, używaj klauzul idempotentnych: `CREATE TABLE IF NOT EXISTS`, `CREATE TRIGGER IF NOT EXISTS`, `CREATE OR REPLACE VIEW`, a dla procedur i funkcji: `DROP PROCEDURE/FUNCTION IF EXISTS` przed definicją.
+3. **Procedura w przypadku częściowego wykonania (Partial DDL Remediation)**:
+   Jeśli wieloinstrukcyjna migracja zakończy się błędem na jednej z kolejnych instrukcji:
+   - Poprzednie instrukcje zostały już zatwierdzone w bazie danych, ale migracja **nie** została odnotowana w tabeli `schema_migrations`.
+   - Runner migracji wyświetli ostrzeżenie wskazujące numer instrukcji, która zawiodła, oraz informację o wykonanych krokach.
+   - Należy manualnie zweryfikować stan bazy, cofnąć częściowe zmiany lub dostosować plik migracji, aby był idempotentny przy ponownym uruchomieniu, a następnie ponowić `npm run db:migrate`.
+
 Pliki w [`db-dump`](/db-dump/) są historycznymi eksportami do celów referencyjnych. Nie należy ich używać
 jako podstawowej procedury aktualizacji schematu ani importować ich na istniejącą bazę produkcyjną.
 

@@ -37,7 +37,11 @@ async function seed(): Promise<void> {
       await connection.commit();
       console.log(`Applied ${path.basename(seedFile)} (${statements.length} statements).`);
     } catch (error: unknown) {
-      await connection.rollback();
+      try {
+        await connection.rollback();
+      } catch {
+        // Ignore rollback failure
+      }
       throw new Error(`Seed file ${path.basename(seedFile)} failed.`, { cause: error });
     }
   } finally {

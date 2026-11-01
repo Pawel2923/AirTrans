@@ -17,10 +17,16 @@ services:
     command: 
       --secure-file-priv="/db-dump/"
       --default-time-zone=+02:00
+    healthcheck:
+      test: ["CMD-SHELL", "mysqladmin ping -h localhost -uroot -p$$MYSQL_ROOT_PASSWORD --silent"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
     hostname: mysqldb
   api:
     depends_on:
-      - mysqldb
+      migrations:
+        condition: service_completed_successfully
     build: ./api
     restart: unless-stopped
     env_file: ./.env
@@ -43,6 +49,22 @@ services:
     networks:
       - backend
       - frontend
+  migrations:
+    depends_on:
+      mysqldb:
+        condition: service_healthy
+    build: ./api
+    restart: "no"
+    env_file: ./.env
+    environment:
+      - DB_HOST=mysqldb
+      - DB_MIGRATION_USER=root
+      - DB_MIGRATION_PASSWORD=$MYSQLDB_ROOT_PASSWORD
+      - DB_NAME=$MYSQLDB_DATABASE
+      - DB_PORT=$MYSQLDB_INTERNAL_PORT
+    command: ["npm", "run", "db:setup"]
+    networks:
+      - backend
   ui:
     depends_on:
       - api

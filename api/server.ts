@@ -95,27 +95,44 @@ app.use((err: Err, _req: Request, res: Response, _next: NextFunction): any => {
   return;
 });
 
-// Check if SSL certificates exist
-const sslKeyPath = "./ssl/privkey.key";
-const sslCertPath = "./ssl/fullchain.pem";
+function isRegularFile(filePath: string): boolean {
+  try {
+    return fs.existsSync(filePath) && fs.statSync(filePath).isFile() && fs.statSync(filePath).size > 0;
+  } catch {
+    return false;
+  }
+}
 
-if (fs.existsSync(sslKeyPath) && fs.existsSync(sslCertPath)) {
-  // SSL certificates available - run HTTPS server
-  const privateKey = fs.readFileSync(sslKeyPath);
-  const certificate = fs.readFileSync(sslCertPath);
-  const credentials = { key: privateKey, cert: certificate };
+// Check if SSL certificates exist and are valid files
+const sslKeyPath = process.env["SSL_KEY_PATH"] || "./ssl/privkey.key";
+const sslCertPath = process.env["SSL_CERT_PATH"] || "./ssl/fullchain.pem";
 
-  const httpsServer = https.createServer(credentials, app);
+if (isRegularFile(sslKeyPath) && isRegularFile(sslCertPath)) {
+  try {
+    // SSL certificates available - run HTTPS server
+    const privateKey = fs.readFileSync(sslKeyPath);
+    const certificate = fs.readFileSync(sslCertPath);
+    const credentials = { key: privateKey, cert: certificate };
 
-  const SSLPORT = process.env["API_INTERNAL_PORT"] || 8080;
-  httpsServer.listen(SSLPORT, () => {
-    console.log(`HTTPS Server is running on port ${SSLPORT}.`);
-  });
+    const httpsServer = https.createServer(credentials, app);
+
+    const SSLPORT = process.env["API_INTERNAL_PORT"] || 8080;
+    httpsServer.listen(SSLPORT, () => {
+      console.log(`HTTPS Server is running on port ${SSLPORT}.`);
+    });
+  } catch (error: unknown) {
+    console.error("Failed to start HTTPS server with provided certificates:", error);
+    console.log("Falling back to HTTP mode...");
+    const PORT = process.env["API_INTERNAL_PORT"] || 8080;
+    app.listen(PORT, () => {
+      console.log(`HTTP Server is running on port ${PORT}.`);
+    });
+  }
 } else {
-  // No SSL certificates - run HTTP server for development
+  // No valid SSL certificates - run HTTP server for development / staging fallback
   const PORT = process.env["API_INTERNAL_PORT"] || 8080;
   app.listen(PORT, () => {
     console.log(`HTTP Server is running on port ${PORT}.`);
-    console.log("Warning: Running in HTTP mode - SSL certificates not found");
+    console.log("Warning: Running in HTTP mode - SSL certificates not found or not valid files");
   });
 }

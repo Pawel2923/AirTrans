@@ -14,11 +14,17 @@ services:
       - backend
     command: --secure-file-priv="/db-dump/"
       --default-time-zone=+02:00
+    healthcheck:
+      test: ["CMD-SHELL", "mysqladmin ping -h localhost -uroot -p$$MYSQL_ROOT_PASSWORD --silent"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
     hostname: mysqldb
 
   api:
     depends_on:
-      - mysqldb
+      migrations:
+        condition: service_completed_successfully
     image: pawel2923/airtrans-api:staging
     build:
       context: ./api
@@ -41,11 +47,30 @@ services:
       - UI_ORIGIN=$UI_ORIGIN
     volumes:
       - ./api/files:/api/files
-      - /etc/ssl/certs/cloudflare-origin.pem:/api/ssl/fullchain.pem:ro
-      - /etc/ssl/private/cloudflare-origin.key:/api/ssl/privkey.key:ro
+      - ${SSL_CERT_PATH:-/etc/ssl/certs/cloudflare-origin.pem}:/api/ssl/fullchain.pem:ro
+      - ${SSL_KEY_PATH:-/etc/ssl/private/cloudflare-origin.key}:/api/ssl/privkey.key:ro
     networks:
       - backend
       - frontend
+  migrations:
+    depends_on:
+      mysqldb:
+        condition: service_healthy
+    image: pawel2923/airtrans-api:staging
+    build:
+      context: ./api
+      dockerfile: Dockerfile
+    restart: "no"
+    env_file: ./.env
+    environment:
+      - DB_HOST=mysqldb
+      - DB_MIGRATION_USER=root
+      - DB_MIGRATION_PASSWORD=$MYSQLDB_ROOT_PASSWORD
+      - DB_NAME=$MYSQLDB_DATABASE
+      - DB_PORT=$MYSQLDB_INTERNAL_PORT
+    command: ["npm", "run", "db:setup"]
+    networks:
+      - backend
 
   ui:
     image: pawel2923/airtrans-ui:staging
@@ -61,8 +86,8 @@ services:
       - ./ui/src:/ui/src
       - ./ui/public:/ui/public
       - ./ui/index.html:/ui/index.html
-      - /etc/ssl/certs/cloudflare-origin.pem:/etc/nginx/ssl/fullchain.pem:ro
-      - /etc/ssl/private/cloudflare-origin.key:/etc/nginx/ssl/privkey.key:ro
+      - ${SSL_CERT_PATH:-/etc/ssl/certs/cloudflare-origin.pem}:/etc/nginx/ssl/fullchain.pem:ro
+      - ${SSL_KEY_PATH:-/etc/ssl/private/cloudflare-origin.key}:/etc/nginx/ssl/privkey.key:ro
     environment:
       - TZ=Europe/Warsaw
       - UI_PROTOCOL=$UI_PROTOCOL

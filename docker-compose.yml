@@ -18,7 +18,7 @@ services:
       --secure-file-priv="/db-dump/"
       --default-time-zone=+02:00
     healthcheck:
-      test: ["CMD-SHELL", "mysqladmin ping -h localhost -uroot -p$$MYSQL_ROOT_PASSWORD --silent"]
+      test: ["CMD-SHELL", "mysqladmin status -h localhost -uroot -p$$MYSQL_ROOT_PASSWORD --silent"]
       interval: 5s
       timeout: 5s
       retries: 20
@@ -58,10 +58,10 @@ services:
     env_file: ./.env
     environment:
       - DB_HOST=mysqldb
-      - DB_MIGRATION_USER=root
-      - DB_MIGRATION_PASSWORD=$MYSQLDB_ROOT_PASSWORD
-      - DB_NAME=$MYSQLDB_DATABASE
-      - DB_PORT=$MYSQLDB_INTERNAL_PORT
+      - DB_MIGRATION_USER=${DB_MIGRATION_USER:-root}
+      - DB_MIGRATION_PASSWORD=${DB_MIGRATION_PASSWORD:-$MYSQLDB_ROOT_PASSWORD}
+      - DB_NAME=${DB_NAME:-$MYSQLDB_DATABASE}
+      - DB_PORT=${DB_PORT:-$MYSQLDB_INTERNAL_PORT}
     command: ["npm", "run", "db:setup"]
     networks:
       - backend

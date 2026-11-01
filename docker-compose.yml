@@ -8,7 +8,7 @@ services:
       - MYSQL_DATABASE=$MYSQLDB_DATABASE
       - TZ=Europe/Warsaw
     ports:
-      - $MYSQLDB_LOCAL_PORT:$MYSQLDB_DOCKER_PORT
+      - $MYSQLDB_PUBLISHED_PORT:$MYSQLDB_INTERNAL_PORT
     volumes:
       - db:/var/lib/mysql
       - ./db-dump:/db-dump
@@ -17,15 +17,21 @@ services:
     command: 
       --secure-file-priv="/db-dump/"
       --default-time-zone=+02:00
+    healthcheck:
+      test: ["CMD-SHELL", "mysqladmin ping -h localhost -uroot -p$$MYSQL_ROOT_PASSWORD --silent"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
     hostname: mysqldb
   api:
     depends_on:
-      - mysqldb
+      migrations:
+        condition: service_completed_successfully
     build: ./api
     restart: unless-stopped
     env_file: ./.env
     ports:
-      - $NODE_LOCAL_PORT:$NODE_DOCKER_PORT
+      - $API_PUBLISHED_PORT:$API_INTERNAL_PORT
     environment:
       - DB_HOST=mysqldb
       - DB_ADMIN_PASSWORD=$MYSQLDB_ADMIN_PASSWORD
@@ -36,13 +42,29 @@ services:
       - DB_PARKING_STAFF_PASSWORD=$MYSQLDB_PARKING_STAFF_PASSWORD
       - DB_RENTAL_STAFF_PASSWORD=$MYSQLDB_RENTAL_STAFF_PASSWORD
       - DB_NAME=$MYSQLDB_DATABASE
-      - DB_PORT=$MYSQLDB_DOCKER_PORT
-      - CLIENT_ORIGIN=$CLIENT_ORIGIN
+      - DB_PORT=$MYSQLDB_INTERNAL_PORT
+      - UI_ORIGIN=$UI_ORIGIN
     volumes:
       - ./api/files:/api/files
     networks:
       - backend
       - frontend
+  migrations:
+    depends_on:
+      mysqldb:
+        condition: service_healthy
+    build: ./api
+    restart: "no"
+    env_file: ./.env
+    environment:
+      - DB_HOST=mysqldb
+      - DB_MIGRATION_USER=root
+      - DB_MIGRATION_PASSWORD=$MYSQLDB_ROOT_PASSWORD
+      - DB_NAME=$MYSQLDB_DATABASE
+      - DB_PORT=$MYSQLDB_INTERNAL_PORT
+    command: ["npm", "run", "db:setup"]
+    networks:
+      - backend
   ui:
     depends_on:
       - api
@@ -52,14 +74,19 @@ services:
     build:
       context: ./ui
       dockerfile: Dockerfile.dev
+      args:
+        - VITE_MODE=development
+        - VITE_API_ORIGIN=$API_ORIGIN
+    restart: unless-stopped
     environment:
       - TZ=Europe/Warsaw
-      - REACT_DOCKER_PORT=$REACT_DOCKER_PORT
-      - USE_SSL=false
+      - UI_INTERNAL_PORT=$UI_INTERNAL_PORT
+      - UI_PUBLISHED_PORT=$UI_PUBLISHED_PORT
       - CHOKIDAR_USEPOLLING=true
       - WATCHPACK_POLLING=true
+      - VITE_API_ORIGIN=$API_ORIGIN
     ports:
-      - $REACT_LOCAL_PORT:5173
+      - $UI_PUBLISHED_PORT:5173
     networks:
       - frontend
     stdin_open: true
